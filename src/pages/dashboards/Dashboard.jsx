@@ -4,7 +4,8 @@ import {
   UserPlus, Users, LogIn, LogOut, CheckCircle, BarChart3, Layers, GitBranch,
   Server, RefreshCw, Trash2, Key, Star, ShieldAlert, Award, Grid, HelpCircle,
   BookOpen, ExternalLink, Upload, Download, FileText, Lock, AlertTriangle, Menu, X,
-  Search, ChevronLeft, ChevronRight, Copy, Receipt, Briefcase
+  Search, ChevronLeft, ChevronRight, Copy, Receipt, Briefcase,
+  CreditCard, FileCheck2
 } from 'lucide-react';
 import {
   getAssignmentValidations,
@@ -14,6 +15,7 @@ import {
 } from '../../utils/htmlCssLocking';
 import * as CourseData from '../../courseData';
 import InvoiceGenerator from '../invoice/InvoiceGenerator';
+import CertificateManager from '../certificate/CertificateManager';
 
 const mainCourses = [
   {
@@ -1378,13 +1380,13 @@ export default function Dashboard({ onSelectCourse, enrolledCourse, setEnrolledC
                   style={{
                     display: 'flex', alignItems: 'center', gap: '10px', width: '100%', border: 'none', padding: '0.8rem 1rem',
                     fontSize: '0.92rem', fontWeight: 700, borderRadius: '12px', cursor: 'pointer', textAlign: 'left',
-                    background: activeTab === 'certificates' ? 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)' : 'transparent',
-                    color: activeTab === 'certificates' ? '#ffffff' : 'var(--text-secondary)',
-                    boxShadow: activeTab === 'certificates' ? '0 4px 12px rgba(245,158,11,0.35)' : 'none',
+                    background: (activeTab === 'certificates' || activeTab === 'af_certificates' || activeTab === 'idcards' || activeTab === 'foclen') ? 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)' : 'transparent',
+                    color: (activeTab === 'certificates' || activeTab === 'af_certificates' || activeTab === 'idcards' || activeTab === 'foclen') ? '#ffffff' : 'var(--text-secondary)',
+                    boxShadow: (activeTab === 'certificates' || activeTab === 'af_certificates' || activeTab === 'idcards' || activeTab === 'foclen') ? '0 4px 12px rgba(245,158,11,0.35)' : 'none',
                     transition: 'var(--transition)'
                   }}
                 >
-                  <Award size={18} /> Certificates
+                  <Award size={18} /> Certificates &amp; ID Cards
                 </button>
 
                 <button
@@ -3612,6 +3614,21 @@ export default function Dashboard({ onSelectCourse, enrolledCourse, setEnrolledC
             })()}
 
           </div>
+        )}
+
+        {/* 🎓 TAB 6.5: CERTIFICATES & ID CARD MANAGEMENT (STAFF & ADMIN ONLY) */}
+        {(activeTab === 'certificates' || activeTab === 'af_certificates' || activeTab === 'idcards' || activeTab === 'foclen') && (session?.role === 'admin' || session?.role === 'staff') && (
+          <CertificateManager 
+            session={session} 
+            students={students} 
+            initialModule={activeTab === 'idcards' ? 'idcards' : activeTab === 'foclen' ? 'foclen' : 'certificates'}
+            onSelectModule={(mod) => {
+              if (mod === 'certificates') setActiveTab('af_certificates');
+              else if (mod === 'idcards') setActiveTab('idcards');
+              else if (mod === 'foclen') setActiveTab('foclen');
+            }}
+            onBack={() => setActiveTab('overview')} 
+          />
         )}
 
         {/* 🧾 TAB 7: INVOICE GENERATOR & FEE BILLING (STAFF & ADMIN ONLY) */}
