@@ -4,7 +4,7 @@ import {
   Code, CheckCircle, LayoutGrid, Layers, MonitorPlay, MousePointerClick,
   Video, Edit3, Palette, Layout, Brush, FileCode2, Target, Type as TypeIcon,
   Wand2, FastForward, Move3d, Clapperboard, Smartphone, Database, Table, Columns, List, Terminal, ShieldAlert, PenTool, Settings, PieChart, Link, Activity, Store,
-  Briefcase, Map, Zap, Brain, Bot, Cpu, GitBranch, Rocket, Eye, Sliders, Filter, Trophy, Shield, FileSpreadsheet, Music, RefreshCw, Sparkles, Hash, Globe, Wifi, AlertTriangle, AlertCircle, Award, Send, Home, Compass, User, Lock, ShoppingCart, Folder, Server, Trash2, Plus, LogIn, LogOut, UserPlus, Users, UserCheck, BarChart2, GitMerge, Radio, Key, Copy, CheckSquare, Play, Percent, MessageCircle
+  Briefcase, Map, Zap, Brain, Bot, Cpu, GitBranch, Rocket, Eye, Sliders, Filter, Trophy, Shield, FileSpreadsheet, Music, RefreshCw, Sparkles, Hash, Globe, Wifi, AlertTriangle, AlertCircle, Award, Send, Home, Compass, User, Lock, ShoppingCart, Folder, Server, Trash2, Plus, LogIn, LogOut, UserPlus, Users, UserCheck, BarChart2, GitMerge, Radio, Key, Copy, CheckSquare, Play, Percent, MessageCircle, Presentation, MessageSquare, Scale, Clock
 } from 'lucide-react';
 
 
@@ -2888,8 +2888,117 @@ export const spokoStoryCourseData = [
   }
 ];
 
-
-
-
-
-
+export const spokoProCourseData = [
+  {
+    id: 'spoko_pro_topic1',
+    title: '1. Professional Self Introduction',
+    items: [
+      { id: 'interactive_simulator', label: 'Self Introduction Builder', icon: <User size={18} /> }
+    ]
+  },
+  {
+    id: 'spoko_pro_topic2',
+    title: '2. ATS-Friendly Resume Building with Overleaf',
+    items: [
+      { id: 'interactive_simulator', label: 'ATS Resume Builder & Preview', icon: <FileText size={18} /> }
+    ]
+  },
+  {
+    id: 'spoko_pro_topic3',
+    title: '3. LinkedIn Optimization',
+    items: [
+      { id: 'interactive_simulator', label: 'LinkedIn Profile Optimizer', icon: <Briefcase size={18} /> }
+    ]
+  },
+  {
+    id: 'spoko_pro_topic4',
+    title: '4. Email Etiquette - Part 1 (Interface & Basics)',
+    items: [
+      { id: 'interactive_simulator', label: 'Email Client Simulator', icon: <Send size={18} /> }
+    ]
+  },
+  {
+    id: 'spoko_pro_topic5',
+    title: '5. Email Etiquette - Part 2 (Structure & Tone)',
+    items: [
+      { id: 'interactive_simulator', label: 'Email Writing & AI Coach', icon: <PenTool size={18} /> }
+    ]
+  },
+  {
+    id: 'spoko_pro_topic6',
+    title: '6. Microsoft Teams / Slack',
+    items: [
+      { id: 'interactive_simulator', label: 'Workplace Chat Simulator', icon: <MessageSquare size={18} /> }
+    ]
+  },
+  {
+    id: 'spoko_pro_topic7',
+    title: '7. Meeting Etiquette',
+    items: [
+      { id: 'interactive_simulator', label: 'Virtual Meeting Simulator', icon: <Video size={18} /> }
+    ]
+  },
+  {
+    id: 'spoko_pro_topic8',
+    title: '8. Presentation Skills & Pitch Deck Delivery',
+    items: [
+      { id: 'interactive_simulator', label: 'Presentation & Pitch Deck', icon: <Presentation size={18} /> }
+    ]
+  },
+  {
+    id: 'spoko_pro_topic9',
+    title: '9. Client Communication & Expectation Setting',
+    items: [
+      { id: 'interactive_simulator', label: 'Client Handling Simulator', icon: <Users size={18} /> }
+    ]
+  },
+  {
+    id: 'spoko_pro_topic10',
+    title: '10. Workplace Conflict Resolution',
+    items: [
+      { id: 'interactive_simulator', label: 'Conflict Resolution Simulator', icon: <ShieldAlert size={18} /> }
+    ]
+  },
+  {
+    id: 'spoko_pro_topic11',
+    title: '11. Professional Negotiation & BATNA',
+    items: [
+      { id: 'interactive_simulator', label: 'Negotiation Playbook Simulator', icon: <Scale size={18} /> }
+    ]
+  },
+  {
+    id: 'spoko_pro_topic12',
+    title: '12. Time Management & Eisenhower Matrix',
+    items: [
+      { id: 'interactive_simulator', label: 'Time Management Simulator', icon: <Clock size={18} /> }
+    ]
+  },
+  {
+    id: 'spoko_pro_topic13',
+    title: '13. Smart Work & Automation Strategies',
+    items: [
+      { id: 'interactive_simulator', label: 'Smart Automation Simulator', icon: <Cpu size={18} /> }
+    ]
+  },
+  {
+    id: 'spoko_pro_topic14',
+    title: '14. AI Tools & Prompt Engineering',
+    items: [
+      { id: 'interactive_simulator', label: 'AI Prompt Simulator', icon: <Bot size={18} /> }
+    ]
+  },
+  {
+    id: 'spoko_pro_topic15',
+    title: '15. Executive Leadership & Decision Making',
+    items: [
+      { id: 'interactive_simulator', label: 'Leadership Simulator', icon: <Award size={18} /> }
+    ]
+  },
+  {
+    id: 'spoko_pro_topic16',
+    title: '16. Agile Teamwork & Collaboration',
+    items: [
+      { id: 'interactive_simulator', label: 'Agile Retrospective Simulator', icon: <Sparkles size={18} /> }
+    ]
+  }
+];

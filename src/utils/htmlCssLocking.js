@@ -4,7 +4,7 @@ import {
   pythonDaCourseData, generativeAiCourseData, reactCourseData, gitCourseData, jsonCourseData, 
   djangoCourseData, devopsCourseData, statsCourseData, numpyCourseData, coreJsCourseData, 
   pandasCourseData, matplotlibCourseData, seabornCourseData, tallyCourseData, webDesignCourseData,
-  spokoStoryCourseData
+  spokoStoryCourseData, spokoProCourseData
 } from '../courseData';
 
 export const COURSE_DATA_MAP = {
@@ -34,7 +34,9 @@ export const COURSE_DATA_MAP = {
   web_design_20days: webDesignCourseData,
   web_design: webDesignCourseData,
   spoko_story: spokoStoryCourseData,
-  spoko_course: spokoStoryCourseData
+  spoko_course: spokoStoryCourseData,
+  spoko_pro: spokoProCourseData,
+  softskills: spokoProCourseData
 };
 
 export const HTML_CSS_MODULE_ORDER = [

@@ -3,7 +3,7 @@ import {
   ChevronRight, ChevronLeft, Menu, X, Star, Award, Users, TrendingUp, Shield, Zap, BookOpen,
   Target, CheckCircle, Play, Mail, Phone, LogIn, Key, ShieldAlert, Sparkles,
   Database, Code, Bot, Brain, Terminal, Layers, ArrowRight, BarChart3, Clock, MessageCircle, Send,
-  MapPin, GitBranch, Server
+  MapPin, GitBranch, Server, Briefcase
 } from 'lucide-react';
 
 // --- 1. COUNTDOWN TIMER BANNER WITH GOOGLE RATING & SCROLLING MARQUEE ---
@@ -265,6 +265,14 @@ function CourseCarouselSection() {
   }, []);
 
   const coursesCatalog = [
+    {
+      title: 'Professional Track (Soft Skills & Workplace Mastery)',
+      modules: '15 Topics (Professional Track)',
+      desc: 'Master executive self-introductions, ATS resumes, LinkedIn networking, corporate email & meeting etiquette, client management, negotiation, and workplace AI.',
+      icon: <Briefcase size={24} />,
+      color: '#059669', bg: 'rgba(5, 150, 105, 0.08)', accent: '#10b981',
+      topics: ['Professional Self-Introduction & Executive Pitches', 'ATS Resume Engineering & Portfolio Building', 'LinkedIn Profile Optimization & InMail Outreach', 'Corporate Email Etiquette & Teams/Slack Protocols', 'Meeting Etiquette, PowerPoint Storytelling & Conflict Resolution', 'Workplace AI Prompts & Practical Staff Reviews']
+    },
     {
       title: 'Story-Based Learning (Spoko English)',
       modules: '6 Days Active (Story-Based English Course)',

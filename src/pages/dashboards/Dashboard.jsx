@@ -4,7 +4,7 @@ import {
   UserPlus, Users, LogIn, LogOut, CheckCircle, BarChart3, Layers, GitBranch,
   Server, RefreshCw, Trash2, Key, Star, ShieldAlert, Award, Grid, HelpCircle,
   BookOpen, ExternalLink, Upload, Download, FileText, Lock, AlertTriangle, Menu, X,
-  Search, ChevronLeft, ChevronRight, Copy, Receipt
+  Search, ChevronLeft, ChevronRight, Copy, Receipt, Briefcase
 } from 'lucide-react';
 import {
   getAssignmentValidations,
@@ -348,6 +348,18 @@ const subCourses = [
     shadowColor: 'rgba(234, 88, 12, 0.15)',
     modulesCount: '6 Days Active (Story-Based English Course)',
     enrolledKey: 'spoko_story'
+  },
+  {
+    id: 'spoko_pro',
+    mainCourseId: 'spoko_english',
+    title: 'Professional Track (Soft Skills & Workplace Mastery)',
+    desc: 'Executive communication, interview mastery, LinkedIn optimization, email & meeting etiquette, conflict resolution, and workplace dialogue simulations.',
+    icon: <Briefcase size={24} />,
+    bgColor: 'rgba(5, 150, 105, 0.08)',
+    borderColor: '#059669',
+    shadowColor: 'rgba(5, 150, 105, 0.15)',
+    modulesCount: '16 Topics (Professional Soft Skills Course)',
+    enrolledKey: 'spoko_pro'
   }
 ];
 
@@ -403,7 +415,8 @@ const availableCourseOptions = [
   { value: "seaborn_course", label: "Seaborn for Data Science" },
   { value: "core_js", label: "Core JavaScript" },
   { value: "tally_prime", label: "AI powered Tally" },
-  { value: "spoko_story", label: "Story-Based Learning (Spoko English)" }
+  { value: "spoko_story", label: "Story-Based Learning (Spoko English)" },
+  { value: "spoko_pro", label: "Professional Track (Soft Skills)" }
 ];
 
 function getCourseLabel(courseKey) {
@@ -439,7 +452,9 @@ function getCourseLabel(courseKey) {
     seaborn_course: 'Seaborn for Data Science',
     core_js: 'Core JavaScript',
     tally_prime: 'AI powered Tally',
-    spoko_story: 'Story-Based Learning (Spoko English)'
+    spoko_story: 'Story-Based Learning (Spoko English)',
+    spoko_pro: 'Professional Track (Soft Skills)',
+    softskills: 'Professional Track (Soft Skills)'
   };
   if (labels[courseKey]) return labels[courseKey];
   return courseKey.replace(/_/g, ' ').toUpperCase();
@@ -472,7 +487,9 @@ function getCourseDataList(courseKey) {
     induction: CourseData.inductionCourseData,
     tally: CourseData.tallyCourseData,
     web_design_20days: CourseData.webDesignCourseData,
-    spoko_story: CourseData.spokoStoryCourseData
+    spoko_story: CourseData.spokoStoryCourseData,
+    spoko_pro: CourseData.spokoProCourseData,
+    softskills: CourseData.spokoProCourseData
   };
   return map[courseKey] || [];
 }
@@ -489,7 +506,7 @@ function calculateDetailedCourseProgress(student) {
       'html_css', 'react_course', 'python_course', 'django_course', 'git_github',
       'core_js', 'web_design_20days', 'sql', 'powerbi', 'stats_course', 'devops',
       'json_course', 'numpy_course', 'pandas_course', 'matplotlib_course', 'seaborn_course',
-      'summer_sql', 'sql_da', 'python_da', 'agentic_ai', 'generative_ai_course', 'induction', 'tally', 'spoko_story'
+      'summer_sql', 'sql_da', 'python_da', 'agentic_ai', 'generative_ai_course', 'induction', 'tally', 'spoko_story', 'spoko_pro'
     ];
   } else if (Array.isArray(enrolledCourse)) {
     courseKeys = enrolledCourse;
@@ -565,7 +582,7 @@ function calculateStudentProgress(student) {
       'python_fullstack', 'python_course', 'python_da', 'generative_ai_course',
       'react_course', 'git_github', 'json_course', 'django_course', 'devops',
       'stats_course', 'numpy_course', 'pandas_course', 'matplotlib_course',
-      'seaborn_course', 'core_js', 'induction', 'tally', 'web_design_20days', 'spoko_story'
+      'seaborn_course', 'core_js', 'induction', 'tally', 'web_design_20days', 'spoko_story', 'spoko_pro'
     ];
     allKeys.forEach(k => {
       const data = getCourseDataList(k);

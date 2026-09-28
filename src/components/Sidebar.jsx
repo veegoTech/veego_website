@@ -48,6 +48,7 @@ export default function Sidebar({ courseStructure, activeNode, onNavClick, onBac
 
   const getCourseDuration = () => {
     const firstId = courseStructure?.[0]?.id || '';
+    if (firstId.includes('spoko_pro') || firstId.includes('softskills')) return 450; // 7h 30m
     if (firstId.includes('spoko_story')) return 180; // 3h
     if (courseStructure?.some(m => m.id?.includes('sql_da'))) return 540; // 9h
     if (firstId.includes('summer_sql')) return 420; // 7h
@@ -100,7 +101,8 @@ export default function Sidebar({ courseStructure, activeNode, onNavClick, onBac
       {/* Course Title (Dynamic) */}
       <div style={{ padding: '1rem 1.5rem 0' }}>
         <h2 style={{ fontSize: '1.6rem', fontWeight: '800', color: '#0f172a', margin: 0 }}>
-          {courseStructure?.[0]?.id?.includes('spoko_story') ? 'Spoko Story English' :
+          {courseStructure?.[0]?.id?.includes('spoko_pro') ? 'Spoko Professional Track' :
+           courseStructure?.[0]?.id?.includes('spoko_story') ? 'Spoko Story English' :
            courseStructure?.[0]?.id?.includes('web_design') ? 'AI-Powered Web Design' :
            courseStructure?.some(m => m.id?.includes('sql_da')) ? 'SQL for Data Analytics' :
            courseStructure?.[0]?.id?.includes('sql') ? 'Databases & SQL' : 
@@ -139,32 +141,43 @@ export default function Sidebar({ courseStructure, activeNode, onNavClick, onBac
         {courseStructure?.map((module) => {
           const isExpanded = expandedModules[module.id];
           const isLocked = isModuleLocked(activeCourse, module.id, validations, session, completedLessons, taskSubmissions);
+          const isSingleItem = module.items?.length === 1;
+          const isModuleActive = activeNode?.moduleId === module.id;
 
           return (
             <div key={module.id} style={{ marginBottom: '0.5rem' }}>
               {/* Accordion Header */}
               <div 
-                onClick={() => toggleModule(module.id)}
+                onClick={() => {
+                  toggleModule(module.id);
+                  if (isSingleItem && !isLocked && typeof onNavClick === 'function') {
+                    onNavClick(module.id, module.items[0].id);
+                  }
+                }}
                 style={{ 
                   display: 'flex', 
                   alignItems: 'center', 
                   gap: '0.5rem',
                   padding: '0.75rem 1.5rem',
                   cursor: 'pointer',
-                  fontWeight: '700',
-                  color: isLocked ? '#94a3b8' : '#1e293b',
-                  fontSize: '1.05rem',
-                  userSelect: 'none'
+                  fontWeight: isModuleActive ? '800' : '700',
+                  color: isLocked ? '#94a3b8' : isModuleActive ? '#1d4ed8' : '#1e293b',
+                  backgroundColor: isModuleActive && isSingleItem ? 'rgba(37, 99, 235, 0.08)' : 'transparent',
+                  borderLeft: isModuleActive && isSingleItem ? '3px solid #2563eb' : '3px solid transparent',
+                  fontSize: '1.02rem',
+                  userSelect: 'none',
+                  transition: 'all 0.2s ease'
                 }}
               >
-                {isExpanded ? <ChevronDown size={18} /> : <ChevronRight size={18} />}
+                {!isSingleItem && (isExpanded ? <ChevronDown size={18} /> : <ChevronRight size={18} />)}
+                {isSingleItem && (module.items[0]?.icon || <ChevronRight size={18} />)}
                 <span style={{ flex: 1 }}>{module.title}</span>
                 {isLocked && <Lock size={15} color="#ea580c" title="Previous Day Assignment/Completion Required" />}
               </div>
 
               {/* Accordion Content */}
               <AnimatePresence initial={false}>
-                {isExpanded && (
+                {isExpanded && !isSingleItem && (
                   <motion.div
                     initial={{ height: 0, opacity: 0 }}
                     animate={{ height: 'auto', opacity: 1 }}
