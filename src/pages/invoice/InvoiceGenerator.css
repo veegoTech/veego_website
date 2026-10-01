@@ -329,6 +329,7 @@
   .af-invoice-root aside,
   .af-invoice-root .toast-notification,
   .af-invoice-root .drawer-backdrop,
+  .invoice-canvas-wrapper,
   .delete-row-btn {
     display: none !important;
   }
@@ -340,13 +341,18 @@
     width: 100% !important;
   }
 
-  .af-invoice-root .invoice-canvas-wrapper {
-    margin: 0 !important;
-    padding: 0 !important;
+  .invoice-pdf-canvas-container {
+    position: static !important;
+    left: auto !important;
+    top: auto !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+    z-index: auto !important;
     display: block !important;
+    margin: 0 auto !important;
   }
 
-  .af-invoice-root .invoice-canvas {
+  .invoice-pdf-canvas {
     width: 190mm !important;
     min-height: 270mm !important;
     max-height: none !important;
@@ -365,76 +371,50 @@
     transform: none !important;
   }
 
-  .af-invoice-root .invoice-canvas * {
+  .invoice-pdf-canvas * {
     page-break-inside: avoid !important;
     break-inside: avoid !important;
     orphans: 1 !important;
     widows: 1 !important;
   }
 
-  .af-invoice-root table, 
-  .af-invoice-root thead, 
-  .af-invoice-root tbody, 
-  .af-invoice-root tr, 
-  .af-invoice-root td, 
-  .af-invoice-root th {
+  .invoice-pdf-canvas table, 
+  .invoice-pdf-canvas thead, 
+  .invoice-pdf-canvas tbody, 
+  .invoice-pdf-canvas tr, 
+  .invoice-pdf-canvas td, 
+  .invoice-pdf-canvas th {
     page-break-inside: avoid !important;
     break-inside: avoid !important;
   }
+}
 
-  .af-invoice-root .canvas-input {
-    border: none !important;
-    background: transparent !important;
-    padding: 0 !important;
-    color: black !important;
-    -webkit-print-color-adjust: exact;
-    print-color-adjust: exact;
-  }
-  
-  .af-invoice-root .text-primary {
-    color: #0A3D91 !important;
-  }
-  
-  .af-invoice-root .bg-primary {
-    background-color: #0A3D91 !important;
-    color: white !important;
-  }
+/* Hidden container for PDF capture */
+.invoice-pdf-canvas-container {
+  position: fixed;
+  left: -9999px;
+  top: 0;
+  opacity: 0;
+  pointer-events: none;
+  z-index: -999;
+}
 
-  .af-invoice-root .text-accent {
-    color: #F97316 !important;
-  }
-
-  .af-invoice-root table, 
-  .af-invoice-root th, 
-  .af-invoice-root td {
-    border-color: #cbd5e1 !important;
-  }
+.invoice-pdf-canvas {
+  width: 190mm;
+  min-height: 270mm;
+  box-sizing: border-box;
+  background-color: #ffffff;
+  color: #1e293b;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 8mm 10mm;
 }
 
 /* PDF rendering mode */
-body.pdf-rendering {
-  margin: 0 !important;
-  padding: 0 !important;
-}
-
 body.pdf-rendering .no-print,
 body.pdf-rendering .delete-row-btn {
   display: none !important;
-}
-
-body.pdf-rendering .invoice-canvas {
-  box-sizing: border-box !important;
-  box-shadow: none !important;
-  border: none !important;
-  margin: 0 !important;
-  padding: 8mm 10mm !important;
-  overflow: hidden !important;
-  display: flex !important;
-  flex-direction: column !important;
-  justify-content: space-between !important;
-}
-
-body.pdf-rendering .canvas-input {
-  border: none !important;
-  background: transparent !important;
 }

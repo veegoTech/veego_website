@@ -39,6 +39,15 @@ const generateRandomInvoiceNo = () => {
   return `AF-${year}-${rand}`;
 };
 
+const formatDateDisplay = (dateStr) => {
+  if (!dateStr) return '—';
+  const parts = dateStr.split('-');
+  if (parts.length === 3) {
+    return `${parts[2]}-${parts[1]}-${parts[0]}`;
+  }
+  return dateStr;
+};
+
 export default function InvoiceGenerator({ session, students = [] }) {
   // Mobile drawer state
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -309,7 +318,7 @@ export default function InvoiceGenerator({ session, students = [] }) {
     setIsDrawerOpen(false);
     saveToLedger(true);
 
-    const element = document.getElementById('invoice-canvas');
+    const element = document.getElementById('invoice-pdf-canvas') || document.getElementById('invoice-canvas');
     if (!element) {
       showToast('Invoice element not found.');
       return;
@@ -1568,6 +1577,286 @@ export default function InvoiceGenerator({ session, students = [] }) {
             
           </div>{/* end invoice-canvas */}
         </div>{/* end invoice-canvas-wrapper */}
+
+        {/* ========================================================================= */}
+        {/* 🖨️ STATIC PUBLICATION-READY PDF & PRINT CANVAS (NO INPUT ARTIFACTS) */}
+        {/* ========================================================================= */}
+        <div id="invoice-pdf-canvas-container" className="invoice-pdf-canvas-container">
+          <div id="invoice-pdf-canvas" className="invoice-pdf-canvas">
+            
+            {/* Background Watermark Vector */}
+            <div className="invoice-watermark">
+              <svg width="240" height="240" viewBox="0 0 100 100" fill="#0A3D91" style={{ color: '#0A3D91' }}>
+                <path d="M10 15h80v45H10z" fill="none" stroke="#0A3D91" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
+                <path d="M42 60l-5 16h26l-5-16z" fill="none" stroke="#0A3D91" strokeWidth="3" strokeLinejoin="round" />
+                <path d="M30 76h40" stroke="#0A3D91" strokeWidth="3.5" strokeLinecap="round" fill="none" />
+                <path d="M10 52h80" stroke="#0A3D91" strokeWidth="1.5" fill="none" />
+                <rect x="74" y="68" width="12" height="18" rx="6" fill="none" stroke="#0A3D91" strokeWidth="2.5" />
+                <path d="M80 68v6 M74 74h12" stroke="#0A3D91" strokeWidth="1.5" fill="none" />
+                <path d="M80 68c0-8-12-3-12-11" fill="none" stroke="#0A3D91" strokeWidth="1.5" strokeLinecap="round" />
+              </svg>
+            </div>
+
+            {/* Header */}
+            <header className="text-center mb-2 border-b border-slate-200 pb-2 relative z-10">
+              <h1 className="text-[22px] font-black tracking-tight text-[#0A3D91] leading-tight" style={{ fontFamily: "'Outfit', sans-serif" }}>
+                ALPHA FLY THENI
+              </h1>
+              <h3 className="text-[13px] font-bold tracking-tight text-[#0A3D91] leading-tight" style={{ fontFamily: "'Outfit', sans-serif" }}>
+                Computer Education
+              </h3>
+              <p className="text-[#F97316] font-extrabold tracking-widest text-[9px] uppercase mt-0.5">
+                Empowering Skills for the Future
+              </p>
+
+              <div className="flex items-center justify-center gap-4 mt-1.5 text-[8.5px] text-slate-600 font-medium">
+                <span>📍 No. 10, K S Complex, Old Bus Stand, Subban Chetty Street, Theni, Tamil Nadu 625531</span>
+                <span>📞 8015 8016 89</span>
+                <span>✉️ alphafly.edu@gmail.com</span>
+              </div>
+              
+              <div className="text-[8px] text-slate-500 font-bold mt-1 tracking-wider uppercase">
+                Reg No: AF/EDU/2026/9841 &nbsp;|&nbsp; GSTIN: 33AAFCA8841M1ZS &nbsp;|&nbsp; ISO 9001:2015 Certified
+              </div>
+            </header>
+
+            {/* Invoice Info & Meta Card */}
+            <section className="flex justify-between items-start gap-4 mb-2.5 relative z-10">
+              <div className="flex flex-col justify-end pt-2">
+                <h2 className="text-[24px] font-black tracking-tight text-[#0A3D91] uppercase leading-none" style={{ fontFamily: "'Outfit', sans-serif" }}>
+                  INVOICE
+                </h2>
+                <div className="w-16 h-1 bg-[#F97316] rounded-full mt-1"></div>
+              </div>
+
+              <div className="w-[230px] bg-slate-50 border border-slate-200 rounded-xl p-2.5 relative">
+                <div className="absolute -top-2.5 right-3">
+                  <span className={`px-2.5 py-0.5 text-[9px] font-extrabold uppercase rounded-full border status-${paymentStatus.toLowerCase()}`}>
+                    {paymentStatus}
+                  </span>
+                </div>
+
+                <div className="space-y-1 text-[10px]">
+                  <div className="flex justify-between items-center">
+                    <span className="font-semibold text-slate-500">Invoice No:</span>
+                    <span className="font-mono font-bold text-slate-900">{invoiceNo || 'AF-2026-0001'}</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="font-semibold text-slate-500">Invoice Date:</span>
+                    <span className="font-semibold text-slate-800">{formatDateDisplay(invoiceDate)}</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="font-semibold text-slate-500">Due Date:</span>
+                    <span className="font-semibold text-slate-800">{formatDateDisplay(dueDate)}</span>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            {/* Bill To Card */}
+            <section className="border border-slate-200 rounded-xl p-2.5 mb-2.5 bg-white shadow-xs relative z-10">
+              <h3 className="text-[9px] font-bold tracking-wider text-[#0A3D91] uppercase pb-1 border-b border-slate-100 mb-2 flex items-center gap-1.5">
+                👤 BILL TO (STUDENT INFORMATION)
+              </h3>
+              
+              <div className="grid grid-cols-2 gap-x-6 gap-y-1.5 text-[10.5px]">
+                <div className="flex items-baseline gap-2">
+                  <span className="text-slate-500 font-semibold min-w-[95px] text-[10px]">Student Name:</span>
+                  <span className="font-bold text-slate-900">{studentName || '—'}</span>
+                </div>
+                <div className="flex items-baseline gap-2">
+                  <span className="text-slate-500 font-semibold min-w-[95px] text-[10px]">Academic Year:</span>
+                  <span className="font-medium text-slate-800">{studentSession || '—'}</span>
+                </div>
+                <div className="flex items-baseline gap-2">
+                  <span className="text-slate-500 font-semibold min-w-[95px] text-[10px]">Course Name:</span>
+                  <span className="font-bold text-slate-900">{studentCourse || '—'}</span>
+                </div>
+                <div className="flex items-baseline gap-2">
+                  <span className="text-slate-500 font-semibold min-w-[95px] text-[10px]">Batch Timing:</span>
+                  <span className="font-medium text-slate-800">{studentBatch || '—'}</span>
+                </div>
+                <div className="flex items-baseline gap-2">
+                  <span className="text-slate-500 font-semibold min-w-[95px] text-[10px]">Mobile No:</span>
+                  <span className="font-medium text-slate-800">{studentMobile || '—'}</span>
+                </div>
+                <div className="flex items-baseline gap-2">
+                  <span className="text-slate-500 font-semibold min-w-[95px] text-[10px]">Student Address:</span>
+                  <span className="font-medium text-slate-800">{studentAddress || '—'}</span>
+                </div>
+              </div>
+            </section>
+
+            {/* Items Table */}
+            <section className="mb-2.5 relative z-10">
+              <div className="rounded-xl border border-slate-200 overflow-hidden shadow-xs">
+                <table className="w-full text-left border-collapse" style={{ tableLayout: 'fixed' }}>
+                  <thead>
+                    <tr className="text-[9px] font-bold uppercase tracking-wider bg-[#0A3D91] text-white">
+                      <th className="py-1.5 px-3 text-center" style={{ width: '8%' }}>S.No</th>
+                      <th className="py-1.5 px-3 text-left" style={{ width: '44%' }}>Description</th>
+                      <th className="py-1.5 px-3 text-center" style={{ width: '16%' }}>Duration</th>
+                      <th className="py-1.5 px-3 text-center" style={{ width: '10%' }}>Qty</th>
+                      <th className="py-1.5 px-3 text-right" style={{ width: '11%' }}>Rate (₹)</th>
+                      <th className="py-1.5 px-3 text-right" style={{ width: '11%' }}>Amount (₹)</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100 text-[10.5px]">
+                    {(items.filter(it => (it.description && it.description.trim()) || (it.qty && parseFloat(it.qty) > 0) || (it.rate && parseFloat(it.rate) > 0)).length > 0
+                      ? items.filter(it => (it.description && it.description.trim()) || (it.qty && parseFloat(it.qty) > 0) || (it.rate && parseFloat(it.rate) > 0))
+                      : [items[0]]
+                    ).map((item, index) => {
+                      const q = parseFloat(item.qty) || 0;
+                      const r = parseFloat(item.rate) || 0;
+                      const rowAmount = q * r;
+
+                      return (
+                        <tr key={index} className="bg-white">
+                          <td className="py-2 px-3 text-center text-slate-500 font-mono text-[10px]">{index + 1}</td>
+                          <td className="py-2 px-3 font-semibold text-slate-900">{item.description || '—'}</td>
+                          <td className="py-2 px-3 text-center text-slate-600">{item.duration || '—'}</td>
+                          <td className="py-2 px-3 text-center font-medium text-slate-800">{item.qty || '1'}</td>
+                          <td className="py-2 px-3 text-right text-slate-700">{r > 0 ? r.toFixed(2) : '—'}</td>
+                          <td className="py-2 px-3 text-right font-bold text-slate-900">₹{rowAmount.toFixed(2)}</td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            </section>
+
+            {/* Payment Particulars & Settlement Summary */}
+            <section className="grid grid-cols-2 gap-3 mb-2.5 relative z-10">
+              {/* Payment Particulars */}
+              <div className="border border-slate-200 rounded-xl p-2.5 bg-white shadow-xs flex flex-col justify-between">
+                <div>
+                  <h3 className="text-[9px] font-bold tracking-wider text-[#0A3D91] uppercase pb-1 border-b border-slate-100 mb-1.5 flex items-center gap-1">
+                    💳 PAYMENT PARTICULARS
+                  </h3>
+                  
+                  <div className="flex flex-wrap gap-1.5 mb-2">
+                    {Object.entries(paymentModes).filter(([_, a]) => a).map(([m]) => (
+                      <span key={m} className="px-2 py-0.5 bg-blue-50 text-blue-700 border border-blue-200 rounded-md text-[9.5px] font-bold uppercase">
+                        {m}
+                      </span>
+                    ))}
+                    {!Object.values(paymentModes).some(Boolean) && (
+                      <span className="text-slate-400 text-[10px] italic">No mode selected</span>
+                    )}
+                  </div>
+
+                  {transactionId && (
+                    <div className="text-[10px] flex items-center gap-1.5 text-slate-600">
+                      <span className="font-semibold text-slate-500">Txn / Ref ID:</span>
+                      <span className="font-mono font-bold text-slate-800">{transactionId}</span>
+                    </div>
+                  )}
+                </div>
+
+                <div className="border-t border-slate-100 pt-1.5 mt-2 space-y-1 text-[10.5px]">
+                  <div className="flex justify-between items-center">
+                    <span className="font-semibold text-slate-700">Amount Paid:</span>
+                    <span className="font-extrabold text-emerald-600">₹{amountPaid.toFixed(2)}</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="font-bold text-slate-800">Balance Due:</span>
+                    <span className={`font-black ${balanceDue > 0 ? 'text-rose-600' : 'text-slate-900'}`}>
+                      ₹{Math.max(0, balanceDue).toFixed(2)}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Settlement Summary */}
+              <div className="border border-slate-200 rounded-xl p-2.5 bg-slate-50 shadow-xs flex flex-col justify-between">
+                <h3 className="text-[9px] font-bold tracking-wider text-[#0A3D91] uppercase pb-1 border-b border-slate-200 mb-1.5 flex items-center gap-1">
+                  💰 FEE SETTLEMENT SUMMARY
+                </h3>
+
+                <div className="space-y-1 text-[10.5px]">
+                  <div className="flex justify-between items-center">
+                    <span className="text-slate-600 font-medium">Subtotal:</span>
+                    <span className="font-bold text-slate-900">₹{subtotal.toFixed(2)}</span>
+                  </div>
+                  {discount > 0 && (
+                    <div className="flex justify-between items-center text-emerald-700">
+                      <span className="font-medium">Discount:</span>
+                      <span className="font-bold">-₹{discount.toFixed(2)}</span>
+                    </div>
+                  )}
+                  {gstPercent > 0 && (
+                    <div className="flex justify-between items-center text-slate-600">
+                      <span className="font-medium">GST ({gstPercent}%):</span>
+                      <span className="font-bold text-slate-900">+₹{gstAmount.toFixed(2)}</span>
+                    </div>
+                  )}
+                </div>
+
+                <div className="border-t border-slate-200 pt-1.5 mt-2 flex justify-between items-center">
+                  <span className="text-[11px] font-extrabold text-[#0A3D91] uppercase">Grand Total:</span>
+                  <span className="text-[14px] font-black text-[#0A3D91]">₹{grandTotal.toFixed(2)}</span>
+                </div>
+              </div>
+            </section>
+
+            {/* Terms & Scan to Pay */}
+            <section className="grid grid-cols-2 gap-3 mb-2 relative z-10">
+              {/* Terms */}
+              <div className="border border-slate-200 rounded-xl p-2.5 bg-white shadow-xs">
+                <h3 className="text-[9px] font-bold tracking-wider text-[#0A3D91] uppercase pb-1 border-b border-slate-100 mb-1">
+                  📋 TERMS & CONDITIONS
+                </h3>
+                <ul className="text-[8px] text-slate-600 space-y-0.5 leading-relaxed">
+                  <li>• Course fees once paid are non-refundable unless approved by management.</li>
+                  <li>• Receipt should be preserved until course completion.</li>
+                  <li>• Certificates issued only after successful completion & fee clearance.</li>
+                  <li>• Late fee may apply on delayed payments.</li>
+                </ul>
+              </div>
+
+              {/* UPI QR */}
+              <div className="border border-slate-200 rounded-xl p-2.5 bg-white shadow-xs flex items-center justify-between gap-2">
+                <div className="space-y-0.5">
+                  <h4 className="text-[9px] font-bold tracking-wider text-[#0A3D91] uppercase">
+                    📱 SCAN & PAY (UPI)
+                  </h4>
+                  <p className="text-[9px] font-bold text-slate-700">{upiId || 'alphafly@okaxis'}</p>
+                  <p className="text-[7.5px] text-slate-400">Scan via GPay, PhonePe, Paytm</p>
+                </div>
+                <div className="w-12 h-12 border border-slate-200 rounded-lg p-1 bg-slate-50 flex items-center justify-center shrink-0">
+                  {uploadedQR ? (
+                    <img src={uploadedQR} alt="UPI QR" className="w-full h-full object-contain" />
+                  ) : (
+                    <div dangerouslySetInnerHTML={{ __html: DEFAULT_QR_SVG }} className="w-full h-full" />
+                  )}
+                </div>
+              </div>
+            </section>
+
+            {/* Signature Area */}
+            <section className="flex justify-end mt-1 mb-1 relative z-10">
+              <div className="text-center w-48">
+                <div className="border-b border-dashed border-slate-400 h-6"></div>
+                <div className="mt-1">
+                  <p className="text-[9.5px] font-bold text-[#0A3D91] uppercase">Authorized Signature</p>
+                  <p className="text-[8px] font-medium text-slate-500">Alpha Fly Theni</p>
+                </div>
+              </div>
+            </section>
+
+            {/* Footer */}
+            <footer className="text-center pt-1.5 border-t border-slate-100 relative z-10">
+              <p className="text-[#F97316] font-extrabold text-[11px] tracking-wider" style={{ fontFamily: "'Outfit', sans-serif" }}>
+                Thank You!
+              </p>
+              <p className="text-[8px] text-slate-500 font-medium">
+                Thank you for choosing Alphafly Computer Education. We wish you success in your learning journey!
+              </p>
+            </footer>
+
+          </div>
+        </div>
       </main>
 
       {/* ========================================================================= */}
