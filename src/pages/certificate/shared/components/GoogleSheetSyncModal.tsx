@@ -27,6 +27,7 @@ interface GoogleSheetSyncModalProps {
   onImport: (importedRows: any[]) => void;
 }
 
+const DEFAULT_SHEET_URL = 'https://docs.google.com/spreadsheets/d/1-B2M4HCEYpjwODULGApsl0YamV-enhyIpJCKPEhFjmI/edit';
 const STORAGE_SHEET_URL_KEY = 'alphafly_cached_google_sheet_url';
 
 export const GoogleSheetSyncModal: React.FC<GoogleSheetSyncModalProps> = ({
@@ -36,7 +37,7 @@ export const GoogleSheetSyncModal: React.FC<GoogleSheetSyncModalProps> = ({
   moduleType,
   onImport,
 }) => {
-  const [sheetUrl, setSheetUrl] = useState<string>('');
+  const [sheetUrl, setSheetUrl] = useState<string>(DEFAULT_SHEET_URL);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [errorMsg, setErrorMsg] = useState<string>('');
   const [sheetData, setSheetData] = useState<ParsedSheetData | null>(null);
@@ -49,6 +50,8 @@ export const GoogleSheetSyncModal: React.FC<GoogleSheetSyncModalProps> = ({
     const cached = localStorage.getItem(STORAGE_SHEET_URL_KEY);
     if (cached) {
       setSheetUrl(cached);
+    } else {
+      setSheetUrl(DEFAULT_SHEET_URL);
     }
   }, []);
 

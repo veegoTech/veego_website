@@ -189,8 +189,8 @@ export const IDCardDashboard: React.FC<IDCardDashboardProps> = ({
                   </td>
 
                   {/* ID Card No */}
-                  <td className="py-3 px-4 font-mono font-bold text-orange-700">
-                    <span className="px-2 py-0.5 bg-orange-50 border border-orange-200 rounded-md">
+                  <td className="py-3 px-4 font-mono font-bold text-orange-700 whitespace-nowrap align-middle">
+                    <span className="px-2.5 py-1 bg-orange-50 border border-orange-200 rounded-md inline-block whitespace-nowrap">
                       {card.id}
                     </span>
                   </td>

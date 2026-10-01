@@ -6,7 +6,6 @@ import {
   Copy, 
   Trash2, 
   Search, 
-  Check, 
   FileCheck,
   ChevronDown
 } from 'lucide-react';
@@ -28,7 +27,6 @@ export const CertificateTable: React.FC<CertificateTableProps> = ({
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCourseFilter, setSelectedCourseFilter] = useState('ALL');
-  const [copiedId, setCopiedId] = useState<string | null>(null);
 
   const uniqueCourses = Array.from(new Set(certificates.map(c => c.courseName).filter(Boolean)));
 
@@ -45,13 +43,6 @@ export const CertificateTable: React.FC<CertificateTableProps> = ({
 
     return matchesSearch && matchesCourse;
   });
-
-  const handleCopyLink = (certId: string) => {
-    const url = `${window.location.origin}/verify/${certId}`;
-    navigator.clipboard.writeText(url);
-    setCopiedId(certId);
-    setTimeout(() => setCopiedId(null), 2000);
-  };
 
   return (
     <div className="bg-white border border-slate-200 rounded-xl shadow-xs overflow-hidden">
@@ -76,7 +67,7 @@ export const CertificateTable: React.FC<CertificateTableProps> = ({
             <select
               value={selectedCourseFilter}
               onChange={(e) => setSelectedCourseFilter(e.target.value)}
-              className="w-full sm:w-auto text-xs bg-white border border-slate-300 rounded-lg px-3 py-2 text-slate-700 font-medium focus:outline-none focus:border-blue-500 pr-8 appearance-none"
+              className="w-full sm:w-auto text-xs bg-white border border-slate-300 rounded-lg px-3 py-2 text-slate-700 font-medium focus:outline-none focus:border-blue-500 pr-8 appearance-none cursor-pointer"
             >
               <option value="ALL">All Courses ({certificates.length})</option>
               {uniqueCourses.map((c, i) => (
@@ -93,19 +84,18 @@ export const CertificateTable: React.FC<CertificateTableProps> = ({
         <table className="w-full text-left border-collapse">
           <thead>
             <tr className="bg-slate-100/80 border-b border-slate-200 text-[11px] font-bold text-slate-600 uppercase tracking-wider">
-              <th className="py-3 px-4">Certificate ID</th>
-              <th className="py-3 px-4">Student Name</th>
-              <th className="py-3 px-4">Course</th>
-              <th className="py-3 px-4">Course Duration</th>
-              <th className="py-3 px-4">Issue Date</th>
-              <th className="py-3 px-4">Qualities</th>
-              <th className="py-3 px-4 text-right">Actions</th>
+              <th className="py-3.5 px-4 whitespace-nowrap">Certificate ID</th>
+              <th className="py-3.5 px-4 whitespace-nowrap">Student Name</th>
+              <th className="py-3.5 px-4">Course</th>
+              <th className="py-3.5 px-4 whitespace-nowrap">Course Duration</th>
+              <th className="py-3.5 px-4 whitespace-nowrap">Issue Date</th>
+              <th className="py-3.5 px-4 text-right whitespace-nowrap">Actions</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100 text-xs text-slate-700 font-medium">
             {filteredCertificates.length === 0 ? (
               <tr>
-                <td colSpan={7} className="py-12 text-center text-slate-400">
+                <td colSpan={6} className="py-12 text-center text-slate-400">
                   <div className="flex flex-col items-center justify-center gap-2">
                     <FileCheck className="w-8 h-8 text-slate-300 stroke-1" />
                     <p className="text-sm font-semibold">No certificates match your search.</p>
@@ -120,42 +110,32 @@ export const CertificateTable: React.FC<CertificateTableProps> = ({
                   className="hover:bg-blue-50/40 transition-colors group cursor-pointer"
                   onClick={() => onView(cert)}
                 >
-                  <td className="py-3 px-4">
-                    <span className="font-mono font-bold text-blue-700 bg-blue-50 px-2 py-0.5 rounded border border-blue-200">
+                  <td className="py-3 px-4 whitespace-nowrap align-middle">
+                    <span className="font-mono font-bold text-xs text-blue-700 bg-blue-50 px-2.5 py-1 rounded-md border border-blue-200 inline-block whitespace-nowrap">
                       {cert.id}
                     </span>
                   </td>
-                  <td className="py-3 px-4 font-bold text-slate-900 text-sm">
+                  <td className="py-3 px-4 font-bold text-slate-900 text-sm whitespace-nowrap align-middle">
                     {cert.studentName}
                   </td>
-                  <td className="py-3 px-4 text-slate-600 font-medium max-w-[200px] truncate">
-                    {cert.courseName}
-                  </td>
-                  <td className="py-3 px-4 text-slate-500 font-medium whitespace-nowrap">
-                    {cert.formattedDuration || '—'}
-                  </td>
-                  <td className="py-3 px-4 text-slate-500 whitespace-nowrap">
-                    {cert.issueDate || cert.generatedDate || '—'}
-                  </td>
-                  <td className="py-3 px-4">
-                    <div className="flex flex-wrap gap-1 max-w-[200px]">
-                      {(cert.qualities || []).map((q: any, idx: number) => (
-                        <span 
-                          key={idx} 
-                          className="bg-slate-100 text-slate-600 text-[10px] px-1.5 py-0.5 rounded"
-                        >
-                          {typeof q === 'string' ? q : (q?.title || 'Quality')}
-                        </span>
-                      ))}
+                  <td className="py-3 px-4 text-slate-700 font-medium align-middle">
+                    <div className="max-w-[280px] truncate" title={cert.courseName}>
+                      {cert.courseName}
                     </div>
                   </td>
-                  <td className="py-3 px-4 text-right" onClick={(e) => e.stopPropagation()}>
-                    <div className="flex items-center justify-end gap-1">
+                  <td className="py-3 px-4 text-slate-600 font-medium whitespace-nowrap align-middle text-xs">
+                    {cert.formattedDuration || '—'}
+                  </td>
+                  <td className="py-3 px-4 text-slate-600 font-medium whitespace-nowrap align-middle text-xs">
+                    {cert.issueDate || cert.generatedDate || '—'}
+                  </td>
+                  <td className="py-3 px-4 text-right whitespace-nowrap align-middle" onClick={(e) => e.stopPropagation()}>
+                    <div className="inline-flex items-center justify-end gap-1.5">
                       <button
                         type="button"
                         onClick={() => onView(cert)}
                         title="View Certificate"
-                        className="p-1.5 hover:bg-slate-200 text-slate-600 rounded transition-colors"
+                        className="p-1.5 hover:bg-slate-100 text-slate-600 hover:text-slate-900 rounded-lg transition-colors cursor-pointer"
                       >
                         <Eye className="w-4 h-4" />
                       </button>
@@ -163,29 +143,17 @@ export const CertificateTable: React.FC<CertificateTableProps> = ({
                         type="button"
                         onClick={() => onEdit(cert)}
                         title="Edit Certificate"
-                        className="p-1.5 hover:bg-blue-100 text-blue-600 rounded transition-colors"
+                        className="p-1.5 hover:bg-blue-50 text-blue-600 hover:text-blue-800 rounded-lg transition-colors cursor-pointer"
                       >
                         <Edit3 className="w-4 h-4" />
                       </button>
                       <button
                         type="button"
                         onClick={() => onDuplicate(cert)}
-                        title="Duplicate as New"
-                        className="p-1.5 hover:bg-emerald-100 text-emerald-600 rounded transition-colors"
+                        title="Duplicate Certificate"
+                        className="p-1.5 hover:bg-emerald-50 text-emerald-600 hover:text-emerald-800 rounded-lg transition-colors cursor-pointer"
                       >
                         <Copy className="w-4 h-4" />
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => handleCopyLink(cert.id)}
-                        title="Copy Verification Link"
-                        className="p-1.5 hover:bg-amber-100 text-amber-700 rounded transition-colors"
-                      >
-                        {copiedId === cert.id ? (
-                          <Check className="w-4 h-4 text-emerald-600" />
-                        ) : (
-                          <span className="text-[10px] font-bold px-1">QR</span>
-                        )}
                       </button>
                       <button
                         type="button"
@@ -195,7 +163,7 @@ export const CertificateTable: React.FC<CertificateTableProps> = ({
                           }
                         }}
                         title="Delete Certificate"
-                        className="p-1.5 hover:bg-red-100 text-red-600 rounded transition-colors"
+                        className="p-1.5 hover:bg-red-50 text-red-600 hover:text-red-800 rounded-lg transition-colors cursor-pointer"
                       >
                         <Trash2 className="w-4 h-4" />
                       </button>

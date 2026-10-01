@@ -142,11 +142,13 @@ export const FoclenDashboard: React.FC<FoclenDashboardProps> = ({
                   <td className="py-3 px-4 text-slate-500 max-w-[200px] truncate">
                     {cert.periodDescription}
                   </td>
-                  <td className="py-3 px-4 font-mono font-bold text-slate-600 text-[11px]">
-                    {cert.certificateNumber || cert.id}
+                  <td className="py-3 px-4 font-mono font-bold text-slate-700 text-xs whitespace-nowrap align-middle">
+                    <span className="px-2 py-0.5 bg-slate-100 border border-slate-200 rounded-md inline-block whitespace-nowrap">
+                      {cert.certificateNumber || cert.id}
+                    </span>
                   </td>
-                  <td className="py-3 px-4 text-slate-500 font-medium">
-                    {cert.issueDate}
+                  <td className="py-3 px-4 text-slate-500 font-medium whitespace-nowrap align-middle">
+                    {cert.issueDate || '—'}
                   </td>
                   <td className="py-3 px-4 text-right">
                     <div className="flex items-center justify-end gap-1.5">

@@ -50,7 +50,7 @@ export default function CertificateManager({
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <div className="flex items-center justify-between min-h-[4.25rem] py-2 gap-3 flex-wrap md:flex-nowrap">
             
-            {/* Left: Back button & Title */}
+            {/* Left: Back button */}
             <div className="flex items-center gap-3">
               {onBack && (
                 <button
@@ -63,23 +63,6 @@ export default function CertificateManager({
                   <span>Dashboard</span>
                 </button>
               )}
-              
-              <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-gradient-to-br from-orange-500 to-amber-600 flex items-center justify-center text-white font-black text-sm sm:text-base shadow-sm shrink-0">
-                AF
-              </div>
-              <div className="leading-tight">
-                <div className="flex items-center gap-1.5 sm:gap-2">
-                  <span className="font-extrabold text-slate-900 text-xs sm:text-base tracking-tight whitespace-nowrap">
-                    ALPHA FLY & FOCLEN
-                  </span>
-                  <span className="bg-orange-100 text-orange-800 text-[9px] sm:text-[10px] font-bold px-1.5 py-0.5 rounded border border-orange-200 uppercase shrink-0">
-                    Cert Suite
-                  </span>
-                </div>
-                <p className="text-[10px] sm:text-[11px] text-slate-500 font-medium truncate max-w-[180px] sm:max-w-none">
-                  Certificates & ID Cards Management
-                </p>
-              </div>
             </div>
 
             {/* Center: Module Switcher (Certificates vs ID Cards vs Foclen) */}

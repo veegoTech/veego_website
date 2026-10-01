@@ -1380,13 +1380,27 @@ export default function Dashboard({ onSelectCourse, enrolledCourse, setEnrolledC
                   style={{
                     display: 'flex', alignItems: 'center', gap: '10px', width: '100%', border: 'none', padding: '0.8rem 1rem',
                     fontSize: '0.92rem', fontWeight: 700, borderRadius: '12px', cursor: 'pointer', textAlign: 'left',
-                    background: (activeTab === 'certificates' || activeTab === 'af_certificates' || activeTab === 'idcards' || activeTab === 'foclen') ? 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)' : 'transparent',
-                    color: (activeTab === 'certificates' || activeTab === 'af_certificates' || activeTab === 'idcards' || activeTab === 'foclen') ? '#ffffff' : 'var(--text-secondary)',
-                    boxShadow: (activeTab === 'certificates' || activeTab === 'af_certificates' || activeTab === 'idcards' || activeTab === 'foclen') ? '0 4px 12px rgba(245,158,11,0.35)' : 'none',
+                    background: activeTab === 'certificates' ? 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)' : 'transparent',
+                    color: activeTab === 'certificates' ? '#ffffff' : 'var(--text-secondary)',
+                    boxShadow: activeTab === 'certificates' ? '0 4px 12px rgba(245,158,11,0.35)' : 'none',
                     transition: 'var(--transition)'
                   }}
                 >
-                  <Award size={18} /> Certificates &amp; ID Cards
+                  <Upload size={18} /> Certificate Upload
+                </button>
+
+                <button
+                  onClick={() => { setActiveTab('af_certificates'); fetchStudents(); if (isMobile) setIsMobileMenuOpen(false); }}
+                  style={{
+                    display: 'flex', alignItems: 'center', gap: '10px', width: '100%', border: 'none', padding: '0.8rem 1rem',
+                    fontSize: '0.92rem', fontWeight: 700, borderRadius: '12px', cursor: 'pointer', textAlign: 'left',
+                    background: (activeTab === 'prepare_certs' || activeTab === 'af_certificates' || activeTab === 'idcards' || activeTab === 'foclen') ? 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)' : 'transparent',
+                    color: (activeTab === 'prepare_certs' || activeTab === 'af_certificates' || activeTab === 'idcards' || activeTab === 'foclen') ? '#ffffff' : 'var(--text-secondary)',
+                    boxShadow: (activeTab === 'prepare_certs' || activeTab === 'af_certificates' || activeTab === 'idcards' || activeTab === 'foclen') ? '0 4px 12px rgba(245,158,11,0.35)' : 'none',
+                    transition: 'var(--transition)'
+                  }}
+                >
+                  <Award size={18} /> Prepare Certificate / ID Card
                 </button>
 
                 <button
@@ -1459,7 +1473,7 @@ export default function Dashboard({ onSelectCourse, enrolledCourse, setEnrolledC
       <main style={{ flex: 1, padding: activeTab === 'invoices' ? 0 : (isMobile ? '1.25rem 1rem' : '3rem 4rem'), minHeight: '100vh', overflowY: 'auto', minWidth: 0, background: activeTab === 'invoices' ? '#0f172a' : 'transparent' }}>
 
         {/* Dynamic header title based on active tab */}
-        {activeTab !== 'invoices' && (
+        {activeTab !== 'invoices' && activeTab !== 'prepare_certs' && activeTab !== 'af_certificates' && activeTab !== 'idcards' && activeTab !== 'foclen' && (
           <div style={{ display: 'flex', flexDirection: isMobile ? 'column' : 'row', justifyContent: 'space-between', alignItems: isMobile ? 'flex-start' : 'center', gap: '1rem', borderBottom: '1px solid var(--surface-border)', paddingBottom: '1.5rem', marginBottom: '2.5rem' }}>
             <div>
               <h1 style={{ fontSize: isMobile ? '1.5rem' : '2.2rem', fontWeight: 900, color: 'var(--text-primary)', margin: 0 }}>
@@ -1469,7 +1483,7 @@ export default function Dashboard({ onSelectCourse, enrolledCourse, setEnrolledC
                 {activeTab === 'database' && 'Student Credentials Directory'}
                 {activeTab === 'demos' && 'Alpha Fly Induction & Demo Classes'}
                 {activeTab === 'grading' && 'Review and Grade Assignments'}
-                {activeTab === 'certificates' && 'Certificate Management'}
+                {activeTab === 'certificates' && 'Certificate Upload'}
               </h1>
               <p style={{ fontSize: isMobile ? '0.85rem' : '0.95rem', color: 'var(--text-secondary)', margin: '0.2rem 0 0 0' }}>
                 {activeTab === 'overview' && 'Overview stats, role privileges, and quick configuration access.'}
@@ -3617,7 +3631,7 @@ export default function Dashboard({ onSelectCourse, enrolledCourse, setEnrolledC
         )}
 
         {/* 🎓 TAB 6.5: CERTIFICATES & ID CARD MANAGEMENT (STAFF & ADMIN ONLY) */}
-        {(activeTab === 'certificates' || activeTab === 'af_certificates' || activeTab === 'idcards' || activeTab === 'foclen') && (session?.role === 'admin' || session?.role === 'staff') && (
+        {(activeTab === 'prepare_certs' || activeTab === 'af_certificates' || activeTab === 'idcards' || activeTab === 'foclen') && (session?.role === 'admin' || session?.role === 'staff') && (
           <CertificateManager 
             session={session} 
             students={students} 
