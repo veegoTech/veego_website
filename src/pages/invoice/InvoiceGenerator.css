@@ -295,7 +295,7 @@
 /* Print adjustments */
 @media print {
   @page {
-    size: B5 portrait;
+    size: A4 portrait;
     margin: 0mm;
   }
   
@@ -328,7 +328,8 @@
   .af-invoice-root header.no-print,
   .af-invoice-root aside,
   .af-invoice-root .toast-notification,
-  .af-invoice-root .drawer-backdrop {
+  .af-invoice-root .drawer-backdrop,
+  .delete-row-btn {
     display: none !important;
   }
   
@@ -346,24 +347,22 @@
   }
 
   .af-invoice-root .invoice-canvas {
-    width: 176mm !important;
-    height: 250mm !important;
+    width: 190mm !important;
+    min-height: 270mm !important;
     max-height: none !important;
     box-sizing: border-box !important;
     box-shadow: none !important;
     border: none !important;
     margin: 0 auto !important;
-    padding: 3mm !important;
+    padding: 8mm 10mm !important;
     overflow: visible !important;
     display: flex !important;
     flex-direction: column !important;
     align-items: stretch !important;
-    justify-content: flex-start !important;
-    gap: 2mm !important;
+    justify-content: space-between !important;
     page-break-inside: avoid !important;
     break-inside: avoid !important;
-    transform: scale(0.85) !important;
-    transform-origin: top center !important;
+    transform: none !important;
   }
 
   .af-invoice-root .invoice-canvas * {
@@ -419,26 +418,20 @@ body.pdf-rendering {
 }
 
 body.pdf-rendering .no-print,
-body.pdf-rendering .print\:hidden {
+body.pdf-rendering .delete-row-btn {
   display: none !important;
 }
 
-body.pdf-rendering .print\:col-span-2 {
-  grid-column: span 2 / span 2 !important;
-}
-
 body.pdf-rendering .invoice-canvas {
-  width: 176mm !important;
-  height: 250mm !important;
-  max-height: none !important;
   box-sizing: border-box !important;
   box-shadow: none !important;
   border: none !important;
   margin: 0 !important;
-  padding: 3mm !important;
+  padding: 8mm 10mm !important;
   overflow: hidden !important;
-  justify-content: flex-start !important;
-  gap: 2mm !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: space-between !important;
 }
 
 body.pdf-rendering .canvas-input {

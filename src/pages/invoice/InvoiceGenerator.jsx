@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import * as XLSX from 'xlsx';
+import { toPng } from 'html-to-image';
+import { jsPDF } from 'jspdf';
 import './InvoiceGenerator.css';
 
 const DEFAULT_QR_SVG = `
@@ -306,50 +308,84 @@ export default function InvoiceGenerator({ session, students = [] }) {
   const handlePDFDownload = async () => {
     setIsDrawerOpen(false);
     saveToLedger(true);
-    document.body.classList.add('pdf-rendering');
-    
-    // Check if html2pdf is available
-    if (window.html2pdf) {
-      const element = document.getElementById('invoice-canvas');
-      const opt = {
-        margin: 0,
-        filename: `Invoice_${invoiceNo || 'Alphafly'}.pdf`,
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2, useCORS: true, letterRendering: true },
-        jsPDF: { unit: 'mm', format: 'b5', orientation: 'portrait' }
-      };
-      try {
-        await window.html2pdf().set(opt).from(element).save();
-        showToast('PDF downloaded!');
-      } catch (err) {
-        console.warn('html2pdf fallback to native print:', err);
-        window.print();
-      } finally {
-        document.body.classList.remove('pdf-rendering');
+
+    const element = document.getElementById('invoice-canvas');
+    if (!element) {
+      showToast('Invoice element not found.');
+      return;
+    }
+
+    try {
+      showToast('Generating PDF...');
+      document.body.classList.add('pdf-rendering');
+
+      // Sync all input values to HTML attributes so html-to-image captures them accurately
+      const inputs = element.querySelectorAll('input, textarea');
+      inputs.forEach(input => {
+        input.setAttribute('value', input.value);
+        if (input.type === 'checkbox') {
+          if (input.checked) {
+            input.setAttribute('checked', 'checked');
+          } else {
+            input.removeAttribute('checked');
+          }
+        }
+      });
+
+      // Ensure all web fonts (Outfit, Inter) are fully loaded
+      if (document.fonts && document.fonts.ready) {
+        await document.fonts.ready;
       }
-    } else {
-      // Load html2pdf script dynamically if not yet on page
-      const script = document.createElement('script');
-      script.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js';
-      script.onload = () => {
-        const element = document.getElementById('invoice-canvas');
-        const opt = {
-          margin: 0,
-          filename: `Invoice_${invoiceNo || 'Alphafly'}.pdf`,
-          image: { type: 'jpeg', quality: 0.98 },
-          html2canvas: { scale: 2, useCORS: true, letterRendering: true },
-          jsPDF: { unit: 'mm', format: 'b5', orientation: 'portrait' }
-        };
-        window.html2pdf().set(opt).from(element).save().then(() => {
-          document.body.classList.remove('pdf-rendering');
-          showToast('PDF downloaded!');
-        });
-      };
-      script.onerror = () => {
-        document.body.classList.remove('pdf-rendering');
-        window.print();
-      };
-      document.head.appendChild(script);
+
+      // Small delay for DOM layout to settle
+      await new Promise(resolve => setTimeout(resolve, 80));
+
+      const imgData = await toPng(element, {
+        pixelRatio: 3,
+        quality: 1.0,
+        backgroundColor: '#ffffff',
+        cacheBust: true,
+        filter: (node) => {
+          if (node.classList && (
+            node.classList.contains('no-print') || 
+            node.classList.contains('delete-row-btn')
+          )) {
+            return false;
+          }
+          return true;
+        }
+      });
+
+      // Create standard A4 portrait PDF (210mm x 297mm)
+      const pdf = new jsPDF({
+        orientation: 'portrait',
+        unit: 'mm',
+        format: 'a4',
+        compress: true
+      });
+
+      const pdfWidth = 210;
+      const pdfHeight = 297;
+      const margin = 8;
+      const contentWidth = pdfWidth - (margin * 2);
+      const contentHeight = (element.offsetHeight / element.offsetWidth) * contentWidth;
+
+      // Center vertically if height fits within the single A4 page
+      const yOffset = contentHeight < (pdfHeight - margin * 2) 
+        ? margin + ((pdfHeight - (margin * 2) - contentHeight) / 2) 
+        : margin;
+
+      pdf.addImage(imgData, 'PNG', margin, yOffset, contentWidth, Math.min(contentHeight, pdfHeight - margin * 2), undefined, 'FAST');
+
+      const sanitizedInvNo = (invoiceNo || 'Alphafly').replace(/[^a-zA-Z0-9_-]/g, '_');
+      pdf.save(`Invoice_${sanitizedInvNo}.pdf`);
+      showToast('PDF downloaded successfully!');
+    } catch (err) {
+      console.error('PDF export error:', err);
+      showToast('PDF export fallback to print dialog...');
+      window.print();
+    } finally {
+      document.body.classList.remove('pdf-rendering');
     }
   };
 
@@ -1425,8 +1461,8 @@ export default function InvoiceGenerator({ session, students = [] }) {
             {/* Terms & Scan-to-pay QR Panel Grid */}
             <section className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-1.5 items-stretch">
               
-              {/* Column 1: Terms & Conditions Card (Expands on Print) */}
-              <div className="border border-slate-200 rounded-custom p-1.5 bg-white shadow-sm flex flex-col justify-between print:col-span-2">
+              {/* Column 1: Terms & Conditions Card */}
+              <div className="border border-slate-200 rounded-custom p-2 bg-white shadow-sm flex flex-col justify-between">
                 <div>
                   <h3 className="text-[8px] font-bold tracking-wider text-primary uppercase pb-0.5 border-b border-slate-100 mb-0.5 flex items-center gap-1">
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -1449,14 +1485,14 @@ export default function InvoiceGenerator({ session, students = [] }) {
                     </li>
                     <li className="flex items-start gap-1">
                       <span className="text-accent text-xs leading-none mt-0.5">•</span>
-                      <span>Late fee may apply.</span>
+                      <span>Late fee may apply on delayed payments.</span>
                     </li>
                   </ul>
                 </div>
               </div>
 
-              {/* Column 2: SCAN & PAY UPI Box Card (Hidden on Print) */}
-              <div className="border border-slate-200 rounded-custom p-1.5 bg-white shadow-sm flex flex-col md:flex-row gap-2 items-center justify-between print:hidden">
+              {/* Column 2: SCAN & PAY UPI Box Card */}
+              <div className="border border-slate-200 rounded-custom p-2 bg-white shadow-sm flex flex-col md:flex-row gap-2 items-center justify-between">
                 {/* Left side of card: Title & Inputs */}
                 <div className="flex-1 flex flex-col justify-between w-full h-full gap-1.5">
                   <div>
