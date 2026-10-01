@@ -597,11 +597,12 @@ export const GoogleSheetSyncModal: React.FC<GoogleSheetSyncModalProps> = ({
         </div>
 
         {/* Modal Footer */}
-        <div className="px-4 sm:px-6 py-3.5 sm:py-4 bg-slate-50 border-t border-slate-200 flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-between gap-2.5">
+        <div className="px-4 sm:px-6 py-3.5 sm:py-4 bg-slate-50 border-t border-slate-200 flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-between gap-3">
           <button
             type="button"
             onClick={onClose}
-            className="px-4 py-2 text-xs font-bold text-slate-600 hover:text-slate-900 bg-white border border-slate-200 rounded-xl hover:bg-slate-100 transition-colors text-center"
+            className="px-5 py-2.5 text-xs font-bold text-slate-700 hover:text-slate-900 bg-white border border-slate-300 rounded-xl hover:bg-slate-100 transition-colors text-center cursor-pointer shadow-xs"
+            style={{ color: '#334155', backgroundColor: '#ffffff', borderColor: '#cbd5e1' }}
           >
             Cancel
           </button>
@@ -610,10 +611,33 @@ export const GoogleSheetSyncModal: React.FC<GoogleSheetSyncModalProps> = ({
             type="button"
             onClick={handleExecuteImport}
             disabled={!sheetData || selectedIndices.size === 0 || importSuccess}
-            className="inline-flex items-center justify-center gap-2 px-6 py-2.5 bg-gradient-to-r from-orange-600 to-amber-600 hover:from-orange-500 hover:to-amber-500 active:from-orange-700 active:to-amber-700 text-white rounded-xl text-xs font-bold shadow-md transition-all active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed"
+            style={
+              importSuccess
+                ? { backgroundColor: '#10b981', color: '#ffffff', boxShadow: '0 4px 14px 0 rgba(16, 185, 129, 0.4)' }
+                : !sheetData || selectedIndices.size === 0
+                ? { backgroundColor: '#f1f5f9', color: '#94a3b8', borderColor: '#cbd5e1' }
+                : { backgroundColor: '#ea580c', color: '#ffffff', boxShadow: '0 4px 16px 0 rgba(234, 88, 12, 0.45)' }
+            }
+            className={`inline-flex items-center justify-center gap-2.5 px-6 py-2.5 rounded-xl text-xs sm:text-sm font-extrabold transition-all duration-200 cursor-pointer ${
+              importSuccess
+                ? 'bg-emerald-600 text-white shadow-lg'
+                : !sheetData || selectedIndices.size === 0
+                ? 'bg-slate-100 text-slate-400 border border-slate-200 cursor-not-allowed'
+                : 'bg-gradient-to-r from-orange-600 via-orange-500 to-amber-600 hover:from-orange-500 hover:to-amber-500 active:from-orange-700 text-white shadow-lg active:scale-95'
+            }`}
           >
-            <CheckCircle2 className="w-4 h-4" />
-            <span>Import Selected ({selectedIndices.size}) Records</span>
+            <CheckCircle2 className={`w-4 h-4 shrink-0 ${!sheetData || selectedIndices.size === 0 ? 'text-slate-400' : 'text-white'}`} />
+            <span>
+              {importSuccess ? 'Imported Successfully!' : `Import Selected (${selectedIndices.size}) Records`}
+            </span>
+            {!importSuccess && selectedIndices.size > 0 && (
+              <span
+                style={{ backgroundColor: 'rgba(255, 255, 255, 0.25)', color: '#ffffff' }}
+                className="px-2 py-0.5 rounded-full text-xs font-black"
+              >
+                {selectedIndices.size}
+              </span>
+            )}
           </button>
         </div>
 
