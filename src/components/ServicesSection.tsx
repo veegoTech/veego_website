@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import {
   Zap,
   FolderGit2,
@@ -8,7 +9,13 @@ import {
   Sparkles,
   Bot,
   ShieldCheck,
-  ChevronRight
+  ChevronRight,
+  Cpu,
+  Layers,
+  Code2,
+  Workflow,
+  Clock,
+  Sparkle
 } from 'lucide-react';
 
 interface ServicesSectionProps {
@@ -20,19 +27,25 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
   onNavigate,
   onRequestService
 }) => {
+  const [activeTab, setActiveTab] = useState<'all' | 'automation' | 'projects' | 'web'>('all');
+  const [expandedCard, setExpandedCard] = useState<string | null>(null);
+
   const services = [
     {
       id: 'business-automation',
+      category: 'automation',
       badge: 'Operational Efficiency',
-      badgeColor: 'bg-blue-50 text-blue-700 border-blue-200',
+      badgeColor: 'bg-blue-50 text-blue-700 border-blue-200/80',
       accentColor: 'blue',
+      glowColor: 'rgba(37, 99, 235, 0.15)',
+      gradient: 'from-blue-600 via-indigo-600 to-blue-700',
       icon: Bot,
       title: 'Business Automation & Workflows',
-      tagline: 'Eliminate manual bottlenecks & save daily work hours',
+      tagline: 'Eliminate manual friction & reclaim lost operational hours',
       description:
-        'We design and deploy custom automated workflows that connect your daily spreadsheets, WhatsApp alerts, staff reporting, and billing into seamless zero-touch systems.',
+        'We visit your workplace, map your daily bottlenecks, and build custom zero-touch automated workflows that connect your spreadsheets, WhatsApp notifications, staff attendance, and billing automatically.',
       priceTag: 'Custom Workflow Audit',
-      priceSubtext: 'Tailored for small & medium businesses',
+      priceSubtext: 'Built for growing small & medium businesses',
       features: [
         'Staff shift tracking & automated attendance reports',
         'Auto invoicing, billing & payment reminder pipelines',
@@ -40,9 +53,10 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
         'Google Sheets & database two-way synchronization',
         'Custom CRM & lead management automation'
       ],
+      impactStat: '3.5 Hours Saved Daily',
       primaryCta: 'Explore Automation Solutions',
       primaryAction: () => onNavigate('/solutions'),
-      secondaryCta: 'Request Custom Automation',
+      secondaryCta: 'Request Workflow Audit',
       secondaryAction: () => {
         if (onRequestService) {
           onRequestService('Business Automation');
@@ -53,16 +67,19 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
     },
     {
       id: 'college-projects',
+      category: 'projects',
       badge: 'Software Architecture',
-      badgeColor: 'bg-emerald-50 text-emerald-700 border-emerald-200',
+      badgeColor: 'bg-emerald-50 text-emerald-700 border-emerald-200/80',
       accentColor: 'emerald',
+      glowColor: 'rgba(16, 185, 129, 0.15)',
+      gradient: 'from-emerald-600 via-teal-600 to-emerald-700',
       icon: FolderGit2,
       title: 'Production & College Projects',
-      tagline: 'End-to-end engineered software with full documentation & live demo',
+      tagline: 'End-to-end engineered software with full documentation & live hosting',
       description:
-        'Complete engineering systems built with real-world architectures. Includes full documented source code, system design diagrams, cloud deployment links, and walkthrough support.',
+        'Complete engineering systems built with production-grade architecture. Includes fully documented clean source code, system design diagrams, live cloud deployment links, and 1-on-1 code walkthroughs.',
       priceTag: 'Starting from ₹2,000',
-      priceSubtext: 'Full source code, report & live hosting',
+      priceSubtext: 'Full source code, project report & live hosting',
       popular: true,
       features: [
         'Complete frontend, backend & database source code',
@@ -71,6 +88,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
         'Project report, PPT & technical synopsis materials',
         '1-on-1 code walkthrough & architecture explanation'
       ],
+      impactStat: '100% Production Ready',
       primaryCta: 'Browse Built Projects',
       primaryAction: () => onNavigate('/projects'),
       secondaryCta: 'Discuss Custom Project',
@@ -84,14 +102,17 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
     },
     {
       id: 'web-services',
+      category: 'web',
       badge: 'Full-Stack Engineering',
-      badgeColor: 'bg-purple-50 text-purple-700 border-purple-200',
+      badgeColor: 'bg-purple-50 text-purple-700 border-purple-200/80',
       accentColor: 'purple',
+      glowColor: 'rgba(147, 51, 234, 0.15)',
+      gradient: 'from-purple-600 via-indigo-600 to-purple-700',
       icon: Globe,
       title: 'Web Applications & Portals',
-      tagline: 'Modern business websites & complex custom web apps',
+      tagline: 'High-converting business platforms & custom SaaS web applications',
       description:
-        'From high-converting business platforms to robust SaaS web applications, client portals, and administrative dashboards engineered for reliability, security, and scale.',
+        'From high-converting modern business websites to complex multi-tenant SaaS web applications, customer portals, and administrative dashboards engineered for high performance, security, and scale.',
       priceTag: 'Tailored Architecture',
       priceSubtext: 'Fast delivery & responsive UI/UX',
       features: [
@@ -101,6 +122,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
         'Database Design, REST APIs & Cloud Infrastructure',
         'SEO Optimization, Blazing Performance & Security'
       ],
+      impactStat: '99.9% Uptime Guarantee',
       primaryCta: 'Discuss Web Project',
       primaryAction: () => {
         if (onRequestService) {
@@ -114,174 +136,232 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
     }
   ];
 
+  const filteredServices = activeTab === 'all' ? services : services.filter(s => s.category === activeTab);
+
   return (
-    <section id="services" className="py-16 sm:py-24 bg-white border-b border-slate-200 text-slate-900 scroll-mt-16 relative overflow-hidden">
-      {/* Background Decorative Accents */}
-      <div className="absolute top-1/4 right-0 w-96 h-96 bg-blue-50/60 rounded-full blur-3xl pointer-events-none -z-0" />
-      <div className="absolute bottom-10 left-0 w-96 h-96 bg-indigo-50/50 rounded-full blur-3xl pointer-events-none -z-0" />
+    <section id="services" className="py-20 sm:py-28 bg-gradient-to-b from-white via-slate-50/50 to-white border-b border-slate-200 text-slate-900 scroll-mt-16 relative overflow-hidden">
+      {/* 🔮 PARALLAX FLOATING BACKGROUND OBJECTS & GLOW ORBS */}
+      <motion.div
+        animate={{
+          y: [0, -25, 0],
+          rotate: [0, 5, 0],
+          scale: [1, 1.05, 1]
+        }}
+        transition={{ duration: 12, repeat: Infinity, ease: 'easeInOut' }}
+        className="absolute top-12 right-10 w-96 h-96 bg-blue-400/10 rounded-full blur-3xl pointer-events-none -z-0"
+      />
+      <motion.div
+        animate={{
+          y: [0, 30, 0],
+          rotate: [0, -8, 0],
+          scale: [1, 1.08, 1]
+        }}
+        transition={{ duration: 15, repeat: Infinity, ease: 'easeInOut' }}
+        className="absolute bottom-16 left-10 w-[450px] h-[450px] bg-indigo-400/10 rounded-full blur-3xl pointer-events-none -z-0"
+      />
+
+      {/* Floating Animated Technical Icons in Background */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none -z-0 opacity-25">
+        <motion.div
+          animate={{ y: [0, -40, 0], opacity: [0.3, 0.7, 0.3] }}
+          transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
+          className="absolute top-24 left-[8%] text-blue-500"
+        >
+          <Cpu className="w-12 h-12" />
+        </motion.div>
+
+        <motion.div
+          animate={{ y: [0, 35, 0], opacity: [0.2, 0.6, 0.2] }}
+          transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
+          className="absolute top-48 right-[10%] text-indigo-500"
+        >
+          <Workflow className="w-14 h-14" />
+        </motion.div>
+
+        <motion.div
+          animate={{ y: [0, -30, 0], opacity: [0.3, 0.6, 0.3] }}
+          transition={{ duration: 9, repeat: Infinity, ease: 'easeInOut', delay: 2 }}
+          className="absolute bottom-32 left-[15%] text-emerald-500"
+        >
+          <Code2 className="w-10 h-10" />
+        </motion.div>
+      </div>
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 z-10">
-        {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-14">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-50 border border-blue-200 text-xs font-bold text-blue-700 mb-4 shadow-2xs">
-            <Sparkles className="w-3.5 h-3.5 text-blue-600" />
-            <span>OUR CORE SERVICES · WHAT WE DELIVER</span>
+        {/* Section Header with Human Touch */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="text-center max-w-3xl mx-auto mb-12"
+        >
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-50 border border-blue-200/80 text-xs font-bold text-blue-700 mb-4 shadow-2xs">
+            <Sparkle className="w-3.5 h-3.5 text-blue-600 animate-spin-slow" />
+            <span>REAL ENGINEERING · HAND-CRAFTED SYSTEMS</span>
           </div>
-          <h2
-            className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-slate-900"
-            style={{ textWrap: 'balance' }}
-          >
-            Engineering Solutions for Every Goal
+
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-slate-900 leading-tight">
+            Engineering Solutions Built by Humans, for Real Operations
           </h2>
+
           <p className="mt-4 text-base sm:text-lg text-slate-600 leading-relaxed font-normal">
-            Whether you need to automate company workflows, build an outstanding production project, or develop a custom web application tailored to your operational needs.
+            No cookie-cutter templates or aggressive sales pitches. We analyze your actual daily workflows, write clean production code, and deliver systems that solve your exact friction points.
           </p>
-        </div>
 
-        {/* 3 Services Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {services.map((svc) => {
-            const IconComponent = svc.icon;
-            const isEmerald = svc.accentColor === 'emerald';
-            const isPurple = svc.accentColor === 'purple';
-
-            let borderClasses = 'border-slate-200 hover:border-blue-300';
-            let iconBgClasses = 'bg-blue-600 text-white';
-            let priceBgClasses = 'bg-blue-50 text-blue-800 border-blue-200';
-            let btnClasses = 'bg-blue-600 hover:bg-blue-700 text-white';
-            let checkIconColor = 'text-blue-600';
-
-            if (isEmerald) {
-              borderClasses = 'border-emerald-200 hover:border-emerald-400';
-              iconBgClasses = 'bg-emerald-600 text-white';
-              priceBgClasses = 'bg-emerald-50 text-emerald-900 border-emerald-200';
-              btnClasses = 'bg-emerald-600 hover:bg-emerald-700 text-white';
-              checkIconColor = 'text-emerald-600';
-            } else if (isPurple) {
-              borderClasses = 'border-purple-200 hover:border-purple-400';
-              iconBgClasses = 'bg-purple-600 text-white';
-              priceBgClasses = 'bg-purple-50 text-purple-900 border-purple-200';
-              btnClasses = 'bg-purple-600 hover:bg-purple-700 text-white';
-              checkIconColor = 'text-purple-600';
-            }
-
-            return (
-              <div
-                key={svc.id}
-                className={`rounded-3xl p-7 sm:p-8 bg-white border-2 ${borderClasses} shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between relative group`}
+          {/* Interactive Filter Pills */}
+          <div className="flex flex-wrap items-center justify-center gap-2 mt-8">
+            {[
+              { id: 'all', label: 'All Solutions' },
+              { id: 'automation', label: '⚡ Business Automation' },
+              { id: 'projects', label: '🎓 Software Projects' },
+              { id: 'web', label: '🌐 Web Applications' }
+            ].map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id as any)}
+                className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer ${
+                  activeTab === tab.id
+                    ? 'bg-slate-900 text-white shadow-md scale-105'
+                    : 'bg-white text-slate-600 border border-slate-200 hover:border-slate-300 hover:bg-slate-50'
+                }`}
               >
-                {/* Popular Pill if applicable */}
-                {svc.popular && (
-                  <div className="absolute -top-3.5 right-6 bg-emerald-600 text-white text-[11px] font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow-sm flex items-center gap-1">
-                    <Sparkles className="w-3 h-3" />
-                    <span>Popular</span>
-                  </div>
-                )}
+                {tab.label}
+              </button>
+            ))}
+          </div>
+        </motion.div>
 
-                <div>
-                  {/* Top Row: Icon + Badge */}
-                  <div className="flex items-start justify-between gap-4 mb-6">
-                    <div className="flex items-center gap-3.5">
-                      <div className={`w-12 h-12 rounded-2xl ${iconBgClasses} flex items-center justify-center shadow-sm shrink-0 transition-transform group-hover:scale-105 duration-200`}>
-                        <IconComponent className="w-6 h-6" />
-                      </div>
-                      <div>
-                        <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${svc.badgeColor} uppercase tracking-wider inline-block mb-1`}>
-                          {svc.badge}
-                        </span>
-                        <h3 className="text-xl font-black text-slate-900 tracking-tight">
-                          {svc.title}
-                        </h3>
-                      </div>
-                    </div>
-                  </div>
+        {/* 3 Services Cards with Motion & Parallax Effects */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch">
+          <AnimatePresence mode="wait">
+            {filteredServices.map((svc, idx) => {
+              const IconComponent = svc.icon;
+              const isExpanded = expandedCard === svc.id;
 
-                  {/* Price Banner */}
-                  <div className={`p-3 rounded-2xl ${priceBgClasses} border flex items-center justify-between mb-5`}>
-                    <div>
-                      <div className="text-sm font-black tracking-tight">
-                        {svc.priceTag}
-                      </div>
-                      <div className="text-[11px] opacity-80 font-medium">
-                        {svc.priceSubtext}
-                      </div>
-                    </div>
-                    <div className="p-1.5 rounded-xl bg-white/80 shadow-2xs">
-                      <ShieldCheck className="w-4 h-4 opacity-90" />
-                    </div>
-                  </div>
+              return (
+                <motion.div
+                  key={svc.id}
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: idx * 0.15 }}
+                  whileHover={{ y: -8 }}
+                  className="group relative rounded-3xl p-7 sm:p-8 bg-white border-2 border-slate-200/90 hover:border-blue-400/80 shadow-md hover:shadow-2xl transition-all duration-300 flex flex-col justify-between overflow-hidden"
+                >
+                  {/* Subtle Card Glow Effect */}
+                  <div
+                    className="absolute -top-24 -right-24 w-48 h-48 rounded-full blur-2xl pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                    style={{ background: svc.glowColor }}
+                  />
 
-                  {/* Tagline & Description */}
-                  <p className="text-xs font-bold text-slate-800 mb-2">
-                    {svc.tagline}
-                  </p>
-                  <p className="text-xs text-slate-600 leading-relaxed mb-6 font-normal">
-                    {svc.description}
-                  </p>
-
-                  {/* Feature Checklist */}
-                  <div className="pt-4 border-t border-slate-100 mb-8">
-                    <div className="text-[11px] uppercase tracking-wider text-slate-500 font-bold mb-3">
-                      What&apos;s Included:
+                  {/* Popular Badge */}
+                  {svc.popular && (
+                    <div className="absolute top-4 right-5 bg-gradient-to-r from-emerald-600 to-teal-600 text-white text-[11px] font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow-sm flex items-center gap-1.5 animate-pulse">
+                      <Sparkles className="w-3 h-3" />
+                      <span>Popular</span>
                     </div>
-                    <ul className="space-y-2 text-xs text-slate-700">
-                      {svc.features.map((item) => (
-                        <li key={item} className="flex items-start gap-2">
-                          <CheckCircle2 className={`w-3.5 h-3.5 ${checkIconColor} shrink-0 mt-0.5`} />
-                          <span>{item}</span>
-                        </li>
+                  )}
+
+                  <div>
+                    {/* Header Row */}
+                    <div className="flex items-start justify-between gap-4 mb-6">
+                      <div className="w-13 h-13 rounded-2xl bg-gradient-to-br from-slate-900 to-slate-800 text-white flex items-center justify-center shadow-md shrink-0 transition-transform group-hover:scale-110 duration-300">
+                        <IconComponent className="w-6 h-6 text-blue-400" />
+                      </div>
+                      <span className={`text-[10px] font-extrabold px-2.5 py-1 rounded-full border ${svc.badgeColor} uppercase tracking-wider`}>
+                        {svc.badge}
+                      </span>
+                    </div>
+
+                    <h3 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight mb-2 group-hover:text-blue-600 transition-colors">
+                      {svc.title}
+                    </h3>
+
+                    {/* Impact Stat Badge */}
+                    <div className="inline-flex items-center gap-1.5 text-xs font-bold text-slate-700 bg-slate-100/80 px-2.5 py-1 rounded-md mb-4 border border-slate-200/60">
+                      <Clock className="w-3.5 h-3.5 text-blue-600" />
+                      <span>{svc.impactStat}</span>
+                    </div>
+
+                    <p className="text-xs sm:text-sm text-slate-600 leading-relaxed mb-6 font-normal">
+                      {svc.description}
+                    </p>
+
+                    {/* Features List */}
+                    <div className="pt-4 border-t border-slate-100 mb-6 space-y-2.5">
+                      <div className="text-[11px] uppercase tracking-wider text-slate-400 font-bold mb-3 flex items-center justify-between">
+                        <span>Core Deliverables</span>
+                        <span className="text-blue-600 font-semibold">{svc.priceTag}</span>
+                      </div>
+                      {svc.features.map((feat) => (
+                        <div key={feat} className="flex items-start gap-2.5 text-xs text-slate-700 font-medium">
+                          <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
+                          <span>{feat}</span>
+                        </div>
                       ))}
-                    </ul>
+                    </div>
                   </div>
-                </div>
 
-                {/* Bottom CTA Action Buttons */}
-                <div className="pt-4 border-t border-slate-100 space-y-2">
-                  <button
-                    onClick={svc.primaryAction}
-                    className={`w-full py-3 px-4 rounded-xl ${btnClasses} font-semibold text-xs transition-all shadow-xs flex items-center justify-between group/btn`}
-                  >
-                    <span>{svc.primaryCta}</span>
-                    <ArrowRight className="w-4 h-4 transition-transform group-hover/btn:translate-x-1" />
-                  </button>
+                  {/* Actions */}
+                  <div className="pt-5 border-t border-slate-100 space-y-2">
+                    <button
+                      onClick={svc.primaryAction}
+                      className="w-full py-3 px-4 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs sm:text-sm transition-all shadow-md hover:shadow-lg flex items-center justify-between group/btn cursor-pointer"
+                    >
+                      <span>{svc.primaryCta}</span>
+                      <ArrowRight className="w-4 h-4 transition-transform group-hover/btn:translate-x-1" />
+                    </button>
 
-                  <button
-                    onClick={svc.secondaryAction}
-                    className="w-full py-2 px-3 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-700 font-semibold text-xs transition-colors flex items-center justify-center gap-1.5"
-                  >
-                    <span>{svc.secondaryCta}</span>
-                    <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
-                  </button>
-                </div>
-              </div>
-            );
-          })}
+                    <button
+                      onClick={svc.secondaryAction}
+                      className="w-full py-2.5 px-3 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-700 font-bold text-xs transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
+                    >
+                      <span>{svc.secondaryCta}</span>
+                      <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
+                    </button>
+                  </div>
+                </motion.div>
+              );
+            })}
+          </AnimatePresence>
         </div>
 
-        {/* Bottom Guarantee Strip */}
-        <div className="mt-14 max-w-5xl mx-auto rounded-2xl bg-slate-50 border border-slate-200 p-6 sm:p-8 flex flex-col md:flex-row items-center justify-between gap-6">
-          <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-2xl bg-blue-100 text-blue-700 flex items-center justify-center shrink-0">
-              <Zap className="w-6 h-6" />
+        {/* 🤝 Human Guarantee Card */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, delay: 0.3 }}
+          className="mt-16 rounded-3xl bg-slate-900 text-white p-8 sm:p-10 shadow-2xl relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-8 border border-slate-800"
+        >
+          <div className="absolute top-0 right-0 w-80 h-80 bg-blue-500/10 rounded-full blur-3xl pointer-events-none" />
+
+          <div className="flex items-start gap-5">
+            <div className="w-14 h-14 rounded-2xl bg-blue-600 text-white flex items-center justify-center shrink-0 shadow-lg">
+              <ShieldCheck className="w-7 h-7" />
             </div>
             <div>
-              <h4 className="text-sm sm:text-base font-bold text-slate-900">
-                Need a tailored combination or custom consultation?
-              </h4>
-              <p className="text-xs text-slate-600 mt-0.5 max-w-xl">
-                We assess your exact technical or business requirements and provide a fixed-scope roadmap with rapid turnaround.
+              <div className="inline-block text-[11px] font-bold text-blue-400 uppercase tracking-wider mb-1">
+                Direct Human Commitment
+              </div>
+              <h3 className="text-xl sm:text-2xl font-black text-white">
+                No Sales Representatives. You Speak Directly With Building Engineers.
+              </h3>
+              <p className="text-xs sm:text-sm text-slate-300 mt-1 max-w-2xl leading-relaxed">
+                We believe in transparent engineering. From initial problem consultation to post-deployment support, you work directly with the developers writing your system code.
               </p>
             </div>
           </div>
 
           <button
             onClick={() => onNavigate('/contact')}
-            className="w-full md:w-auto px-6 py-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-semibold text-xs sm:text-sm transition-colors whitespace-nowrap shadow-xs flex items-center justify-center gap-2"
+            className="w-full md:w-auto px-7 py-3.5 rounded-xl bg-white text-slate-900 hover:bg-blue-50 font-bold text-sm transition-all shadow-lg whitespace-nowrap flex items-center justify-center gap-2 cursor-pointer shrink-0"
           >
-            <span>Talk to Engineers</span>
-            <ArrowRight className="w-4 h-4" />
+            <span>Consult With Engineers</span>
+            <ArrowRight className="w-4 h-4 text-slate-900" />
           </button>
-        </div>
+        </motion.div>
       </div>
     </section>
   );
