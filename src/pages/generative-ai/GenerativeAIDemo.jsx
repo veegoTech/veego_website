@@ -105,7 +105,7 @@ export default function GenerativeAIDemo({ activeTab, onNavigate, openAITutor })
               <motion.div variants={itemVariants} style={{ background: 'linear-gradient(135deg, #0284c7 0%, #0369a1 100%)', borderRadius: '24px', padding: '3rem', color: 'white', marginBottom: '2.5rem', position: 'relative', overflow: 'hidden', boxShadow: '0 20px 40px rgba(2,132,199,0.15)' }}>
                 <div style={{ position: 'relative', zIndex: 2 }}>
                   <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: 'rgba(255, 255, 255, 0.18)', border: '1px solid rgba(255,255,255,0.3)', padding: '0.5rem 1.2rem', borderRadius: '30px', fontSize: '0.9rem', fontWeight: 700, color: '#e0f2fe', marginBottom: '1.5rem' }}>
-                    <Sparkles size={16} color="#38bdf8" /> AlphaFly AI Career Accelerator
+                    <Sparkles size={16} color="#38bdf8" /> VeeGo AI Career Accelerator
                   </div>
                   <h3 style={{ fontSize: '2.3rem', margin: '0 0 1rem 0', color: 'white', lineHeight: 1.3, fontWeight: 800 }}>
                     The Biggest Job Disruption Since the Internet

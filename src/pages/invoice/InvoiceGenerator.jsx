@@ -83,7 +83,7 @@ export default function InvoiceGenerator({ session, students = [] }) {
   });
 
   // QR / UPI
-  const [upiId, setUpiId] = useState('alphafly@okaxis');
+  const [upiId, setUpiId] = useState('veegotech@okaxis');
   const [uploadedQR, setUploadedQR] = useState(null);
 
   // Ledger & Storage
@@ -399,7 +399,7 @@ export default function InvoiceGenerator({ session, students = [] }) {
 
       pdf.addImage(imgData, 'PNG', margin, yOffset, contentWidth, Math.min(contentHeight, pdfHeight - margin * 2), undefined, 'FAST');
 
-      const sanitizedInvNo = (invoiceNo || 'Alphafly').replace(/[^a-zA-Z0-9_-]/g, '_');
+      const sanitizedInvNo = (invoiceNo || 'Veego').replace(/[^a-zA-Z0-9_-]/g, '_');
       pdf.save(`Invoice_${sanitizedInvNo}.pdf`);
       showToast('PDF downloaded successfully!');
     } catch (err) {
@@ -472,7 +472,7 @@ export default function InvoiceGenerator({ session, students = [] }) {
         }
         showToast('Invoice loaded successfully!');
       } catch (err) {
-        alert('Error parsing JSON file. Please ensure it is a valid Alphafly invoice JSON.');
+        alert('Error parsing JSON file. Please ensure it is a valid VeeGo invoice JSON.');
       }
       e.target.value = '';
     };
@@ -550,7 +550,7 @@ export default function InvoiceGenerator({ session, students = [] }) {
     XLSX.utils.book_append_sheet(wb, ws1, 'Ledger Summary');
     XLSX.utils.book_append_sheet(wb, ws2, 'All Fee Items');
 
-    const filename = `Alphafly_Invoice_Ledger_${new Date().toISOString().split('T')[0]}.xlsx`;
+    const filename = `VeeGo_Invoice_Ledger_${new Date().toISOString().split('T')[0]}.xlsx`;
     XLSX.writeFile(wb, filename);
     showToast('Ledger downloaded!');
   };
@@ -598,7 +598,7 @@ export default function InvoiceGenerator({ session, students = [] }) {
     text += `💳 Paid: ₹${d.amountPaid.toFixed(2)} | Balance: ₹${d.balanceDue.toFixed(2)}\n`;
     text += `📌 Status: ${d.status}\n`;
     if (d.activeModesStr) text += `💰 Payment: ${d.activeModesStr}\n`;
-    text += `\n🏫 Alphafly Computer Education, Theni\n📞 8015 8016 89`;
+    text += `\n🏫 VeeGo Computer Education, Theni\n📞 8015 8016 89`;
 
     return text;
   };
@@ -612,7 +612,7 @@ export default function InvoiceGenerator({ session, students = [] }) {
   const shareViaEmail = () => {
     setIsDrawerOpen(false);
     const d = collectInvoiceData();
-    const subject = `Invoice ${d.invoiceNo || 'Alphafly'} — ${d.studentName || 'Student'}`;
+    const subject = `Invoice ${d.invoiceNo || 'VeeGo'} — ${d.studentName || 'Student'}`;
     const body = generateShareText();
     window.open(`mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`, '_self');
   };
@@ -1059,13 +1059,13 @@ export default function InvoiceGenerator({ session, students = [] }) {
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 text-accent shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                   </svg>
-                  alphafly.edu@gmail.com
+                  veegotech.edu@gmail.com
                 </span>
               </div>
               
               {/* Registration and GSTIN Info */}
               <div className="text-[7.5px] text-slate-500 font-bold mt-1 tracking-wider uppercase select-none">
-                Reg No: AF/EDU/2026/9841 &nbsp;|&nbsp; GSTIN: 33AAFCA8841M1ZS &nbsp;|&nbsp; ISO 9001:2015 Certified
+                Reg No: VG/EDU/2026/9841 &nbsp;|&nbsp; GSTIN: 33AAFCA8841M1ZS &nbsp;|&nbsp; ISO 9001:2015 Certified
               </div>
             </header>
 
@@ -1585,7 +1585,7 @@ export default function InvoiceGenerator({ session, students = [] }) {
                 Thank You!
               </p>
               <p className="text-[7.5px] text-slate-500 font-medium mt-0">
-                Thank you for choosing Alphafly Computer Education.<br />
+                Thank you for choosing VeeGo Computer Education.<br />
                 We appreciate your trust and wish you success in your learning journey.
               </p>
             </footer>
@@ -1615,10 +1615,10 @@ export default function InvoiceGenerator({ session, students = [] }) {
             {/* Header */}
             <header className="text-center mb-2 border-b border-slate-200 pb-2 relative z-10">
               <h1 className="text-[22px] font-black tracking-tight text-[#0A3D91] leading-tight" style={{ fontFamily: "'Outfit', sans-serif" }}>
-                ALPHA FLY THENI
+                VEEGO TECH THENI
               </h1>
               <h3 className="text-[13px] font-bold tracking-tight text-[#0A3D91] leading-tight" style={{ fontFamily: "'Outfit', sans-serif" }}>
-                Computer Education
+                Computer Education & Tech Solutions
               </h3>
               <p className="text-[#F97316] font-extrabold tracking-widest text-[9px] uppercase mt-0.5">
                 Empowering Skills for the Future
@@ -1627,7 +1627,7 @@ export default function InvoiceGenerator({ session, students = [] }) {
               <div className="flex items-center justify-center gap-4 mt-1.5 text-[8.5px] text-slate-600 font-medium">
                 <span>📍 No. 10, K S Complex, Old Bus Stand, Subban Chetty Street, Theni, Tamil Nadu 625531</span>
                 <span>📞 8015 8016 89</span>
-                <span>✉️ alphafly.edu@gmail.com</span>
+                <span>✉️ veegotech.edu@gmail.com</span>
               </div>
               
               <div className="text-[8px] text-slate-500 font-bold mt-1 tracking-wider uppercase">
@@ -1836,7 +1836,7 @@ export default function InvoiceGenerator({ session, students = [] }) {
                   <h4 className="text-[9px] font-bold tracking-wider text-[#0A3D91] uppercase">
                     📱 SCAN & PAY (UPI)
                   </h4>
-                  <p className="text-[9px] font-bold text-slate-700">{upiId || 'alphafly@okaxis'}</p>
+                  <p className="text-[9px] font-bold text-slate-700">{upiId || 'veegotech@okaxis'}</p>
                   <p className="text-[7.5px] text-slate-400">Scan via GPay, PhonePe, Paytm</p>
                 </div>
                 <div className="w-12 h-12 border border-slate-200 rounded-lg p-1 bg-slate-50 flex items-center justify-center shrink-0">
@@ -1855,7 +1855,7 @@ export default function InvoiceGenerator({ session, students = [] }) {
                 <div className="border-b border-dashed border-slate-400 h-6"></div>
                 <div className="mt-1">
                   <p className="text-[9.5px] font-bold text-[#0A3D91] uppercase">Authorized Signature</p>
-                  <p className="text-[8px] font-medium text-slate-500">Alpha Fly Theni</p>
+                  <p className="text-[8px] font-medium text-slate-500">VeeGo Tech Theni</p>
                 </div>
               </div>
             </section>
@@ -1866,7 +1866,7 @@ export default function InvoiceGenerator({ session, students = [] }) {
                 Thank You!
               </p>
               <p className="text-[8px] text-slate-500 font-medium">
-                Thank you for choosing Alphafly Computer Education. We wish you success in your learning journey!
+                Thank you for choosing VeeGo Computer Education. We wish you success in your learning journey!
               </p>
             </footer>
 
@@ -1887,7 +1887,7 @@ export default function InvoiceGenerator({ session, students = [] }) {
                   📊
                 </div>
                 <div>
-                  <h3 className="font-extrabold text-base text-white">Alphafly Invoice Ledger</h3>
+                  <h3 className="font-extrabold text-base text-white">VeeGo Invoice Ledger</h3>
                   <p className="text-xs text-slate-400">Total {ledger.length} Invoices Recorded</p>
                 </div>
               </div>

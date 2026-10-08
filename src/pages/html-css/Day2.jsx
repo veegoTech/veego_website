@@ -92,12 +92,12 @@ export default function Day2({ activeTab, onNavigate }) {
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
   <!-- SEO Page Description (seen in Search Results) -->
-  <meta name="description" content="Learn Web Development and AI with AlphaFly Course LMS.">
+  <meta name="description" content="Learn Web Development and AI with VeeGo Course LMS.">
   
   <!-- Search Engine Keywords -->
   <meta name="keywords" content="HTML, CSS, Web Design, LMS">
   
-  <title>AlphaFly Course LMS</title>
+  <title>VeeGo Course LMS</title>
 </head>`;
 
   const iframeCode = `<!-- Embed an external website/page -->

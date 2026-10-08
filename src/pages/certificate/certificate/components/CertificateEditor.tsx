@@ -58,7 +58,7 @@ export const PRESENTATION_TEXT_OPTIONS = [
   {
     id: 'nextgen',
     label: 'Option 2: NextGen Tech Camp Junior Developer',
-    text: 'has successfully completed NextGen Tech Camp Junior Developer Course in Alpha Fly Education, Theni',
+    text: 'has successfully completed NextGen Tech Camp Junior Developer Course in VeeGo Computer Education & Tech Solutions',
     courseName: 'NextGen Tech Camp Junior Developer Course',
   },
 ];

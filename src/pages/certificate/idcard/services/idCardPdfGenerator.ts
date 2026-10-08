@@ -38,7 +38,7 @@ export const downloadIDCardPDF = async (
       pdf.addImage(frontImg, 'PNG', 0, 0, cardWidthMm, cardHeightMm, undefined, 'FAST');
       
       const safeName = (data.studentName || 'Student').replace(/[^a-zA-Z0-9]/g, '_');
-      pdf.save(`AlphaFly_ID_Front_${safeName}_${data.id}.pdf`);
+      pdf.save(`VeeGo_ID_Front_${safeName}_${data.id}.pdf`);
       return;
     }
 
@@ -63,7 +63,7 @@ export const downloadIDCardPDF = async (
       pdf.addImage(backImg, 'PNG', 0, 0, cardWidthMm, cardHeightMm, undefined, 'FAST');
       
       const safeName = (data.studentName || 'Student').replace(/[^a-zA-Z0-9]/g, '_');
-      pdf.save(`AlphaFly_ID_Back_${safeName}_${data.id}.pdf`);
+      pdf.save(`VeeGo_ID_Back_${safeName}_${data.id}.pdf`);
       return;
     }
 
@@ -102,7 +102,7 @@ export const downloadIDCardPDF = async (
 
     const safeName = (data.studentName || 'Student').replace(/[^a-zA-Z0-9]/g, '_');
     onProgress?.('Saving ID card PDF...');
-    pdf.save(`AlphaFly_ID_Card_${safeName}_${data.id}.pdf`);
+    pdf.save(`VeeGo_ID_Card_${safeName}_${data.id}.pdf`);
   } catch (err) {
     console.error('Failed to generate ID Card PDF:', err);
     throw err;

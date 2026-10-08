@@ -1,10 +1,10 @@
 import type { IDCardData } from '../types/idcard';
 
-const STORAGE_KEY = 'alphafly_id_cards_v1';
+const STORAGE_KEY = 'veego_id_cards_v1';
 
 export const INITIAL_ID_CARDS: IDCardData[] = [
   {
-    id: 'AF-ID-2026-001',
+    id: 'VG-ID-2026-001',
     studentName: 'AARTHI R',
     courseName: 'TALLY',
     studentContact: '7397165195',
@@ -13,12 +13,12 @@ export const INITIAL_ID_CARDS: IDCardData[] = [
     bloodGroup: 'B+ve',
     address: '6380245526',
     photoUrl: '/id_card_assets/sample_student_photo.jpg',
-    qrCodeUrl: 'https://www.alphafly.in/verify/id/AF-ID-2026-001',
+    qrCodeUrl: 'https://veego-tech.vercel.app/verify/id/VG-ID-2026-001',
     issueDate: '2026-01-10',
     validUntil: '2026-12-31',
   },
   {
-    id: 'AF-ID-2026-002',
+    id: 'VG-ID-2026-002',
     studentName: 'SANGERTH.A',
     courseName: 'PYTHON FULL STACK',
     studentContact: '9842154789',
@@ -27,7 +27,7 @@ export const INITIAL_ID_CARDS: IDCardData[] = [
     bloodGroup: 'O+ve',
     address: 'No 15, North Street, Theni',
     photoUrl: '/id_card_assets/sample_student_photo.jpg',
-    qrCodeUrl: 'https://www.alphafly.in/verify/id/AF-ID-2026-002',
+    qrCodeUrl: 'https://veego-tech.vercel.app/verify/id/VG-ID-2026-002',
     issueDate: '2026-02-01',
     validUntil: '2026-12-31',
   },

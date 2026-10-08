@@ -28,7 +28,7 @@ interface GoogleSheetSyncModalProps {
 }
 
 const DEFAULT_SHEET_URL = 'https://docs.google.com/spreadsheets/d/1-B2M4HCEYpjwODULGApsl0YamV-enhyIpJCKPEhFjmI/edit';
-const STORAGE_SHEET_URL_KEY = 'alphafly_cached_google_sheet_url';
+const STORAGE_SHEET_URL_KEY = 'veego_cached_google_sheet_url';
 
 export const GoogleSheetSyncModal: React.FC<GoogleSheetSyncModalProps> = ({
   isOpen,
@@ -161,7 +161,7 @@ export const GoogleSheetSyncModal: React.FC<GoogleSheetSyncModalProps> = ({
             'Django and SQL'
           ],
           finalAssessmentRaw: 'HTML, CSS, JS, Bootstrap, JSON, Git/GitHub, DevOps, React, Python, Django and SQL',
-          qrCodeUrl: `https://www.alphafly.in/verify/${certId}`,
+          qrCodeUrl: `https://veego-tech.vercel.app/verify/${certId}`,
           templateId: 'template-1',
           status: 'verified',
         });
@@ -181,7 +181,7 @@ export const GoogleSheetSyncModal: React.FC<GoogleSheetSyncModalProps> = ({
           photoUrl: photoUrl.trim() || '/id_card_assets/sample_student_photo.jpg',
           issueDate: issueDate.trim() || new Date().toISOString().split('T')[0],
           validUntil: '2026-12-31',
-          qrCodeUrl: `https://alphafly.in/verify/${idCardNum}`,
+          qrCodeUrl: `https://veego-tech.vercel.app/verify/${idCardNum}`,
         });
       } else if (moduleType === 'foclen') {
         const foclenId = `FOC-${Date.now().toString().slice(-4)}-${idx + 1}`;
@@ -241,7 +241,7 @@ export const GoogleSheetSyncModal: React.FC<GoogleSheetSyncModalProps> = ({
     const encodedUri = encodeURI(csvContent);
     const link = document.createElement('a');
     link.setAttribute('href', encodedUri);
-    link.setAttribute('download', 'AlphaFly_Student_Template.csv');
+    link.setAttribute('download', 'VeeGo_Student_Template.csv');
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);

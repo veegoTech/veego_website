@@ -114,7 +114,7 @@ export function CertificateApp() {
       ...certToDuplicate,
       id: newId,
       studentName: `${certToDuplicate.studentName}`,
-      qrCodeUrl: `https://www.alphafly.in/verify/${newId}`,
+      qrCodeUrl: `https://veego-tech.vercel.app/verify/${newId}`,
       generatedDate: new Date().toISOString().split('T')[0],
     };
 

@@ -48,7 +48,7 @@ export const IDCardApp: React.FC = () => {
       bloodGroup: 'B+ve',
       address: '',
       photoUrl: '/id_card_assets/sample_student_photo.jpg',
-      qrCodeUrl: `https://www.alphafly.in/verify/id/${nextId}`,
+      qrCodeUrl: `https://veego-tech.vercel.app/verify/id/${nextId}`,
       issueDate: new Date().toISOString().split('T')[0],
       validUntil: '2026-12-31',
     };

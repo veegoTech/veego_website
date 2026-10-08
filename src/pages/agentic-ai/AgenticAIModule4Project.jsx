@@ -90,8 +90,8 @@ export default function AgenticAIModule4Project({ onNavigate, openAITutor }) {
       "🧠 Master Tool Agent: Parsing question intent...",
       "🔢 Calculator Tool triggered: calculating EMI (15000 / 3)...",
       "🔢 Calculator Response: Monthly EMI = 5,000 INR",
-      "🌐 SerpAPI Web Search Tool triggered: querying 'Alphafly Academy next cohort start date'...",
-      "🌐 SerpAPI Response: Found cohort start date on alphafly.com (Aug 15th, 2026)",
+      "🌐 SerpAPI Web Search Tool triggered: querying 'VeeGo Academy next cohort start date'...",
+      "🌐 SerpAPI Response: Found cohort start date on veegotech.com (Aug 15th, 2026)",
       "💾 Buffer Memory: Loading session history for user '" + sessionId + "' to preserve conversation state",
       "🎉 Response compiled successfully: Formatted calculations and web information."
     ];

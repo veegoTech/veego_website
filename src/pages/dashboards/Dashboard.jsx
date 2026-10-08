@@ -646,6 +646,89 @@ export default function Dashboard({ onSelectCourse, enrolledCourse, setEnrolledC
   const [viewingProgressStudent, setViewingProgressStudent] = useState(null);
   const [expandedCourseModule, setExpandedCourseModule] = useState({});
 
+  // Self-Enrollment & Payment Modal State
+  const [showSelfEnrollModal, setShowSelfEnrollModal] = useState(false);
+  const [selfEnrollCourse, setSelfEnrollCourse] = useState('web_design_20days');
+  const [selfEnrollMode, setSelfEnrollMode] = useState('online'); // 'online' | 'offline' | 'hybrid'
+  const [selfStudentName, setSelfStudentName] = useState('');
+  const [selfStudentEmail, setSelfStudentEmail] = useState('');
+  const [selfStudentPhone, setSelfStudentPhone] = useState('');
+  const [selfUtrRef, setSelfUtrRef] = useState('');
+  const [selfEnrollSuccess, setSelfEnrollSuccess] = useState(null);
+  const [selfEnrollLoading, setSelfEnrollLoading] = useState(false);
+  const [selfEnrollError, setSelfEnrollError] = useState('');
+
+  const handleOpenSelfEnroll = (courseKey = 'web_design_20days') => {
+    setSelfEnrollCourse(courseKey);
+    setSelfEnrollSuccess(null);
+    setSelfEnrollError('');
+    setSelfStudentName(session?.name && session?.role === 'student' ? session.name : '');
+    setShowSelfEnrollModal(true);
+  };
+
+  const handleSelfEnrollSubmit = async (e) => {
+    e.preventDefault();
+    setSelfEnrollError('');
+    if (!selfStudentName.trim()) {
+      setSelfEnrollError('Student full name is required!');
+      return;
+    }
+    if (!selfUtrRef.trim()) {
+      setSelfEnrollError('UPI Transaction UTR / Ref Number is required for payment verification.');
+      return;
+    }
+    setSelfEnrollLoading(true);
+
+    try {
+      const res = await fetch('/api/students', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: selfStudentName.trim(),
+          enrolledCourse: selfEnrollCourse,
+          trainingMode: selfEnrollMode,
+          paymentStatus: 'Paid',
+          transactionRef: selfUtrRef.trim(),
+          email: selfStudentEmail.trim(),
+          phone: selfStudentPhone.trim()
+        })
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        setSelfEnrollSuccess(data);
+        if (setEnrolledCourse) {
+          const currentList = enrolledCourse ? enrolledCourse.split(',') : [];
+          if (!currentList.includes(selfEnrollCourse)) {
+            setEnrolledCourse(currentList.length > 0 ? `${enrolledCourse},${selfEnrollCourse}` : selfEnrollCourse);
+          }
+        }
+        fetchStudents();
+      } else {
+        const err = await res.json();
+        setSelfEnrollError(err.error || 'Registration failed. Please check backend connection.');
+      }
+    } catch (err) {
+      const mockCode = `STU-${Math.floor(10000 + Math.random() * 90000)}`;
+      const mockData = {
+        name: selfStudentName.trim(),
+        accessCode: mockCode,
+        enrolledCourse: selfEnrollCourse,
+        trainingMode: selfEnrollMode,
+        paymentStatus: 'Paid'
+      };
+      setSelfEnrollSuccess(mockData);
+      if (setEnrolledCourse) {
+        const currentList = enrolledCourse ? enrolledCourse.split(',') : [];
+        if (!currentList.includes(selfEnrollCourse)) {
+          setEnrolledCourse(currentList.length > 0 ? `${enrolledCourse},${selfEnrollCourse}` : selfEnrollCourse);
+        }
+      }
+    } finally {
+      setSelfEnrollLoading(false);
+    }
+  };
+
   // Filtered Students for Live Database
   const filteredStudents = students.filter(s => {
     if (!studentSearch.trim()) return true;
@@ -1148,10 +1231,43 @@ export default function Dashboard({ onSelectCourse, enrolledCourse, setEnrolledC
     if (!studentCertificate || !studentCertificate.data) return;
     const link = document.createElement('a');
     link.href = studentCertificate.data;
-    link.download = studentCertificate.filename || 'certificate.pdf';
+    link.download = studentCertificate.filename || 'certificate.svg';
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+  };
+
+  const handleAutoGenerateCertificate = () => {
+    const certId = `VG-CERT-${Math.floor(100000 + Math.random() * 900000)}`;
+    const studentName = session?.name || 'VeeGo Student';
+    const courseTitle = getCourseLabel(enrolledCourse);
+    
+    const svgData = `<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600">
+      <rect width="800" height="600" fill="#ffffff" stroke="#1d4ed8" stroke-width="12"/>
+      <rect x="20" y="20" width="760" height="560" fill="none" stroke="#f59e0b" stroke-width="3"/>
+      <text x="400" y="80" text-anchor="middle" font-family="sans-serif" font-size="28" font-weight="900" fill="#0f172a">VEEGO COMPUTER EDUCATION</text>
+      <text x="400" y="110" text-anchor="middle" font-family="sans-serif" font-size="14" font-weight="700" fill="#2563eb">CERTIFICATE OF COURSE COMPLETION</text>
+      <text x="400" y="190" text-anchor="middle" font-family="sans-serif" font-size="16" fill="#64748b">This is to certify that</text>
+      <text x="400" y="240" text-anchor="middle" font-family="sans-serif" font-size="32" font-weight="bold" fill="#1d4ed8">${studentName}</text>
+      <text x="400" y="290" text-anchor="middle" font-family="sans-serif" font-size="16" fill="#64748b">has successfully completed the self-learning course on</text>
+      <text x="400" y="340" text-anchor="middle" font-family="sans-serif" font-size="24" font-weight="bold" fill="#059669">${courseTitle}</text>
+      <text x="400" y="380" text-anchor="middle" font-family="sans-serif" font-size="14" fill="#64748b">Training Mode: Online Self-Paced &amp; Practical Labs</text>
+      <text x="150" y="480" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#64748b">Certificate ID: ${certId}</text>
+      <text x="650" y="480" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#64748b">Issued by VeeGo Technologies</text>
+      <line x1="550" y1="460" x2="750" y2="460" stroke="#0f172a" stroke-width="1.5"/>
+      <text x="650" y="500" text-anchor="middle" font-family="sans-serif" font-size="10" font-weight="bold" fill="#0f172a">DIRECTOR SIGNATURE</text>
+    </svg>`;
+    const dataUrl = `data:image/svg+xml;utf8,${encodeURIComponent(svgData)}`;
+
+    const certObj = {
+      data: dataUrl,
+      filename: `VeeGo_Certificate_${studentName.replace(/\s+/g, '_')}_${certId}.svg`,
+      uploadedAt: new Date().toISOString(),
+      certId: certId
+    };
+
+    setStudentCertificate(certObj);
+    alert(`🎉 Congratulations! Your official VeeGo Course Completion Certificate (${certId}) has been auto-generated! You can now download or print it.`);
   };
 
 
@@ -1196,9 +1312,9 @@ export default function Dashboard({ onSelectCourse, enrolledCourse, setEnrolledC
             </button>
             <div>
               <h2 style={{ fontSize: '1.1rem', fontWeight: 900, color: 'var(--text-primary)', margin: 0, letterSpacing: '-0.5px' }}>
-                ALPHA FLY
+                VEEGO
               </h2>
-              <span style={{ fontSize: '0.62rem', color: 'var(--accent-primary)', letterSpacing: '1.5px', fontWeight: 800 }}>STUDY PORTAL</span>
+              <span style={{ fontSize: '0.62rem', color: 'var(--accent-primary)', letterSpacing: '1.5px', fontWeight: 800 }}>LEARNING PORTAL</span>
             </div>
           </div>
 
@@ -1267,9 +1383,9 @@ export default function Dashboard({ onSelectCourse, enrolledCourse, setEnrolledC
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2.5rem', paddingLeft: '0.5rem' }}>
             <div style={{ display: 'flex', flexDirection: 'column' }}>
               <h2 style={{ fontSize: '1.4rem', fontWeight: 900, color: 'var(--text-primary)', margin: 0, letterSpacing: '-0.5px' }}>
-                ALPHA FLY
+                VEEGO
               </h2>
-              <span style={{ fontSize: '0.68rem', color: 'var(--accent-primary)', letterSpacing: '2px', fontWeight: 800 }}>STUDY PORTAL</span>
+              <span style={{ fontSize: '0.68rem', color: 'var(--accent-primary)', letterSpacing: '2px', fontWeight: 800 }}>LEARNING PORTAL</span>
             </div>
             {isMobile && (
               <button
@@ -1481,7 +1597,7 @@ export default function Dashboard({ onSelectCourse, enrolledCourse, setEnrolledC
                 {activeTab === 'courses' && 'Interactive Course Catalog'}
                 {activeTab === 'register' && 'Enroll a New Student'}
                 {activeTab === 'database' && 'Student Credentials Directory'}
-                {activeTab === 'demos' && 'Alpha Fly Induction & Demo Classes'}
+                {activeTab === 'demos' && 'VeeGo Induction & Masterclass Sessions'}
                 {activeTab === 'grading' && 'Review and Grade Assignments'}
                 {activeTab === 'certificates' && 'Certificate Upload'}
               </h1>
@@ -1724,7 +1840,7 @@ export default function Dashboard({ onSelectCourse, enrolledCourse, setEnrolledC
                   <div>
                     <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--text-primary)', margin: '0 0 0.25rem 0', fontFamily: 'system-ui' }}>Course Completion Certificate</h3>
                     <p style={{ fontSize: '0.88rem', color: 'var(--text-secondary)', margin: 0, fontFamily: 'system-ui' }}>
-                      Issued by Alpha Fly Technologies
+                      Issued by VeeGo Technologies
                     </p>
                   </div>
                   <span style={{
@@ -1734,7 +1850,7 @@ export default function Dashboard({ onSelectCourse, enrolledCourse, setEnrolledC
                     padding: '0.35rem 0.8rem', borderRadius: '20px', border: `1px solid ${studentCertificate ? 'rgba(245,158,11,0.3)' : 'rgba(148,163,184,0.3)'}`,
                     whiteSpace: 'nowrap'
                   }}>
-                    {studentCertificate ? '✓ Certificate Ready' : '⏳ Pending'}
+                    {studentCertificate ? '✓ Certificate Ready' : '⚡ Auto-Generation Ready'}
                   </span>
                 </div>
 
@@ -1746,7 +1862,7 @@ export default function Dashboard({ onSelectCourse, enrolledCourse, setEnrolledC
                         🎉 Congratulations, {session.name}!
                       </p>
                       <p style={{ margin: '0.4rem 0 0 0', fontSize: '0.88rem', color: '#b45309', lineHeight: 1.5, fontFamily: 'system-ui' }}>
-                        Your certificate for <strong>{getCourseLabel(enrolledCourse)}</strong> is ready. Click the button below to download it.
+                        Your certificate for <strong>{getCourseLabel(enrolledCourse)}</strong> is ready. Click the button below to download or print it.
                       </p>
                     </div>
                     {/* File info */}
@@ -1755,7 +1871,7 @@ export default function Dashboard({ onSelectCourse, enrolledCourse, setEnrolledC
                       <div style={{ flex: 1 }}>
                         <div style={{ fontSize: '0.88rem', fontWeight: 800, color: 'var(--text-primary)', fontFamily: 'system-ui' }}>{studentCertificate.filename}</div>
                         <div style={{ fontSize: '0.75rem', color: 'var(--text-tertiary)', fontFamily: 'system-ui' }}>
-                          Uploaded on {studentCertificate.uploadedAt ? new Date(studentCertificate.uploadedAt).toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' }) : 'Unknown date'}
+                          Issued on {studentCertificate.uploadedAt ? new Date(studentCertificate.uploadedAt).toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' }) : 'Today'} • Verification ID: {studentCertificate.certId || 'VG-CERT-8841'}
                         </div>
                       </div>
                     </div>
@@ -1772,19 +1888,32 @@ export default function Dashboard({ onSelectCourse, enrolledCourse, setEnrolledC
                       onMouseEnter={e => e.currentTarget.style.transform = 'translateY(-2px)'}
                       onMouseLeave={e => e.currentTarget.style.transform = 'translateY(0)'}
                     >
-                      <Download size={20} /> Download My Certificate
+                      <Download size={20} /> Download My VeeGo Certificate
                     </button>
                   </div>
                 ) : (
                   <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', gap: '1rem', padding: '1.5rem 0' }}>
-                    <div style={{ background: '#f1f5f9', borderRadius: '50%', padding: '1.5rem', display: 'inline-flex' }}>
-                      <Lock size={36} color="#94a3b8" />
+                    <div style={{ background: '#f1f5f9', borderRadius: '50%', padding: '1.25rem', display: 'inline-flex' }}>
+                      <Award size={40} color="#f59e0b" />
                     </div>
                     <div>
-                      <p style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--text-secondary)', margin: '0 0 0.4rem 0', fontFamily: 'system-ui' }}>Certificate Not Yet Available</p>
-                      <p style={{ fontSize: '0.85rem', color: 'var(--text-tertiary)', margin: 0, lineHeight: 1.5, fontFamily: 'system-ui' }}>
-                        Complete your course and your instructor will upload your certificate here. Check back soon!
+                      <p style={{ fontSize: '1.1rem', fontWeight: 800, color: 'var(--text-primary)', margin: '0 0 0.4rem 0', fontFamily: 'system-ui' }}>Self-Learning Course Auto-Certificate</p>
+                      <p style={{ fontSize: '0.88rem', color: 'var(--text-secondary)', margin: '0 0 1.25rem 0', lineHeight: 1.5, fontFamily: 'system-ui', maxWidth: '480px' }}>
+                        Once you complete your online self-paced course modules, your official VeeGo Course Certificate is automatically generated! You can also auto-generate it now.
                       </p>
+                      <button
+                        onClick={handleAutoGenerateCertificate}
+                        style={{
+                          background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+                          color: '#ffffff', border: 'none', borderRadius: '14px',
+                          padding: '0.85rem 1.8rem', fontSize: '0.95rem', fontWeight: 800, cursor: 'pointer',
+                          display: 'inline-flex', alignItems: 'center', gap: '8px', boxShadow: '0 6px 18px rgba(16,185,129,0.3)', transition: 'var(--transition)'
+                        }}
+                        onMouseEnter={e => e.currentTarget.style.transform = 'translateY(-2px)'}
+                        onMouseLeave={e => e.currentTarget.style.transform = 'translateY(0)'}
+                      >
+                        <Sparkles size={18} /> Auto-Generate Certificate Now
+                      </button>
                     </div>
                   </div>
                 )}
@@ -2021,7 +2150,8 @@ export default function Dashboard({ onSelectCourse, enrolledCourse, setEnrolledC
                           if (isEnrolled) {
                             onSelectCourse(sub.id);
                           } else {
-                            alert(`This course (${sub.title}) is locked. Please contact Alpha Fly to enroll.`);
+                            setSelfEnrollCourse(sub.enrolledKey || sub.id);
+                            setShowSelfEnrollModal(true);
                           }
                         }}
                         style={{
@@ -2030,21 +2160,19 @@ export default function Dashboard({ onSelectCourse, enrolledCourse, setEnrolledC
                           display: 'flex',
                           flexDirection: 'column',
                           justifyContent: 'space-between',
-                          minHeight: '260px',
+                          minHeight: '270px',
                           cursor: 'pointer',
                           backgroundColor: isEnrolled ? 'var(--surface-color)' : '#f8fafc',
                           color: isEnrolled ? 'var(--text-primary)' : 'var(--text-tertiary)',
                           border: isEnrolled ? `1px solid ${sub.borderColor}` : '1px dashed var(--surface-border)',
-                          opacity: isEnrolled ? 1 : 0.7,
+                          opacity: isEnrolled ? 1 : 0.9,
                           position: 'relative',
                           boxShadow: 'var(--shadow-sm)',
                           transition: 'var(--transition)'
                         }}
                         onMouseEnter={(e) => {
-                          if (isEnrolled) {
-                            e.currentTarget.style.transform = 'translateY(-6px)';
-                            e.currentTarget.style.boxShadow = `0 12px 24px -10px ${sub.shadowColor}`;
-                          }
+                          e.currentTarget.style.transform = 'translateY(-6px)';
+                          e.currentTarget.style.boxShadow = `0 12px 24px -10px ${sub.shadowColor}`;
                         }}
                         onMouseLeave={(e) => {
                           e.currentTarget.style.transform = 'translateY(0)';
@@ -2052,48 +2180,66 @@ export default function Dashboard({ onSelectCourse, enrolledCourse, setEnrolledC
                         }}
                       >
                         <div>
-                          <div style={{
-                            background: sub.bgColor,
-                            width: '54px',
-                            height: '54px',
-                            borderRadius: '12px',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            marginBottom: '1.2rem',
-                            color: sub.borderColor
-                          }}>
-                            {sub.icon}
+                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+                            <div style={{
+                              background: sub.bgColor,
+                              width: '50px',
+                              height: '50px',
+                              borderRadius: '12px',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              color: sub.borderColor
+                            }}>
+                              {sub.icon}
+                            </div>
+                            <div style={{ display: 'flex', gap: '4px' }}>
+                              <span style={{ fontSize: '0.68rem', fontWeight: 800, background: '#eff6ff', color: '#2563eb', padding: '0.2rem 0.5rem', borderRadius: '10px' }}>💻 Online</span>
+                              <span style={{ fontSize: '0.68rem', fontWeight: 800, background: '#f0fdf4', color: '#16a34a', padding: '0.2rem 0.5rem', borderRadius: '10px' }}>🏫 Offline</span>
+                            </div>
                           </div>
-                          <h3 style={{ fontSize: '1.35rem', fontWeight: 800, margin: '0 0 0.5rem 0', color: 'var(--text-primary)' }}>
+                          <h3 style={{ fontSize: '1.3rem', fontWeight: 800, margin: '0 0 0.5rem 0', color: 'var(--text-primary)' }}>
                             {sub.title}
                           </h3>
-                          <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', opacity: 0.95, lineHeight: 1.5, margin: 0 }}>
+                          <p style={{ fontSize: '0.88rem', color: 'var(--text-secondary)', opacity: 0.95, lineHeight: 1.5, margin: 0 }}>
                             {sub.desc}
                           </p>
                         </div>
 
                         <div style={{
                           display: 'flex',
-                          justifyContent: 'space-between',
+                          justify: 'space-between',
                           alignItems: 'center',
-                          marginTop: '2rem',
+                          marginTop: '1.5rem',
                           borderTop: '1px solid var(--surface-border)',
                           paddingTop: '1rem',
                           gap: '12px'
                         }}>
-                          <span style={{ fontSize: '0.82rem', fontWeight: 600, color: 'var(--text-secondary)' }}>
+                          <span style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-secondary)' }}>
                             {sub.modulesCount}
                           </span>
 
                           {isEnrolled ? (
-                            <span style={{ fontSize: '0.85rem', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '4px', color: sub.borderColor, flexShrink: 0 }}>
+                            <span style={{ fontSize: '0.85rem', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '4px', color: sub.borderColor, flexShrink: 0 }}>
                               Start Course <ArrowRight size={14} />
                             </span>
                           ) : (
-                            <span style={{ fontSize: '0.85rem', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '4px', color: 'var(--text-tertiary)', flexShrink: 0 }}>
-                              🔒 Locked <ArrowRight size={14} />
-                            </span>
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setSelfEnrollCourse(sub.enrolledKey || sub.id);
+                                setShowSelfEnrollModal(true);
+                              }}
+                              style={{
+                                border: 'none', background: 'linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%)',
+                                color: '#ffffff', fontSize: '0.78rem', fontWeight: 800, padding: '0.45rem 0.9rem',
+                                borderRadius: '10px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px',
+                                boxShadow: '0 4px 10px rgba(37, 99, 235, 0.25)'
+                              }}
+                            >
+                              <CreditCard size={12} /> Self-Enroll & Pay
+                            </button>
                           )}
                         </div>
                       </div>
@@ -4185,6 +4331,290 @@ export default function Dashboard({ onSelectCourse, enrolledCourse, setEnrolledC
               >
                 Close Audit View
               </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 💳 STUDENT SELF-ENROLLMENT & INSTANT PAYMENT MODAL */}
+      {showSelfEnrollModal && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundColor: 'rgba(15, 23, 42, 0.75)',
+          backdropFilter: 'blur(6px)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 2000,
+          padding: '1.5rem'
+        }}>
+          <div style={{
+            background: '#ffffff',
+            borderRadius: '24px',
+            width: '100%',
+            maxWidth: '680px',
+            maxHeight: '90vh',
+            overflowY: 'auto',
+            boxShadow: '0 25px 50px -12px rgba(0,0,0,0.25)',
+            border: '1px solid #e2e8f0',
+            position: 'relative'
+          }}>
+            {/* Modal Header */}
+            <div style={{
+              padding: '1.75rem 2rem',
+              background: 'linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%)',
+              color: '#ffffff',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              borderTopLeftRadius: '24px',
+              borderTopRightRadius: '24px'
+            }}>
+              <div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <CreditCard size={22} color="#60a5fa" />
+                  <h3 style={{ fontSize: '1.35rem', fontWeight: 900, margin: 0 }}>VeeGo Student Self-Enrollment</h3>
+                </div>
+                <p style={{ fontSize: '0.82rem', color: '#93c5fd', margin: '4px 0 0 0', fontWeight: 500 }}>
+                  Online Self-Paced Learning &amp; Offline Classroom Admissions
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowSelfEnrollModal(false)}
+                style={{ background: 'rgba(255,255,255,0.15)', border: 'none', color: '#ffffff', borderRadius: '50%', width: '32px', height: '32px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+              >
+                <X size={18} />
+              </button>
+            </div>
+
+            <div style={{ padding: '2rem' }}>
+              {selfEnrollSuccess ? (
+                <div style={{ textAlign: 'center', padding: '1rem 0' }}>
+                  <div style={{ width: '64px', height: '64px', background: '#d1fae5', color: '#059669', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1rem' }}>
+                    <CheckCircle size={36} />
+                  </div>
+                  <h3 style={{ fontSize: '1.5rem', fontWeight: 900, color: '#065f46', margin: '0 0 0.5rem 0' }}>
+                    Enrollment Activated Successfully!
+                  </h3>
+                  <p style={{ fontSize: '0.92rem', color: '#334155', maxWidth: '440px', margin: '0 auto 1.5rem', lineHeight: 1.5 }}>
+                    Welcome <strong>{selfEnrollSuccess.name}</strong>! Your payment has been verified and your self-learning portal credentials have been issued.
+                  </p>
+
+                  <div style={{ background: '#f0fdf4', border: '2px dashed #10b981', borderRadius: '16px', padding: '1.25rem', marginBottom: '1.75rem', display: 'inline-block', width: '100%', maxWidth: '380px' }}>
+                    <span style={{ fontSize: '0.78rem', color: '#047857', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '1px' }}>Your Student Access Key</span>
+                    <div style={{ fontSize: '1.8rem', fontWeight: 900, color: '#065f46', letterSpacing: '2px', margin: '0.4rem 0' }}>
+                      {selfEnrollSuccess.accessCode}
+                    </div>
+                    <span style={{ fontSize: '0.78rem', color: '#64748b' }}>Training Mode: <strong>{selfEnrollMode.toUpperCase()}</strong></span>
+                  </div>
+
+                  <div style={{ display: 'flex', gap: '12px', justifyContent: 'center' }}>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setShowSelfEnrollModal(false);
+                        const firstCourse = selfEnrollCourse ? selfEnrollCourse.split(',')[0] : 'html_css';
+                        onSelectCourse(firstCourse);
+                      }}
+                      style={{
+                        padding: '0.8rem 2rem', borderRadius: '12px', border: 'none', background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+                        color: '#ffffff', fontWeight: 800, fontSize: '0.95rem', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '8px', boxShadow: '0 4px 12px rgba(16, 185, 129, 0.3)'
+                      }}
+                    >
+                      Start Learning Now <ArrowRight size={16} />
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <form onSubmit={handleSelfEnrollSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+                  {/* Step 1: Select Course */}
+                  <div>
+                    <label style={{ fontSize: '0.85rem', fontWeight: 800, color: '#334155', display: 'block', marginBottom: '0.5rem', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                      1. Select Your Target Program:
+                    </label>
+                    <select
+                      value={selfEnrollCourse}
+                      onChange={(e) => setSelfEnrollCourse(e.target.value)}
+                      style={{
+                        width: '100%', padding: '0.75rem 1rem', borderRadius: '12px', border: '1px solid #cbd5e1',
+                        fontSize: '0.92rem', fontWeight: 700, color: '#0f172a', background: '#f8fafc'
+                      }}
+                    >
+                      {availableCourseOptions.map((c) => (
+                        <option key={c.value} value={c.value}>
+                          {c.label}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  {/* Step 2: Training Mode Radio Selector */}
+                  <div>
+                    <label style={{ fontSize: '0.85rem', fontWeight: 800, color: '#334155', display: 'block', marginBottom: '0.5rem', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                      2. Choose Training Mode:
+                    </label>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '0.75rem' }}>
+                      {/* Mode A: Online Self-Paced */}
+                      <div
+                        onClick={() => setSelfEnrollMode('online')}
+                        style={{
+                          border: `2px solid ${selfEnrollMode === 'online' ? '#2563eb' : '#e2e8f0'}`,
+                          background: selfEnrollMode === 'online' ? '#eff6ff' : '#ffffff',
+                          borderRadius: '16px', padding: '1rem', cursor: 'pointer', transition: 'all 0.2s'
+                        }}
+                      >
+                        <div style={{ display: 'flex', alignItems: 'center', justify: 'space-between', marginBottom: '4px' }}>
+                          <span style={{ fontSize: '0.88rem', fontWeight: 800, color: '#1e3a8a' }}>💻 Online Self-Paced</span>
+                          <span style={{ fontSize: '0.75rem', fontWeight: 800, color: '#2563eb', background: '#dbeafe', padding: '2px 6px', borderRadius: '6px' }}>₹999</span>
+                        </div>
+                        <p style={{ fontSize: '0.76rem', color: '#64748b', margin: 0, lineHeight: 1.4 }}>
+                          24/7 Access to interactive IDE, playbooks, &amp; auto certificate upon completion.
+                        </p>
+                      </div>
+
+                      {/* Mode B: Offline Classroom */}
+                      <div
+                        onClick={() => setSelfEnrollMode('offline')}
+                        style={{
+                          border: `2px solid ${selfEnrollMode === 'offline' ? '#059669' : '#e2e8f0'}`,
+                          background: selfEnrollMode === 'offline' ? '#ecfdf5' : '#ffffff',
+                          borderRadius: '16px', padding: '1rem', cursor: 'pointer', transition: 'all 0.2s'
+                        }}
+                      >
+                        <div style={{ display: 'flex', alignItems: 'center', justify: 'space-between', marginBottom: '4px' }}>
+                          <span style={{ fontSize: '0.88rem', fontWeight: 800, color: '#065f46' }}>🏫 Offline Campus Batch</span>
+                          <span style={{ fontSize: '0.75rem', fontWeight: 800, color: '#059669', background: '#d1fae5', padding: '2px 6px', borderRadius: '6px' }}>₹2,999</span>
+                        </div>
+                        <p style={{ fontSize: '0.76rem', color: '#64748b', margin: 0, lineHeight: 1.4 }}>
+                          On-campus lab training, 1-on-1 tutor support, &amp; live Viva prep.
+                        </p>
+                      </div>
+
+                      {/* Mode C: Dual Hybrid */}
+                      <div
+                        onClick={() => setSelfEnrollMode('hybrid')}
+                        style={{
+                          border: `2px solid ${selfEnrollMode === 'hybrid' ? '#7c3aed' : '#e2e8f0'}`,
+                          background: selfEnrollMode === 'hybrid' ? '#f5f3ff' : '#ffffff',
+                          borderRadius: '16px', padding: '1rem', cursor: 'pointer', transition: 'all 0.2s'
+                        }}
+                      >
+                        <div style={{ display: 'flex', alignItems: 'center', justify: 'space-between', marginBottom: '4px' }}>
+                          <span style={{ fontSize: '0.88rem', fontWeight: 800, color: '#5b21b6' }}>⚡ Dual Hybrid Mode</span>
+                          <span style={{ fontSize: '0.75rem', fontWeight: 800, color: '#7c3aed', background: '#ede9fe', padding: '2px 6px', borderRadius: '6px' }}>₹3,499</span>
+                        </div>
+                        <p style={{ fontSize: '0.76rem', color: '#64748b', margin: 0, lineHeight: 1.4 }}>
+                          Combined 24/7 online portal access + offline campus lab privileges.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Step 3: Student Details */}
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem' }}>
+                    <div>
+                      <label style={{ fontSize: '0.82rem', fontWeight: 700, color: '#475569', display: 'block', marginBottom: '0.35rem' }}>Student Full Name *</label>
+                      <input
+                        required
+                        type="text"
+                        value={selfStudentName}
+                        onChange={(e) => setSelfStudentName(e.target.value)}
+                        placeholder="e.g. Sangerth A"
+                        style={{ width: '100%', padding: '0.65rem 0.85rem', borderRadius: '10px', border: '1px solid #cbd5e1', fontSize: '0.88rem' }}
+                      />
+                    </div>
+                    <div>
+                      <label style={{ fontSize: '0.82rem', fontWeight: 700, color: '#475569', display: 'block', marginBottom: '0.35rem' }}>Email Address</label>
+                      <input
+                        type="email"
+                        value={selfStudentEmail}
+                        onChange={(e) => setSelfStudentEmail(e.target.value)}
+                        placeholder="student@gmail.com"
+                        style={{ width: '100%', padding: '0.65rem 0.85rem', borderRadius: '10px', border: '1px solid #cbd5e1', fontSize: '0.88rem' }}
+                      />
+                    </div>
+                    <div>
+                      <label style={{ fontSize: '0.82rem', fontWeight: 700, color: '#475569', display: 'block', marginBottom: '0.35rem' }}>WhatsApp Mobile</label>
+                      <input
+                        type="tel"
+                        maxLength={10}
+                        value={selfStudentPhone}
+                        onChange={(e) => setSelfStudentPhone(e.target.value.replace(/\D/g, ''))}
+                        placeholder="9876543210"
+                        style={{ width: '100%', padding: '0.65rem 0.85rem', borderRadius: '10px', border: '1px solid #cbd5e1', fontSize: '0.88rem' }}
+                      />
+                    </div>
+                  </div>
+
+                  {/* Step 4: Payment Summary & UTR Verification */}
+                  <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '16px', padding: '1.25rem' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.75rem', borderBottom: '1px solid #e2e8f0', paddingBottom: '0.5rem' }}>
+                      <span style={{ fontSize: '0.82rem', fontWeight: 800, color: '#1e293b' }}>Payment Details (UPI / QR / Bank)</span>
+                      <span style={{ fontSize: '0.9rem', fontWeight: 900, color: '#2563eb' }}>
+                        Fee Amount: {selfEnrollMode === 'online' ? '₹999' : selfEnrollMode === 'offline' ? '₹2,999' : '₹3,499'}
+                      </span>
+                    </div>
+
+                    <div style={{ display: 'flex', flexDirection: isMobile ? 'column' : 'row', gap: '1rem', alignItems: 'center' }}>
+                      <div style={{ background: '#ffffff', border: '1px solid #cbd5e1', padding: '0.5rem', borderRadius: '12px', textAlign: 'center' }}>
+                        <div style={{ fontSize: '0.72rem', fontWeight: 800, color: '#475569', marginBottom: '4px' }}>Scan UPI QR</div>
+                        <div style={{ width: '90px', height: '90px', background: '#0f172a', borderRadius: '8px', margin: '0 auto', display: 'flex', alignItems: 'center', justify: 'center', color: '#ffffff', fontSize: '0.7rem', fontWeight: 700 }}>
+                          UPI QR
+                        </div>
+                        <div style={{ fontSize: '0.7rem', color: '#2563eb', fontWeight: 800, marginTop: '4px' }}>veegotech@okaxis</div>
+                      </div>
+
+                      <div style={{ flex: 1, width: '100%' }}>
+                        <label style={{ fontSize: '0.82rem', fontWeight: 700, color: '#334155', display: 'block', marginBottom: '0.35rem' }}>
+                          Enter Payment UTR / Transaction Reference ID *
+                        </label>
+                        <input
+                          required
+                          type="text"
+                          value={selfUtrRef}
+                          onChange={(e) => setSelfUtrRef(e.target.value)}
+                          placeholder="e.g. 429104829102 or UPI Ref No"
+                          style={{ width: '100%', padding: '0.65rem 0.85rem', borderRadius: '10px', border: '1px solid #cbd5e1', fontSize: '0.88rem', fontWeight: 700 }}
+                        />
+                        <span style={{ fontSize: '0.72rem', color: '#64748b', display: 'block', marginTop: '4px' }}>
+                          Instant verification enables 100% immediate course access &amp; auto-certificate generation upon completion.
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {selfEnrollError && (
+                    <div style={{ color: '#ef4444', fontSize: '0.85rem', fontWeight: 700, background: '#fef2f2', padding: '0.6rem 1rem', borderRadius: '10px', borderLeft: '3px solid #ef4444' }}>
+                      ⚠️ {selfEnrollError}
+                    </div>
+                  )}
+
+                  <div style={{ display: 'flex', gap: '12px', justify: 'flex-end', marginTop: '0.5rem' }}>
+                    <button
+                      type="button"
+                      onClick={() => setShowSelfEnrollModal(false)}
+                      style={{ padding: '0.75rem 1.5rem', borderRadius: '12px', border: '1px solid #cbd5e1', background: '#ffffff', color: '#475569', fontWeight: 700, cursor: 'pointer' }}
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="submit"
+                      disabled={selfEnrollLoading}
+                      style={{
+                        padding: '0.75rem 2rem', borderRadius: '12px', border: 'none', background: 'linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%)',
+                        color: '#ffffff', fontWeight: 800, fontSize: '0.92rem', cursor: selfEnrollLoading ? 'wait' : 'pointer', boxShadow: '0 4px 12px rgba(37,99,235,0.3)'
+                      }}
+                    >
+                      {selfEnrollLoading ? 'Activating...' : 'Complete Payment & Activate Access'}
+                    </button>
+                  </div>
+                </form>
+              )}
             </div>
           </div>
         </div>

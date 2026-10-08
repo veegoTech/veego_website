@@ -1,12 +1,12 @@
 import type { CertificateData, CustomAssets } from '../types/certificate';
 import { getRandomTwoQualities } from './qualityLibrary';
 
-const STORAGE_KEY = 'alphafly_certificates_db_v2';
-const ASSETS_STORAGE_KEY = 'alphafly_custom_assets_v2';
+const STORAGE_KEY = 'veego_certificates_db_v2';
+const ASSETS_STORAGE_KEY = 'veego_custom_assets_v2';
 
 export const INITIAL_CERTIFICATES: CertificateData[] = [
   {
-    id: 'AFE-2026-0001',
+    id: 'VG-2026-0001',
     studentName: 'SANGERTH.A',
     courseName: 'Full Stack Development in Python',
     description:
@@ -40,13 +40,13 @@ export const INITIAL_CERTIFICATES: CertificateData[] = [
       }
     ],
     photoUrl: '/id_card_assets/sample_student_photo.jpg',
-    qrCodeUrl: 'https://www.alphafly.in/verify/AFE-2026-0001',
+    qrCodeUrl: 'https://veego-tech.vercel.app/verify/VG-2026-0001',
     generatedDate: '2024-12-14',
     templateId: 'template-1',
     status: 'verified'
   },
   {
-    id: 'AFE-2026-0002',
+    id: 'VG-2026-0002',
     studentName: 'DHIVYA DHARSHINI K',
     courseName: 'Full Stack Development in Python',
     description:
@@ -80,7 +80,7 @@ export const INITIAL_CERTIFICATES: CertificateData[] = [
       }
     ],
     photoUrl: '/id_card_assets/sample_student_photo.jpg',
-    qrCodeUrl: 'https://www.alphafly.in/verify/AFE-2026-0002',
+    qrCodeUrl: 'https://veego-tech.vercel.app/verify/VG-2026-0002',
     generatedDate: '2025-02-28',
     templateId: 'template-1',
     status: 'verified'
@@ -118,7 +118,7 @@ export function getStoredCertificates(): CertificateData[] {
     
     // Sanitize in case any certificate is missing required fields from previous imports
     return parsed.map((cert: any, idx: number): CertificateData => {
-      const id = cert.id || `AFE-${new Date().getFullYear()}-${String(idx + 1).padStart(4, '0')}`;
+      const id = cert.id || `VG-${new Date().getFullYear()}-${String(idx + 1).padStart(4, '0')}`;
       const defaultDate = new Date().toISOString().split('T')[0];
       const genDate = cert.generatedDate || cert.issueDate || defaultDate;
       
@@ -138,7 +138,7 @@ export function getStoredCertificates(): CertificateData[] {
         finalAssessmentRaw: cert.finalAssessmentRaw || (Array.isArray(cert.finalAssessment) ? cert.finalAssessment.join(', ') : ''),
         qualities: (Array.isArray(cert.qualities) && cert.qualities.length >= 2) ? cert.qualities : getRandomTwoQualities(),
         photoUrl: cert.photoUrl || '/id_card_assets/sample_student_photo.jpg',
-        qrCodeUrl: cert.qrCodeUrl || `https://www.alphafly.in/verify/${id}`,
+        qrCodeUrl: cert.qrCodeUrl || `https://veego-tech.vercel.app/verify/${id}`,
         templateId: cert.templateId || 'template-1',
         status: cert.status || 'verified',
       };
@@ -161,7 +161,7 @@ export function generateNextCertificateId(existingCerts: CertificateData[]): str
   let maxSeq = 0;
 
   existingCerts.forEach(c => {
-    const match = c.id.match(/AFE-(\d{4})-(\d+)/i);
+    const match = c.id.match(/(?:VG|AFE)-(\d{4})-(\d+)/i);
     if (match) {
       const seq = parseInt(match[2], 10);
       if (!isNaN(seq) && seq > maxSeq) {
@@ -171,7 +171,7 @@ export function generateNextCertificateId(existingCerts: CertificateData[]): str
   });
 
   const nextSeq = (maxSeq + 1).toString().padStart(4, '0');
-  return `AFE-${currentYear}-${nextSeq}`;
+  return `VG-${currentYear}-${nextSeq}`;
 }
 
 export function createNewBlankCertificate(existingCerts: CertificateData[]): CertificateData {
@@ -201,7 +201,7 @@ export function createNewBlankCertificate(existingCerts: CertificateData[]): Cer
     ],
     finalAssessmentRaw: 'HTML, CSS, JS, Bootstrap, JSON, Git/GitHub, Devops, React, Python, Django and SQL',
     qualities: randomQualities,
-    qrCodeUrl: `https://www.alphafly.in/verify/${newId}`,
+    qrCodeUrl: `https://veego-tech.vercel.app/verify/${newId}`,
     generatedDate: new Date().toISOString().split('T')[0],
     templateId: 'template-1',
     status: 'verified'

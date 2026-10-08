@@ -95,14 +95,14 @@ export const AssetManager: React.FC<AssetManagerProps> = ({
                 <span className="text-[10px] bg-slate-100 text-slate-600 font-bold px-2 py-0.5 rounded">Default Master</span>
               )}
             </div>
-            <h3 className="text-sm font-bold text-slate-900 mb-1">Alpha Fly Education Master Logo</h3>
-            <p className="text-xs text-slate-500 mb-4">Top-left branding header (Alpha Fly Education with origami bird & tagline).</p>
+            <h3 className="text-sm font-bold text-slate-900 mb-1">VeeGo Technologies Master Logo</h3>
+            <p className="text-xs text-slate-500 mb-4">Top-left branding header (VeeGo Technologies & Computer Education).</p>
 
             {/* Preview Box */}
             <div className="h-28 bg-slate-50 border border-dashed border-slate-300 rounded-lg flex items-center justify-center p-3 mb-4">
               <img 
                 src={assets.alphaFlyLogo || '/alpha_fly_logo.png'} 
-                alt="Alpha Fly Logo" 
+                alt="VeeGo Logo" 
                 className="max-h-20 max-w-full object-contain"
               />
             </div>

@@ -94,8 +94,8 @@ export default function Sidebar({ courseStructure, activeNode, onNavClick, onBac
 
       {/* Institute Info */}
       <div style={{ padding: '1rem 1.5rem 0' }}>
-        <h1 style={{ fontSize: '1.8rem', fontWeight: '900', color: '#1877F2', margin: 0, letterSpacing: '-0.5px' }}>Alpha Fly Theni</h1>
-        <p style={{ fontSize: '0.85rem', color: '#64748b', margin: '0.25rem 0 0 0', textTransform: 'uppercase', letterSpacing: '1px', fontWeight: '600' }}>Computer Education</p>
+        <h1 style={{ fontSize: '1.8rem', fontWeight: '900', color: '#1877F2', margin: 0, letterSpacing: '-0.5px' }}>VeeGo LMS</h1>
+        <p style={{ fontSize: '0.85rem', color: '#64748b', margin: '0.25rem 0 0 0', textTransform: 'uppercase', letterSpacing: '1px', fontWeight: '600' }}>Computer Education &amp; Tech Solutions</p>
       </div>
 
       {/* Course Title (Dynamic) */}

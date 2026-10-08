@@ -79,13 +79,19 @@ export const AlphaFlyTemplate: React.FC<AlphaFlyTemplateProps> = ({
         }}
       >
         <img
-          src="/alphafly_logo_exact.png"
-          alt="ALPHA FLY EDUCATION"
+          src="/asset_logo_veego.png"
+          alt="VEEGO TECH EDUCATION"
           style={{
             height: '52px',
             objectFit: 'contain',
           }}
+          onError={(e) => {
+            (e.target as HTMLImageElement).style.display = 'none';
+          }}
         />
+        <div style={{ fontSize: '24px', fontWeight: 900, color: '#1877F2', letterSpacing: '-0.5px', fontFamily: "'Garet', sans-serif" }}>
+          VEEGO TECH
+        </div>
       </div>
 
       {/* 3. TOP RIGHT: FOCLEN LOGO + ISO BADGE & DYNAMIC QR CODE */}
@@ -239,7 +245,7 @@ export const AlphaFlyTemplate: React.FC<AlphaFlyTemplateProps> = ({
           Satheeshkumar Nagaraj
         </p>
         <p style={{ fontSize: '19.7px', fontWeight: 700, lineHeight: '1.2', marginTop: '4px', margin: 0 }}>
-          Founder & Director of Alpha Fly Education
+          Founder & Director of VeeGo Technologies
         </p>
       </div>
 
@@ -467,7 +473,7 @@ export const AlphaFlyTemplate: React.FC<AlphaFlyTemplateProps> = ({
                 letterSpacing: '0.2px',
               }}
             >
-              ALPHA FLY COMPUTER CENTER
+              VEEGO COMPUTER EDUCATION
             </h4>
 
             <p
@@ -496,7 +502,7 @@ export const AlphaFlyTemplate: React.FC<AlphaFlyTemplateProps> = ({
               }}
             >
               <p style={{ margin: 0 }}>Contact: 8015 8016 89</p>
-              <p style={{ margin: '2px 0 0 0' }}>www.alphafly.in</p>
+              <p style={{ margin: '2px 0 0 0' }}>www.veegotech.com</p>
             </div>
           </div>
         </div>
