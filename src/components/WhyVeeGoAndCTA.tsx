@@ -36,7 +36,7 @@ export const WhyVeeGoAndCTA: React.FC<WhyVeeGoAndCTAProps> = ({
   return (
     <>
       {/* SECTION: WHY VEEGO */}
-      <section className="relative py-20 sm:py-32 bg-stylish-mesh bg-stylish-grid text-slate-900 border-b border-slate-200/80 overflow-hidden">
+      <section className="relative py-20 sm:py-32 bg-slate-50/70 text-slate-900 border-b border-slate-200/80 overflow-hidden">
         {/* Subtle background glow */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden bg-dot-pattern opacity-30">
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] bg-blue-50/50 rounded-full blur-3xl" />

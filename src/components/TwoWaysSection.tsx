@@ -66,7 +66,7 @@ export const TwoWaysSection: React.FC<TwoWaysSectionProps> = ({
   ];
 
   return (
-    <section className="relative py-20 sm:py-32 bg-stylish-mesh bg-stylish-grid border-b border-slate-200/80 text-slate-900 overflow-hidden">
+    <section className="relative py-20 sm:py-32 bg-slate-50/70 border-b border-slate-200/80 text-slate-900 overflow-hidden">
       {/* Ambient background parallax orbs */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden bg-dot-pattern opacity-30">
         <motion.div
