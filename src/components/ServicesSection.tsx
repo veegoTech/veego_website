@@ -139,7 +139,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
   const filteredServices = activeTab === 'all' ? services : services.filter(s => s.category === activeTab);
 
   return (
-    <section id="services" className="py-20 sm:py-32 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-50/70 via-slate-50 to-white border-b border-slate-200/80 text-slate-900 scroll-mt-16 relative overflow-hidden">
+    <section id="services" className="py-20 sm:py-32 bg-stylish-mesh bg-stylish-grid border-b border-slate-200/80 text-slate-900 scroll-mt-16 relative overflow-hidden">
       {/* 🔮 PARALLAX FLOATING BACKGROUND OBJECTS & GLOW ORBS */}
       <motion.div
         animate={{

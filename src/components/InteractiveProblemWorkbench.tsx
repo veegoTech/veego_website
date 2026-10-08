@@ -72,7 +72,7 @@ export const InteractiveProblemWorkbench: React.FC<InteractiveProblemWorkbenchPr
   };
 
   return (
-    <section className="relative py-20 sm:py-32 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-blue-50/70 via-slate-50 to-white border-b border-slate-200/80 overflow-hidden text-slate-900">
+    <section className="relative py-20 sm:py-32 bg-stylish-mesh bg-stylish-grid border-b border-slate-200/80 overflow-hidden text-slate-900">
       {/* Background Parallax Orbs */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden bg-dot-pattern opacity-30">
         <motion.div

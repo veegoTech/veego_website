@@ -41,7 +41,7 @@ export const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({ onStartDis
   ];
 
   return (
-    <section className="relative py-20 sm:py-32 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-50/60 via-slate-50 to-white text-slate-900 border-b border-slate-200/80 overflow-hidden">
+    <section className="relative py-20 sm:py-32 bg-stylish-mesh bg-stylish-grid text-slate-900 border-b border-slate-200/80 overflow-hidden">
       {/* Parallax background orb */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden bg-dot-pattern opacity-30">
         <motion.div

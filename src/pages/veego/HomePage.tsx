@@ -112,7 +112,7 @@ export const HomePage: React.FC<HomePageProps> = ({
       </div>
 
       {/* 7. DIRECT CONSULTATION FORM - "WHAT IS YOUR BUSINESS PROBLEM?" */}
-      <section id="contact" className="relative py-20 sm:py-32 bg-[radial-gradient(ellipse_at_bottom,_var(--tw-gradient-stops))] from-blue-50/70 via-slate-50 to-white border-b border-slate-200/80 scroll-mt-16 overflow-hidden">
+      <section id="contact" className="relative py-20 sm:py-32 bg-stylish-mesh bg-stylish-grid border-b border-slate-200/80 scroll-mt-16 overflow-hidden">
         {/* Parallax lighting orb */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden bg-dot-pattern opacity-30">
           <motion.div
