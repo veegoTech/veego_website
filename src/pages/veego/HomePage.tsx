@@ -112,32 +112,32 @@ export const HomePage: React.FC<HomePageProps> = ({
       </div>
 
       {/* 7. DIRECT CONSULTATION FORM - "WHAT IS YOUR BUSINESS PROBLEM?" */}
-      <section id="contact" className="relative py-20 sm:py-28 bg-slate-50 border-b border-slate-200 scroll-mt-16 overflow-hidden">
+      <section id="contact" className="relative py-20 sm:py-32 bg-[radial-gradient(ellipse_at_bottom,_var(--tw-gradient-stops))] from-blue-50/70 via-slate-50 to-white border-b border-slate-200/80 scroll-mt-16 overflow-hidden">
         {/* Parallax lighting orb */}
-        <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        <div className="absolute inset-0 pointer-events-none overflow-hidden bg-dot-pattern opacity-30">
           <motion.div
-            animate={{ scale: [1, 1.1, 1], y: [0, -20, 0] }}
+            animate={{ scale: [1, 1.15, 1], y: [0, -20, 0] }}
             transition={{ duration: 15, repeat: Infinity, ease: 'easeInOut' }}
-            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[400px] bg-blue-300/10 rounded-full blur-3xl"
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[750px] h-[450px] bg-gradient-to-br from-blue-400/15 via-indigo-400/10 to-teal-400/15 rounded-full blur-3xl"
           />
         </div>
 
-        <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 z-10">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="rounded-3xl p-8 sm:p-12 bg-white border-2 border-slate-200/80 shadow-xl relative overflow-hidden"
+            className="rounded-3xl p-8 sm:p-12 glass-card border-2 border-slate-200/90 shadow-2xl relative overflow-hidden"
           >
             <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-blue-600 via-indigo-600 to-emerald-500" />
 
             <div className="text-center max-w-2xl mx-auto mb-8">
-              <span className="text-xs uppercase tracking-wider text-blue-700 font-bold px-3 py-1 rounded-full bg-blue-50 border border-blue-200 mb-3 inline-flex items-center gap-1.5 shadow-2xs">
+              <span className="text-xs uppercase tracking-wider text-blue-700 font-bold px-3.5 py-1 rounded-full bg-blue-50 border border-blue-200/80 mb-3 inline-flex items-center gap-1.5 shadow-xs">
                 <CheckCircle2 className="w-3.5 h-3.5 text-blue-600" />
                 Direct Engineering Access
               </span>
-              <h2 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
-                What problem are you trying to solve today?
+              <h2 className="font-display text-3xl sm:text-4xl font-black text-slate-900 tracking-tight leading-tight">
+                What problem are you trying to <span className="text-gradient-blue">solve today?</span>
               </h2>
               <p className="mt-3 text-xs sm:text-sm text-slate-600 leading-relaxed font-normal">
                 Describe the manual routine taking too much time, costing money, or causing operational mistakes. Our systems engineers will review your workflow and outline the right technical solution.

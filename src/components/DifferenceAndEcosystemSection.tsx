@@ -23,9 +23,9 @@ export const DifferenceAndEcosystemSection: React.FC<DifferenceAndEcosystemSecti
   const [hoveredStep, setHoveredStep] = useState<number | null>(null);
 
   return (
-    <section className="relative py-20 sm:py-28 bg-slate-50 text-slate-900 border-b border-slate-200 overflow-hidden">
+    <section className="relative py-20 sm:py-32 bg-[radial-gradient(ellipse_at_bottom,_var(--tw-gradient-stops))] from-slate-100/80 via-slate-50 to-white text-slate-900 border-b border-slate-200/80 overflow-hidden">
       {/* Background Parallax & Light Orbs */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+      <div className="absolute inset-0 pointer-events-none overflow-hidden bg-dot-pattern opacity-30">
         <motion.div
           animate={{
             y: [0, -30, 0],
@@ -33,7 +33,7 @@ export const DifferenceAndEcosystemSection: React.FC<DifferenceAndEcosystemSecti
             scale: [1, 1.05, 1],
           }}
           transition={{ duration: 15, repeat: Infinity, ease: 'easeInOut' }}
-          className="absolute -top-24 left-1/4 w-96 h-96 bg-blue-400/10 rounded-full blur-3xl"
+          className="absolute -top-24 left-1/4 w-[450px] h-[450px] bg-gradient-to-br from-blue-400/15 via-indigo-400/10 to-purple-400/15 rounded-full blur-3xl"
         />
         <motion.div
           animate={{
@@ -42,33 +42,33 @@ export const DifferenceAndEcosystemSection: React.FC<DifferenceAndEcosystemSecti
             scale: [1, 1.1, 1],
           }}
           transition={{ duration: 18, repeat: Infinity, ease: 'easeInOut' }}
-          className="absolute bottom-10 right-1/4 w-96 h-96 bg-indigo-400/10 rounded-full blur-3xl"
+          className="absolute bottom-10 right-1/4 w-[450px] h-[450px] bg-gradient-to-tr from-emerald-400/15 via-teal-400/10 to-blue-400/15 rounded-full blur-3xl"
         />
 
         {/* Floating tech background icons */}
         <motion.div
           animate={{ y: [0, -15, 0], rotate: [0, 5, 0] }}
           transition={{ duration: 7, repeat: Infinity, ease: 'easeInOut' }}
-          className="absolute top-16 left-8 text-blue-200/70 hidden lg:block"
+          className="absolute top-16 left-8 text-blue-300/60 hidden lg:block"
         >
           <Layers className="w-16 h-16" />
         </motion.div>
         <motion.div
           animate={{ y: [0, 20, 0], rotate: [0, -8, 0] }}
           transition={{ duration: 8.5, repeat: Infinity, ease: 'easeInOut' }}
-          className="absolute bottom-20 right-10 text-emerald-200/70 hidden lg:block"
+          className="absolute bottom-20 right-10 text-emerald-300/60 hidden lg:block"
         >
           <Terminal className="w-16 h-16" />
         </motion.div>
       </div>
 
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center max-w-3xl mx-auto mb-12">
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 z-10">
+        <div className="text-center max-w-3xl mx-auto mb-16">
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="inline-flex items-center gap-2 text-xs uppercase tracking-widest text-blue-700 font-bold px-3 py-1 bg-blue-50 border border-blue-100 rounded-full mb-4"
+            className="inline-flex items-center gap-2 text-xs uppercase tracking-widest text-blue-700 font-bold px-3.5 py-1.5 bg-blue-50 border border-blue-200/80 rounded-full mb-4 shadow-xs"
           >
             <Cpu className="w-3.5 h-3.5 text-blue-600" />
             <span>Engineering Standard</span>
@@ -79,10 +79,10 @@ export const DifferenceAndEcosystemSection: React.FC<DifferenceAndEcosystemSecti
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.1 }}
-            className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-slate-900"
+            className="font-display text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-slate-900 leading-tight"
             style={{ textWrap: 'balance' }}
           >
-            Technology is only useful when it solves real operational problems.
+            Technology is only useful when it <span className="text-gradient-blue">solves real operational problems.</span>
           </motion.h2>
 
           <motion.p
@@ -90,18 +90,18 @@ export const DifferenceAndEcosystemSection: React.FC<DifferenceAndEcosystemSecti
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.2 }}
-            className="mt-4 text-base sm:text-lg text-slate-600 leading-relaxed"
+            className="mt-4 text-base sm:text-lg text-slate-600 leading-relaxed font-normal"
           >
             We reject syntax memorization and template tutorials. We build software in reverse: starting with the commercial workflow breakdown, architecting the solution, writing production code, and deploying to live cloud infrastructure.
           </motion.p>
 
           {/* Interactive view toggle */}
-          <div className="mt-8 inline-flex p-1 bg-white border border-slate-200 rounded-xl shadow-xs">
+          <div className="mt-8 inline-flex p-1 bg-white/90 backdrop-blur-md border border-slate-200/90 rounded-2xl shadow-sm">
             <button
               onClick={() => setActiveComparison('both')}
-              className={`px-4 py-2 rounded-lg text-xs font-semibold transition-all ${
+              className={`px-4 py-2 rounded-xl text-xs font-bold transition-all duration-200 cursor-pointer ${
                 activeComparison === 'both'
-                  ? 'bg-slate-900 text-white shadow-xs'
+                  ? 'bg-slate-900 text-white shadow-md'
                   : 'text-slate-600 hover:text-slate-900'
               }`}
             >
@@ -109,9 +109,9 @@ export const DifferenceAndEcosystemSection: React.FC<DifferenceAndEcosystemSecti
             </button>
             <button
               onClick={() => setActiveComparison('outdated')}
-              className={`px-4 py-2 rounded-lg text-xs font-semibold transition-all ${
+              className={`px-4 py-2 rounded-xl text-xs font-bold transition-all duration-200 cursor-pointer ${
                 activeComparison === 'outdated'
-                  ? 'bg-rose-600 text-white shadow-xs'
+                  ? 'bg-rose-600 text-white shadow-md'
                   : 'text-slate-600 hover:text-slate-900'
               }`}
             >
@@ -119,9 +119,9 @@ export const DifferenceAndEcosystemSection: React.FC<DifferenceAndEcosystemSecti
             </button>
             <button
               onClick={() => setActiveComparison('veego')}
-              className={`px-4 py-2 rounded-lg text-xs font-semibold transition-all ${
+              className={`px-4 py-2 rounded-xl text-xs font-bold transition-all duration-200 cursor-pointer ${
                 activeComparison === 'veego'
-                  ? 'bg-blue-600 text-white shadow-xs'
+                  ? 'bg-blue-600 text-white shadow-md'
                   : 'text-slate-600 hover:text-slate-900'
               }`}
             >
@@ -141,9 +141,9 @@ export const DifferenceAndEcosystemSection: React.FC<DifferenceAndEcosystemSecti
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -20 }}
                 transition={{ duration: 0.4 }}
-                className={`p-8 rounded-3xl bg-white border ${
-                  activeComparison === 'outdated' ? 'border-rose-400 ring-4 ring-rose-100' : 'border-slate-200'
-                } shadow-sm hover:shadow-md transition-all flex flex-col justify-between`}
+                className={`p-8 sm:p-9 rounded-3xl glass-card border-2 ${
+                  activeComparison === 'outdated' ? 'border-rose-400 ring-4 ring-rose-100' : 'border-slate-200/90'
+                } shadow-xl hover:shadow-2xl transition-all flex flex-col justify-between`}
               >
                 <div>
                   <div className="flex items-center justify-between pb-4 mb-6 border-b border-slate-100 text-xs font-bold">

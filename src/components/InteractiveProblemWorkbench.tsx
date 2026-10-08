@@ -72,48 +72,48 @@ export const InteractiveProblemWorkbench: React.FC<InteractiveProblemWorkbenchPr
   };
 
   return (
-    <section className="relative py-20 sm:py-28 bg-slate-50 border-b border-slate-200 overflow-hidden text-slate-900">
+    <section className="relative py-20 sm:py-32 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-blue-50/70 via-slate-50 to-white border-b border-slate-200/80 overflow-hidden text-slate-900">
       {/* Background Parallax Orbs */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+      <div className="absolute inset-0 pointer-events-none overflow-hidden bg-dot-pattern opacity-30">
         <motion.div
           animate={{ x: [0, 30, 0], y: [0, -30, 0] }}
           transition={{ duration: 15, repeat: Infinity, ease: 'easeInOut' }}
-          className="absolute top-10 right-10 w-96 h-96 bg-blue-400/10 rounded-full blur-3xl"
+          className="absolute top-10 right-10 w-[450px] h-[450px] bg-gradient-to-br from-blue-400/15 via-indigo-400/10 to-teal-400/15 rounded-full blur-3xl"
         />
         <motion.div
           animate={{ x: [0, -30, 0], y: [0, 30, 0] }}
           transition={{ duration: 18, repeat: Infinity, ease: 'easeInOut' }}
-          className="absolute bottom-10 left-10 w-96 h-96 bg-emerald-400/10 rounded-full blur-3xl"
+          className="absolute bottom-10 left-10 w-[450px] h-[450px] bg-gradient-to-tr from-emerald-400/15 via-teal-400/10 to-blue-400/15 rounded-full blur-3xl"
         />
       </div>
 
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center max-w-3xl mx-auto mb-12">
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 z-10">
+        <div className="text-center max-w-3xl mx-auto mb-16">
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
-            className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-50 border border-blue-200 text-xs font-bold text-blue-700 mb-3 shadow-xs"
+            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-50 border border-blue-200/80 text-xs font-bold text-blue-700 mb-3 shadow-xs"
           >
             <Cpu className="w-3.5 h-3.5 text-blue-600" />
-            <span>INTERACTIVE ENGINE</span>
+            <span className="tracking-wider uppercase">INTERACTIVE ENGINE</span>
           </motion.div>
           <motion.h2
             initial={{ opacity: 0, y: 15 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.1 }}
-            className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-slate-900"
+            className="font-display text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-slate-900 leading-tight"
             style={{ textWrap: 'balance' }}
           >
-            Problems In → Solutions Out
+            Problems In → <span className="text-gradient-blue">Solutions Out</span>
           </motion.h2>
           <motion.p
             initial={{ opacity: 0, y: 15 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.2 }}
-            className="mt-3 text-base sm:text-lg text-slate-600 leading-relaxed"
+            className="mt-3 text-base sm:text-lg text-slate-600 leading-relaxed font-normal"
           >
             Test how VeeGo engineers analyze real operational friction points and design custom production software systems.
           </motion.p>
@@ -124,7 +124,7 @@ export const InteractiveProblemWorkbench: React.FC<InteractiveProblemWorkbenchPr
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="rounded-3xl bg-white border-2 border-slate-200 shadow-xl overflow-hidden"
+          className="rounded-3xl glass-card border-2 border-slate-200/90 shadow-2xl overflow-hidden"
         >
           {/* Workbench Header Bar */}
           <div className="bg-slate-900 text-white px-6 py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">

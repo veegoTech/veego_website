@@ -36,19 +36,19 @@ export const WhyVeeGoAndCTA: React.FC<WhyVeeGoAndCTAProps> = ({
   return (
     <>
       {/* SECTION: WHY VEEGO */}
-      <section className="relative py-20 sm:py-28 bg-white text-slate-900 border-b border-slate-200 overflow-hidden">
+      <section className="relative py-20 sm:py-32 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-slate-50 via-white to-slate-50 text-slate-900 border-b border-slate-200/80 overflow-hidden">
         {/* Subtle background glow */}
-        <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        <div className="absolute inset-0 pointer-events-none overflow-hidden bg-dot-pattern opacity-30">
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] bg-blue-50/50 rounded-full blur-3xl" />
         </div>
 
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 z-10">
           <div className="text-center max-w-3xl mx-auto mb-16">
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
-              className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-50 border border-blue-200 text-xs uppercase tracking-widest text-blue-700 font-bold mb-3 shadow-xs"
+              className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-50 border border-blue-200/80 text-xs uppercase tracking-widest text-blue-700 font-bold mb-3 shadow-xs"
             >
               <Sparkles className="w-3.5 h-3.5 text-blue-600" />
               <span>CORE ENGINEERING ETHICS</span>
@@ -58,10 +58,10 @@ export const WhyVeeGoAndCTA: React.FC<WhyVeeGoAndCTAProps> = ({
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.1 }}
-              className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-slate-900"
+              className="font-display text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-slate-900 leading-tight"
               style={{ textWrap: 'balance' }}
             >
-              Why Organizations Trust VeeGo
+              Why Organizations <span className="text-gradient-blue">Trust VeeGo</span>
             </motion.h2>
             <motion.p
               initial={{ opacity: 0, y: 15 }}
@@ -82,14 +82,14 @@ export const WhyVeeGoAndCTA: React.FC<WhyVeeGoAndCTAProps> = ({
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: idx * 0.1, duration: 0.4 }}
-                whileHover={{ y: -6 }}
-                className="p-7 rounded-3xl bg-slate-50/80 border border-slate-200 flex flex-col justify-between hover:border-blue-400 hover:bg-white hover:shadow-xl transition-all group"
+                whileHover={{ y: -8 }}
+                className="p-7 rounded-3xl glass-card border-2 border-slate-200/90 hover:border-blue-500/60 shadow-xl hover:shadow-2xl transition-all duration-300 flex flex-col justify-between group"
               >
                 <div>
-                  <div className="w-12 h-12 rounded-2xl bg-white border border-slate-200 flex items-center justify-center mb-6 shadow-xs group-hover:scale-110 group-hover:bg-blue-600 group-hover:text-white transition-all">
+                  <div className="w-13 h-13 rounded-2xl bg-white border border-slate-200/90 flex items-center justify-center mb-6 shadow-md group-hover:scale-110 group-hover:bg-blue-600 group-hover:text-white transition-all duration-300">
                     {p.icon}
                   </div>
-                  <h3 className="text-xl font-bold text-slate-900 mb-3 group-hover:text-blue-700 transition-colors">
+                  <h3 className="text-xl font-bold text-slate-900 mb-3 group-hover:text-blue-600 transition-colors font-display">
                     {p.title}
                   </h3>
                   <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-normal">

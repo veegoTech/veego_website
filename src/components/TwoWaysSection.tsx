@@ -66,47 +66,47 @@ export const TwoWaysSection: React.FC<TwoWaysSectionProps> = ({
   ];
 
   return (
-    <section className="relative py-20 sm:py-28 bg-slate-50 border-b border-slate-200 text-slate-900 overflow-hidden">
+    <section className="relative py-20 sm:py-32 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-slate-100/70 via-slate-50 to-white border-b border-slate-200/80 text-slate-900 overflow-hidden">
       {/* Ambient background parallax orbs */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+      <div className="absolute inset-0 pointer-events-none overflow-hidden bg-dot-pattern opacity-30">
         <motion.div
           animate={{ x: [0, 40, 0], y: [0, -20, 0] }}
           transition={{ duration: 16, repeat: Infinity, ease: 'easeInOut' }}
-          className="absolute top-1/4 -left-20 w-80 h-80 bg-blue-400/10 rounded-full blur-3xl"
+          className="absolute top-1/4 -left-20 w-96 h-96 bg-gradient-to-br from-blue-400/15 to-indigo-400/10 rounded-full blur-3xl"
         />
         <motion.div
           animate={{ x: [0, -40, 0], y: [0, 30, 0] }}
           transition={{ duration: 18, repeat: Infinity, ease: 'easeInOut' }}
-          className="absolute bottom-1/4 -right-20 w-80 h-80 bg-emerald-400/10 rounded-full blur-3xl"
+          className="absolute bottom-1/4 -right-20 w-96 h-96 bg-gradient-to-tr from-emerald-400/15 to-teal-400/10 rounded-full blur-3xl"
         />
 
         <motion.div
           animate={{ rotate: 360 }}
           transition={{ duration: 40, repeat: Infinity, ease: 'linear' }}
-          className="absolute top-12 right-12 text-slate-200 hidden lg:block"
+          className="absolute top-12 right-12 text-slate-300/50 hidden lg:block"
         >
           <Globe className="w-20 h-20" />
         </motion.div>
         <motion.div
           animate={{ y: [0, 15, 0] }}
           transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
-          className="absolute bottom-16 left-12 text-slate-200 hidden lg:block"
+          className="absolute bottom-16 left-12 text-slate-300/50 hidden lg:block"
         >
           <Database className="w-16 h-16" />
         </motion.div>
       </div>
 
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 z-10">
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-16">
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
-            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-50 border border-blue-200 text-xs text-blue-700 font-bold mb-4 shadow-xs"
+            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-50 border border-blue-200/80 text-xs text-blue-700 font-bold mb-4 shadow-xs"
           >
             <Sparkles className="w-3.5 h-3.5 text-blue-600" />
-            <span>THE TWO PILLARS OF VEEGO</span>
+            <span className="tracking-wider uppercase">THE TWO PILLARS OF VEEGO</span>
           </motion.div>
 
           <motion.h2
@@ -114,10 +114,10 @@ export const TwoWaysSection: React.FC<TwoWaysSectionProps> = ({
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.1 }}
-            className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-slate-900"
+            className="font-display text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-slate-900 leading-tight"
             style={{ textWrap: 'balance' }}
           >
-            Built for Businesses. Engineered for Developers.
+            Built for Businesses. <span className="text-gradient-blue">Engineered for Developers.</span>
           </motion.h2>
 
           <motion.p
@@ -138,9 +138,9 @@ export const TwoWaysSection: React.FC<TwoWaysSectionProps> = ({
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            whileHover={{ y: -4 }}
+            whileHover={{ y: -6 }}
             transition={{ duration: 0.3 }}
-            className="rounded-3xl p-7 sm:p-9 bg-white border-2 border-blue-200/90 shadow-md hover:shadow-xl hover:border-blue-400 transition-all flex flex-col justify-between relative overflow-hidden group"
+            className="rounded-3xl p-7 sm:p-9 glass-card border-2 border-blue-200/90 hover:border-blue-500/60 shadow-xl hover:shadow-2xl transition-all flex flex-col justify-between relative overflow-hidden group"
           >
             <div className="absolute top-0 right-0 w-44 h-44 bg-gradient-to-bl from-blue-100/70 to-transparent rounded-bl-full pointer-events-none transition-transform group-hover:scale-110" />
 

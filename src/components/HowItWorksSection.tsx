@@ -41,36 +41,36 @@ export const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({ onStartDis
   ];
 
   return (
-    <section className="relative py-20 sm:py-28 bg-slate-50 text-slate-900 border-b border-slate-200 overflow-hidden">
+    <section className="relative py-20 sm:py-32 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-50/60 via-slate-50 to-white text-slate-900 border-b border-slate-200/80 overflow-hidden">
       {/* Parallax background orb */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+      <div className="absolute inset-0 pointer-events-none overflow-hidden bg-dot-pattern opacity-30">
         <motion.div
           animate={{ scale: [1, 1.15, 1], y: [0, -30, 0] }}
           transition={{ duration: 14, repeat: Infinity, ease: 'easeInOut' }}
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-blue-300/10 rounded-full blur-3xl"
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-br from-blue-400/15 via-indigo-400/10 to-teal-400/15 rounded-full blur-3xl"
         />
       </div>
 
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 z-10">
         <div className="text-center max-w-3xl mx-auto mb-16">
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-50 border border-blue-200 text-xs text-blue-700 font-bold mb-4 shadow-xs"
+            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-50 border border-blue-200/80 text-xs text-blue-700 font-bold mb-4 shadow-xs"
           >
             <Sparkles className="w-3.5 h-3.5 text-blue-600" />
-            <span>THE VEEGO PROCESS</span>
+            <span className="tracking-wider uppercase">THE VEEGO PROCESS</span>
           </motion.div>
           <motion.h2
             initial={{ opacity: 0, y: 15 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.1 }}
-            className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-slate-900"
+            className="font-display text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-slate-900 leading-tight"
             style={{ textWrap: 'balance' }}
           >
-            Understand. Build. Grow.
+            Understand. Build. <span className="text-gradient-blue">Grow.</span>
           </motion.h2>
           <motion.p
             initial={{ opacity: 0, y: 15 }}
@@ -93,10 +93,10 @@ export const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({ onStartDis
               transition={{ delay: idx * 0.1, duration: 0.4 }}
               onHoverStart={() => setHoveredStep(idx)}
               onHoverEnd={() => setHoveredStep(null)}
-              className={`p-6 rounded-3xl bg-white border transition-all flex flex-col justify-between relative group cursor-pointer ${
+              className={`p-7 rounded-3xl glass-card border-2 transition-all duration-300 flex flex-col justify-between relative group cursor-pointer ${
                 hoveredStep === idx
-                  ? 'border-blue-500 shadow-xl ring-4 ring-blue-100 -translate-y-2'
-                  : 'border-slate-200 shadow-sm hover:border-blue-300'
+                  ? 'border-blue-500 shadow-2xl ring-4 ring-blue-100 -translate-y-2'
+                  : 'border-slate-200/90 shadow-md hover:border-blue-300'
               }`}
             >
               {/* Step indicator pill */}

@@ -139,35 +139,35 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
   const filteredServices = activeTab === 'all' ? services : services.filter(s => s.category === activeTab);
 
   return (
-    <section id="services" className="py-20 sm:py-28 bg-gradient-to-b from-white via-slate-50/50 to-white border-b border-slate-200 text-slate-900 scroll-mt-16 relative overflow-hidden">
+    <section id="services" className="py-20 sm:py-32 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-50/70 via-slate-50 to-white border-b border-slate-200/80 text-slate-900 scroll-mt-16 relative overflow-hidden">
       {/* 🔮 PARALLAX FLOATING BACKGROUND OBJECTS & GLOW ORBS */}
       <motion.div
         animate={{
-          y: [0, -25, 0],
-          rotate: [0, 5, 0],
-          scale: [1, 1.05, 1]
+          y: [0, -30, 0],
+          rotate: [0, 8, 0],
+          scale: [1, 1.1, 1]
         }}
-        transition={{ duration: 12, repeat: Infinity, ease: 'easeInOut' }}
-        className="absolute top-12 right-10 w-96 h-96 bg-blue-400/10 rounded-full blur-3xl pointer-events-none -z-0"
+        transition={{ duration: 14, repeat: Infinity, ease: 'easeInOut' }}
+        className="absolute top-12 right-10 w-[450px] h-[450px] bg-gradient-to-br from-blue-500/15 via-indigo-500/10 to-purple-500/15 rounded-full blur-3xl pointer-events-none -z-0"
       />
       <motion.div
         animate={{
-          y: [0, 30, 0],
-          rotate: [0, -8, 0],
-          scale: [1, 1.08, 1]
+          y: [0, 35, 0],
+          rotate: [0, -10, 0],
+          scale: [1, 1.12, 1]
         }}
-        transition={{ duration: 15, repeat: Infinity, ease: 'easeInOut' }}
-        className="absolute bottom-16 left-10 w-[450px] h-[450px] bg-indigo-400/10 rounded-full blur-3xl pointer-events-none -z-0"
+        transition={{ duration: 16, repeat: Infinity, ease: 'easeInOut' }}
+        className="absolute bottom-16 left-10 w-[500px] h-[500px] bg-gradient-to-tr from-emerald-500/15 via-teal-500/10 to-blue-500/15 rounded-full blur-3xl pointer-events-none -z-0"
       />
 
       {/* Floating Animated Technical Icons in Background */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none -z-0 opacity-25">
+      <div className="absolute inset-0 overflow-hidden pointer-events-none -z-0 opacity-20 bg-dot-pattern">
         <motion.div
           animate={{ y: [0, -40, 0], opacity: [0.3, 0.7, 0.3] }}
           transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
           className="absolute top-24 left-[8%] text-blue-500"
         >
-          <Cpu className="w-12 h-12" />
+          <Cpu className="w-14 h-14" />
         </motion.div>
 
         <motion.div
@@ -175,7 +175,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
           transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
           className="absolute top-48 right-[10%] text-indigo-500"
         >
-          <Workflow className="w-14 h-14" />
+          <Workflow className="w-16 h-16" />
         </motion.div>
 
         <motion.div
@@ -183,7 +183,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
           transition={{ duration: 9, repeat: Infinity, ease: 'easeInOut', delay: 2 }}
           className="absolute bottom-32 left-[15%] text-emerald-500"
         >
-          <Code2 className="w-10 h-10" />
+          <Code2 className="w-12 h-12" />
         </motion.div>
       </div>
 
@@ -194,15 +194,16 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="text-center max-w-3xl mx-auto mb-12"
+          className="text-center max-w-3xl mx-auto mb-16"
         >
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-50 border border-blue-200/80 text-xs font-bold text-blue-700 mb-4 shadow-2xs">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200/80 text-xs font-bold text-blue-700 mb-4 shadow-xs">
             <Sparkle className="w-3.5 h-3.5 text-blue-600 animate-spin-slow" />
-            <span>REAL ENGINEERING · HAND-CRAFTED SYSTEMS</span>
+            <span className="tracking-wider uppercase">REAL ENGINEERING · HAND-CRAFTED SYSTEMS</span>
           </div>
 
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-slate-900 leading-tight">
-            Engineering Solutions Built by Humans, for Real Operations
+          <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-slate-900 leading-tight">
+            Engineering Solutions Built by Humans, <br className="hidden sm:inline" />
+            <span className="text-gradient-blue">for Real Operations</span>
           </h2>
 
           <p className="mt-4 text-base sm:text-lg text-slate-600 leading-relaxed font-normal">
@@ -210,7 +211,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
           </p>
 
           {/* Interactive Filter Pills */}
-          <div className="flex flex-wrap items-center justify-center gap-2 mt-8">
+          <div className="flex flex-wrap items-center justify-center gap-2.5 mt-8">
             {[
               { id: 'all', label: 'All Solutions' },
               { id: 'automation', label: '⚡ Business Automation' },
@@ -220,10 +221,10 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id as any)}
-                className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer ${
+                className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all duration-200 cursor-pointer ${
                   activeTab === tab.id
-                    ? 'bg-slate-900 text-white shadow-md scale-105'
-                    : 'bg-white text-slate-600 border border-slate-200 hover:border-slate-300 hover:bg-slate-50'
+                    ? 'bg-slate-900 text-white shadow-lg shadow-slate-900/20 scale-105 border border-slate-800'
+                    : 'bg-white/90 text-slate-600 border border-slate-200/80 hover:border-slate-300 hover:bg-slate-50'
                 }`}
               >
                 {tab.label}
@@ -247,7 +248,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
                   viewport={{ once: true }}
                   transition={{ duration: 0.5, delay: idx * 0.15 }}
                   whileHover={{ y: -8 }}
-                  className="group relative rounded-3xl p-7 sm:p-8 bg-white border-2 border-slate-200/90 hover:border-blue-400/80 shadow-md hover:shadow-2xl transition-all duration-300 flex flex-col justify-between overflow-hidden"
+                  className="group relative rounded-3xl p-7 sm:p-8 glass-card border-2 border-slate-200/90 hover:border-blue-500/60 shadow-xl hover:shadow-2xl transition-all duration-300 flex flex-col justify-between overflow-hidden"
                 >
                   {/* Subtle Card Glow Effect */}
                   <div
