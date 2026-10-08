@@ -521,16 +521,21 @@ export default function LandingPage({ onLoginSuccess }) {
                   <span>{isLoading ? 'Verifying credentials...' : `Authenticate as ${activeTab}`}</span>
                 </button>
 
-                <div className="pt-2 border-t border-slate-100 text-center">
+                <div className="pt-2 border-t border-slate-100 text-center flex flex-col gap-1 items-center">
                   <button
                     type="button"
                     onClick={() => {
-                      setUsername(activeTab === 'admin' ? 'admin' : 'staff');
-                      setPassword('123456');
+                      if (activeTab === 'admin') {
+                        setUsername('admin');
+                        setPassword('admin_portal_2026');
+                      } else {
+                        setUsername('staff');
+                        setPassword('staff_portal_2026');
+                      }
                     }}
-                    className="text-xs font-semibold text-blue-600 hover:text-blue-700 hover:underline"
+                    className="text-xs font-semibold text-blue-600 hover:text-blue-700 hover:underline cursor-pointer"
                   >
-                    Auto-fill Demo Credentials
+                    Auto-fill Demo {activeTab.toUpperCase()} Credentials ({activeTab === 'admin' ? 'admin / admin_portal_2026' : 'staff / staff_portal_2026'})
                   </button>
                 </div>
               </form>
