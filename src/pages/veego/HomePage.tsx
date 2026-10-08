@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { motion } from 'framer-motion';
 import { Hero } from '../../components/Hero';
 import { ServicesSection } from '../../components/ServicesSection';
 import { DifferenceAndEcosystemSection } from '../../components/DifferenceAndEcosystemSection';
