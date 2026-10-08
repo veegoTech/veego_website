@@ -1,5 +1,6 @@
 import React from 'react';
-import { ArrowRight, Sparkles, Play } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { ArrowRight, Sparkles, Play, Shield, Code2, Cpu, Box } from 'lucide-react';
 import heroTeamImg from '../assets/hero_team.jpg';
 
 interface HeroProps {
@@ -12,109 +13,167 @@ export const Hero: React.FC<HeroProps> = ({
   onSolveProblem,
   onExploreSolutions
 }) => {
-
   return (
-    <section className="relative bg-white text-slate-900 overflow-hidden pt-8 pb-16 lg:pt-14 lg:pb-20 border-b border-slate-200">
-      {/* Background Soft Glow Accents */}
-      <div className="absolute top-0 right-0 w-[550px] h-[550px] bg-gradient-to-br from-blue-100/50 via-cyan-50/40 to-transparent rounded-full blur-3xl pointer-events-none -z-0" />
-      <div className="absolute -bottom-10 left-10 w-[400px] h-[400px] bg-blue-50/40 rounded-full blur-3xl pointer-events-none -z-0" />
+    <section className="relative bg-tech-3d-dark text-white overflow-hidden pt-10 pb-20 lg:pt-16 lg:pb-28 border-b border-slate-800/80">
+      {/* 3D LIGHTING & AMBIENT PARALLAX GLOWS */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        {/* Top Right Cyan Radial Glow */}
+        <div className="absolute -top-24 -right-24 w-[650px] h-[650px] bg-sky-500/15 rounded-full blur-[140px]" />
+        {/* Bottom Left Blue-Indigo Glow */}
+        <div className="absolute -bottom-24 -left-24 w-[600px] h-[600px] bg-indigo-600/20 rounded-full blur-[140px]" />
+
+        {/* Laser Axis Lines (Matching Reference Image 1) */}
+        <div className="absolute top-1/4 right-[25%] w-[500px] laser-axis-h opacity-60 hidden md:block" />
+        <div className="absolute top-[10%] right-[35%] h-[600px] laser-axis-v opacity-60 hidden md:block" />
+        
+        {/* HUD Corner Accents */}
+        <div className="absolute top-6 left-6 text-sky-500/40 text-xs font-mono select-none">
+          + 3D_SPACE_GRID // 0x7F9A
+        </div>
+        <div className="absolute top-6 right-6 text-indigo-400/40 text-xs font-mono select-none">
+          [ VEEGO_ENGINEERING_V2.0 ]
+        </div>
+      </div>
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 z-10">
-        {/* MAIN SPLIT HERO: Left Headline + Right Geometric Shield Image */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center mb-16">
+        {/* MAIN SPLIT HERO: Left Headline + Right 3D Object & Team Frame */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
+          
           {/* Left Column (Content & CTAs) */}
           <div className="lg:col-span-6 flex flex-col items-start text-left">
             {/* Tagline Badge */}
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-50 border border-blue-200/80 text-xs font-semibold text-blue-700 mb-6 shadow-2xs">
-              <span className="w-2 h-2 rounded-full bg-blue-600 animate-pulse" />
-              <span>VeeGo</span>
-              <span className="text-blue-300">·</span>
-              <span className="text-slate-700">Understand. Build. Grow.</span>
-            </div>
+            <motion.div
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-slate-900/90 border border-sky-500/40 text-xs font-mono text-sky-300 mb-6 shadow-lg shadow-sky-500/10"
+            >
+              <span className="w-2 h-2 rounded-full bg-sky-400 animate-ping" />
+              <Code2 className="w-3.5 h-3.5 text-sky-400" />
+              <span>VEEGO</span>
+              <span className="text-slate-600">|</span>
+              <span className="text-slate-300 font-sans">UNDERSTAND · BUILD · GROW</span>
+            </motion.div>
 
-            {/* Main Headline with Underline Accent */}
-            <h1
-              className="text-4xl sm:text-5xl lg:text-[3.5rem] font-black tracking-tight text-slate-900 leading-[1.12] mb-6"
+            {/* Main Headline */}
+            <motion.h1
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+              className="text-4xl sm:text-5xl lg:text-[3.5rem] font-black tracking-tight text-white leading-[1.12] mb-6"
               style={{ textWrap: 'balance' }}
             >
-              <span className="relative inline-block">
-                <span className="relative z-10">IT Solutions</span>
-                <span className="absolute bottom-1.5 left-0 w-full h-3 bg-blue-200 -z-0 rounded-sm" />
-              </span>{' '}
-              for your Business Problems
-            </h1>
+              Real <span className="text-sky-400 font-black">IT Solutions</span> for Your Operational Problems
+            </motion.h1>
 
             {/* Subtitle Paragraph */}
-            <p className="text-base sm:text-lg text-slate-600 leading-relaxed font-normal mb-8 max-w-xl">
-              We start with your business problem, not complex tech. We understand how your team works, build custom software to solve it, and teach practical coding through real projects.
-            </p>
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="text-base sm:text-lg text-slate-300 leading-relaxed font-normal mb-8 max-w-xl"
+            >
+              We solve daily business friction through custom-engineered software, automated workflows, and hands-on production code. No buzzwords, just results.
+            </motion.p>
 
             {/* Action Buttons */}
-            <div className="flex flex-wrap items-center gap-4 w-full sm:w-auto mb-10">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.3 }}
+              className="flex flex-wrap items-center gap-4 w-full sm:w-auto mb-6"
+            >
               <button
                 onClick={onSolveProblem}
-                className="px-7 py-3.5 rounded-full bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm shadow-md shadow-blue-600/20 hover:shadow-lg transition-all flex items-center gap-2"
+                className="px-8 py-4 rounded-2xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-sm shadow-xl shadow-blue-600/30 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center gap-2.5 cursor-pointer"
               >
-                <span>Tell Us Your Problem</span>
+                <span>Discuss Your Operational Problem</span>
                 <ArrowRight className="w-4 h-4" />
               </button>
 
               <button
                 onClick={onExploreSolutions}
-                className="px-6 py-3.5 rounded-full border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 font-semibold text-sm transition-all flex items-center gap-2.5 shadow-2xs"
+                className="px-6 py-4 rounded-2xl border border-slate-700 bg-slate-900/80 hover:bg-slate-800 text-slate-200 font-semibold text-sm transition-all flex items-center gap-2.5 cursor-pointer hover:border-sky-500/50"
               >
-                <div className="w-6 h-6 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center">
+                <div className="w-6 h-6 rounded-full bg-sky-500/20 text-sky-400 flex items-center justify-center">
                   <Play className="w-3 h-3 fill-current ml-0.5" />
                 </div>
                 <span>Explore Solutions</span>
               </button>
+            </motion.div>
+
+            {/* Tech Badges Row */}
+            <div className="flex items-center gap-6 pt-4 text-xs font-mono text-slate-400">
+              <div className="flex items-center gap-1.5">
+                <Cpu className="w-4 h-4 text-sky-400" />
+                <span>Zero Sales Reps</span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <Shield className="w-4 h-4 text-emerald-400" />
+                <span>100% Direct Engineer Access</span>
+              </div>
             </div>
 
           </div>
 
-          {/* Right Column (Geometric Shield Framed Image with Accent Wings) */}
+          {/* Right Column: 3D Wireframe Scene & Cyber Frame */}
           <div className="lg:col-span-6 relative flex items-center justify-center">
-            {/* Decorative Geometric Background Wings */}
-            <div className="absolute -top-6 -right-6 w-72 h-72 bg-gradient-to-br from-blue-600 to-cyan-500 rounded-3xl rotate-12 opacity-85 -z-0 blur-xs" />
-            <div className="absolute -bottom-4 -left-4 w-48 h-48 bg-blue-100 rounded-3xl -rotate-6 -z-0" />
-
-            {/* Chevrons Accent */}
-            <div className="absolute -bottom-8 left-8 text-blue-300/80 font-bold text-xs tracking-widest select-none hidden sm:block">
-              &lt;&lt;&lt;&lt;&lt;&lt;
+            
+            {/* Animated 3D Isometric Cube Element (Matching Reference Image 1) */}
+            <div className="absolute -top-12 -right-8 pointer-events-none z-0 hidden sm:block opacity-80">
+              <div className="perspective-1000 scale-75">
+                <div className="cube-3d-scene">
+                  <div className="cube-3d-face cube-3d-front" />
+                  <div className="cube-3d-face cube-3d-back" />
+                  <div className="cube-3d-face cube-3d-right" />
+                  <div className="cube-3d-face cube-3d-left" />
+                  <div className="cube-3d-face cube-3d-top" />
+                  <div className="cube-3d-face cube-3d-bottom" />
+                </div>
+              </div>
             </div>
 
-            {/* Main Image in Modern Organic Polygon Frame */}
-            <div className="relative z-10 w-full max-w-lg rounded-[2.5rem] overflow-hidden border-4 border-white shadow-2xl bg-white aspect-[4/3]">
+            {/* Main Cyber Framed Image */}
+            <div className="relative z-10 w-full max-w-lg rounded-3xl overflow-hidden border border-slate-700/80 shadow-2xl bg-slate-900 aspect-[4/3] group">
               <img
                 src={heroTeamImg}
                 alt="VeeGo Software Engineering Team Collaborating"
-                className="w-full h-full object-cover object-center transform hover:scale-105 transition-transform duration-700"
+                className="w-full h-full object-cover object-center transform group-hover:scale-105 transition-transform duration-700 opacity-90"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-slate-900/40 via-transparent to-transparent pointer-events-none" />
+              <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent pointer-events-none" />
+
+              {/* HUD Corner Markers */}
+              <div className="absolute top-3 left-3 w-4 h-4 border-t-2 border-l-2 border-sky-400 pointer-events-none" />
+              <div className="absolute top-3 right-3 w-4 h-4 border-t-2 border-r-2 border-sky-400 pointer-events-none" />
+              <div className="absolute bottom-3 left-3 w-4 h-4 border-b-2 border-l-2 border-sky-400 pointer-events-none" />
+              <div className="absolute bottom-3 right-3 w-4 h-4 border-b-2 border-r-2 border-sky-400 pointer-events-none" />
 
               {/* Floating Bottom Card Over Image */}
-              <div className="absolute bottom-4 left-4 right-4 bg-white/95 backdrop-blur-md p-3.5 rounded-2xl border border-white/80 shadow-lg flex items-center justify-between">
+              <div className="absolute bottom-4 left-4 right-4 bg-slate-900/90 backdrop-blur-md p-4 rounded-2xl border border-slate-700/80 shadow-xl flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 rounded-xl bg-blue-600 text-white flex items-center justify-center shadow-xs shrink-0">
-                    <Sparkles className="w-5 h-5" />
+                  <div className="w-10 h-10 rounded-xl bg-blue-600 text-white flex items-center justify-center shadow-lg shadow-blue-600/30 shrink-0">
+                    <Box className="w-5 h-5" />
                   </div>
                   <div>
-                    <div className="text-xs font-bold text-slate-900">
-                      Understand · Build · Grow
+                    <div className="text-xs font-bold text-white font-mono tracking-tight">
+                      VEEGO_ENGINEERING_CORE
                     </div>
-                    <div className="text-[11px] text-slate-500">
-                      Real software for real daily operations
+                    <div className="text-[11px] text-slate-400">
+                      Understand · Build · Grow
                     </div>
                   </div>
                 </div>
-                <span className="text-[10px] font-bold px-2 py-1 rounded-md bg-emerald-50 text-emerald-700 border border-emerald-200">
-                  Active
+                <span className="text-[10px] font-mono font-bold px-2.5 py-1 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
+                  ● ACTIVE
                 </span>
               </div>
             </div>
+
           </div>
+
         </div>
       </div>
     </section>
   );
 };
+
