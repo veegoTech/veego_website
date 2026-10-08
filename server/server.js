@@ -337,14 +337,11 @@ app.post('/api/auth/login', async (req, res) => {
   return res.status(400).json({ error: 'Invalid role specified!' });
 });
 
-// C. Authenticate/Sign In Student with Device Lock Check
+// C. Authenticate/Sign In Student
 app.post('/api/students/login', async (req, res) => {
-  const { accessCode, deviceId } = req.body;
+  const { accessCode } = req.body;
   if (!accessCode) {
     return res.status(400).json({ error: 'Access Code is required!' });
-  }
-  if (!deviceId) {
-    return res.status(400).json({ error: 'Device ID is required to secure your account!' });
   }
 
   try {
@@ -354,18 +351,6 @@ app.post('/api/students/login', async (req, res) => {
       if (!student) {
         return res.status(404).json({ error: 'Invalid Access Code. Please try again!' });
       }
-      
-      // Device verification checks
-      if (student.deviceId && student.deviceId !== deviceId) {
-        return res.status(403).json({ error: 'This access key is locked to another device! Please request an administrator to reset your device access.' });
-      }
-      
-      // Lock student account to this device if it's the first login
-      if (!student.deviceId) {
-        student.deviceId = deviceId;
-        await student.save();
-      }
-      
       return res.json(student);
     } else {
       const students = getLocalStudents();
@@ -373,17 +358,6 @@ app.post('/api/students/login', async (req, res) => {
       if (idx === -1) {
         return res.status(404).json({ error: 'Invalid Access Code. Please try again!' });
       }
-      
-      const student = students[idx];
-      if (student.deviceId && student.deviceId !== deviceId) {
-        return res.status(403).json({ error: 'This access key is locked to another device! Please request an administrator to reset your device access.' });
-      }
-      
-      if (!student.deviceId) {
-        students[idx].deviceId = deviceId;
-        saveLocalStudents(students);
-      }
-      
       return res.json(students[idx]);
     }
   } catch (e) {

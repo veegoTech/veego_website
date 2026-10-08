@@ -2535,7 +2535,6 @@ export default function Dashboard({ onSelectCourse, enrolledCourse, setEnrolledC
                               <th style={{ padding: '1rem 1.25rem', whiteSpace: 'nowrap' }}>ACCESS CODE</th>
                               <th style={{ padding: '1rem 1.25rem', minWidth: '220px' }}>COURSE PROGRESS</th>
                               <th style={{ padding: '1rem 1.25rem', whiteSpace: 'nowrap' }}>SHAREABLE LINK</th>
-                              <th style={{ padding: '1rem 1.25rem', whiteSpace: 'nowrap' }}>LOCK STATUS</th>
                               <th style={{ padding: '1rem 1.25rem', textAlign: 'center', whiteSpace: 'nowrap' }}>ACTIONS</th>
                             </tr>
                           </thead>
@@ -2686,17 +2685,6 @@ export default function Dashboard({ onSelectCourse, enrolledCourse, setEnrolledC
                                     <Copy size={12} /> Copy Link
                                   </button>
                                 </td>
-                                <td style={{ padding: '1rem 1.25rem', whiteSpace: 'nowrap' }}>
-                                  {s.deviceId ? (
-                                    <span style={{ color: '#10b981', fontWeight: 700, fontSize: '0.78rem', background: 'rgba(16, 185, 129, 0.08)', padding: '0.35rem 0.75rem', borderRadius: '20px', display: 'inline-block', whiteSpace: 'nowrap' }}>
-                                      🔒 Device Locked
-                                    </span>
-                                  ) : (
-                                    <span style={{ color: 'var(--text-secondary)', fontWeight: 600, fontSize: '0.78rem', background: 'rgba(0, 0, 0, 0.03)', padding: '0.35rem 0.75rem', borderRadius: '20px', display: 'inline-block', whiteSpace: 'nowrap' }}>
-                                      🆕 Unlocked
-                                    </span>
-                                  )}
-                                </td>
                                 <td style={{ padding: '1rem 1.25rem', textAlign: 'center', whiteSpace: 'nowrap' }}>
                                   <button
                                     onClick={() => handleOpenEditCoursesModal(s)}
@@ -2704,14 +2692,6 @@ export default function Dashboard({ onSelectCourse, enrolledCourse, setEnrolledC
                                   >
                                     Edit Tracks
                                   </button>
-                                  {s.deviceId && (
-                                    <button
-                                      onClick={() => handleResetDevice(s._id || s.id)}
-                                      style={{ background: '#fffbe8', border: '1px solid #fde68a', color: '#d97706', fontWeight: 800, cursor: 'pointer', fontSize: '0.8rem', padding: '0.35rem 0.75rem', borderRadius: '8px', marginRight: '6px' }}
-                                    >
-                                      Reset Lock
-                                    </button>
-                                  )}
                                   {session?.role === 'admin' && (
                                     <button
                                       onClick={() => handleDeleteStudent(s._id || s.id)}

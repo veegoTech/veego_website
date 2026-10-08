@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { CertificateApp } from './certificate/CertificateApp';
 import { IDCardApp } from './idcard/IDCardApp';
-import { FoclenApp } from './foclen/FoclenApp';
 import { 
   Award,
   CreditCard,
   Building2,
-  FileCheck2,
   ArrowLeft,
   GraduationCap
 } from 'lucide-react';
@@ -15,8 +13,8 @@ import './certificate.css';
 interface CertificateManagerProps {
   session?: any;
   students?: any[];
-  initialModule?: 'certificates' | 'idcards' | 'foclen';
-  onSelectModule?: (mod: 'certificates' | 'idcards' | 'foclen') => void;
+  initialModule?: 'certificates' | 'idcards';
+  onSelectModule?: (mod: 'certificates' | 'idcards') => void;
   onBack?: () => void;
 }
 
@@ -27,7 +25,9 @@ export default function CertificateManager({
   onSelectModule,
   onBack 
 }: CertificateManagerProps) {
-  const [activeModule, setActiveModule] = useState<'certificates' | 'idcards' | 'foclen'>(initialModule);
+  const [activeModule, setActiveModule] = useState<'certificates' | 'idcards'>(
+    initialModule === 'idcards' ? 'idcards' : 'certificates'
+  );
 
   useEffect(() => {
     if (initialModule && initialModule !== activeModule) {
@@ -35,7 +35,7 @@ export default function CertificateManager({
     }
   }, [initialModule]);
 
-  const handleModuleChange = (mod: 'certificates' | 'idcards' | 'foclen') => {
+  const handleModuleChange = (mod: 'certificates' | 'idcards') => {
     setActiveModule(mod);
     if (onSelectModule) {
       onSelectModule(mod);
@@ -65,7 +65,7 @@ export default function CertificateManager({
               )}
             </div>
 
-            {/* Center: Module Switcher (Certificates vs ID Cards vs Foclen) */}
+            {/* Center: Module Switcher (Certificates vs ID Cards) */}
             <div className="flex items-center bg-slate-100 p-1 rounded-xl border border-slate-200 overflow-x-auto max-w-full order-3 md:order-2 w-full md:w-auto justify-between sm:justify-start">
               <button
                 type="button"
@@ -76,8 +76,8 @@ export default function CertificateManager({
                     : 'text-slate-600 hover:text-slate-900'
                 }`}
               >
-                <Award className={`w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0 ${activeModule === 'certificates' ? 'text-orange-600' : 'text-slate-400'}`} />
-                <span>AF Certificate</span>
+                <Award className={`w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0 ${activeModule === 'certificates' ? 'text-blue-600' : 'text-slate-400'}`} />
+                <span>Certificate</span>
               </button>
 
               <button
@@ -90,31 +90,18 @@ export default function CertificateManager({
                 }`}
               >
                 <CreditCard className={`w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0 ${activeModule === 'idcards' ? 'text-blue-600' : 'text-slate-400'}`} />
-                <span>AF ID Card</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => handleModuleChange('foclen')}
-                className={`inline-flex items-center justify-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg text-xs font-bold transition-all whitespace-nowrap flex-1 sm:flex-initial cursor-pointer ${
-                  activeModule === 'foclen'
-                    ? 'bg-white text-slate-900 shadow-sm'
-                    : 'text-slate-600 hover:text-slate-900'
-                }`}
-              >
-                <FileCheck2 className={`w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0 ${activeModule === 'foclen' ? 'text-emerald-600' : 'text-slate-400'}`} />
-                <span>Foclen Certificate</span>
+                <span>Student ID Card</span>
               </button>
             </div>
 
             {/* Right: Info Badge */}
             <div className="hidden lg:flex items-center gap-2 text-xs font-medium text-slate-500 order-2 md:order-3">
               <Building2 className="w-3.5 h-3.5 text-slate-400" />
-              <span>Theni Branch</span>
+              <span>VeeGo Technologies</span>
               {students.length > 0 && (
                 <span className="inline-flex items-center gap-1 ml-2 bg-blue-50 text-blue-700 px-2 py-0.5 rounded-full border border-blue-200 text-[11px] font-semibold">
                   <GraduationCap className="w-3 h-3" />
-                  {students.length} LMS Students
+                  {students.length} Enrolled Students
                 </span>
               )}
             </div>
@@ -127,14 +114,13 @@ export default function CertificateManager({
       <main className="flex-1 max-w-7xl w-full mx-auto px-3 sm:px-6 py-4 sm:py-6">
         {activeModule === 'certificates' && <CertificateApp />}
         {activeModule === 'idcards' && <IDCardApp />}
-        {activeModule === 'foclen' && <FoclenApp />}
       </main>
 
       {/* Footer */}
       <footer className="no-print bg-white border-t border-slate-200 py-4 mt-8 text-xs text-slate-500">
         <div className="max-w-7xl mx-auto px-3 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-2 text-center sm:text-left">
-          <p>© {new Date().getFullYear()} Alpha Fly Education & Foclen Software Pvt Ltd.</p>
-          <p className="text-slate-400">ISO 9001:2015 Certified • All rights reserved</p>
+          <p>© {new Date().getFullYear()} VeeGo Technologies. All rights reserved.</p>
+          <p className="text-slate-400">Official ISO 9001:2015 Verified Engineering Portal</p>
         </div>
       </footer>
 

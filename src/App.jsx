@@ -611,31 +611,6 @@ function App() {
   }, []);
 
   useEffect(() => {
-    const verifyDevice = async () => {
-      if (session && session.role === 'student') {
-        const deviceId = localStorage.getItem('lms_device_uuid');
-        try {
-          const res = await fetch('/api/students/verify-device', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ accessCode: session.accessCode, deviceId })
-          });
-          if (res.ok) {
-            const data = await res.json();
-            if (data.valid === false) {
-              alert('This student access key is locked to another device! You have been logged out.');
-              handleLogout();
-            }
-          }
-        } catch (err) {
-          console.warn('Device verification check failed:', err);
-        }
-      }
-    };
-    verifyDevice();
-  }, [session]);
-
-  useEffect(() => {
     const enrolledList = enrolledCourse ? enrolledCourse.split(',') : [];
     const isEnrolled = enrolledCourse === 'all' || enrolledList.includes(activeCourse);
     if (activeCourse !== 'dashboard' && activeCourse !== 'induction' && !isEnrolled) {
