@@ -82,7 +82,7 @@ export const DifferenceAndEcosystemSection: React.FC<DifferenceAndEcosystemSecti
             className="font-display text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-slate-900 leading-tight"
             style={{ textWrap: 'balance' }}
           >
-            Technology is only useful when it <span className="text-gradient-blue">solves real operational problems.</span>
+            Technology is only useful when it <span className="text-blue-600 font-extrabold">solves real operational problems.</span>
           </motion.h2>
 
           <motion.p

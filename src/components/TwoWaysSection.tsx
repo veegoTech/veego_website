@@ -117,7 +117,7 @@ export const TwoWaysSection: React.FC<TwoWaysSectionProps> = ({
             className="font-display text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-slate-900 leading-tight"
             style={{ textWrap: 'balance' }}
           >
-            Built for Businesses. <span className="text-gradient-blue">Engineered for Developers.</span>
+            Built for Businesses. <span className="text-blue-600 font-extrabold">Engineered for Developers.</span>
           </motion.h2>
 
           <motion.p

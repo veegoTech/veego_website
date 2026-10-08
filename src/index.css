@@ -297,21 +297,18 @@ tr:hover td {
 }
 
 .text-gradient-blue {
-  background: linear-gradient(135deg, #2563eb 0%, #7c3aed 50%, #06b6d4 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  color: #2563eb;
+  font-weight: 800;
 }
 
 .text-gradient-gold {
-  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  color: #d97706;
+  font-weight: 800;
 }
 
 .text-gradient-emerald {
-  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  color: #059669;
+  font-weight: 800;
 }
 
 .bg-dot-pattern {

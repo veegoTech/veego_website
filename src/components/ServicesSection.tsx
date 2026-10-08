@@ -203,7 +203,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
 
           <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-slate-900 leading-tight">
             Engineering Solutions Built by Humans, <br className="hidden sm:inline" />
-            <span className="text-gradient-blue">for Real Operations</span>
+            <span className="text-blue-600 font-extrabold">for Real Operations</span>
           </h2>
 
           <p className="mt-4 text-base sm:text-lg text-slate-600 leading-relaxed font-normal">

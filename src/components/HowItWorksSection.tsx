@@ -70,7 +70,7 @@ export const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({ onStartDis
             className="font-display text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-slate-900 leading-tight"
             style={{ textWrap: 'balance' }}
           >
-            Understand. Build. <span className="text-gradient-blue">Grow.</span>
+            Understand. Build. <span className="text-blue-600 font-extrabold">Grow.</span>
           </motion.h2>
           <motion.p
             initial={{ opacity: 0, y: 15 }}

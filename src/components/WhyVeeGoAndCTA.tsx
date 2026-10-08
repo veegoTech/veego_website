@@ -61,7 +61,7 @@ export const WhyVeeGoAndCTA: React.FC<WhyVeeGoAndCTAProps> = ({
               className="font-display text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-slate-900 leading-tight"
               style={{ textWrap: 'balance' }}
             >
-              Why Organizations <span className="text-gradient-blue">Trust VeeGo</span>
+              Why Organizations <span className="text-blue-600 font-extrabold">Trust VeeGo</span>
             </motion.h2>
             <motion.p
               initial={{ opacity: 0, y: 15 }}
@@ -103,17 +103,18 @@ export const WhyVeeGoAndCTA: React.FC<WhyVeeGoAndCTAProps> = ({
       </section>
 
       {/* SECTION: FINAL BOTTOM CTA */}
-      <section className="relative overflow-hidden py-24 sm:py-32 bg-gradient-to-b from-slate-900 via-slate-900 to-blue-950 text-white border-t border-slate-800">
-        {/* Parallax ambient background particles */}
+      <section className="relative overflow-hidden py-24 sm:py-32 bg-slate-950 text-white border-t border-slate-800">
+        {/* Parallax ambient background glows */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden">
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-900/40 via-slate-950 to-slate-950" />
           <motion.div
-            animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.5, 0.3] }}
-            transition={{ duration: 12, repeat: Infinity, ease: 'easeInOut' }}
-            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[350px] bg-blue-500/20 rounded-full blur-[140px]"
+            animate={{ scale: [1, 1.15, 1], opacity: [0.3, 0.5, 0.3] }}
+            transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut' }}
+            className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-blue-600/25 rounded-full blur-[120px]"
           />
         </div>
 
-        <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center z-10">
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             whileInView={{ opacity: 1, scale: 1 }}
@@ -129,11 +130,11 @@ export const WhyVeeGoAndCTA: React.FC<WhyVeeGoAndCTAProps> = ({
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.1 }}
-            className="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight text-white mb-6"
+            className="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight text-white mb-6 leading-tight"
             style={{ textWrap: 'balance' }}
           >
             We Go Through Your Problem. <br className="hidden sm:inline" />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-indigo-300 to-emerald-400">
+            <span className="text-sky-400 font-black">
               We Deliver Your Solution.
             </span>
           </motion.h2>
@@ -157,7 +158,7 @@ export const WhyVeeGoAndCTA: React.FC<WhyVeeGoAndCTAProps> = ({
           >
             <button
               onClick={onSolveBusinessProblem}
-              className="w-full sm:w-auto px-9 py-4 text-sm font-bold rounded-2xl bg-blue-600 hover:bg-blue-500 text-white shadow-xl shadow-blue-600/30 hover:scale-[1.03] active:scale-[0.98] transition-all flex items-center justify-center gap-2.5"
+              className="w-full sm:w-auto px-9 py-4 text-sm font-bold rounded-2xl bg-blue-600 hover:bg-blue-500 text-white shadow-xl shadow-blue-600/30 hover:scale-[1.03] active:scale-[0.98] transition-all flex items-center justify-center gap-2.5 cursor-pointer"
             >
               <Building2 className="w-5 h-5" />
               <span>Discuss Your Operational Problem</span>
@@ -166,7 +167,7 @@ export const WhyVeeGoAndCTA: React.FC<WhyVeeGoAndCTAProps> = ({
           </motion.div>
 
           {/* Trust Guarantees */}
-          <div className="mt-12 pt-8 border-t border-slate-800/80 grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs text-slate-400">
+          <div className="mt-12 pt-8 border-t border-slate-800/80 grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs sm:text-sm font-semibold text-slate-200">
             <div className="flex items-center justify-center gap-2">
               <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
               <span>Direct access to lead software engineers</span>

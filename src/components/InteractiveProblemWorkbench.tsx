@@ -106,7 +106,7 @@ export const InteractiveProblemWorkbench: React.FC<InteractiveProblemWorkbenchPr
             className="font-display text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-slate-900 leading-tight"
             style={{ textWrap: 'balance' }}
           >
-            Problems In → <span className="text-gradient-blue">Solutions Out</span>
+            Problems In → <span className="text-blue-600 font-extrabold">Solutions Out</span>
           </motion.h2>
           <motion.p
             initial={{ opacity: 0, y: 15 }}
