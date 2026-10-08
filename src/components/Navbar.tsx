@@ -3,9 +3,7 @@ import {
   Menu,
   X,
   ArrowRight,
-  Building2,
-  Sparkles,
-  LogIn
+  Building2
 } from 'lucide-react';
 import logoImg from '../assets/logo.png';
 
@@ -22,14 +20,18 @@ export const Navbar: React.FC<NavbarProps> = ({ currentPath, onNavigate, onOpenL
     { label: 'Home', path: '/' },
     { label: 'About', path: '/about' },
     { label: 'Solutions', path: '/solutions' },
-    { label: 'Built by VeeGo', path: '/projects' },
-    { label: 'How It Works', path: '/how-it-works' },
+    { label: 'Projects', path: '/projects' },
+    { label: 'Courses', path: '/courses', isCourses: true, badge: '₹499' },
     { label: 'Contact', path: '/contact' }
   ];
 
-  const handleLinkClick = (path: string) => {
+  const handleLinkClick = (item: { label: string; path: string; isCourses?: boolean }) => {
     setMobileMenuOpen(false);
-    onNavigate(path);
+    if (item.isCourses && onOpenLoginModal) {
+      onOpenLoginModal();
+    } else {
+      onNavigate(item.path);
+    }
   };
 
   const isLinkActive = (item: { label: string; path: string }) => {
@@ -40,12 +42,12 @@ export const Navbar: React.FC<NavbarProps> = ({ currentPath, onNavigate, onOpenL
   };
 
   return (
-    <header className="sticky top-0 z-50 w-full bg-white/95 backdrop-blur-md border-b border-slate-200/80 transition-shadow duration-200 shadow-xs">
+    <header className="sticky top-0 z-50 w-full bg-white/95 backdrop-blur-md border-b border-slate-200/80 transition-shadow duration-200 shadow-2xs">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 sm:h-18">
-          {/* Logo & Tagline */}
+          {/* Logo */}
           <button
-            onClick={() => handleLinkClick('/')}
+            onClick={() => onNavigate('/')}
             className="flex items-center text-left group focus:outline-none"
             aria-label="VeeGo Home"
           >
@@ -57,61 +59,46 @@ export const Navbar: React.FC<NavbarProps> = ({ currentPath, onNavigate, onOpenL
           </button>
 
           {/* Desktop Navigation Links */}
-          <nav className="hidden md:flex items-center gap-1 lg:gap-1.5">
+          <nav className="hidden md:flex items-center gap-1.5 lg:gap-2">
             {navLinks.map((item) => {
               const active = isLinkActive(item);
               return (
                 <button
                   key={item.label}
-                  onClick={() => handleLinkClick(item.path)}
-                  className={`px-3 py-1.5 rounded-lg text-xs lg:text-sm font-semibold transition-all flex items-center gap-1.5 ${
+                  onClick={() => handleLinkClick(item)}
+                  className={`px-4 py-1.5 rounded-lg text-sm font-semibold transition-all flex items-center gap-1.5 cursor-pointer ${
                     active
-                      ? 'text-blue-600 font-bold bg-blue-50/80 shadow-2xs'
+                      ? 'border border-slate-900 text-blue-600 font-bold bg-white shadow-2xs'
                       : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
                   }`}
                 >
                   <span>{item.label}</span>
+                  {item.badge && (
+                    <span className="bg-purple-100/80 text-purple-700 text-[10px] font-bold px-1.5 py-0.5 rounded-full border border-purple-200/60">
+                      {item.badge}
+                    </span>
+                  )}
                 </button>
               );
             })}
           </nav>
 
-          {/* Right Action Buttons */}
+          {/* Right Action Button: Tell Us Your Problem */}
           <div className="hidden sm:flex items-center gap-3">
-            {onOpenLoginModal && (
-              <button
-                onClick={onOpenLoginModal}
-                className="px-4 py-2 text-xs sm:text-sm font-bold rounded-xl bg-slate-900 hover:bg-slate-800 text-white transition-all shadow-sm hover:shadow-md flex items-center gap-1.5 cursor-pointer"
-              >
-                <LogIn className="w-3.5 h-3.5 text-blue-400" />
-                <span>LMS Login</span>
-              </button>
-            )}
             <button
-              onClick={() => handleLinkClick('/contact')}
-              style={{ background: 'linear-gradient(135deg, #2563eb 0%, #4f46e5 100%)', color: '#ffffff' }}
-              className="px-4 py-2 text-xs sm:text-sm font-bold rounded-xl hover:opacity-95 text-white transition-all shadow-sm hover:shadow-md flex items-center gap-1.5 group cursor-pointer"
+              onClick={() => onNavigate('/contact')}
+              className="px-6 py-2.5 text-xs sm:text-sm font-bold rounded-full bg-blue-600 hover:bg-blue-700 text-white transition-all shadow-md hover:shadow-lg flex items-center gap-2 cursor-pointer group"
             >
-              <Sparkles className="w-3.5 h-3.5 text-blue-200" />
-              <span style={{ color: '#ffffff' }}>Tell Us Your Problem</span>
-              <ArrowRight className="w-3.5 h-3.5 text-white transition-transform group-hover:translate-x-0.5" />
+              <span className="text-white">Tell Us Your Problem</span>
+              <ArrowRight className="w-4 h-4 text-white transition-transform group-hover:translate-x-0.5" />
             </button>
           </div>
 
           {/* Mobile Menu Hamburger Button */}
           <div className="flex items-center md:hidden gap-2">
-            {onOpenLoginModal && (
-              <button
-                onClick={onOpenLoginModal}
-                className="px-3 py-1.5 text-xs font-semibold rounded-lg bg-slate-900 text-white flex items-center gap-1"
-              >
-                <LogIn className="w-3 h-3 text-blue-400" />
-                <span>Login</span>
-              </button>
-            )}
             <button
-              onClick={() => handleLinkClick('/contact')}
-              className="px-3 py-1.5 text-xs font-semibold rounded-lg bg-blue-600 text-white"
+              onClick={() => onNavigate('/contact')}
+              className="px-3.5 py-1.5 text-xs font-bold rounded-full bg-blue-600 text-white"
             >
               Solve Problem
             </button>
@@ -133,34 +120,32 @@ export const Navbar: React.FC<NavbarProps> = ({ currentPath, onNavigate, onOpenL
             {navLinks.map((item) => (
               <button
                 key={item.label}
-                onClick={() => handleLinkClick(item.path)}
+                onClick={() => handleLinkClick(item)}
                 className={`w-full text-left px-3 py-2.5 rounded-lg text-sm font-semibold flex items-center justify-between ${
                   isLinkActive(item)
-                    ? 'bg-blue-50 text-blue-700 font-bold'
+                    ? 'bg-blue-50 text-blue-700 font-bold border border-blue-200'
                     : 'text-slate-700 hover:bg-slate-50'
                 }`}
               >
-                <span>{item.label}</span>
+                <div className="flex items-center gap-2">
+                  <span>{item.label}</span>
+                  {item.badge && (
+                    <span className="bg-purple-100 text-purple-700 text-[10px] font-bold px-1.5 py-0.5 rounded-full">
+                      {item.badge}
+                    </span>
+                  )}
+                </div>
               </button>
             ))}
           </div>
 
           <div className="pt-3 border-t border-slate-100 flex flex-col gap-2">
-            {onOpenLoginModal && (
-              <button
-                onClick={() => {
-                  setMobileMenuOpen(false);
-                  onOpenLoginModal();
-                }}
-                className="w-full py-2.5 px-4 rounded-xl bg-slate-900 text-white font-semibold text-xs flex items-center justify-center gap-1.5 shadow-xs"
-              >
-                <LogIn className="w-4 h-4 text-blue-400" />
-                <span>LMS Portal Login</span>
-              </button>
-            )}
             <button
-              onClick={() => handleLinkClick('/contact')}
-              className="w-full py-2.5 px-4 rounded-xl bg-blue-600 text-white font-semibold text-xs flex items-center justify-center gap-1.5 shadow-xs"
+              onClick={() => {
+                setMobileMenuOpen(false);
+                onNavigate('/contact');
+              }}
+              className="w-full py-2.5 px-4 rounded-full bg-blue-600 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-xs"
             >
               <Building2 className="w-4 h-4" />
               <span>Tell Us Your Problem</span>
@@ -171,4 +156,3 @@ export const Navbar: React.FC<NavbarProps> = ({ currentPath, onNavigate, onOpenL
     </header>
   );
 };
-
