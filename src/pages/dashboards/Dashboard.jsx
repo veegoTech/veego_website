@@ -1345,34 +1345,7 @@ export default function Dashboard({ onSelectCourse, enrolledCourse, setEnrolledC
               </p>
             </div>
 
-            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-              {session?.role !== 'student' && (
-                <button
-                  type="button"
-                  onClick={() => setActiveTab('grading')}
-                  style={{
-                    background: pendingCount > 0 ? '#fef2f2' : '#ffffff',
-                    border: `1px solid ${pendingCount > 0 ? '#fca5a5' : 'var(--surface-border)'}`,
-                    color: pendingCount > 0 ? '#dc2626' : 'var(--text-secondary)',
-                    padding: '0.45rem 0.9rem',
-                    borderRadius: '20px',
-                    fontSize: '0.82rem',
-                    fontWeight: 800,
-                    cursor: 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '6px',
-                    boxShadow: 'var(--shadow-sm)'
-                  }}
-                >
-                  🔔 {pendingCount} Pending Approvals
-                </button>
-              )}
 
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.8rem', color: 'var(--text-secondary)', background: '#ffffff', padding: '0.4rem 0.8rem', borderRadius: '20px', border: '1px solid var(--surface-border)', boxShadow: 'var(--shadow-sm)' }}>
-                <Award size={14} color="#eab308" /> LMS Engine Active
-              </div>
-            </div>
           </div>
         )}
 
@@ -1655,80 +1628,419 @@ export default function Dashboard({ onSelectCourse, enrolledCourse, setEnrolledC
           </div>
         )}
 
-        {/* 📊 TAB 1: WORKSPACE OVERVIEW VIEW (ADMIN/STAFF ONLY) */}
-        {activeTab === 'overview' && session.role !== 'student' && (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+        {/* 📊 TAB 1: WORKSPACE OVERVIEW VIEW (ADMIN/STAFF ONLY) - 3 LAYERED REVENUE DASHBOARD */}
+        {activeTab === 'overview' && session.role !== 'student' && (() => {
+          // Revenue Calculations
+          const totalStudentsCount = students.length;
+          const paidStudents = students.filter(s => s.paymentStatus === 'Paid').length;
+          const pendingPayments = students.filter(s => s.paymentStatus !== 'Paid').length;
 
-            {/* Quick Stats Grid */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1.5rem' }}>
-              <div style={{ background: 'var(--surface-color)', border: '1px solid var(--surface-border)', borderRadius: '20px', padding: '1.5rem', boxShadow: 'var(--shadow-sm)' }}>
-                <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Registered Students</span>
-                <div style={{ fontSize: '2.2rem', fontWeight: 900, color: '#3b82f6', marginTop: '0.4rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <Users size={28} color="#3b82f6" /> {totalStudents}
-                </div>
-              </div>
-              <div style={{ background: 'var(--surface-color)', border: '1px solid var(--surface-border)', borderRadius: '20px', padding: '1.5rem', boxShadow: 'var(--shadow-sm)' }}>
-                <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Device Locked Accounts</span>
-                <div style={{ fontSize: '2.2rem', fontWeight: 900, color: '#f59e0b', marginTop: '0.4rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <Key size={28} color="#f59e0b" /> {totalLocked}
-                </div>
-              </div>
-              <div style={{ background: 'var(--surface-color)', border: '1px solid var(--surface-border)', borderRadius: '20px', padding: '1.5rem', boxShadow: 'var(--shadow-sm)' }}>
-                <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Course Options</span>
-                <div style={{ fontSize: '2.2rem', fontWeight: 900, color: '#10b981', marginTop: '0.4rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <Terminal size={28} color="#10b981" /> {subCourses.length}
-                </div>
-              </div>
-              <div style={{ background: 'var(--surface-color)', border: '1px solid var(--surface-border)', borderRadius: '20px', padding: '1.5rem', boxShadow: 'var(--shadow-sm)' }}>
-                <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.5px' }}>System Role</span>
-                <div style={{ fontSize: '1.5rem', fontWeight: 900, color: '#ec4899', marginTop: '0.6rem', textTransform: 'uppercase', letterSpacing: '1px' }}>
-                  {session.role}
-                </div>
-              </div>
-            </div>
+          // Layer 1: Business Software & Applications
+          const bizCourses = ['html_css', 'react_course', 'django_course', 'javascript_course', 'core_js', 'git_github', 'json_course', 'devops', 'web_design_20days'];
+          const bizStudents = students.filter(s => {
+            const courses = (s.enrolledCourse || '').split(',').map(c => c.trim());
+            return courses.some(c => bizCourses.includes(c));
+          });
 
-            {/* Profile Detail Workspace */}
-            <div style={{ background: 'var(--surface-color)', border: '1px solid var(--surface-border)', borderRadius: '24px', padding: '2rem', display: 'flex', gap: '2rem', alignItems: 'center', boxShadow: 'var(--shadow-sm)' }}>
-              <div style={{ background: 'linear-gradient(135deg, #3b82f6 0%, #6366f1 100%)', width: '80px', height: '80px', borderRadius: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#ffffff', flexShrink: 0 }}>
-                <Star size={40} />
-              </div>
-              <div>
-                <h3 style={{ fontSize: '1.35rem', fontWeight: 800, color: 'var(--text-primary)', margin: '0 0 0.4rem 0' }}>Welcome, {session.name}!</h3>
-                <p style={{ fontSize: '0.92rem', color: 'var(--text-secondary)', lineHeight: 1.5, margin: 0 }}>
-                  You have logged in securely with {session.role === 'admin' ? 'Root Administrator rights' : 'Staff Instructor status'}. You can assign subcourses, manage student logins, clear device lock security hashes, or launch modules within the course catalog using the navigation panel on the left.
-                </p>
-              </div>
-            </div>
+          // Layer 2: College Projects
+          const collegeCourses = ['python_course', 'agentic_ai', 'generative_ai_course', 'python_da', 'sql_da', 'stats_course', 'numpy_course', 'pandas_course', 'matplotlib_course', 'seaborn_course'];
+          const collegeStudents = students.filter(s => {
+            const courses = (s.enrolledCourse || '').split(',').map(c => c.trim());
+            return courses.some(c => collegeCourses.includes(c));
+          });
 
-            {/* Quick Actions Shortcuts */}
-            <div style={{ borderTop: '1px solid var(--surface-border)', paddingTop: '2rem', marginTop: '1rem' }}>
-              <h3 style={{ fontSize: '1.15rem', color: 'var(--text-primary)', fontWeight: 800, marginBottom: '1rem' }}>Quick Actions Shortcuts</h3>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-                <div
-                  onClick={() => setActiveTab('courses')}
-                  style={{ background: '#ffffff', border: '1px solid var(--surface-border)', borderRadius: '16px', padding: '1.25rem', cursor: 'pointer', transition: 'var(--transition)', boxShadow: 'var(--shadow-sm)' }}
-                  onMouseEnter={e => e.currentTarget.style.borderColor = 'var(--accent-primary)'}
-                  onMouseLeave={e => e.currentTarget.style.borderColor = 'var(--surface-border)'}
-                >
-                  <h4 style={{ color: 'var(--text-primary)', fontWeight: 800, fontSize: '1.02rem', margin: '0 0 0.25rem 0', display: 'flex', alignItems: 'center', gap: '6px' }}>Course Catalog <ArrowRight size={14} /></h4>
-                  <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', margin: 0 }}>Launch bootcamps, check syllabi, or run coding play areas.</p>
-                </div>
-                {(session?.role === 'admin' || session?.role === 'staff') && (
-                  <div
-                    onClick={() => setActiveTab('register')}
-                    style={{ background: '#ffffff', border: '1px solid var(--surface-border)', borderRadius: '16px', padding: '1.25rem', cursor: 'pointer', transition: 'var(--transition)', boxShadow: 'var(--shadow-sm)' }}
-                    onMouseEnter={e => e.currentTarget.style.borderColor = 'var(--accent-primary)'}
-                    onMouseLeave={e => e.currentTarget.style.borderColor = 'var(--surface-border)'}
-                  >
-                    <h4 style={{ color: 'var(--text-primary)', fontWeight: 800, fontSize: '1.02rem', margin: '0 0 0.25rem 0', display: 'flex', alignItems: 'center', gap: '6px' }}>Register a Student <ArrowRight size={14} /></h4>
-                    <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', margin: 0 }}>Enroll new records and generate sharable link credentials.</p>
+          // Layer 3: Course Enrollment
+          const enrollCourses = ['sql', 'summer_sql', 'powerbi', 'tally_prime', 'spoko_story', 'spoko_pro'];
+          const enrollStudents = students.filter(s => {
+            const courses = (s.enrolledCourse || '').split(',').map(c => c.trim());
+            return courses.some(c => enrollCourses.includes(c));
+          });
+
+          const avgRevPerStudent = 4999;
+          const totalRevenue = paidStudents * avgRevPerStudent;
+          const bizRevenue = Math.round(bizStudents.length * avgRevPerStudent * 0.4);
+          const collegeRevenue = Math.round(collegeStudents.length * avgRevPerStudent * 0.35);
+          const enrollRevenue = Math.round(enrollStudents.length * avgRevPerStudent * 0.25);
+
+          const formatINR = (n) => '₹' + n.toLocaleString('en-IN');
+
+          const now = new Date();
+          const monthName = now.toLocaleString('default', { month: 'long', year: 'numeric' });
+
+          // Course distribution for mini bar chart
+          const courseDistribution = [
+            { label: 'Python & OOPs', count: students.filter(s => (s.enrolledCourse||'').includes('python')).length, color: '#3b82f6' },
+            { label: 'SQL', count: students.filter(s => (s.enrolledCourse||'').includes('sql')).length, color: '#10b981' },
+            { label: 'AI Courses', count: students.filter(s => (s.enrolledCourse||'').includes('ai') || (s.enrolledCourse||'').includes('generative')).length, color: '#8b5cf6' },
+            { label: 'Web Design', count: students.filter(s => (s.enrolledCourse||'').includes('html') || (s.enrolledCourse||'').includes('react')).length, color: '#f59e0b' },
+            { label: 'Others', count: students.filter(s => !(s.enrolledCourse||'').includes('python') && !(s.enrolledCourse||'').includes('sql') && !(s.enrolledCourse||'').includes('ai') && !(s.enrolledCourse||'').includes('html')).length, color: '#ec4899' },
+          ];
+          const maxCount = Math.max(...courseDistribution.map(c => c.count), 1);
+
+          const recentStudents = [...students].sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0)).slice(0, 5);
+
+          return (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+
+              {/* ═══════════════════ HERO STATS BAR ═══════════════════ */}
+              <div style={{
+                background: 'linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%)',
+                borderRadius: '28px',
+                padding: '2.5rem',
+                color: '#ffffff',
+                position: 'relative',
+                overflow: 'hidden',
+                boxShadow: '0 20px 60px rgba(15,23,42,0.4)'
+              }}>
+                {/* Decorative glows */}
+                <div style={{ position: 'absolute', top: '-60px', right: '-60px', width: '250px', height: '250px', background: 'radial-gradient(circle, rgba(139,92,246,0.3) 0%, transparent 70%)', borderRadius: '50%', pointerEvents: 'none' }} />
+                <div style={{ position: 'absolute', bottom: '-40px', left: '30%', width: '200px', height: '200px', background: 'radial-gradient(circle, rgba(59,130,246,0.2) 0%, transparent 70%)', borderRadius: '50%', pointerEvents: 'none' }} />
+
+                <div style={{ position: 'relative', zIndex: 2 }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '2rem', flexWrap: 'wrap', gap: '1rem' }}>
+                    <div>
+                      <div style={{ fontSize: '0.75rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '2px', color: '#818cf8', marginBottom: '0.4rem' }}>VeeGo Learning Center</div>
+                      <h2 style={{ margin: 0, fontSize: '1.8rem', fontWeight: 900, background: 'linear-gradient(90deg, #ffffff, #a5b4fc)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+                        Revenue Command Center
+                      </h2>
+                      <p style={{ margin: '0.3rem 0 0 0', color: '#94a3b8', fontSize: '0.88rem' }}>{monthName} — Live Performance Dashboard</p>
+                    </div>
+                    <div style={{ textAlign: 'right' }}>
+                      <div style={{ fontSize: '0.72rem', color: '#64748b', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '0.3rem' }}>Total Revenue Collected</div>
+                      <div style={{ fontSize: '2.5rem', fontWeight: 900, color: '#22c55e', lineHeight: 1 }}>{formatINR(totalRevenue)}</div>
+                      <div style={{ fontSize: '0.8rem', color: '#94a3b8', marginTop: '0.25rem' }}>{paidStudents} paid enrollments</div>
+                    </div>
                   </div>
-                )}
-              </div>
-            </div>
 
-          </div>
-        )}
+                  {/* 4 Metric Pills */}
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: '1rem' }}>
+                    {[
+                      { label: 'Total Students', value: totalStudentsCount, icon: '👥', color: '#60a5fa' },
+                      { label: 'Paid Enrollments', value: paidStudents, icon: '✅', color: '#34d399' },
+                      { label: 'Pending Payments', value: pendingPayments, icon: '⏳', color: '#fbbf24' },
+                      { label: 'Device Locked', value: totalLocked, icon: '🔒', color: '#f472b6' },
+                    ].map((m, i) => (
+                      <div key={i} style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '16px', padding: '1rem 1.25rem', backdropFilter: 'blur(8px)' }}>
+                        <div style={{ fontSize: '1.4rem', marginBottom: '0.4rem' }}>{m.icon}</div>
+                        <div style={{ fontSize: '1.8rem', fontWeight: 900, color: m.color, lineHeight: 1 }}>{m.value}</div>
+                        <div style={{ fontSize: '0.72rem', color: '#94a3b8', marginTop: '0.25rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.5px' }}>{m.label}</div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* ═══════════════════ 3 LAYER CARDS ═══════════════════ */}
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1.5rem' }}>
+
+                {/* LAYER 1 — Business Software & Applications */}
+                <div style={{
+                  background: 'linear-gradient(145deg, #1d4ed8 0%, #2563eb 60%, #3b82f6 100%)',
+                  borderRadius: '24px',
+                  padding: '2rem',
+                  color: '#ffffff',
+                  position: 'relative',
+                  overflow: 'hidden',
+                  boxShadow: '0 12px 40px rgba(29,78,216,0.35)',
+                  cursor: 'pointer',
+                  transition: 'transform 0.2s'
+                }}
+                  onMouseEnter={e => e.currentTarget.style.transform = 'translateY(-4px)'}
+                  onMouseLeave={e => e.currentTarget.style.transform = 'translateY(0)'}
+                >
+                  <div style={{ position: 'absolute', top: '-30px', right: '-30px', opacity: 0.12 }}>
+                    <Briefcase size={150} />
+                  </div>
+                  <div style={{ position: 'relative', zIndex: 2 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '1.5rem' }}>
+                      <div style={{ background: 'rgba(255,255,255,0.2)', borderRadius: '12px', padding: '0.6rem', display: 'flex' }}>
+                        <Briefcase size={22} />
+                      </div>
+                      <div>
+                        <div style={{ fontSize: '0.68rem', textTransform: 'uppercase', letterSpacing: '1.5px', opacity: 0.7, fontWeight: 800 }}>Layer 1</div>
+                        <div style={{ fontSize: '1rem', fontWeight: 900 }}>Business Software & Apps</div>
+                      </div>
+                    </div>
+
+                    <div style={{ fontSize: '2.4rem', fontWeight: 900, marginBottom: '0.25rem' }}>{formatINR(bizRevenue)}</div>
+                    <div style={{ fontSize: '0.82rem', opacity: 0.8, marginBottom: '1.5rem' }}>Estimated revenue from {bizStudents.length} students</div>
+
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
+                      {[
+                        { label: 'Students', value: bizStudents.length },
+                        { label: 'Courses', value: bizCourses.length },
+                        { label: 'Avg. Fee', value: '₹4,999' },
+                        { label: 'Track', value: 'Web Dev' },
+                      ].map((item, i) => (
+                        <div key={i} style={{ background: 'rgba(255,255,255,0.1)', borderRadius: '10px', padding: '0.6rem 0.8rem' }}>
+                          <div style={{ fontSize: '0.65rem', opacity: 0.7, textTransform: 'uppercase', letterSpacing: '0.5px' }}>{item.label}</div>
+                          <div style={{ fontSize: '1rem', fontWeight: 800 }}>{item.value}</div>
+                        </div>
+                      ))}
+                    </div>
+
+                    <div style={{ marginTop: '1.25rem', padding: '0.75rem 1rem', background: 'rgba(255,255,255,0.12)', borderRadius: '12px', fontSize: '0.78rem', opacity: 0.9 }}>
+                      📌 HTML/CSS, React, Django, DevOps, Web Design
+                    </div>
+                  </div>
+                </div>
+
+                {/* LAYER 2 — College Projects */}
+                <div style={{
+                  background: 'linear-gradient(145deg, #7c3aed 0%, #8b5cf6 60%, #a78bfa 100%)',
+                  borderRadius: '24px',
+                  padding: '2rem',
+                  color: '#ffffff',
+                  position: 'relative',
+                  overflow: 'hidden',
+                  boxShadow: '0 12px 40px rgba(124,58,237,0.35)',
+                  cursor: 'pointer',
+                  transition: 'transform 0.2s'
+                }}
+                  onMouseEnter={e => e.currentTarget.style.transform = 'translateY(-4px)'}
+                  onMouseLeave={e => e.currentTarget.style.transform = 'translateY(0)'}
+                >
+                  <div style={{ position: 'absolute', top: '-30px', right: '-30px', opacity: 0.12 }}>
+                    <Brain size={150} />
+                  </div>
+                  <div style={{ position: 'relative', zIndex: 2 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '1.5rem' }}>
+                      <div style={{ background: 'rgba(255,255,255,0.2)', borderRadius: '12px', padding: '0.6rem', display: 'flex' }}>
+                        <Brain size={22} />
+                      </div>
+                      <div>
+                        <div style={{ fontSize: '0.68rem', textTransform: 'uppercase', letterSpacing: '1.5px', opacity: 0.7, fontWeight: 800 }}>Layer 2</div>
+                        <div style={{ fontSize: '1rem', fontWeight: 900 }}>College Projects</div>
+                      </div>
+                    </div>
+
+                    <div style={{ fontSize: '2.4rem', fontWeight: 900, marginBottom: '0.25rem' }}>{formatINR(collegeRevenue)}</div>
+                    <div style={{ fontSize: '0.82rem', opacity: 0.8, marginBottom: '1.5rem' }}>Estimated revenue from {collegeStudents.length} students</div>
+
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
+                      {[
+                        { label: 'Students', value: collegeStudents.length },
+                        { label: 'Courses', value: collegeCourses.length },
+                        { label: 'Avg. Fee', value: '₹4,999' },
+                        { label: 'Track', value: 'AI & DS' },
+                      ].map((item, i) => (
+                        <div key={i} style={{ background: 'rgba(255,255,255,0.1)', borderRadius: '10px', padding: '0.6rem 0.8rem' }}>
+                          <div style={{ fontSize: '0.65rem', opacity: 0.7, textTransform: 'uppercase', letterSpacing: '0.5px' }}>{item.label}</div>
+                          <div style={{ fontSize: '1rem', fontWeight: 800 }}>{item.value}</div>
+                        </div>
+                      ))}
+                    </div>
+
+                    <div style={{ marginTop: '1.25rem', padding: '0.75rem 1rem', background: 'rgba(255,255,255,0.12)', borderRadius: '12px', fontSize: '0.78rem', opacity: 0.9 }}>
+                      📌 Python OOPs, Agentic AI, GenAI, Data Science
+                    </div>
+                  </div>
+                </div>
+
+                {/* LAYER 3 — Course Enrollment */}
+                <div style={{
+                  background: 'linear-gradient(145deg, #0f766e 0%, #059669 60%, #10b981 100%)',
+                  borderRadius: '24px',
+                  padding: '2rem',
+                  color: '#ffffff',
+                  position: 'relative',
+                  overflow: 'hidden',
+                  boxShadow: '0 12px 40px rgba(5,150,105,0.35)',
+                  cursor: 'pointer',
+                  transition: 'transform 0.2s'
+                }}
+                  onMouseEnter={e => e.currentTarget.style.transform = 'translateY(-4px)'}
+                  onMouseLeave={e => e.currentTarget.style.transform = 'translateY(0)'}
+                >
+                  <div style={{ position: 'absolute', top: '-30px', right: '-30px', opacity: 0.12 }}>
+                    <BookOpen size={150} />
+                  </div>
+                  <div style={{ position: 'relative', zIndex: 2 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '1.5rem' }}>
+                      <div style={{ background: 'rgba(255,255,255,0.2)', borderRadius: '12px', padding: '0.6rem', display: 'flex' }}>
+                        <BookOpen size={22} />
+                      </div>
+                      <div>
+                        <div style={{ fontSize: '0.68rem', textTransform: 'uppercase', letterSpacing: '1.5px', opacity: 0.7, fontWeight: 800 }}>Layer 3</div>
+                        <div style={{ fontSize: '1rem', fontWeight: 900 }}>Course Enrollment</div>
+                      </div>
+                    </div>
+
+                    <div style={{ fontSize: '2.4rem', fontWeight: 900, marginBottom: '0.25rem' }}>{formatINR(enrollRevenue)}</div>
+                    <div style={{ fontSize: '0.82rem', opacity: 0.8, marginBottom: '1.5rem' }}>Estimated revenue from {enrollStudents.length} students</div>
+
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
+                      {[
+                        { label: 'Students', value: enrollStudents.length },
+                        { label: 'Courses', value: enrollCourses.length },
+                        { label: 'Avg. Fee', value: '₹3,499' },
+                        { label: 'Track', value: 'SQL & BIZ' },
+                      ].map((item, i) => (
+                        <div key={i} style={{ background: 'rgba(255,255,255,0.1)', borderRadius: '10px', padding: '0.6rem 0.8rem' }}>
+                          <div style={{ fontSize: '0.65rem', opacity: 0.7, textTransform: 'uppercase', letterSpacing: '0.5px' }}>{item.label}</div>
+                          <div style={{ fontSize: '1rem', fontWeight: 800 }}>{item.value}</div>
+                        </div>
+                      ))}
+                    </div>
+
+                    <div style={{ marginTop: '1.25rem', padding: '0.75rem 1rem', background: 'rgba(255,255,255,0.12)', borderRadius: '12px', fontSize: '0.78rem', opacity: 0.9 }}>
+                      📌 SQL, Summer SQL, Power BI, Tally, English
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* ═══════════════════ BOTTOM ROW: Chart + Recent Students ═══════════════════ */}
+              <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1.2fr 1fr', gap: '1.5rem' }}>
+
+                {/* Course Distribution Bar Chart */}
+                <div style={{ background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: '24px', padding: '2rem', boxShadow: '0 4px 20px rgba(0,0,0,0.05)' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.75rem' }}>
+                    <div>
+                      <h3 style={{ margin: 0, fontSize: '1.1rem', fontWeight: 900, color: '#0f172a' }}>Course Distribution</h3>
+                      <p style={{ margin: '0.2rem 0 0 0', fontSize: '0.78rem', color: '#64748b' }}>Students per course track</p>
+                    </div>
+                    <div style={{ background: '#f0fdf4', color: '#059669', padding: '0.35rem 0.75rem', borderRadius: '20px', fontSize: '0.75rem', fontWeight: 800 }}>
+                      {totalStudentsCount} Total
+                    </div>
+                  </div>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                    {courseDistribution.map((cd, i) => {
+                      const pct = Math.round((cd.count / maxCount) * 100);
+                      return (
+                        <div key={i}>
+                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.35rem' }}>
+                            <span style={{ fontSize: '0.82rem', fontWeight: 700, color: '#334155' }}>{cd.label}</span>
+                            <span style={{ fontSize: '0.82rem', fontWeight: 900, color: cd.color }}>{cd.count}</span>
+                          </div>
+                          <div style={{ background: '#f1f5f9', borderRadius: '8px', height: '10px', overflow: 'hidden' }}>
+                            <div style={{
+                              width: pct + '%',
+                              height: '100%',
+                              background: cd.color,
+                              borderRadius: '8px',
+                              transition: 'width 0.6s ease'
+                            }} />
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+
+                  {/* Revenue breakdown mini */}
+                  <div style={{ marginTop: '2rem', paddingTop: '1.5rem', borderTop: '1px solid #e2e8f0' }}>
+                    <h4 style={{ margin: '0 0 1rem 0', fontSize: '0.88rem', fontWeight: 900, color: '#0f172a', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Revenue Split by Layer</h4>
+                    <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
+                      {[
+                        { label: 'Biz Apps', val: formatINR(bizRevenue), color: '#3b82f6' },
+                        { label: 'College', val: formatINR(collegeRevenue), color: '#8b5cf6' },
+                        { label: 'Enrollment', val: formatINR(enrollRevenue), color: '#10b981' },
+                      ].map((r, i) => (
+                        <div key={i} style={{ flex: 1, minWidth: '80px', background: r.color + '12', border: `1px solid ${r.color}33`, borderRadius: '12px', padding: '0.6rem 0.75rem', textAlign: 'center' }}>
+                          <div style={{ fontSize: '0.65rem', fontWeight: 800, textTransform: 'uppercase', color: r.color, letterSpacing: '0.5px' }}>{r.label}</div>
+                          <div style={{ fontSize: '0.88rem', fontWeight: 900, color: r.color, marginTop: '0.25rem' }}>{r.val}</div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Recent Enrollments */}
+                <div style={{ background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: '24px', padding: '2rem', boxShadow: '0 4px 20px rgba(0,0,0,0.05)' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+                    <div>
+                      <h3 style={{ margin: 0, fontSize: '1.1rem', fontWeight: 900, color: '#0f172a' }}>Recent Enrollments</h3>
+                      <p style={{ margin: '0.2rem 0 0 0', fontSize: '0.78rem', color: '#64748b' }}>Latest student registrations</p>
+                    </div>
+                    <button
+                      onClick={() => setActiveTab('database')}
+                      style={{ background: '#f8fafc', border: '1px solid #e2e8f0', color: '#3b82f6', padding: '0.35rem 0.75rem', borderRadius: '20px', fontSize: '0.75rem', fontWeight: 800, cursor: 'pointer' }}>
+                      View All
+                    </button>
+                  </div>
+
+                  {recentStudents.length === 0 ? (
+                    <div style={{ textAlign: 'center', padding: '3rem 1rem', color: '#94a3b8' }}>
+                      <Users size={36} style={{ opacity: 0.3, marginBottom: '0.75rem' }} />
+                      <p style={{ margin: 0, fontSize: '0.88rem' }}>No students registered yet.</p>
+                    </div>
+                  ) : (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
+                      {recentStudents.map((s, i) => {
+                        const colors = ['#3b82f6', '#8b5cf6', '#10b981', '#f59e0b', '#ec4899'];
+                        const col = colors[i % colors.length];
+                        const initials = (s.name || 'S').split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2);
+                        const courseLabel = getCourseLabel(s.enrolledCourse).slice(0, 22) + (getCourseLabel(s.enrolledCourse).length > 22 ? '…' : '');
+                        return (
+                          <div key={s._id || s.id || i} style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '0.75rem', background: '#f8fafc', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
+                            <div style={{ width: '38px', height: '38px', borderRadius: '10px', background: col + '22', border: `2px solid ${col}44`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 900, color: col, fontSize: '0.85rem', flexShrink: 0 }}>
+                              {initials}
+                            </div>
+                            <div style={{ flex: 1, minWidth: 0 }}>
+                              <div style={{ fontSize: '0.88rem', fontWeight: 800, color: '#0f172a', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{s.name}</div>
+                              <div style={{ fontSize: '0.72rem', color: '#64748b', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{courseLabel}</div>
+                            </div>
+                            <div style={{ flexShrink: 0 }}>
+                              <span style={{
+                                fontSize: '0.65rem', fontWeight: 800, padding: '0.25rem 0.6rem', borderRadius: '20px', textTransform: 'uppercase',
+                                background: s.paymentStatus === 'Paid' ? '#dcfce7' : '#fef9c3',
+                                color: s.paymentStatus === 'Paid' ? '#166534' : '#854d0e'
+                              }}>
+                                {s.paymentStatus || 'Pending'}
+                              </span>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
+
+                  {/* Welcome Card */}
+                  <div style={{ marginTop: '1.25rem', background: 'linear-gradient(135deg, #1e40af 0%, #3b82f6 100%)', borderRadius: '16px', padding: '1.25rem', color: '#ffffff' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                      <div style={{ background: 'rgba(255,255,255,0.2)', borderRadius: '10px', padding: '0.5rem', display: 'flex' }}>
+                        <Star size={20} />
+                      </div>
+                      <div>
+                        <div style={{ fontSize: '0.85rem', fontWeight: 800 }}>Welcome, {session.name}!</div>
+                        <div style={{ fontSize: '0.72rem', opacity: 0.85, marginTop: '0.15rem' }}>
+                          {session.role === 'admin' ? 'Root Admin' : 'Staff Instructor'} • {session.role === 'admin' ? 'Full access to all modules' : 'Manage students & courses'}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* ═══════════════════ QUICK ACTIONS ═══════════════════ */}
+              <div style={{ background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: '24px', padding: '2rem', boxShadow: '0 4px 20px rgba(0,0,0,0.05)' }}>
+                <h3 style={{ margin: '0 0 1.25rem 0', fontSize: '1.05rem', fontWeight: 900, color: '#0f172a' }}>⚡ Quick Actions</h3>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '1rem' }}>
+                  {[
+                    { label: 'Enroll Student', desc: 'Add new student record', icon: '➕', color: '#3b82f6', tab: 'register' },
+                    { label: 'Live Database', desc: 'View all student records', icon: '🗄️', color: '#8b5cf6', tab: 'database' },
+                    { label: 'Review Tasks', desc: 'Grade submissions', icon: '✅', color: '#10b981', tab: 'grading' },
+                    { label: 'Course Catalog', desc: 'Browse & launch courses', icon: '📚', color: '#f59e0b', tab: 'courses' },
+                    { label: 'Fee Invoices', desc: 'Generate invoices', icon: '🧾', color: '#ec4899', tab: 'invoices' },
+                    { label: 'Certificates', desc: 'Upload certificates', icon: '🏆', color: '#06b6d4', tab: 'certificates' },
+                  ].map((action, i) => (
+                    <div key={i}
+                      onClick={() => setActiveTab(action.tab)}
+                      style={{ background: action.color + '0d', border: `1.5px solid ${action.color}33`, borderRadius: '16px', padding: '1.25rem', cursor: 'pointer', transition: 'all 0.2s' }}
+                      onMouseEnter={e => { e.currentTarget.style.background = action.color + '1a'; e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = `0 8px 20px ${action.color}22`; }}
+                      onMouseLeave={e => { e.currentTarget.style.background = action.color + '0d'; e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none'; }}
+                    >
+                      <div style={{ fontSize: '1.6rem', marginBottom: '0.5rem' }}>{action.icon}</div>
+                      <div style={{ fontSize: '0.9rem', fontWeight: 800, color: '#0f172a' }}>{action.label}</div>
+                      <div style={{ fontSize: '0.72rem', color: '#64748b', marginTop: '0.2rem' }}>{action.desc}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+            </div>
+          );
+        })()}
 
         {/* 📚 TAB 2: COURSE CATALOG VIEW */}
         {activeTab === 'courses' && (
