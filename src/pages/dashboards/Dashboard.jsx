@@ -1763,14 +1763,14 @@ export default function Dashboard({ onSelectCourse, enrolledCourse, setEnrolledC
                     </div>
 
                     <div style={{ fontSize: '2.4rem', fontWeight: 900, marginBottom: '0.25rem' }}>{formatINR(bizRevenue)}</div>
-                    <div style={{ fontSize: '0.82rem', opacity: 0.8, marginBottom: '1.5rem' }}>Estimated revenue from {bizStudents.length} students</div>
+                    <div style={{ fontSize: '0.82rem', opacity: 0.8, marginBottom: '1.5rem' }}>Estimated revenue from {bizStudents.length} business clients</div>
 
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
                       {[
-                        { label: 'Students', value: bizStudents.length },
-                        { label: 'Courses', value: bizCourses.length },
-                        { label: 'Avg. Fee', value: '₹4,999' },
-                        { label: 'Track', value: 'Web Dev' },
+                        { label: 'Clients', value: bizStudents.length },
+                        { label: 'Apps / Software', value: bizCourses.length },
+                        { label: 'Avg. Contract', value: '₹4,999' },
+                        { label: 'Target', value: 'Businesses' },
                       ].map((item, i) => (
                         <div key={i} style={{ background: 'rgba(255,255,255,0.1)', borderRadius: '10px', padding: '0.6rem 0.8rem' }}>
                           <div style={{ fontSize: '0.65rem', opacity: 0.7, textTransform: 'uppercase', letterSpacing: '0.5px' }}>{item.label}</div>
@@ -1780,7 +1780,7 @@ export default function Dashboard({ onSelectCourse, enrolledCourse, setEnrolledC
                     </div>
 
                     <div style={{ marginTop: '1.25rem', padding: '0.75rem 1rem', background: 'rgba(255,255,255,0.12)', borderRadius: '12px', fontSize: '0.78rem', opacity: 0.9 }}>
-                      📌 HTML/CSS, React, Django, DevOps, Web Design
+                      📌 Business Software, Custom Apps, SaaS, Portals, Enterprise Solutions
                     </div>
                   </div>
                 </div>
@@ -1815,14 +1815,14 @@ export default function Dashboard({ onSelectCourse, enrolledCourse, setEnrolledC
                     </div>
 
                     <div style={{ fontSize: '2.4rem', fontWeight: 900, marginBottom: '0.25rem' }}>{formatINR(collegeRevenue)}</div>
-                    <div style={{ fontSize: '0.82rem', opacity: 0.8, marginBottom: '1.5rem' }}>Estimated revenue from {collegeStudents.length} students</div>
+                    <div style={{ fontSize: '0.82rem', opacity: 0.8, marginBottom: '1.5rem' }}>Estimated revenue from {collegeStudents.length} project orders</div>
 
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
                       {[
-                        { label: 'Students', value: collegeStudents.length },
-                        { label: 'Courses', value: collegeCourses.length },
-                        { label: 'Avg. Fee', value: '₹4,999' },
-                        { label: 'Track', value: 'AI & DS' },
+                        { label: 'College Students', value: collegeStudents.length },
+                        { label: 'Project Types', value: collegeCourses.length },
+                        { label: 'Avg. Price', value: '₹4,999' },
+                        { label: 'Target', value: 'College Students' },
                       ].map((item, i) => (
                         <div key={i} style={{ background: 'rgba(255,255,255,0.1)', borderRadius: '10px', padding: '0.6rem 0.8rem' }}>
                           <div style={{ fontSize: '0.65rem', opacity: 0.7, textTransform: 'uppercase', letterSpacing: '0.5px' }}>{item.label}</div>
@@ -1832,7 +1832,7 @@ export default function Dashboard({ onSelectCourse, enrolledCourse, setEnrolledC
                     </div>
 
                     <div style={{ marginTop: '1.25rem', padding: '0.75rem 1rem', background: 'rgba(255,255,255,0.12)', borderRadius: '12px', fontSize: '0.78rem', opacity: 0.9 }}>
-                      📌 Python OOPs, Agentic AI, GenAI, Data Science
+                      📌 Final Year Major Projects, Mini Projects, GenAI & ML Prototypes
                     </div>
                   </div>
                 </div>
@@ -1862,19 +1862,19 @@ export default function Dashboard({ onSelectCourse, enrolledCourse, setEnrolledC
                       </div>
                       <div>
                         <div style={{ fontSize: '0.68rem', textTransform: 'uppercase', letterSpacing: '1.5px', opacity: 0.7, fontWeight: 800 }}>Layer 3</div>
-                        <div style={{ fontSize: '1rem', fontWeight: 900 }}>Course Enrollment</div>
+                        <div style={{ fontSize: '1rem', fontWeight: 900 }}>Course Enrollment (Online & Offline)</div>
                       </div>
                     </div>
 
                     <div style={{ fontSize: '2.4rem', fontWeight: 900, marginBottom: '0.25rem' }}>{formatINR(enrollRevenue)}</div>
-                    <div style={{ fontSize: '0.82rem', opacity: 0.8, marginBottom: '1.5rem' }}>Estimated revenue from {enrollStudents.length} students</div>
+                    <div style={{ fontSize: '0.82rem', opacity: 0.8, marginBottom: '1.5rem' }}>Estimated revenue from {enrollStudents.length} course enrollees</div>
 
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
                       {[
-                        { label: 'Students', value: enrollStudents.length },
-                        { label: 'Courses', value: enrollCourses.length },
-                        { label: 'Avg. Fee', value: '₹3,499' },
-                        { label: 'Track', value: 'SQL & BIZ' },
+                        { label: 'Enrolled Students', value: enrollStudents.length },
+                        { label: 'Courses Offered', value: enrollCourses.length },
+                        { label: 'Avg. Course Fee', value: '₹3,499' },
+                        { label: 'Training Mode', value: 'Online & Offline' },
                       ].map((item, i) => (
                         <div key={i} style={{ background: 'rgba(255,255,255,0.1)', borderRadius: '10px', padding: '0.6rem 0.8rem' }}>
                           <div style={{ fontSize: '0.65rem', opacity: 0.7, textTransform: 'uppercase', letterSpacing: '0.5px' }}>{item.label}</div>
@@ -1884,7 +1884,7 @@ export default function Dashboard({ onSelectCourse, enrolledCourse, setEnrolledC
                     </div>
 
                     <div style={{ marginTop: '1.25rem', padding: '0.75rem 1rem', background: 'rgba(255,255,255,0.12)', borderRadius: '12px', fontSize: '0.78rem', opacity: 0.9 }}>
-                      📌 SQL, Summer SQL, Power BI, Tally, English
+                      📌 Online & Offline Courses, Skill Bootcamps, Certifications
                     </div>
                   </div>
                 </div>
