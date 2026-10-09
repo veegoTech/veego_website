@@ -1144,7 +1144,7 @@ export default function Dashboard({ onSelectCourse, enrolledCourse, setEnrolledC
                 transition: 'var(--transition)'
               }}
             >
-              <Grid size={18} /> Overview
+              <Grid size={18} /> Dashboard
             </button>
 
             <button
@@ -1326,7 +1326,7 @@ export default function Dashboard({ onSelectCourse, enrolledCourse, setEnrolledC
           <div style={{ display: 'flex', flexDirection: isMobile ? 'column' : 'row', justifyContent: 'space-between', alignItems: isMobile ? 'flex-start' : 'center', gap: '1rem', borderBottom: '1px solid var(--surface-border)', paddingBottom: '1.5rem', marginBottom: '2.5rem' }}>
             <div>
               <h1 style={{ fontSize: isMobile ? '1.5rem' : '2.2rem', fontWeight: 900, color: 'var(--text-primary)', margin: 0 }}>
-                {activeTab === 'overview' && 'LMS Workspace Overview'}
+                {activeTab === 'overview' && 'LMS Workspace Dashboard'}
                 {activeTab === 'courses' && 'Interactive Course Catalog'}
                 {activeTab === 'register' && 'Enroll a New Student'}
                 {activeTab === 'database' && 'Student Credentials Directory'}
@@ -1335,7 +1335,7 @@ export default function Dashboard({ onSelectCourse, enrolledCourse, setEnrolledC
                 {activeTab === 'certificates' && 'Certificate Upload'}
               </h1>
               <p style={{ fontSize: isMobile ? '0.85rem' : '0.95rem', color: 'var(--text-secondary)', margin: '0.2rem 0 0 0' }}>
-                {activeTab === 'overview' && 'Overview stats, role privileges, and quick configuration access.'}
+                {activeTab === 'overview' && 'Dashboard stats, role privileges, and quick configuration access.'}
                 {activeTab === 'courses' && 'Browse, select, and launch learning timelines and bootcamp environments.'}
                 {activeTab === 'register' && 'Assign course tracks and generate direct student login credential links.'}
                 {activeTab === 'database' && 'Review and clear access token keys, device locks, or student databases.'}
