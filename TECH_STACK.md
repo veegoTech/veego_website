@@ -32,7 +32,7 @@ This document outlines the architecture, frameworks, libraries, cloud services, 
 | :--- | :--- | :--- |
 | **Node.js** | `v20.x` | JavaScript runtime environment |
 | **Express.js** | `v4.21.2` | REST API server handling authentication, student registry, tasks, and certificates |
-| **Mongoose** | `v8.9.5` | ODM (Object Data Modeling) for MongoDB Atlas database operations |
+| **Supabase JS SDK** | `v2.109.0` | Cloud database client for PostgreSQL queries, data persistence & RLS security |
 | **CORS & Dotenv** | — | Cross-origin resource sharing & environment variable security |
 
 ---
@@ -41,7 +41,7 @@ This document outlines the architecture, frameworks, libraries, cloud services, 
 
 | Technology | Purpose |
 | :--- | :--- |
-| **MongoDB Atlas** | Cloud NoSQL database for students, credentials, device locks, and assignments |
+| **Supabase Cloud Database** | PostgreSQL cloud database for students, credentials, device locks, tasks, and inquiries |
 | **Browser LocalStorage** | Offline caching for invoice ledgers, theme states, and sheet sync URLs |
 
 ---
