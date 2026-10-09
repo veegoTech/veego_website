@@ -9,10 +9,11 @@ import { BackToTop } from '../../components/BackToTop';
 import { LiveDemoModal } from '../../components/LiveDemoModal';
 
 import { HomePage } from '../veego/HomePage';
-import { SolutionsPage } from '../veego/SolutionsPage';
+import { CoursesPage } from '../veego/CoursesPage';
 import { ProjectsPage } from '../veego/ProjectsPage';
 import { HowItWorksPage } from '../veego/HowItWorksPage';
 import { AboutPage } from '../veego/AboutPage';
+import { AnidioLandingPage } from '../veego/AnidioLandingPage';
 import { ContactPage } from '../veego/ContactPage';
 import { BusinessEnquiryPage } from '../veego/BusinessEnquiryPage';
 import { AdminPage } from '../veego/AdminPage';
@@ -72,8 +73,8 @@ export default function LandingPage({ onLoginSuccess }) {
   useEffect(() => {
     if (currentPath === '/' || currentPath === '/home') {
       document.title = 'VeeGo | Understand. Build. Grow. — We Go Through Your Problem. We Give You the Solution.';
-    } else if (currentPath === '/solutions') {
-      document.title = 'VeeGo Business Solutions | Understand. Build. Grow.';
+    } else if (currentPath === '/courses') {
+      document.title = 'VeeGo Academy & Courses | Online LMS & Offline Classroom Training';
     } else if (currentPath === '/projects') {
       document.title = 'Built by VeeGo | Production Systems & Case Studies';
     } else if (currentPath === '/how-it-works') {
@@ -229,28 +230,12 @@ export default function LandingPage({ onLoginSuccess }) {
       }
     }
 
-    // 2. Dedicated Solutions Page View
-    if (currentPath === '/solutions') {
+    // 2. Dedicated Courses Page View
+    if (currentPath === '/courses') {
       return (
-        <SolutionsPage
+        <CoursesPage
           onNavigate={navigate}
-          onExploreSolution={(sol) => {
-            setEnquiryCategory(
-              sol.id.includes('staff')
-                ? 'Staff'
-                : sol.id.includes('billing')
-                ? 'Billing'
-                : sol.id.includes('lead')
-                ? 'Sales'
-                : sol.id.includes('education')
-                ? 'Education'
-                : sol.id.includes('ai')
-                ? 'AI'
-                : 'Automation'
-            );
-            setEnquiryProblemDescription(`Requesting consultation on: ${sol.title}\nWorkflow challenge: ${sol.problem}`);
-            navigate('/contact');
-          }}
+          onOpenLoginModal={() => setIsLoginModalOpen(true)}
         />
       );
     }
@@ -275,7 +260,7 @@ export default function LandingPage({ onLoginSuccess }) {
       return <AboutPage onNavigate={navigate} />;
     }
 
-    // 6. Dedicated Contact Page View
+    // 7. Dedicated Contact Page View
     if (currentPath === '/contact') {
       return (
         <ContactPage
@@ -286,7 +271,7 @@ export default function LandingPage({ onLoginSuccess }) {
       );
     }
 
-    // 7. Dedicated Business Consultation Flow
+    // 8. Dedicated Business Consultation Flow
     if (currentPath === '/business-enquiry') {
       return (
         <BusinessEnquiryPage
@@ -297,12 +282,12 @@ export default function LandingPage({ onLoginSuccess }) {
       );
     }
 
-    // 8. Admin Management Dashboard
+    // 9. Admin Management Dashboard
     if (currentPath === '/admin') {
       return <AdminPage onNavigate={navigate} />;
     }
 
-    // 9. Default: Home Page View
+    // 10. Default: VeeGo Enterprise Home View
     return (
       <HomePage
         onNavigate={navigate}
@@ -312,16 +297,16 @@ export default function LandingPage({ onLoginSuccess }) {
             prob.id.includes('staff')
               ? 'Staff'
               : prob.id.includes('billing')
-              ? 'Billing'
-              : prob.id.includes('followup')
-              ? 'Sales'
-              : prob.id.includes('report')
-              ? 'Reports'
-              : prob.id.includes('data')
-              ? 'Data'
-              : prob.id.includes('student')
-              ? 'Education'
-              : 'Automation'
+                ? 'Billing'
+                : prob.id.includes('followup')
+                  ? 'Sales'
+                  : prob.id.includes('report')
+                    ? 'Reports'
+                    : prob.id.includes('data')
+                      ? 'Data'
+                      : prob.id.includes('student')
+                        ? 'Education'
+                        : 'Automation'
           );
           setEnquiryProblemDescription(`Problem: ${prob.problem}\nDaily friction: ${prob.symptom}`);
           navigate('/contact');
@@ -331,14 +316,14 @@ export default function LandingPage({ onLoginSuccess }) {
             sol.id.includes('staff')
               ? 'Staff'
               : sol.id.includes('billing')
-              ? 'Billing'
-              : sol.id.includes('lead')
-              ? 'Sales'
-              : sol.id.includes('education')
-              ? 'Education'
-              : sol.id.includes('ai')
-              ? 'AI'
-              : 'Automation'
+                ? 'Billing'
+                : sol.id.includes('lead')
+                  ? 'Sales'
+                  : sol.id.includes('education')
+                    ? 'Education'
+                    : sol.id.includes('ai')
+                      ? 'AI'
+                      : 'Automation'
           );
           setEnquiryProblemDescription(`Requesting consultation on: ${sol.title}\nWorkflow challenge: ${sol.problem}`);
           navigate('/contact');
@@ -357,7 +342,7 @@ export default function LandingPage({ onLoginSuccess }) {
       />
 
       {/* Main SPA Route View */}
-      <main className="flex-1">{renderCurrentView()}</main>
+      <main className="flex-1 pt-16 sm:pt-18">{renderCurrentView()}</main>
 
       {/* Interactive Live Demo Modal */}
       {activeDemoProject && (
@@ -407,11 +392,10 @@ export default function LandingPage({ onLoginSuccess }) {
                 <button
                   key={role}
                   onClick={() => handleTabChange(role)}
-                  className={`py-2 text-xs font-bold capitalize rounded-lg transition-all ${
-                    activeTab === role
+                  className={`py-2 text-xs font-bold capitalize rounded-lg transition-all ${activeTab === role
                       ? 'bg-white text-blue-600 shadow-sm'
                       : 'text-slate-600 hover:text-slate-900'
-                  }`}
+                    }`}
                 >
                   {role}
                 </button>

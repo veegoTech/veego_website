@@ -1,5 +1,5 @@
 import React from 'react';
-import { motion } from 'framer-motion';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import { ArrowRight, Target, Wrench, ShieldCheck, RefreshCw, Building2, Sparkles, CheckCircle2, PhoneCall, Code2 } from 'lucide-react';
 
 interface WhyVeeGoAndCTAProps {
@@ -10,6 +10,10 @@ interface WhyVeeGoAndCTAProps {
 export const WhyVeeGoAndCTA: React.FC<WhyVeeGoAndCTAProps> = ({
   onSolveBusinessProblem
 }) => {
+  // Parallax Scroll Hooks
+  const { scrollYProgress } = useScroll();
+  const bgOrbY = useTransform(scrollYProgress, [0.6, 1], [-60, 60]);
+
   const principles = [
     {
       title: 'Problem First',
@@ -36,10 +40,31 @@ export const WhyVeeGoAndCTA: React.FC<WhyVeeGoAndCTAProps> = ({
   return (
     <>
       {/* SECTION: WHY VEEGO */}
-      <section className="relative py-20 sm:py-32 bg-slate-50/70 text-slate-900 border-b border-slate-200/80 overflow-hidden">
-        {/* Subtle background glow */}
-        <div className="absolute inset-0 pointer-events-none overflow-hidden bg-dot-pattern opacity-30">
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] bg-blue-50/50 rounded-full blur-3xl" />
+      <section className="relative py-20 pb-32 sm:py-32 sm:pb-36 bg-[#120529] text-white overflow-hidden">
+        {/* Parallax background orbs + star particles */}
+        <div className="absolute inset-0 pointer-events-none overflow-hidden z-0">
+          <motion.div
+            style={{ y: bgOrbY }}
+            animate={{ scale: [1, 1.1, 1] }}
+            transition={{ duration: 14, repeat: Infinity, ease: 'easeInOut' }}
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] bg-purple-600/25 rounded-full blur-[130px]"
+          />
+
+          {/* Animated Particle Stars */}
+          {[...Array(24)].map((_, i) => (
+            <motion.div
+              key={i}
+              className="absolute bg-white rounded-full opacity-60"
+              style={{
+                top: `${(i * 19) % 85 + 8}%`,
+                left: `${(i * 27) % 92 + 4}%`,
+                width: `${(i % 3) + 2}px`,
+                height: `${(i % 3) + 2}px`,
+              }}
+              animate={{ opacity: [0.2, 0.9, 0.2], scale: [0.8, 1.25, 0.8] }}
+              transition={{ duration: 3 + (i % 4), repeat: Infinity, ease: 'easeInOut' }}
+            />
+          ))}
         </div>
 
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 z-10">
@@ -48,9 +73,9 @@ export const WhyVeeGoAndCTA: React.FC<WhyVeeGoAndCTAProps> = ({
               initial={{ opacity: 0, scale: 0.9 }}
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
-              className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-50 border border-blue-200/80 text-xs uppercase tracking-widest text-blue-700 font-bold mb-3 shadow-xs"
+              className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-purple-500/20 border border-purple-400/30 text-xs uppercase tracking-widest text-purple-300 font-bold mb-3 shadow-xs"
             >
-              <Sparkles className="w-3.5 h-3.5 text-blue-600" />
+              <Sparkles className="w-3.5 h-3.5 text-purple-400" />
               <span>CORE ENGINEERING ETHICS</span>
             </motion.div>
             <motion.h2
@@ -58,17 +83,17 @@ export const WhyVeeGoAndCTA: React.FC<WhyVeeGoAndCTAProps> = ({
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.1 }}
-              className="font-display text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-slate-900 leading-tight"
+              className="font-display text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-white leading-tight"
               style={{ textWrap: 'balance' }}
             >
-              Why Organizations <span className="text-blue-600 font-extrabold">Trust VeeGo</span>
+              Why Organizations <span className="text-purple-300 font-extrabold">Trust VeeGo</span>
             </motion.h2>
             <motion.p
               initial={{ opacity: 0, y: 15 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.2 }}
-              className="mt-4 text-base sm:text-lg text-slate-600 leading-relaxed font-normal"
+              className="mt-4 text-base sm:text-lg text-purple-200/80 leading-relaxed font-normal"
             >
               We operate on tangible engineering outcomes, transparent pricing, and real human dedication instead of superficial marketing hype.
             </motion.p>
@@ -83,16 +108,16 @@ export const WhyVeeGoAndCTA: React.FC<WhyVeeGoAndCTAProps> = ({
                 viewport={{ once: true }}
                 transition={{ delay: idx * 0.1, duration: 0.4 }}
                 whileHover={{ y: -8 }}
-                className="p-7 rounded-3xl glass-card border-2 border-slate-200/90 hover:border-blue-500/60 shadow-xl hover:shadow-2xl transition-all duration-300 flex flex-col justify-between group"
+                className="p-7 rounded-3xl bg-white/5 backdrop-blur-md border border-white/10 hover:border-purple-400/40 hover:bg-white/10 shadow-xl transition-all duration-300 flex flex-col justify-between group"
               >
                 <div>
-                  <div className="w-13 h-13 rounded-2xl bg-white border border-slate-200/90 flex items-center justify-center mb-6 shadow-md group-hover:scale-110 group-hover:bg-blue-600 group-hover:text-white transition-all duration-300">
+                  <div className="w-13 h-13 rounded-2xl bg-purple-500/20 border border-purple-400/30 flex items-center justify-center mb-6 shadow-md group-hover:scale-110 group-hover:bg-purple-600 text-purple-300 group-hover:text-white transition-all duration-300">
                     {p.icon}
                   </div>
-                  <h3 className="text-xl font-bold text-slate-900 mb-3 group-hover:text-blue-600 transition-colors font-display">
+                  <h3 className="text-xl font-bold text-white mb-3 group-hover:text-purple-300 transition-colors font-display">
                     {p.title}
                   </h3>
-                  <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-normal">
+                  <p className="text-xs sm:text-sm text-purple-200/80 leading-relaxed font-normal">
                     {p.desc}
                   </p>
                 </div>
@@ -100,18 +125,51 @@ export const WhyVeeGoAndCTA: React.FC<WhyVeeGoAndCTAProps> = ({
             ))}
           </div>
         </div>
+
+        {/* 🌊 REDESIGNED DUAL-LAYER SVG WAVE DIVIDER */}
+        <div className="absolute bottom-0 -left-1 -right-1 w-[calc(100%+8px)] overflow-hidden leading-none z-20 pointer-events-none">
+          <svg
+            viewBox="0 0 1440 120"
+            preserveAspectRatio="none"
+            className="relative block w-full h-12 sm:h-16 lg:h-20 text-[#0e0422] fill-current"
+          >
+            {/* Layer 1: Soft Translucent Depth Wave */}
+            <path
+              opacity="0.25"
+              d="M0,50 C320,110 640,15 960,85 C1280,140 1380,30 1440,50 L1440,120 L0,120 Z"
+            />
+            {/* Layer 2: Main Solid Curve Wave */}
+            <path d="M0,32 C280,90 560,90 840,40 C1120,-10 1280,50 1440,65 L1440,120 L0,120 Z" />
+          </svg>
+        </div>
       </section>
 
       {/* SECTION: FINAL BOTTOM CTA */}
-      <section className="relative overflow-hidden py-24 sm:py-32 bg-slate-950 text-white border-t border-slate-800">
-        {/* Parallax ambient background glows */}
-        <div className="absolute inset-0 pointer-events-none overflow-hidden">
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-900/40 via-slate-950 to-slate-950" />
+      <section className="relative overflow-hidden py-24 sm:py-32 bg-[#0e0422] text-white border-t border-white/10">
+
+        {/* Parallax ambient background glows & star particles */}
+        <div className="absolute inset-0 pointer-events-none overflow-hidden z-0">
           <motion.div
-            animate={{ scale: [1, 1.15, 1], opacity: [0.3, 0.5, 0.3] }}
+            animate={{ scale: [1, 1.15, 1], opacity: [0.3, 0.6, 0.3] }}
             transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut' }}
-            className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-blue-600/25 rounded-full blur-[120px]"
+            className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[650px] h-[350px] bg-purple-600/30 rounded-full blur-[130px]"
           />
+
+          {/* Animated Particle Stars */}
+          {[...Array(24)].map((_, i) => (
+            <motion.div
+              key={i}
+              className="absolute bg-white rounded-full opacity-60"
+              style={{
+                top: `${(i * 19) % 85 + 8}%`,
+                left: `${(i * 27) % 92 + 4}%`,
+                width: `${(i % 3) + 2}px`,
+                height: `${(i % 3) + 2}px`,
+              }}
+              animate={{ opacity: [0.2, 0.9, 0.2], scale: [0.8, 1.25, 0.8] }}
+              transition={{ duration: 3 + (i % 4), repeat: Infinity, ease: 'easeInOut' }}
+            />
+          ))}
         </div>
 
         <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center z-10">
@@ -119,9 +177,9 @@ export const WhyVeeGoAndCTA: React.FC<WhyVeeGoAndCTAProps> = ({
             initial={{ opacity: 0, scale: 0.9 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
-            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-500/10 border border-blue-400/30 text-xs font-mono font-bold text-blue-300 mb-6"
+            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-purple-500/20 border border-purple-400/30 text-xs font-mono font-bold text-purple-300 mb-6"
           >
-            <Code2 className="w-3.5 h-3.5 text-blue-400" />
+            <Code2 className="w-3.5 h-3.5 text-purple-400" />
             <span>UNDERSTAND · BUILD · GROW</span>
           </motion.div>
 
@@ -134,7 +192,7 @@ export const WhyVeeGoAndCTA: React.FC<WhyVeeGoAndCTAProps> = ({
             style={{ textWrap: 'balance' }}
           >
             We Go Through Your Problem. <br className="hidden sm:inline" />
-            <span className="text-sky-400 font-black">
+            <span className="text-purple-300 font-black">
               We Deliver Your Solution.
             </span>
           </motion.h2>
@@ -144,7 +202,7 @@ export const WhyVeeGoAndCTA: React.FC<WhyVeeGoAndCTAProps> = ({
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.2 }}
-            className="text-base sm:text-xl text-slate-300 max-w-xl mx-auto mb-10 font-normal leading-relaxed"
+            className="text-base sm:text-xl text-purple-200/80 max-w-xl mx-auto mb-10 font-normal leading-relaxed"
           >
             Speak directly with our senior software engineers. No aggressive sales reps, no automated bot loops — just straightforward engineering solutions.
           </motion.p>
@@ -167,7 +225,7 @@ export const WhyVeeGoAndCTA: React.FC<WhyVeeGoAndCTAProps> = ({
           </motion.div>
 
           {/* Trust Guarantees */}
-          <div className="mt-12 pt-8 border-t border-slate-800/80 grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs sm:text-sm font-semibold text-slate-200">
+          <div className="mt-12 pt-8 border-t border-white/10 grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs sm:text-sm font-semibold text-purple-200">
             <div className="flex items-center justify-center gap-2">
               <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
               <span>Direct access to lead software engineers</span>

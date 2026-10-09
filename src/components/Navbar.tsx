@@ -19,19 +19,14 @@ export const Navbar: React.FC<NavbarProps> = ({ currentPath, onNavigate, onOpenL
   const navLinks = [
     { label: 'Home', path: '/' },
     { label: 'About', path: '/about' },
-    { label: 'Solutions', path: '/solutions' },
     { label: 'Projects', path: '/projects' },
-    { label: 'Courses', path: '/courses', isCourses: true, badge: '₹499' },
+    { label: 'Courses', path: '/courses', badge: '₹499' },
     { label: 'Contact', path: '/contact' }
   ];
 
-  const handleLinkClick = (item: { label: string; path: string; isCourses?: boolean }) => {
+  const handleLinkClick = (item: { label: string; path: string }) => {
     setMobileMenuOpen(false);
-    if (item.isCourses && onOpenLoginModal) {
-      onOpenLoginModal();
-    } else {
-      onNavigate(item.path);
-    }
+    onNavigate(item.path);
   };
 
   const isLinkActive = (item: { label: string; path: string }) => {
@@ -42,7 +37,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentPath, onNavigate, onOpenL
   };
 
   return (
-    <header className="sticky top-0 z-50 w-full bg-white/95 backdrop-blur-md border-b border-slate-200/80 transition-shadow duration-200 shadow-2xs">
+    <header className="fixed top-0 left-0 right-0 z-50 w-full bg-white/95 backdrop-blur-md border-b border-slate-200/80 transition-shadow duration-200 shadow-2xs">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 sm:h-18">
           {/* Logo */}
@@ -54,7 +49,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentPath, onNavigate, onOpenL
             <img
               src={logoImg}
               alt="VeeGo — Understand. Build. Grow."
-              className="h-8 sm:h-9 w-auto object-contain transition-transform group-hover:scale-102 duration-200"
+              className="h-9 sm:h-10.5 w-auto object-contain transition-transform group-hover:scale-105 duration-200"
             />
           </button>
 
@@ -66,11 +61,10 @@ export const Navbar: React.FC<NavbarProps> = ({ currentPath, onNavigate, onOpenL
                 <button
                   key={item.label}
                   onClick={() => handleLinkClick(item)}
-                  className={`px-4 py-1.5 rounded-lg text-sm font-semibold transition-all flex items-center gap-1.5 cursor-pointer ${
-                    active
-                      ? 'border border-slate-900 text-blue-600 font-bold bg-white shadow-2xs'
-                      : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
-                  }`}
+                  className={`px-4 py-1.5 rounded-lg text-sm font-semibold transition-all flex items-center gap-1.5 cursor-pointer ${active
+                    ? 'border border-slate-900 text-blue-600 font-bold bg-white shadow-2xs'
+                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+                    }`}
                 >
                   <span>{item.label}</span>
                   {item.badge && (
@@ -121,11 +115,10 @@ export const Navbar: React.FC<NavbarProps> = ({ currentPath, onNavigate, onOpenL
               <button
                 key={item.label}
                 onClick={() => handleLinkClick(item)}
-                className={`w-full text-left px-3 py-2.5 rounded-lg text-sm font-semibold flex items-center justify-between ${
-                  isLinkActive(item)
-                    ? 'bg-blue-50 text-blue-700 font-bold border border-blue-200'
-                    : 'text-slate-700 hover:bg-slate-50'
-                }`}
+                className={`w-full text-left px-3 py-2.5 rounded-lg text-sm font-semibold flex items-center justify-between ${isLinkActive(item)
+                  ? 'bg-blue-50 text-blue-700 font-bold border border-blue-200'
+                  : 'text-slate-700 hover:bg-slate-50'
+                  }`}
               >
                 <div className="flex items-center gap-2">
                   <span>{item.label}</span>

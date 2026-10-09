@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
 import {
   Zap,
   FolderGit2,
@@ -28,7 +28,10 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
   onRequestService
 }) => {
   const [activeTab, setActiveTab] = useState<'all' | 'automation' | 'projects' | 'web'>('all');
-  const [expandedCard, setExpandedCard] = useState<string | null>(null);
+
+  // Parallax Scroll Hooks
+  const { scrollYProgress } = useScroll();
+  const bgOrbY = useTransform(scrollYProgress, [0.1, 0.6], [-60, 60]);
 
   const services = [
     {
@@ -41,29 +44,18 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
       gradient: 'from-blue-600 via-indigo-600 to-blue-700',
       icon: Bot,
       title: 'Business Automation & Workflows',
-      tagline: 'Eliminate manual friction & reclaim lost operational hours',
+      tagline: 'Eliminate manual friction & reclaim operational hours',
       description:
-        'We visit your workplace, map your daily bottlenecks, and build custom zero-touch automated workflows that connect your spreadsheets, WhatsApp notifications, staff attendance, and billing automatically.',
-      priceTag: 'Custom Workflow Audit',
-      priceSubtext: 'Built for growing small & medium businesses',
+        'Zero-touch automated workflows connecting your spreadsheets, WhatsApp notifications, staff attendance, and billing automatically.',
+      priceTag: 'Custom Audit',
       features: [
-        'Staff shift tracking & automated attendance reports',
-        'Auto invoicing, billing & payment reminder pipelines',
-        'WhatsApp & email transactional notifications',
-        'Google Sheets & database two-way synchronization',
-        'Custom CRM & lead management automation'
+        'Staff shift tracking & automated attendance',
+        'Auto invoicing, billing & WhatsApp notifications',
+        'Google Sheets & database 2-way sync'
       ],
       impactStat: '3.5 Hours Saved Daily',
-      primaryCta: 'Explore Automation Solutions',
-      primaryAction: () => onNavigate('/solutions'),
-      secondaryCta: 'Request Workflow Audit',
-      secondaryAction: () => {
-        if (onRequestService) {
-          onRequestService('Business Automation');
-        } else {
-          onNavigate('/contact');
-        }
-      }
+      primaryCta: 'Explore Applied Courses',
+      primaryAction: () => onNavigate('/courses'),
     },
     {
       id: 'college-projects',
@@ -74,31 +66,20 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
       glowColor: 'rgba(16, 185, 129, 0.15)',
       gradient: 'from-emerald-600 via-teal-600 to-emerald-700',
       icon: FolderGit2,
-      title: 'Production & College Projects',
-      tagline: 'End-to-end engineered software with full documentation & live hosting',
+      title: 'Production & Software Projects',
+      tagline: 'End-to-end engineered software with live cloud hosting',
       description:
-        'Complete engineering systems built with production-grade architecture. Includes fully documented clean source code, system design diagrams, live cloud deployment links, and 1-on-1 code walkthroughs.',
-      priceTag: 'Starting from ₹2,000',
-      priceSubtext: 'Full source code, project report & live hosting',
+        'Complete engineering systems built with clean code, system architecture diagrams, live cloud links, and 1-on-1 walkthroughs.',
+      priceTag: 'Starting ₹2,000',
       popular: true,
       features: [
         'Complete frontend, backend & database source code',
-        'Live cloud deployment link for presentation & testing',
-        'System architecture diagrams & documentation',
-        'Project report, PPT & technical synopsis materials',
-        '1-on-1 code walkthrough & architecture explanation'
+        'Live cloud deployment link & system diagrams',
+        '1-on-1 code walkthrough & viva coaching'
       ],
       impactStat: '100% Production Ready',
       primaryCta: 'Browse Built Projects',
       primaryAction: () => onNavigate('/projects'),
-      secondaryCta: 'Discuss Custom Project',
-      secondaryAction: () => {
-        if (onRequestService) {
-          onRequestService('College & Custom Software Projects');
-        } else {
-          onNavigate('/contact');
-        }
-      }
     },
     {
       id: 'web-services',
@@ -110,17 +91,14 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
       gradient: 'from-purple-600 via-indigo-600 to-purple-700',
       icon: Globe,
       title: 'Web Applications & Portals',
-      tagline: 'High-converting business platforms & custom SaaS web applications',
+      tagline: 'Modern business platforms & custom SaaS web applications',
       description:
-        'From high-converting modern business websites to complex multi-tenant SaaS web applications, customer portals, and administrative dashboards engineered for high performance, security, and scale.',
+        'Modern business websites, multi-tenant SaaS web applications, customer portals, and admin dashboards engineered for performance.',
       priceTag: 'Tailored Architecture',
-      priceSubtext: 'Fast delivery & responsive UI/UX',
       features: [
-        'Modern Responsive Websites & Interactive Web Portals',
-        'Custom Web Applications with Auth & Role Controls',
-        'Interactive Admin Dashboards & Live KPI Tracking',
-        'Database Design, REST APIs & Cloud Infrastructure',
-        'SEO Optimization, Blazing Performance & Security'
+        'Responsive websites & interactive customer portals',
+        'Custom SaaS web apps & admin dashboards',
+        'Database design, REST APIs & cloud infrastructure'
       ],
       impactStat: '99.9% Uptime Guarantee',
       primaryCta: 'Discuss Web Project',
@@ -131,64 +109,44 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
           onNavigate('/contact');
         }
       },
-      secondaryCta: 'View Live Case Studies',
-      secondaryAction: () => onNavigate('/projects')
     }
   ];
 
   const filteredServices = activeTab === 'all' ? services : services.filter(s => s.category === activeTab);
 
   return (
-    <section id="services" className="py-20 sm:py-32 bg-slate-50/70 border-b border-slate-200/80 text-slate-900 scroll-mt-16 relative overflow-hidden">
-      {/* 🔮 PARALLAX FLOATING BACKGROUND OBJECTS & GLOW ORBS */}
-      <motion.div
-        animate={{
-          y: [0, -30, 0],
-          rotate: [0, 8, 0],
-          scale: [1, 1.1, 1]
-        }}
-        transition={{ duration: 14, repeat: Infinity, ease: 'easeInOut' }}
-        className="absolute top-12 right-10 w-[450px] h-[450px] bg-gradient-to-br from-blue-500/15 via-indigo-500/10 to-purple-500/15 rounded-full blur-3xl pointer-events-none -z-0"
-      />
-      <motion.div
-        animate={{
-          y: [0, 35, 0],
-          rotate: [0, -10, 0],
-          scale: [1, 1.12, 1]
-        }}
-        transition={{ duration: 16, repeat: Infinity, ease: 'easeInOut' }}
-        className="absolute bottom-16 left-10 w-[500px] h-[500px] bg-gradient-to-tr from-emerald-500/15 via-teal-500/10 to-blue-500/15 rounded-full blur-3xl pointer-events-none -z-0"
-      />
+    <section id="services" className="py-24 pb-32 bg-[#0e0422] text-white scroll-mt-16 relative overflow-hidden">
 
-      {/* Floating Animated Technical Icons in Background */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none -z-0 opacity-20 bg-dot-pattern">
+      {/* 🔮 PARALLAX FLOATING BACKGROUND OBJECTS, STAR PARTICLES & GLOW ORBS */}
+      <div className="absolute inset-0 pointer-events-none z-0">
         <motion.div
-          animate={{ y: [0, -40, 0], opacity: [0.3, 0.7, 0.3] }}
-          transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
-          className="absolute top-24 left-[8%] text-blue-500"
-        >
-          <Cpu className="w-14 h-14" />
-        </motion.div>
+          style={{ y: bgOrbY }}
+          className="absolute top-12 right-10 w-[480px] h-[480px] bg-gradient-to-br from-purple-600/25 via-pink-500/15 to-indigo-500/20 rounded-full blur-3xl"
+        />
+        <motion.div
+          style={{ y: bgOrbY }}
+          className="absolute bottom-16 left-10 w-[500px] h-[500px] bg-gradient-to-tr from-indigo-600/25 via-purple-600/15 to-pink-500/20 rounded-full blur-3xl"
+        />
 
-        <motion.div
-          animate={{ y: [0, 35, 0], opacity: [0.2, 0.6, 0.2] }}
-          transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
-          className="absolute top-48 right-[10%] text-indigo-500"
-        >
-          <Workflow className="w-16 h-16" />
-        </motion.div>
-
-        <motion.div
-          animate={{ y: [0, -30, 0], opacity: [0.3, 0.6, 0.3] }}
-          transition={{ duration: 9, repeat: Infinity, ease: 'easeInOut', delay: 2 }}
-          className="absolute bottom-32 left-[15%] text-emerald-500"
-        >
-          <Code2 className="w-12 h-12" />
-        </motion.div>
+        {/* Animated Particle Stars */}
+        {[...Array(24)].map((_, i) => (
+          <motion.div
+            key={i}
+            className="absolute bg-white rounded-full opacity-60"
+            style={{
+              top: `${(i * 19) % 85 + 8}%`,
+              left: `${(i * 27) % 92 + 4}%`,
+              width: `${(i % 3) + 2}px`,
+              height: `${(i % 3) + 2}px`,
+            }}
+            animate={{ opacity: [0.2, 0.9, 0.2], scale: [0.8, 1.25, 0.8] }}
+            transition={{ duration: 3 + (i % 4), repeat: Infinity, ease: 'easeInOut' }}
+          />
+        ))}
       </div>
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 z-10">
-        {/* Section Header with Human Touch */}
+        {/* Section Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -196,17 +154,20 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
           transition={{ duration: 0.6 }}
           className="text-center max-w-3xl mx-auto mb-16"
         >
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200/80 text-xs font-bold text-blue-700 mb-4 shadow-xs">
-            <Sparkle className="w-3.5 h-3.5 text-blue-600 animate-spin-slow" />
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-purple-500/20 border border-purple-400/30 text-xs font-bold text-purple-300 mb-4 shadow-xs">
+
             <span className="tracking-wider uppercase">REAL ENGINEERING · HAND-CRAFTED SYSTEMS</span>
           </div>
 
-          <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-slate-900 leading-tight">
+          <h2
+            className="font-space text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-white leading-tight"
+            style={{ fontFamily: "'Space Grotesk', sans-serif" }}
+          >
             Engineering Solutions Built by Humans, <br className="hidden sm:inline" />
-            <span className="text-blue-600 font-extrabold">for Real Operations</span>
+            <span className="text-purple-300 font-extrabold" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>for Real Operations</span>
           </h2>
 
-          <p className="mt-4 text-base sm:text-lg text-slate-600 leading-relaxed font-normal">
+          <p className="mt-4 text-base sm:text-lg text-purple-200/80 leading-relaxed font-normal">
             No cookie-cutter templates or aggressive sales pitches. We analyze your actual daily workflows, write clean production code, and deliver systems that solve your exact friction points.
           </p>
 
@@ -221,11 +182,10 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id as any)}
-                className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all duration-200 cursor-pointer ${
-                  activeTab === tab.id
-                    ? 'bg-slate-900 text-white shadow-lg shadow-slate-900/20 scale-105 border border-slate-800'
-                    : 'bg-white/90 text-slate-600 border border-slate-200/80 hover:border-slate-300 hover:bg-slate-50'
-                }`}
+                className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all duration-200 cursor-pointer ${activeTab === tab.id
+                    ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/30 scale-105 border border-blue-400/40'
+                    : 'bg-white/5 text-purple-200 border border-white/10 hover:border-blue-400/30 hover:bg-white/10'
+                  }`}
               >
                 {tab.label}
               </button>
@@ -238,7 +198,6 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
           <AnimatePresence mode="wait">
             {filteredServices.map((svc, idx) => {
               const IconComponent = svc.icon;
-              const isExpanded = expandedCard === svc.id;
 
               return (
                 <motion.div
@@ -248,78 +207,71 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
                   viewport={{ once: true }}
                   transition={{ duration: 0.5, delay: idx * 0.15 }}
                   whileHover={{ y: -8 }}
-                  className="group relative rounded-3xl p-7 sm:p-8 glass-card border-2 border-slate-200/90 hover:border-blue-500/60 shadow-xl hover:shadow-2xl transition-all duration-300 flex flex-col justify-between overflow-hidden"
+                  className="group relative rounded-3xl p-7 bg-white/5 backdrop-blur-md border border-white/10 hover:border-purple-400/40 shadow-xl hover:shadow-2xl transition-all duration-300 flex flex-col justify-between overflow-hidden text-white"
                 >
-                  {/* Subtle Card Glow Effect */}
-                  <div
-                    className="absolute -top-24 -right-24 w-48 h-48 rounded-full blur-2xl pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-                    style={{ background: svc.glowColor }}
-                  />
-
-                  {/* Popular Badge */}
-                  {svc.popular && (
-                    <div className="absolute top-4 right-5 bg-gradient-to-r from-emerald-600 to-teal-600 text-white text-[11px] font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow-sm flex items-center gap-1.5 animate-pulse">
-                      <Sparkles className="w-3 h-3" />
-                      <span>Popular</span>
-                    </div>
-                  )}
-
                   <div>
                     {/* Header Row */}
-                    <div className="flex items-start justify-between gap-4 mb-6">
-                      <div className="w-13 h-13 rounded-2xl bg-gradient-to-br from-slate-900 to-slate-800 text-white flex items-center justify-center shadow-md shrink-0 transition-transform group-hover:scale-110 duration-300">
-                        <IconComponent className="w-6 h-6 text-blue-400" />
+                    <div className="flex items-center justify-between gap-3 mb-4">
+                      <div className="w-12 h-12 rounded-2xl bg-purple-500/20 border border-purple-400/30 text-purple-300 flex items-center justify-center shadow-md shrink-0 transition-transform group-hover:scale-110 duration-300">
+                        <IconComponent className="w-6 h-6 text-purple-300" />
                       </div>
-                      <span className={`text-[10px] font-extrabold px-2.5 py-1 rounded-full border ${svc.badgeColor} uppercase tracking-wider`}>
-                        {svc.badge}
-                      </span>
+
+                      <div className="flex items-center gap-2">
+                        {svc.popular && (
+                          <span className="bg-gradient-to-r from-pink-600 to-purple-600 text-white text-[10px] font-extrabold px-2.5 py-1 rounded-full uppercase tracking-wider shadow-xs flex items-center gap-1">
+                            <Sparkles className="w-3 h-3" />
+                            <span>Popular</span>
+                          </span>
+                        )}
+                        <span className="text-[10px] font-bold px-2.5 py-1 rounded-full bg-purple-500/20 border border-purple-400/30 text-purple-300 uppercase tracking-wider">
+                          {svc.badge}
+                        </span>
+                      </div>
                     </div>
 
-                    <h3 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight mb-2 group-hover:text-blue-600 transition-colors">
+                    <h3
+                      className="text-xl font-bold text-white tracking-tight mb-2 group-hover:text-purple-300 transition-colors min-h-[56px] flex items-center"
+                      style={{ fontFamily: "'Space Grotesk', sans-serif" }}
+                    >
                       {svc.title}
                     </h3>
 
                     {/* Impact Stat Badge */}
-                    <div className="inline-flex items-center gap-1.5 text-xs font-bold text-slate-700 bg-slate-100/80 px-2.5 py-1 rounded-md mb-4 border border-slate-200/60">
-                      <Clock className="w-3.5 h-3.5 text-blue-600" />
+                    <div className="inline-flex items-center gap-1.5 text-xs font-semibold text-purple-200 bg-white/10 px-2.5 py-1 rounded-md mb-3 border border-white/10">
+                      <Clock className="w-3.5 h-3.5 text-purple-300" />
                       <span>{svc.impactStat}</span>
                     </div>
 
-                    <p className="text-xs sm:text-sm text-slate-600 leading-relaxed mb-6 font-normal">
+                    <p
+                      className="text-xs sm:text-sm text-purple-200/90 leading-relaxed mb-5 font-normal min-h-[52px] flex items-center"
+                      style={{ fontFamily: "'Outfit', sans-serif" }}
+                    >
                       {svc.description}
                     </p>
 
                     {/* Features List */}
-                    <div className="pt-4 border-t border-slate-100 mb-6 space-y-2.5">
-                      <div className="text-[11px] uppercase tracking-wider text-slate-400 font-bold mb-3 flex items-center justify-between">
-                        <span>Core Deliverables</span>
-                        <span className="text-blue-600 font-semibold">{svc.priceTag}</span>
+                    <div className="pt-3.5 border-t border-white/10 mb-5 space-y-2.5">
+                      <div className="text-[11px] uppercase tracking-wider text-purple-300/80 font-bold mb-2 flex items-center justify-between">
+                        <span>Deliverables</span>
+                        <span className="text-purple-300 font-semibold">{svc.priceTag}</span>
                       </div>
                       {svc.features.map((feat) => (
-                        <div key={feat} className="flex items-start gap-2.5 text-xs text-slate-700 font-medium">
-                          <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
-                          <span>{feat}</span>
+                        <div key={feat} className="flex items-center gap-2 text-xs text-purple-100 font-medium" style={{ fontFamily: "'Outfit', sans-serif" }}>
+                          <CheckCircle2 className="w-3.5 h-3.5 text-purple-400 shrink-0" />
+                          <span className="truncate">{feat}</span>
                         </div>
                       ))}
                     </div>
                   </div>
 
-                  {/* Actions */}
-                  <div className="pt-5 border-t border-slate-100 space-y-2">
+                  {/* Single Clean CTA Action */}
+                  <div className="pt-4 border-t border-white/10">
                     <button
                       onClick={svc.primaryAction}
-                      className="w-full py-3 px-4 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs sm:text-sm transition-all shadow-md hover:shadow-lg flex items-center justify-between group/btn cursor-pointer"
+                      className="w-full py-3 px-4 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs sm:text-sm transition-all shadow-md hover:shadow-lg flex items-center justify-between group/btn cursor-pointer"
                     >
                       <span>{svc.primaryCta}</span>
                       <ArrowRight className="w-4 h-4 transition-transform group-hover/btn:translate-x-1" />
-                    </button>
-
-                    <button
-                      onClick={svc.secondaryAction}
-                      className="w-full py-2.5 px-3 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-700 font-bold text-xs transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
-                    >
-                      <span>{svc.secondaryCta}</span>
-                      <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
                     </button>
                   </div>
                 </motion.div>
@@ -334,22 +286,22 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6, delay: 0.3 }}
-          className="mt-16 rounded-3xl bg-slate-900 text-white p-8 sm:p-10 shadow-2xl relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-8 border border-slate-800"
+          className="mt-16 rounded-3xl bg-white/5 backdrop-blur-md border border-white/10 text-white p-8 sm:p-10 shadow-2xl relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-8"
         >
-          <div className="absolute top-0 right-0 w-80 h-80 bg-blue-500/10 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute top-0 right-0 w-80 h-80 bg-purple-500/10 rounded-full blur-3xl pointer-events-none" />
 
           <div className="flex items-start gap-5">
-            <div className="w-14 h-14 rounded-2xl bg-blue-600 text-white flex items-center justify-center shrink-0 shadow-lg">
-              <ShieldCheck className="w-7 h-7" />
+            <div className="w-14 h-14 rounded-2xl bg-purple-600 text-white flex items-center justify-center shrink-0 shadow-lg">
+              <ShieldCheck className="w-7 h-7 text-white" />
             </div>
             <div>
-              <div className="inline-block text-[11px] font-bold text-blue-400 uppercase tracking-wider mb-1">
+              <div className="inline-block text-[11px] font-bold text-purple-300 uppercase tracking-wider mb-1">
                 Direct Human Commitment
               </div>
               <h3 className="text-xl sm:text-2xl font-black text-white">
                 No Sales Representatives. You Speak Directly With Building Engineers.
               </h3>
-              <p className="text-xs sm:text-sm text-slate-300 mt-1 max-w-2xl leading-relaxed">
+              <p className="text-xs sm:text-sm text-purple-200/80 mt-1 max-w-2xl leading-relaxed">
                 We believe in transparent engineering. From initial problem consultation to post-deployment support, you work directly with the developers writing your system code.
               </p>
             </div>
@@ -357,12 +309,29 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
 
           <button
             onClick={() => onNavigate('/contact')}
-            className="w-full md:w-auto px-7 py-3.5 rounded-xl bg-white text-slate-900 hover:bg-blue-50 font-bold text-sm transition-all shadow-lg whitespace-nowrap flex items-center justify-center gap-2 cursor-pointer shrink-0"
+            className="w-full md:w-auto px-7 py-3.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-sm transition-all shadow-lg shadow-blue-600/30 whitespace-nowrap flex items-center justify-center gap-2 cursor-pointer shrink-0 hover:scale-105"
           >
             <span>Consult With Engineers</span>
-            <ArrowRight className="w-4 h-4 text-slate-900" />
+            <ArrowRight className="w-4 h-4 text-white" />
           </button>
         </motion.div>
+      </div>
+
+      {/* 🌊 REDESIGNED DUAL-LAYER SVG WAVE DIVIDER */}
+      <div className="absolute bottom-0 -left-1 -right-1 w-[calc(100%+8px)] overflow-hidden leading-none z-20 pointer-events-none">
+        <svg
+          viewBox="0 0 1440 120"
+          preserveAspectRatio="none"
+          className="relative block w-full h-12 sm:h-16 lg:h-20 text-[#120529] fill-current"
+        >
+          {/* Layer 1: Soft Translucent Depth Wave */}
+          <path
+            opacity="0.25"
+            d="M0,50 C320,110 640,15 960,85 C1280,140 1380,30 1440,50 L1440,120 L0,120 Z"
+          />
+          {/* Layer 2: Main Solid Curve Wave */}
+          <path d="M0,32 C280,90 560,90 840,40 C1120,-10 1280,50 1440,65 L1440,120 L0,120 Z" />
+        </svg>
       </div>
     </section>
   );

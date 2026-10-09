@@ -71,7 +71,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate }) => {
       {/* Header Banner */}
       <div className="mb-12">
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 border border-blue-200 text-xs text-blue-700 font-semibold mb-4">
-          <Sparkles className="w-3.5 h-3.5" />
+
           <span>BRAND PHILOSOPHY &amp; MISSION</span>
         </div>
 
@@ -268,10 +268,10 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate }) => {
             Tell Us Your Problem
           </button>
           <button
-            onClick={() => onNavigate('/solutions')}
+            onClick={() => onNavigate('/courses')}
             className="w-full sm:w-auto px-5 py-2.5 text-xs font-semibold rounded-lg border border-slate-300 hover:bg-slate-50 text-slate-700 transition-colors"
           >
-            Explore Solutions
+            Explore Courses
           </button>
         </div>
       </div>
