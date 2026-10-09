@@ -479,7 +479,7 @@ export default function Dashboard({ onSelectCourse, enrolledCourse, setEnrolledC
 
       if (loaded && window.Razorpay) {
         try {
-          const rzpKey = (import.meta as any).env?.VITE_RAZORPAY_KEY_ID || 'rzp_live_TloikfLIGkA6Cl';
+          const rzpKey = import.meta.env?.VITE_RAZORPAY_KEY_ID || 'rzp_live_TloikfLIGkA6Cl';
           const options = {
             key: rzpKey,
             amount: feeAmount * 100,
