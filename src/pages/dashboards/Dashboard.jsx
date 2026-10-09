@@ -19,28 +19,19 @@ import CertificateManager from '../certificate/CertificateManager';
 
 const mainCourses = [
   {
-    id: 'fullstack',
-    title: 'AI-Powered Full Stack',
-    desc: 'Frontend layouts, scripts logic, Python/Django backend engines, React SPAs, and Git workflows.',
-    icon: <Layers size={24} />,
-    color: '#3b82f6',
-    gradient: 'linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)',
-    bgLight: 'rgba(59, 130, 246, 0.08)'
-  },
-  {
-    id: 'dataanalytics',
-    title: 'AI Data Analytics',
-    desc: 'Database architecture designs, relational SQL queries, complex DAX pipelines, and Power BI dashboards.',
-    icon: <BarChart3 size={24} />,
-    color: '#6366f1',
-    gradient: 'linear-gradient(135deg, #818cf8 0%, #6366f1 100%)',
-    bgLight: 'rgba(99, 102, 241, 0.08)'
+    id: 'python_main',
+    title: 'Core Python & OOPs',
+    desc: 'Master Python syntax, functions, object-oriented programming, data structures, and practical logic.',
+    icon: <Terminal size={24} />,
+    color: '#0ea5e9',
+    gradient: 'linear-gradient(135deg, #38bdf8 0%, #0284c7 100%)',
+    bgLight: 'rgba(14, 165, 233, 0.08)'
   },
   {
     id: 'summer',
-    title: 'Summer Crash Program',
-    desc: 'Rapid database fundamentals, basic querying, structures, and entry-level operations.',
-    icon: <Sparkles size={24} />,
+    title: 'Summer SQL Program',
+    desc: 'Rapid database fundamentals, relational querying, joins, filters, and SQL structures in 7 days.',
+    icon: <Database size={24} />,
     color: '#10b981',
     gradient: 'linear-gradient(135deg, #10b981 0%, #047857 100%)',
     bgLight: 'rgba(16, 185, 129, 0.08)'
@@ -48,72 +39,18 @@ const mainCourses = [
   {
     id: 'aidevelopment',
     title: 'Cognitive AI Development',
-    desc: 'Language models fine-tuning, prompt engineering structures, vector DBs, and agent systems.',
+    desc: 'Language models fine-tuning, prompt engineering structures, vector DBs, and agentic AI systems.',
     icon: <Brain size={24} />,
     color: '#ec4899',
     gradient: 'linear-gradient(135deg, #f472b6 0%, #be185d 100%)',
     bgLight: 'rgba(236, 72, 153, 0.08)'
-  },
-  {
-    id: 'accounting_finance',
-    title: 'Accounting & Finance',
-    desc: 'Ledger management, taxation, auditing, inventory control, statutory compliances, and AI-powered accounting productivity.',
-    icon: <Database size={24} />,
-    color: '#059669',
-    gradient: 'linear-gradient(135deg, #34d399 0%, #059669 100%)',
-    bgLight: 'rgba(5, 150, 105, 0.08)'
-  },
-  {
-    id: 'spoko_english',
-    title: 'Spoko English Communication',
-    desc: 'Practical English fluency through story reading immersion, bilingual vocabulary, real dialogues, speed teleprompter, video stories, and retell writing.',
-    icon: <BookOpen size={24} />,
-    color: '#ea580c',
-    gradient: 'linear-gradient(135deg, #f97316 0%, #c2410c 100%)',
-    bgLight: 'rgba(234, 88, 12, 0.08)'
   }
 ];
 
 const subCourses = [
   {
-    id: 'web_design_20days',
-    mainCourseId: 'fullstack',
-    title: 'AI-Powered Web Design & Frontend Development',
-    desc: '20-Day progressive practical course building real responsive business websites with HTML, CSS, JavaScript & AI workflows.',
-    icon: <Sparkles size={24} />,
-    bgColor: 'rgba(99, 102, 241, 0.08)',
-    borderColor: '#6366f1',
-    shadowColor: 'rgba(99,102,241,0.15)',
-    modulesCount: '20 Days (20 Hours)',
-    enrolledKey: 'web_design_20days'
-  },
-  {
-    id: 'html_css',
-    mainCourseId: 'fullstack',
-    title: 'Web Design (HTML, CSS & Bootstrap)',
-    desc: 'Build responsive layouts using semantic structures, CSS Grid, Flexbox layouts, and custom animations.',
-    icon: <LayoutTemplate size={24} />,
-    bgColor: 'rgba(37, 99, 235, 0.08)',
-    borderColor: '#3b82f6',
-    shadowColor: 'rgba(37,99,235,0.15)',
-    modulesCount: '12 Modules',
-    enrolledKey: 'html_css'
-  },
-  {
-    id: 'sql',
-    mainCourseId: 'fullstack',
-    title: 'AI-Powered SQL Course',
-    desc: 'Master relational databases, write DDL/DML, optimize statements with AI assistants, and integrate smart workflows.',
-    icon: <Database size={24} />,
-    bgColor: 'rgba(16, 185, 129, 0.08)',
-    borderColor: '#10b981',
-    shadowColor: 'rgba(16,185,129,0.15)',
-    modulesCount: '9 Modules',
-    enrolledKey: 'sql'
-  },
-  {
     id: 'python_course',
-    mainCourseId: 'fullstack',
+    mainCourseId: 'python_main',
     title: 'Python Core & OOPs Course',
     desc: 'Master variables, loops, file streams, regex, and core object-oriented structures with AI enhancements.',
     icon: <Terminal size={24} />,
@@ -122,78 +59,6 @@ const subCourses = [
     shadowColor: 'rgba(14,165,233,0.15)',
     modulesCount: '13 Modules',
     enrolledKey: 'python_course'
-  },
-  {
-    id: 'core_js',
-    mainCourseId: 'fullstack',
-    title: 'Vanilla JS',
-    desc: 'Master Vanilla JavaScript fundamentals, DOM manipulation, variables, functions, Async/Fetch API, Capstone Projects, and AI Power Tools.',
-    icon: <Code size={24} />,
-    bgColor: 'rgba(234, 179, 8, 0.08)',
-    borderColor: '#eab308',
-    shadowColor: 'rgba(234,179,8,0.15)',
-    modulesCount: '10 Days + Capstone & AI Tools (12 Modules)',
-    enrolledKey: 'core_js'
-  },
-  {
-    id: 'react_course',
-    mainCourseId: 'fullstack',
-    title: 'React JS Development',
-    desc: 'Master component-driven architecture, declarative state models, DOM reconciliation diffing, and environment scaffolds via Vite.',
-    icon: <Layers size={24} />,
-    bgColor: 'rgba(129, 140, 248, 0.08)',
-    borderColor: '#818cf8',
-    shadowColor: 'rgba(129,140,248,0.15)',
-    modulesCount: '15 Modules',
-    enrolledKey: 'react_course'
-  },
-  {
-    id: 'git_github',
-    mainCourseId: 'fullstack',
-    title: 'Git & GitHub',
-    desc: 'Master local Git version control histories, branch merging protocols, conflicts audit, and remote project push methods.',
-    icon: <GitBranch size={24} />,
-    bgColor: 'rgba(71, 85, 105, 0.08)',
-    borderColor: '#64748b',
-    shadowColor: 'rgba(71,85,105,0.15)',
-    modulesCount: '2 Modules',
-    enrolledKey: 'git_github'
-  },
-  {
-    id: 'json_course',
-    mainCourseId: 'fullstack',
-    title: 'JSON Essentials',
-    desc: 'Learn standard JSON schema specifications, serialization, parsing APIs, and validation protocols.',
-    icon: <Code size={24} />,
-    bgColor: 'rgba(219, 39, 119, 0.08)',
-    borderColor: '#ec4899',
-    shadowColor: 'rgba(219,39,119,0.15)',
-    modulesCount: '1 Module',
-    enrolledKey: 'json_course'
-  },
-  {
-    id: 'django_course',
-    mainCourseId: 'fullstack',
-    title: 'Django Framework',
-    desc: 'Master Python backend servers, MVT model systems, ORM databases query structure, and built-in Admin security.',
-    icon: <Server size={24} />,
-    bgColor: 'rgba(21, 128, 61, 0.08)',
-    borderColor: '#10b981',
-    shadowColor: 'rgba(21,128,61,0.15)',
-    modulesCount: '10 Modules',
-    enrolledKey: 'django_course'
-  },
-  {
-    id: 'devops',
-    mainCourseId: 'fullstack',
-    title: 'DevOps & Cloud Deploy',
-    desc: 'Master continuous deployments, web servers config, lock configurations, process managers, and deployment hosting.',
-    icon: <Server size={24} />,
-    bgColor: 'rgba(14, 165, 233, 0.08)',
-    borderColor: '#0ea5e9',
-    shadowColor: 'rgba(14,165,233,0.15)',
-    modulesCount: '3 Modules',
-    enrolledKey: 'devops'
   },
   {
     id: 'summer_sql',
@@ -230,138 +95,6 @@ const subCourses = [
     shadowColor: 'rgba(124,58,237,0.15)',
     modulesCount: '40 Days (8 Modules)',
     enrolledKey: 'agentic_ai'
-  },
-  {
-    id: 'powerbi',
-    mainCourseId: 'dataanalytics',
-    title: 'Power BI Data Analytics',
-    desc: 'Master data modeling, ETL Power Query pipelines, DAX metrics engineering, and visually interactive reports.',
-    icon: <BarChart3 size={24} />,
-    bgColor: 'rgba(234, 179, 8, 0.08)',
-    borderColor: '#eab308',
-    shadowColor: 'rgba(234,179,8,0.15)',
-    modulesCount: '8 Days + Capstone (9 Modules)',
-    enrolledKey: 'powerbi'
-  },
-  {
-    id: 'stats_course',
-    mainCourseId: 'dataanalytics',
-    title: 'Statistics for Data Analytics',
-    desc: 'Master descriptive & inferential statistics, probability distributions, hypothesis testing, regression analysis, and Python-based statistical computations.',
-    icon: <BarChart3 size={24} />,
-    bgColor: 'rgba(219, 39, 119, 0.08)',
-    borderColor: '#ec4899',
-    shadowColor: 'rgba(219,39,119,0.15)',
-    modulesCount: '17 Days',
-    enrolledKey: 'stats_course'
-  },
-  {
-    id: 'numpy_course',
-    mainCourseId: 'dataanalytics',
-    title: 'NumPy for Data Science',
-    desc: 'Master multi-dimensional array operations, scientific calculations, indexing, masking, and memory structures in NumPy.',
-    icon: <Code size={24} />,
-    bgColor: 'rgba(14, 165, 233, 0.08)',
-    borderColor: '#0ea5e9',
-    shadowColor: 'rgba(14,165,233,0.15)',
-    modulesCount: '1 Day (Module 1)',
-    enrolledKey: 'numpy_course'
-  },
-  {
-    id: 'pandas_course',
-    mainCourseId: 'dataanalytics',
-    title: 'Pandas for Data Science',
-    desc: 'Master DataFrame operations, Series, data ingestion, filtering, grouping, merging, cleaning, and basic EDA in Pandas.',
-    icon: <Database size={24} />,
-    bgColor: 'rgba(16, 185, 129, 0.08)',
-    borderColor: '#10b981',
-    shadowColor: 'rgba(16,185,129,0.15)',
-    modulesCount: '6 Days (6 Modules)',
-    enrolledKey: 'pandas_course'
-  },
-  {
-    id: 'matplotlib_course',
-    mainCourseId: 'dataanalytics',
-    title: 'Matplotlib for Data Science',
-    desc: 'Master professional data visualization, line/bar/scatter charting styles, subplots grid, customize annotations, and export figures.',
-    icon: <BarChart3 size={24} />,
-    bgColor: 'rgba(249, 115, 22, 0.08)',
-    borderColor: '#f97316',
-    shadowColor: 'rgba(249,115,22,0.15)',
-    modulesCount: '5 Days (5 Modules)',
-    enrolledKey: 'matplotlib_course'
-  },
-  {
-    id: 'seaborn_course',
-    mainCourseId: 'dataanalytics',
-    title: 'Seaborn for Data Science',
-    desc: 'Master professional statistical plots, relational trends, distributions, heatmaps, categorical box/violin charts, and pair plots.',
-    icon: <Layers size={24} />,
-    bgColor: 'rgba(99, 102, 241, 0.08)',
-    borderColor: '#6366f1',
-    shadowColor: 'rgba(99,102,241,0.15)',
-    modulesCount: '4 Days (4 Modules)',
-    enrolledKey: 'seaborn_course'
-  },
-  {
-    id: 'sql_da',
-    mainCourseId: 'dataanalytics',
-    title: 'SQL for Data Analytics',
-    desc: 'Master SQL queries, joins, aggregations, window functions, and analytics query structures to solve real-world retail sales problems.',
-    icon: <Database size={24} />,
-    bgColor: 'rgba(14, 165, 233, 0.08)',
-    borderColor: '#0ea5e9',
-    shadowColor: 'rgba(14,165,233,0.15)',
-    modulesCount: '8 Modules + Capstone',
-    enrolledKey: 'sql_da'
-  },
-  {
-    id: 'python_da',
-    mainCourseId: 'dataanalytics',
-    title: 'Python for Data Analytics',
-    desc: 'Master core Python programming, variables, loops, data structures, functions, regex, and files for data manipulation.',
-    icon: <Terminal size={24} />,
-    bgColor: 'rgba(14, 165, 233, 0.08)',
-    borderColor: '#0ea5e9',
-    shadowColor: 'rgba(14,165,233,0.15)',
-    modulesCount: '8 Modules',
-    enrolledKey: 'python_da'
-  },
-  {
-    id: 'tally_prime',
-    mainCourseId: 'accounting_finance',
-    title: 'AI powered Tally',
-    desc: 'Master double-entry accounting, GST, TDS, inventory audits, bank reconciliation, and AI-assisted financial checking in 41 days.',
-    icon: <Database size={24} />,
-    bgColor: 'rgba(5, 150, 105, 0.08)',
-    borderColor: '#059669',
-    shadowColor: 'rgba(5,150,105,0.15)',
-    modulesCount: '5 Modules',
-    enrolledKey: 'tally_prime'
-  },
-  {
-    id: 'spoko_story',
-    mainCourseId: 'spoko_english',
-    title: 'Story-Based Learning (Spoko English)',
-    desc: 'Master English fluency through immersive story reading, vocabulary cards, dialogues, reading speed highlighter, video stories, and observation exercises.',
-    icon: <BookOpen size={24} />,
-    bgColor: 'rgba(234, 88, 12, 0.08)',
-    borderColor: '#f97316',
-    shadowColor: 'rgba(234, 88, 12, 0.15)',
-    modulesCount: '6 Days Active (Story-Based English Course)',
-    enrolledKey: 'spoko_story'
-  },
-  {
-    id: 'spoko_pro',
-    mainCourseId: 'spoko_english',
-    title: 'Professional Track (Soft Skills & Workplace Mastery)',
-    desc: 'Executive communication, interview mastery, LinkedIn optimization, email & meeting etiquette, conflict resolution, and workplace dialogue simulations.',
-    icon: <Briefcase size={24} />,
-    bgColor: 'rgba(5, 150, 105, 0.08)',
-    borderColor: '#059669',
-    shadowColor: 'rgba(5, 150, 105, 0.15)',
-    modulesCount: '16 Topics (Professional Soft Skills Course)',
-    enrolledKey: 'spoko_pro'
   }
 ];
 

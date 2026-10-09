@@ -44,117 +44,71 @@ interface OnlineCourse {
 
 const ONLINE_COURSES: OnlineCourse[] = [
   {
-    id: 'fullstack-web',
-    badge: 'Most Popular',
-    badgeColor: 'bg-purple-500/20 text-purple-300 border-purple-400/40',
-    title: 'Full-Stack Web Development & SaaS',
-    subtitle: 'React, Node.js, TypeScript, TailwindCSS & Database Architecture',
+    id: 'core-python',
+    badge: 'Core Program',
+    badgeColor: 'bg-sky-500/20 text-sky-300 border-sky-400/40',
+    title: 'Core Python with OOPs',
+    subtitle: 'Variables, Logic Structures, Functions, OOP Principles & File I/O',
     description:
-      'Master modern web applications from scratch. Build real production projects, design responsive frontends, construct REST APIs, and deploy live on Vercel & Render.',
+      'Master fundamental Python programming and object-oriented principles. Build scalable backend logic, create clean classes, and solve real computing challenges.',
     price: '₹499',
-    duration: '8 Weeks · Self-Paced + LMS',
+    duration: '4 Weeks · Self-Paced + LMS',
     level: 'Beginner to Advanced',
     modules: [
-      'HTML5, Modern CSS & Tailwind Design Systems',
-      'JavaScript ES6+ & TypeScript Mastery',
-      'React.js Component Architecture & State Management',
-      'Node.js, Express & REST API Backend Development',
-      'PostgreSQL / MongoDB Database Design & Cloud Deployment'
+      'Python Syntax, Variables & Operator Logic',
+      'Control Flow, Loops & Data Structures',
+      'Functions, Modules & Exception Handling',
+      'Object-Oriented Programming (Classes, Inheritance, Polymorphism)',
+      'File Streams, Regular Expressions & Mini Projects'
     ],
-    gradient: 'from-purple-600 via-indigo-600 to-purple-700',
-    glowColor: 'rgba(147, 51, 234, 0.2)'
+    gradient: 'from-sky-600 via-blue-600 to-sky-700',
+    glowColor: 'rgba(14, 165, 233, 0.2)'
   },
   {
-    id: 'data-science',
-    badge: 'High Demand',
+    id: 'summer-sql',
+    badge: 'Summer Crash',
     badgeColor: 'bg-emerald-500/20 text-emerald-300 border-emerald-400/40',
-    title: 'Data Science & Machine Learning Engineering',
-    subtitle: 'Python, Pandas, NumPy, Scikit-Learn & Statistical Analysis',
+    title: 'Summer SQL Crash Course',
+    subtitle: 'Relational Database Queries, Filters, Aggregations & Table Structures',
     description:
-      'Turn raw commercial data into actionable insights. Learn exploratory data analysis, statistical modeling, machine learning algorithms, and predictive dashboarding.',
+      'Learn database querying from scratch in 7 days. Master SELECT queries, filtering, aggregation, table joins, and relational schema designs.',
     price: '₹499',
-    duration: '10 Weeks · Self-Paced + LMS',
-    level: 'Intermediate',
+    duration: '7 Days · Self-Paced + LMS',
+    level: 'Beginner',
     modules: [
-      'Python Programming & Advanced Data Structures',
-      'Data Manipulation with Pandas & NumPy',
-      'Exploratory Data Analysis & Matplotlib Visualization',
-      'Machine Learning Algorithms & Predictive Analytics',
-      'Real-world Capstone Project & Model Deployment'
+      'Database Architecture & SQL Relational Models',
+      'DDL Commands: CREATE, ALTER, DROP',
+      'DML & SELECT Filtering: WHERE, ORDER BY, LIMIT',
+      'Aggregations & Grouping: GROUP BY, HAVING',
+      'Relational Joins, Primary/Foreign Keys & 7-Day Capstone'
     ],
     gradient: 'from-emerald-600 via-teal-600 to-emerald-700',
     glowColor: 'rgba(16, 185, 129, 0.2)'
   },
   {
-    id: 'ai-automation',
-    badge: 'Trending 2026',
-    badgeColor: 'bg-blue-500/20 text-blue-300 border-blue-400/40',
-    title: 'Generative AI, LLMs & Workflow Automation',
-    subtitle: 'n8n, Flowise, LangChain, OpenAI APIs & Agentic Workflows',
+    id: 'cognitive-ai',
+    badge: 'Advanced AI',
+    badgeColor: 'bg-pink-500/20 text-pink-300 border-pink-400/40',
+    title: 'Cognitive AI Development & Agentic Engineering',
+    subtitle: 'Prompt Engineering, Fine-Tuning, Flowise, CrewAI & Multi-Agent Loops',
     description:
-      'Engineers of the future build AI workflows. Learn to automate business routines, construct RAG pipelines, integrate AI chatbots, and build autonomous agents.',
+      'Engineers of the future build Cognitive AI systems. Master prompt engineering, vector databases, RAG architecture, Flowise visual bots, and autonomous multi-agent loops.',
     price: '₹499',
     duration: '6 Weeks · Self-Paced + LMS',
     level: 'All Levels',
     modules: [
-      'Prompt Engineering & OpenAI API Integration',
-      'n8n & Flowise No-Code/Low-Code Workflow Engines',
-      'LangChain & RAG Vector Database Systems',
-      'WhatsApp & Email Automated CRM Bot Loops',
-      'Building Autonomous AI Agents for Real Operations'
-    ],
-    gradient: 'from-blue-600 via-indigo-600 to-blue-700',
-    glowColor: 'rgba(37, 99, 235, 0.2)'
-  },
-  {
-    id: 'python-fullstack',
-    badge: 'Core Technology',
-    badgeColor: 'bg-amber-500/20 text-amber-300 border-amber-400/40',
-    title: 'Python Software Engineering & Django / FastAPI',
-    subtitle: 'Clean Code, Object-Oriented Architecture & Web Frameworks',
-    description:
-      'Build robust enterprise backend applications with Python. Master object-oriented programming, relational databases, authentication systems, and cloud deployment.',
-    price: '₹499',
-    duration: '8 Weeks · Self-Paced + LMS',
-    level: 'Beginner to Professional',
-    modules: [
-      'Python Core, OOP Principles & Data Structures',
-      'Django Web Framework & ORM Database Models',
-      'FastAPI Microservices & Asynchronous Programming',
-      'User Authentication, JWT & Security Best Practices',
-      'Cloud Deployment on Render & AWS Elastic Beanstalk'
-    ],
-    gradient: 'from-amber-600 via-orange-600 to-amber-700',
-    glowColor: 'rgba(217, 119, 6, 0.2)'
-  },
-  {
-    id: 'powerbi-analytics',
-    badge: 'Business Intelligence',
-    badgeColor: 'bg-pink-500/20 text-pink-300 border-pink-400/40',
-    title: 'PowerBI & Executive Business Analytics',
-    subtitle: 'DAX Formulas, Data Modeling, ETL & Interactive Executive Dashboards',
-    description:
-      'Transform complex business ledgers into dynamic visual dashboards. Master Power Query, DAX formulas, SQL data extraction, and executive reporting.',
-    price: '₹499',
-    duration: '4 Weeks · Self-Paced + LMS',
-    level: 'Beginner to Intermediate',
-    modules: [
-      'Power Query Data Cleaning & Transformation (ETL)',
-      'Relational Data Modeling & Star Schema Architecture',
-      'DAX Measures, Calculated Columns & Time Intelligence',
-      'Designing High-Impact Executive Dashboards',
-      'Automated Report Refresh & Cloud Service Publishing'
+      'Generative AI Foundations & LLM Tokenization',
+      'Prompt Engineering, System Messages & API Integrations',
+      'Flowise Visual Agent Designer & Vector Databases',
+      'LangChain & CrewAI Multi-Agent Workflows',
+      'Autonomous Cognitive AI Capstone Project'
     ],
     gradient: 'from-pink-600 via-purple-600 to-pink-700',
-    glowColor: 'rgba(219, 39, 119, 0.2)'
+    glowColor: 'rgba(236, 72, 153, 0.2)'
   }
 ];
 
 export const CoursesPage: React.FC<CoursesPageProps> = ({ onNavigate, onOpenLoginModal }) => {
-  // Carousel State
-  const [currentSlide, setCurrentSlide] = useState(0);
-  const [isAutoPlay, setIsAutoPlay] = useState(true);
-
   // Offline Form State
   const [offlineName, setOfflineName] = useState('');
   const [offlinePhone, setOfflinePhone] = useState('');
@@ -168,25 +122,6 @@ export const CoursesPage: React.FC<CoursesPageProps> = ({ onNavigate, onOpenLogi
   const { scrollYProgress } = useScroll();
   const bgOrb1Y = useTransform(scrollYProgress, [0, 0.5], [0, -120]);
   const bgOrb2Y = useTransform(scrollYProgress, [0.3, 0.9], [-60, 60]);
-
-  // Carousel Auto Play Timer
-  useEffect(() => {
-    if (!isAutoPlay) return;
-    const interval = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % ONLINE_COURSES.length);
-    }, 5000);
-    return () => clearInterval(interval);
-  }, [isAutoPlay]);
-
-  const nextSlide = () => {
-    setIsAutoPlay(false);
-    setCurrentSlide((prev) => (prev + 1) % ONLINE_COURSES.length);
-  };
-
-  const prevSlide = () => {
-    setIsAutoPlay(false);
-    setCurrentSlide((prev) => (prev - 1 + ONLINE_COURSES.length) % ONLINE_COURSES.length);
-  };
 
   const handleOfflineSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -270,7 +205,7 @@ export const CoursesPage: React.FC<CoursesPageProps> = ({ onNavigate, onOpenLogi
         </div>
       </header>
 
-      {/* 📚 SECTION 1: AVAILABLE ONLINE COURSES (CAROUSEL) */}
+      {/* 📚 SECTION 1: AVAILABLE ONLINE COURSES (3 CARDS AT ONCE) */}
       <section className="relative py-20 pb-32 bg-[#1a0937] text-white overflow-hidden">
         {/* Star Particles */}
         <div className="absolute inset-0 pointer-events-none z-0">
@@ -293,8 +228,8 @@ export const CoursesPage: React.FC<CoursesPageProps> = ({ onNavigate, onOpenLogi
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 z-10">
           
           {/* Section Header */}
-          <div className="text-center max-w-3xl mx-auto mb-14">
-            <span className="text-xs uppercase tracking-wider text-purple-300 font-bold px-3.5 py-1 rounded-full bg-purple-500/20 border border-purple-400/30 mb-3 inline-flex items-center gap-1.5 shadow-xs">
+          <div className="text-center max-w-3xl mx-auto mb-16">
+            <span className="text-xs uppercase tracking-wider text-purple-300 font-bold px-3.5 py-1.5 rounded-full bg-purple-500/20 border border-purple-400/30 mb-3 inline-flex items-center gap-1.5 shadow-xs">
               <Laptop className="w-3.5 h-3.5 text-purple-300" />
               Live Online LMS Portal
             </span>
@@ -302,176 +237,101 @@ export const CoursesPage: React.FC<CoursesPageProps> = ({ onNavigate, onOpenLogi
               Available Online Courses
             </h2>
             <p className="text-sm sm:text-base text-purple-200/80 max-w-xl mx-auto leading-relaxed">
-              Self-paced structured LMS access with real project source code, quizzes, cloud deployment guides, and 1-on-1 engineer assistance.
+              Structured LMS access with real project source code, interactive quizzes, cloud deployment guides, and 1-on-1 engineer assistance.
             </p>
           </div>
 
-          {/* CAROUSEL CONTAINER */}
-          <div className="relative max-w-5xl mx-auto">
-            
-            {/* Carousel Navigation Buttons */}
-            <button
-              onClick={prevSlide}
-              aria-label="Previous Course"
-              className="absolute top-1/2 -left-4 sm:-left-6 -translate-y-1/2 z-30 w-12 h-12 rounded-full bg-blue-600/80 hover:bg-blue-500 text-white border border-blue-400/40 flex items-center justify-center shadow-xl backdrop-blur-md transition-all hover:scale-110 cursor-pointer"
-            >
-              <ChevronLeft className="w-6 h-6" />
-            </button>
-
-            <button
-              onClick={nextSlide}
-              aria-label="Next Course"
-              className="absolute top-1/2 -right-4 sm:-right-6 -translate-y-1/2 z-30 w-12 h-12 rounded-full bg-blue-600/80 hover:bg-blue-500 text-white border border-blue-400/40 flex items-center justify-center shadow-xl backdrop-blur-md transition-all hover:scale-110 cursor-pointer"
-            >
-              <ChevronRight className="w-6 h-6" />
-            </button>
-
-            {/* Active Carousel Card Slide */}
-            <div className="overflow-hidden rounded-3xl p-1">
-              <AnimatePresence mode="wait">
-                {ONLINE_COURSES.map((course, idx) => {
-                  if (idx !== currentSlide) return null;
-
-                  return (
-                    <motion.div
-                      key={course.id}
-                      initial={{ opacity: 0, x: 50, scale: 0.98 }}
-                      animate={{ opacity: 1, x: 0, scale: 1 }}
-                      exit={{ opacity: 0, x: -50, scale: 0.98 }}
-                      transition={{ duration: 0.4 }}
-                      className="rounded-3xl p-8 sm:p-12 bg-white/5 backdrop-blur-md border border-white/15 shadow-2xl relative overflow-hidden text-white grid grid-cols-1 lg:grid-cols-12 gap-8 items-center"
-                    >
-                      {/* Ambient background card glow */}
-                      <div
-                        className="absolute -top-10 -right-10 w-96 h-96 rounded-full blur-3xl pointer-events-none"
-                        style={{ backgroundColor: course.glowColor }}
-                      />
-
-                      {/* Left Column: Course Details */}
-                      <div className="lg:col-span-7 flex flex-col justify-between">
-                        <div>
-                          <div className="flex items-center gap-3 mb-4 flex-wrap">
-                            <span className={`text-[11px] font-extrabold uppercase tracking-wider px-3 py-1 rounded-full border ${course.badgeColor}`}>
-                              {course.badge}
-                            </span>
-                            <span className="text-xs font-semibold text-purple-200/80 flex items-center gap-1.5 bg-white/10 px-2.5 py-1 rounded-md border border-white/10">
-                              <Clock className="w-3.5 h-3.5 text-purple-300" />
-                              {course.duration}
-                            </span>
-                          </div>
-
-                          <h3 className="font-Space Grotesk text-2xl sm:text-4xl font-extrabold text-white tracking-tight mb-2 leading-tight">
-                            {course.title}
-                          </h3>
-
-                          <p className="text-xs sm:text-sm font-semibold text-purple-300 mb-4">
-                            {course.subtitle}
-                          </p>
-
-                          <p className="text-xs sm:text-sm text-purple-200/80 leading-relaxed mb-6 font-normal">
-                            {course.description}
-                          </p>
-
-                          {/* Key Modules Checklist */}
-                          <div className="pt-4 border-t border-white/10 mb-6 space-y-2.5">
-                            <div className="text-[11px] uppercase tracking-wider text-purple-300 font-bold mb-2">
-                              Core Curriculum &amp; Hands-on Skills:
-                            </div>
-                            {course.modules.map((m) => (
-                              <div key={m} className="flex items-start gap-2 text-xs text-purple-100 font-medium">
-                                <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
-                                <span>{m}</span>
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-
-                        {/* CTA Row */}
-                        <div className="pt-4 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4">
-                          <div>
-                            <span className="text-[10px] uppercase tracking-wider text-purple-300/70 font-bold block">
-                              Full LMS Access
-                            </span>
-                            <div className="flex items-baseline gap-2">
-                              <span className="text-2xl font-extrabold text-white">{course.price}</span>
-                              <span className="text-xs text-purple-200/70 font-normal">/ One-time fee</span>
-                            </div>
-                          </div>
-
-                          <button
-                            onClick={() => {
-                              if (onOpenLoginModal) {
-                                onOpenLoginModal();
-                              } else {
-                                onNavigate('/contact');
-                              }
-                            }}
-                            className="w-full sm:w-auto px-7 py-3.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs sm:text-sm transition-all shadow-lg shadow-blue-600/30 hover:scale-105 flex items-center justify-center gap-2 cursor-pointer whitespace-nowrap"
-                          >
-                            <span>Access Online LMS</span>
-                            <ArrowRight className="w-4 h-4" />
-                          </button>
-                        </div>
-                      </div>
-
-                      {/* Right Column: Visual Card Highlights */}
-                      <div className="lg:col-span-5 bg-white/5 p-6 rounded-2xl border border-white/10 flex flex-col justify-between space-y-4">
-                        <div className="flex items-center gap-3 pb-3 border-b border-white/10">
-                          <div className="w-10 h-10 rounded-xl bg-purple-500/20 border border-purple-400/30 text-purple-300 flex items-center justify-center font-bold">
-                            LMS
-                          </div>
-                          <div>
-                            <div className="text-xs font-bold text-white">Interactive Portal</div>
-                            <div className="text-[10px] text-purple-200/70">24/7 Access to course code &amp; quizzes</div>
-                          </div>
-                        </div>
-
-                        <div className="space-y-2 text-xs">
-                          <div className="p-3 rounded-xl bg-white/5 border border-white/10 flex items-center justify-between">
-                            <span className="text-purple-200/80 font-medium">Difficulty Level:</span>
-                            <span className="text-white font-bold">{course.level}</span>
-                          </div>
-
-                          <div className="p-3 rounded-xl bg-white/5 border border-white/10 flex items-center justify-between">
-                            <span className="text-purple-200/80 font-medium">Projects Included:</span>
-                            <span className="text-emerald-300 font-bold">Real Live Source Code</span>
-                          </div>
-
-                          <div className="p-3 rounded-xl bg-white/5 border border-white/10 flex items-center justify-between">
-                            <span className="text-purple-200/80 font-medium">Engineer Assistance:</span>
-                            <span className="text-purple-300 font-bold">1-on-1 Code Support</span>
-                          </div>
-                        </div>
-
-                        <div className="pt-2 text-[11px] text-purple-300/70 text-center font-medium">
-                          Slide {currentSlide + 1} of {ONLINE_COURSES.length} · Auto-rotating
-                        </div>
-                      </div>
-                    </motion.div>
-                  );
-                })}
-              </AnimatePresence>
-            </div>
-
-            {/* Carousel Dot Indicators */}
-            <div className="flex items-center justify-center gap-2 mt-6">
-              {ONLINE_COURSES.map((_, idx) => (
-                <button
-                  key={idx}
-                  onClick={() => {
-                    setIsAutoPlay(false);
-                    setCurrentSlide(idx);
-                  }}
-                  aria-label={`Go to slide ${idx + 1}`}
-                  className={`h-2.5 rounded-full transition-all duration-300 cursor-pointer ${
-                    idx === currentSlide
-                      ? 'w-8 bg-purple-400 shadow-sm'
-                      : 'w-2.5 bg-white/20 hover:bg-white/40'
-                  }`}
+          {/* 3 CARDS AT ONCE GRID */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 items-stretch max-w-7xl mx-auto">
+            {ONLINE_COURSES.map((course, idx) => (
+              <motion.div
+                key={course.id}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.4, delay: idx * 0.15 }}
+                className="rounded-3xl p-7 bg-white/5 backdrop-blur-md border border-white/15 shadow-2xl relative overflow-hidden text-white flex flex-col justify-between hover:border-purple-400/50 transition-all duration-300 hover:-translate-y-2 group"
+              >
+                {/* Ambient background card glow */}
+                <div
+                  className="absolute -top-12 -right-12 w-64 h-64 rounded-full blur-3xl pointer-events-none group-hover:scale-125 transition-transform duration-500"
+                  style={{ backgroundColor: course.glowColor }}
                 />
-              ))}
-            </div>
+
+                <div>
+                  {/* Top Badges */}
+                  <div className="flex items-center justify-between gap-2 mb-4 flex-wrap">
+                    <span className={`text-[11px] font-extrabold uppercase tracking-wider px-3 py-1 rounded-full border ${course.badgeColor}`}>
+                      {course.badge}
+                    </span>
+                    <span className="text-xs font-semibold text-purple-200/80 flex items-center gap-1 bg-white/10 px-2.5 py-1 rounded-md border border-white/10">
+                      <Clock className="w-3.5 h-3.5 text-purple-300" />
+                      {course.duration.split('·')[0]}
+                    </span>
+                  </div>
+
+                  {/* Title & Subtitle */}
+                  <h3 className="font-Space Grotesk text-2xl font-extrabold text-white tracking-tight mb-2 leading-snug group-hover:text-purple-200 transition-colors">
+                    {course.title}
+                  </h3>
+
+                  <p className="text-xs font-semibold text-purple-300 mb-3">
+                    {course.subtitle}
+                  </p>
+
+                  <p className="text-xs text-purple-200/80 leading-relaxed mb-5 font-normal line-clamp-3">
+                    {course.description}
+                  </p>
+
+                  {/* Key Modules Checklist */}
+                  <div className="pt-4 border-t border-white/10 mb-6 space-y-2.5">
+                    <div className="text-[10px] uppercase tracking-wider text-purple-300 font-bold mb-2">
+                      Core Curriculum Highlights:
+                    </div>
+                    {course.modules.slice(0, 5).map((m) => (
+                      <div key={m} className="flex items-start gap-2 text-xs text-purple-100 font-medium">
+                        <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
+                        <span className="line-clamp-1">{m}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Card Footer / CTA */}
+                <div className="pt-4 border-t border-white/10 space-y-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <span className="text-[10px] uppercase tracking-wider text-purple-300/70 font-bold block">
+                        Full LMS Access
+                      </span>
+                      <div className="flex items-baseline gap-1.5">
+                        <span className="text-2xl font-extrabold text-white">{course.price}</span>
+                        <span className="text-[11px] text-purple-200/70 font-normal">/ One-time</span>
+                      </div>
+                    </div>
+                    <span className="text-[11px] text-purple-300 font-bold bg-purple-500/20 border border-purple-400/30 px-2.5 py-1 rounded-md">
+                      {course.level}
+                    </span>
+                  </div>
+
+                  <button
+                    onClick={() => {
+                      if (onOpenLoginModal) {
+                        onOpenLoginModal();
+                      } else {
+                        onNavigate('/contact');
+                      }
+                    }}
+                    className="w-full py-3.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs sm:text-sm transition-all shadow-lg shadow-blue-600/30 flex items-center justify-center gap-2 cursor-pointer group-hover:bg-blue-500"
+                  >
+                    <span>Access Online LMS</span>
+                    <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+                  </button>
+                </div>
+              </motion.div>
+            ))}
           </div>
+
         </div>
 
         {/* 🌊 SVG WAVE DIVIDER AT BOTTOM OF CAROUSEL SECTION */}
