@@ -479,8 +479,9 @@ export default function Dashboard({ onSelectCourse, enrolledCourse, setEnrolledC
 
       if (loaded && window.Razorpay) {
         try {
+          const rzpKey = (import.meta as any).env?.VITE_RAZORPAY_KEY_ID || 'rzp_live_TloikfLIGkA6Cl';
           const options = {
-            key: 'rzp_test_VeeGoLMS2026',
+            key: rzpKey,
             amount: feeAmount * 100,
             currency: 'INR',
             name: 'VeeGo Learning Portal',
