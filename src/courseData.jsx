@@ -222,6 +222,7 @@ export const pythonCourseData = [
       { id: 'variables', label: 'Variables & Data Types', icon: <Database size={18} /> },
       { id: 'print_input', label: 'print() & input()', icon: <Terminal size={18} /> },
       { id: 'type_casting', label: 'Type Casting', icon: <Filter size={18} /> },
+      { id: 'ai_superpowers', label: 'AI Python Superpowers', icon: <Zap size={18} /> },
       { id: 'playground', label: 'Live Python Playground', icon: <Code size={18} /> },
     ]
   },
@@ -250,7 +251,7 @@ export const pythonCourseData = [
       { id: 'elif_statement', label: 'elif Statement', icon: <Zap size={18} /> },
       { id: 'elif_ladder', label: 'elif Ladder', icon: <Database size={18} /> },
       { id: 'nested_if', label: 'Nested if', icon: <Terminal size={18} /> },
-      { id: 'practice', label: '🎓 Student Grade System', icon: <Code size={18} /> },
+      { id: 'practice', label: 'Student Grade System', icon: <Code size={18} /> },
       { id: 'assignment_work', label: '📝 Assignment (10 Tasks)', icon: <BookOpen size={18} /> },
       { id: 'quiz', label: 'Quiz (12 Questions)', icon: <Zap size={18} /> },
     ]
