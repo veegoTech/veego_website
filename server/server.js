@@ -1,19 +1,11 @@
-import 'dotenv/config'; // Loads .env for local dev (no-op on Vercel)
+import 'dotenv/config'; // Loads .env for local dev
 import express from 'express';
-import mongoose from 'mongoose';
 import cors from 'cors';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import dns from 'dns';
-
-// Set DNS servers to resolve MongoDB SRV record
-try {
-  dns.setServers(['8.8.8.8', '8.8.4.4']);
-} catch (e) {
-  console.warn('⚠️ Failed to set custom DNS servers:', e.message);
-}
-
+import { createClient } from '@supabase/supabase-js';
+import ws from 'ws';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -22,144 +14,31 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Fallback JSON DB path (Vercel serverless has write permissions only inside '/tmp')
+// 1. SUPABASE CLOUD DATABASE CONNECTION
+const SUPABASE_URL = process.env.VITE_SUPABASE_URL || 'https://nziavlzgudaybsieramx.supabase.co';
+const SUPABASE_KEY = process.env.VITE_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im56aWF2bHpndWRheWJzaWVyYW14Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA1ODMzMTQsImV4cCI6MjEwNjE1OTMxNH0.7rrAnLLRTmwk2qssfkWR8nfkkyux4ULnV25aCThLX5U';
+
+export const supabase = createClient(SUPABASE_URL, SUPABASE_KEY, {
+  auth: { persistSession: false, autoRefreshToken: false },
+  realtime: { transport: ws }
+});
+
+console.log('📡 Connected Backend Database to Supabase Cloud:', SUPABASE_URL);
+
+// 2. LOCAL JSON FALLBACK PATHS
 const localDbPath = process.env.VERCEL
   ? '/tmp/students.json'
   : path.join(__dirname, 'students.json');
 
-// MongoDB Atlas URI — loaded from environment variable (never hardcode credentials!)
-const MONGO_URI = process.env.MONGODB_URI;
+const localStaffDbPath = process.env.VERCEL
+  ? '/tmp/staff.json'
+  : path.join(__dirname, 'staff.json');
 
-let connectionPromise = null;
+const localInvoiceDbPath = process.env.VERCEL
+  ? '/tmp/invoices.json'
+  : path.join(__dirname, 'invoices.json');
 
-// 1. Establish Database Connection (with local fallback)
-if (!MONGO_URI) {
-  console.warn('⚠️ MONGODB_URI environment variable is not set!');
-  console.warn('🔄 Falling back to local offline JSON storage database (students.json).');
-} else {
-  connectionPromise = mongoose.connect(MONGO_URI, { serverSelectionTimeoutMS: 5000 })
-    .then(() => {
-      console.log('📡 Connected successfully to MongoDB Atlas Cloud Database!');
-      connectionPromise = null;
-    })
-    .catch(err => {
-      console.warn('⚠️ MongoDB connection failed:', err.message);
-      console.warn('🔄 Falling back to local offline JSON storage database (students.json).');
-      connectionPromise = null;
-    });
-}
-
-// Database Connection Helper for Route Handlers
-const checkDbConnection = async () => {
-  if (mongoose.connection.readyState === 1) {
-    return true;
-  }
-  if (!MONGO_URI) {
-    return false;
-  }
-  if (connectionPromise) {
-    try {
-      await connectionPromise;
-    } catch (e) {
-      // Handled in catch block of connectionPromise initialization
-    }
-    return mongoose.connection.readyState === 1;
-  }
-  
-  // Re-attempt connection if it dropped or previously failed
-  connectionPromise = mongoose.connect(MONGO_URI, { serverSelectionTimeoutMS: 5000 })
-    .then(() => {
-      connectionPromise = null;
-      return true;
-    })
-    .catch(err => {
-      console.warn('⚠️ MongoDB reconnect failed:', err.message);
-      connectionPromise = null;
-      return false;
-    });
-  return connectionPromise;
-};
-
-
-// 2. Mongoose Schema
-const taskSubmissionSchema = new mongoose.Schema({
-  moduleId: { type: String, required: true },
-  tabId: { type: String, required: true },
-  taskUrl: { type: String, default: '' },
-  taskText: { type: String, default: '' },
-  submittedAt: { type: Date, default: Date.now },
-  status: { type: String, enum: ['Pending', 'Approved', 'Rejected'], default: 'Pending' },
-  feedback: { type: String, default: '' },
-  grade: { type: String, default: '' }
-});
-
-const certificateSchema = new mongoose.Schema({
-  data: { type: String, default: '' },
-  filename: { type: String, default: '' },
-  mimeType: { type: String, default: '' },
-  uploadedAt: { type: Date, default: null }
-});
-
-const studentSchema = new mongoose.Schema({
-  name: { type: String, required: true },
-  enrolledCourse: { type: String, required: true },
-  accessCode: { type: String, required: true, unique: true },
-  deviceId: { type: String, default: null },
-  completedLessons: { type: [String], default: [] },
-  tasks: { type: [taskSubmissionSchema], default: [] },
-  certificate: { type: certificateSchema, default: () => ({}) }
-});
-
-const Student = mongoose.model('Student', studentSchema);
-
-const staffSchema = new mongoose.Schema({
-  name: { type: String, required: true },
-  username: { type: String, required: true, unique: true },
-  password: { type: String, required: true }
-});
-
-const Staff = mongoose.model('Staff', staffSchema);
-
-const invoiceItemSchema = new mongoose.Schema({
-  description: { type: String, default: '' },
-  duration: { type: String, default: '' },
-  qty: { type: Number, default: 1 },
-  rate: { type: Number, default: 0 }
-});
-
-const invoiceSchema = new mongoose.Schema({
-  invoiceNo: { type: String, required: true, unique: true },
-  invoiceDate: { type: String, default: '' },
-  dueDate: { type: String, default: '' },
-  studentName: { type: String, default: '' },
-  studentId: { type: String, default: '' },
-  enrollment: { type: String, default: '' },
-  session: { type: String, default: '' },
-  course: { type: String, default: '' },
-  batch: { type: String, default: '' },
-  mobile: { type: String, default: '' },
-  address: { type: String, default: '' },
-  items: { type: [invoiceItemSchema], default: [] },
-  subtotal: { type: Number, default: 0 },
-  discount: { type: Number, default: 0 },
-  gstPercent: { type: Number, default: 0 },
-  gstAmount: { type: Number, default: 0 },
-  grandTotal: { type: Number, default: 0 },
-  amountPaid: { type: Number, default: 0 },
-  balanceDue: { type: Number, default: 0 },
-  status: { type: String, default: 'UNPAID' },
-  paymentModes: { type: Object, default: {} },
-  activeModesStr: { type: String, default: '' },
-  transactionId: { type: String, default: '' },
-  upiId: { type: String, default: 'alphafly@okaxis' },
-  qrImage: { type: String, default: null },
-  createdAt: { type: Date, default: Date.now },
-  updatedAt: { type: Date, default: Date.now }
-});
-
-const Invoice = mongoose.model('Invoice', invoiceSchema);
-
-// Helper to manage local JSON files
+// Local Storage Helpers
 const getLocalStudents = () => {
   if (!fs.existsSync(localDbPath)) {
     fs.writeFileSync(localDbPath, JSON.stringify([]));
@@ -181,10 +60,6 @@ const saveLocalStudents = (data) => {
   fs.writeFileSync(localDbPath, JSON.stringify(data, null, 2));
 };
 
-const localStaffDbPath = process.env.VERCEL
-  ? '/tmp/staff.json'
-  : path.join(__dirname, 'staff.json');
-
 const getLocalStaff = () => {
   if (!fs.existsSync(localStaffDbPath)) {
     fs.writeFileSync(localStaffDbPath, JSON.stringify([]));
@@ -199,10 +74,6 @@ const getLocalStaff = () => {
 const saveLocalStaff = (data) => {
   fs.writeFileSync(localStaffDbPath, JSON.stringify(data, null, 2));
 };
-
-const localInvoiceDbPath = process.env.VERCEL
-  ? '/tmp/invoices.json'
-  : path.join(__dirname, 'invoices.json');
 
 const getLocalInvoices = () => {
   if (!fs.existsSync(localInvoiceDbPath)) {
@@ -219,19 +90,70 @@ const saveLocalInvoices = (data) => {
   fs.writeFileSync(localInvoiceDbPath, JSON.stringify(data, null, 2));
 };
 
-// 3. API ROUTES
+// 3. SUPABASE CLOUD DATABASE OPERATIONAL HELPERS
+
+const fetchSupabaseStudents = async () => {
+  try {
+    const { data, error } = await supabase.from('students').select('*');
+    if (error || !data) return null;
+    return data.map(s => ({
+      id: s.id,
+      _id: s.id,
+      name: s.name,
+      enrolledCourse: s.enrolled_course || s.enrolledCourse || 'all',
+      accessCode: s.access_code || s.accessCode,
+      deviceId: s.device_id || s.deviceId || null,
+      completedLessons: typeof s.completed_lessons === 'string' ? JSON.parse(s.completed_lessons) : (s.completed_lessons || []),
+      tasks: typeof s.tasks === 'string' ? JSON.parse(s.tasks) : (s.tasks || []),
+      certificate: typeof s.certificate === 'string' ? JSON.parse(s.certificate) : (s.certificate || null),
+      status: s.status || 'Active',
+      createdAt: s.created_at
+    }));
+  } catch (e) {
+    return null;
+  }
+};
+
+const syncStudentToSupabase = async (student) => {
+  try {
+    const payload = {
+      id: student.id || student._id || 'stu_' + Date.now(),
+      name: student.name,
+      enrolled_course: student.enrolledCourse,
+      access_code: student.accessCode,
+      device_id: student.deviceId || null,
+      completed_lessons: JSON.stringify(student.completedLessons || []),
+      tasks: JSON.stringify(student.tasks || []),
+      certificate: JSON.stringify(student.certificate || null),
+      status: student.status || 'Active'
+    };
+    await supabase.from('students').upsert(payload, { onConflict: 'access_code' });
+  } catch (e) {
+    console.warn('Supabase student sync notice:', e.message);
+  }
+};
+
+const deleteStudentFromSupabase = async (accessCodeOrId) => {
+  try {
+    await supabase.from('students').delete().or(`access_code.eq.${accessCodeOrId},id.eq.${accessCodeOrId}`);
+  } catch (e) {
+    console.warn('Supabase delete student notice:', e.message);
+  }
+};
+
+// 4. API ROUTES (SUPABASE BACKEND)
 
 // A. Get all students
 app.get('/api/students', async (req, res) => {
   try {
-    const isDbConnected = await checkDbConnection();
-    if (isDbConnected) {
-      const students = await Student.find({});
-      return res.json(students);
-    } else {
-      const students = getLocalStudents();
-      return res.json(students);
+    const supabaseStudents = await fetchSupabaseStudents();
+    if (supabaseStudents) {
+      // Keep local JSON in sync
+      saveLocalStudents(supabaseStudents);
+      return res.json(supabaseStudents);
     }
+    const local = getLocalStudents();
+    return res.json(local);
   } catch (e) {
     return res.status(500).json({ error: e.message });
   }
@@ -244,22 +166,29 @@ app.post('/api/students', async (req, res) => {
     return res.status(400).json({ error: 'Name and course enrollment are required!' });
   }
 
-  // Generate a random numeric access code
   const accessCode = 'STU-' + Math.floor(1000 + Math.random() * 9000);
+  const newStudent = {
+    id: 'stu_' + Date.now() + '_' + Math.floor(Math.random() * 1000),
+    _id: 'stu_' + Date.now() + '_' + Math.floor(Math.random() * 1000),
+    name,
+    enrolledCourse,
+    accessCode,
+    deviceId: null,
+    completedLessons: [],
+    tasks: [],
+    status: 'Active',
+    createdAt: new Date().toISOString()
+  };
 
   try {
-    const isDbConnected = await checkDbConnection();
-    if (isDbConnected) {
-      const newStudent = new Student({ name, enrolledCourse, accessCode, deviceId: null });
-      await newStudent.save();
-      return res.json(newStudent);
-    } else {
-      const students = getLocalStudents();
-      const newStudent = { id: Date.now().toString(), name, enrolledCourse, accessCode, deviceId: null, completedLessons: [], tasks: [] };
-      students.push(newStudent);
-      saveLocalStudents(students);
-      return res.json(newStudent);
-    }
+    const students = getLocalStudents();
+    students.push(newStudent);
+    saveLocalStudents(students);
+
+    // Sync to Supabase
+    await syncStudentToSupabase(newStudent);
+
+    return res.json(newStudent);
   } catch (e) {
     return res.status(500).json({ error: e.message });
   }
@@ -289,7 +218,6 @@ app.post('/api/auth/login', async (req, res) => {
   } else if (role === 'staff') {
     const trimmedUser = username.trim();
     const trimmedPass = password.trim();
-    // 1. Check superuser hardcoded login
     if ((trimmedUser === 'staff_tutor' || trimmedUser === 'staff') && (trimmedPass === 'staff_portal_2026' || trimmedPass === 'staff' || trimmedPass === '123456')) {
       return res.json({
         success: true,
@@ -300,35 +228,16 @@ app.post('/api/auth/login', async (req, res) => {
       });
     }
 
-    // 2. Check dynamic database/local staff
-    try {
-      const isDbConnected = await checkDbConnection();
-      if (isDbConnected) {
-        const staffMem = await Staff.findOne({ username: username.trim() });
-        if (staffMem && staffMem.password === password.trim()) {
-          return res.json({
-            success: true,
-            role: 'staff',
-            name: staffMem.name,
-            username: staffMem.username,
-            token: 'mock-jwt-staff-token-' + staffMem._id
-          });
-        }
-      } else {
-        const staffList = getLocalStaff();
-        const staffMem = staffList.find(s => s.username === username.trim());
-        if (staffMem && staffMem.password === password.trim()) {
-          return res.json({
-            success: true,
-            role: 'staff',
-            name: staffMem.name,
-            username: staffMem.username,
-            token: 'mock-jwt-staff-token-' + staffMem.id
-          });
-        }
-      }
-    } catch (err) {
-      console.warn('Error validating dynamic staff login:', err);
+    const staffList = getLocalStaff();
+    const staffMem = staffList.find(s => s.username === username.trim());
+    if (staffMem && staffMem.password === password.trim()) {
+      return res.json({
+        success: true,
+        role: 'staff',
+        name: staffMem.name,
+        username: staffMem.username,
+        token: 'mock-jwt-staff-token-' + (staffMem.id || staffMem._id)
+      });
     }
 
     return res.status(401).json({ error: 'Invalid staff username or password!' });
@@ -344,22 +253,18 @@ app.post('/api/students/login', async (req, res) => {
     return res.status(400).json({ error: 'Access Code is required!' });
   }
 
+  const codeTrimmed = accessCode.trim();
+
   try {
-    const isDbConnected = await checkDbConnection();
-    if (isDbConnected) {
-      const student = await Student.findOne({ accessCode: accessCode.trim() });
-      if (!student) {
-        return res.status(404).json({ error: 'Invalid Access Code. Please try again!' });
-      }
-      return res.json(student);
-    } else {
-      const students = getLocalStudents();
-      const idx = students.findIndex(s => s.accessCode === accessCode.trim());
-      if (idx === -1) {
-        return res.status(404).json({ error: 'Invalid Access Code. Please try again!' });
-      }
-      return res.json(students[idx]);
+    const supabaseStudents = await fetchSupabaseStudents();
+    const list = supabaseStudents || getLocalStudents();
+    const student = list.find(s => s.accessCode === codeTrimmed);
+
+    if (!student) {
+      return res.status(404).json({ error: 'Invalid Access Code. Please try again!' });
     }
+
+    return res.json(student);
   } catch (e) {
     return res.status(500).json({ error: e.message });
   }
@@ -369,20 +274,15 @@ app.post('/api/students/login', async (req, res) => {
 app.post('/api/students/:id/reset-device', async (req, res) => {
   const { id } = req.params;
   try {
-    const isDbConnected = await checkDbConnection();
-    if (isDbConnected) {
-      const student = await Student.findByIdAndUpdate(id, { deviceId: null }, { new: true });
-      return res.json(student);
-    } else {
-      const students = getLocalStudents();
-      const idx = students.findIndex(s => s.id === id || s.accessCode === id);
-      if (idx !== -1) {
-        students[idx].deviceId = null;
-        saveLocalStudents(students);
-        return res.json(students[idx]);
-      }
-      return res.status(404).json({ error: 'Student not found!' });
+    const students = getLocalStudents();
+    const idx = students.findIndex(s => s.id === id || s._id === id || s.accessCode === id.trim());
+    if (idx !== -1) {
+      students[idx].deviceId = null;
+      saveLocalStudents(students);
+      await syncStudentToSupabase(students[idx]);
+      return res.json(students[idx]);
     }
+    return res.status(404).json({ error: 'Student not found!' });
   } catch (e) {
     return res.status(500).json({ error: e.message });
   }
@@ -395,27 +295,17 @@ app.post('/api/students/verify-device', async (req, res) => {
     return res.status(400).json({ error: 'Access Code and Device ID are required!' });
   }
   try {
-    const isDbConnected = await checkDbConnection();
-    if (isDbConnected) {
-      const student = await Student.findOne({ accessCode: accessCode.trim() });
-      if (!student) {
-        return res.status(404).json({ error: 'Student not found!' });
-      }
-      if (student.deviceId && student.deviceId !== deviceId) {
-        return res.json({ valid: false });
-      }
-      return res.json({ valid: true });
-    } else {
-      const students = getLocalStudents();
-      const student = students.find(s => s.accessCode === accessCode.trim());
-      if (!student) {
-        return res.status(404).json({ error: 'Student not found!' });
-      }
-      if (student.deviceId && student.deviceId !== deviceId) {
-        return res.json({ valid: false });
-      }
-      return res.json({ valid: true });
+    const supabaseStudents = await fetchSupabaseStudents();
+    const list = supabaseStudents || getLocalStudents();
+    const student = list.find(s => s.accessCode === accessCode.trim());
+
+    if (!student) {
+      return res.status(404).json({ error: 'Student not found!' });
     }
+    if (student.deviceId && student.deviceId !== deviceId) {
+      return res.json({ valid: false });
+    }
+    return res.json({ valid: true });
   } catch (e) {
     return res.status(500).json({ error: e.message });
   }
@@ -428,42 +318,26 @@ app.post('/api/students/:id/progress', async (req, res) => {
   if (!lessonKey) {
     return res.status(400).json({ error: 'lessonKey is required!' });
   }
+
   try {
-    const isDbConnected = await checkDbConnection();
-    if (isDbConnected) {
-      // Find by id (checking if valid ObjectId) or accessCode
-      const query = mongoose.Types.ObjectId.isValid(id) 
-        ? { _id: id } 
-        : { accessCode: id.trim() };
-        
-      const student = await Student.findOne(query);
-      if (!student) return res.status(404).json({ error: 'Student not found!' });
-      
-      const index = student.completedLessons.indexOf(lessonKey);
-      if (completed) {
-        if (index === -1) student.completedLessons.push(lessonKey);
-      } else {
-        if (index !== -1) student.completedLessons.splice(index, 1);
-      }
-      await student.save();
-      return res.json(student);
+    const students = getLocalStudents();
+    const idx = students.findIndex(s => s.id === id || s._id === id || s.accessCode === id.trim());
+    if (idx === -1) return res.status(404).json({ error: 'Student not found!' });
+
+    const student = students[idx];
+    if (!student.completedLessons) student.completedLessons = [];
+
+    const index = student.completedLessons.indexOf(lessonKey);
+    if (completed) {
+      if (index === -1) student.completedLessons.push(lessonKey);
     } else {
-      const students = getLocalStudents();
-      const idx = students.findIndex(s => s.id === id || s.accessCode === id.trim());
-      if (idx === -1) return res.status(404).json({ error: 'Student not found!' });
-      
-      const student = students[idx];
-      if (!student.completedLessons) student.completedLessons = [];
-      
-      const index = student.completedLessons.indexOf(lessonKey);
-      if (completed) {
-        if (index === -1) student.completedLessons.push(lessonKey);
-      } else {
-        if (index !== -1) student.completedLessons.splice(index, 1);
-      }
-      saveLocalStudents(students);
-      return res.json(student);
+      if (index !== -1) student.completedLessons.splice(index, 1);
     }
+
+    saveLocalStudents(students);
+    await syncStudentToSupabase(student);
+
+    return res.json(student);
   } catch (e) {
     return res.status(500).json({ error: e.message });
   }
@@ -492,71 +366,40 @@ app.post('/api/students/:id/tasks', async (req, res) => {
   }
 
   try {
-    const isDbConnected = await checkDbConnection();
-    if (isDbConnected) {
-      const query = mongoose.Types.ObjectId.isValid(id) 
-        ? { _id: id } 
-        : { accessCode: id.trim() };
-        
-      const student = await Student.findOne(query);
-      if (!student) return res.status(404).json({ error: 'Student not found!' });
-      
-      // Check if already submitted
-      const existingTask = student.tasks.find(t => t.moduleId === moduleId && t.tabId === tabId);
-      if (existingTask) {
-        existingTask.taskUrl = urlTrimmed;
-        existingTask.taskText = textTrimmed;
-        existingTask.submittedAt = new Date();
-        existingTask.status = 'Pending';
-        existingTask.feedback = '';
-        existingTask.grade = '';
-      } else {
-        student.tasks.push({
-          moduleId,
-          tabId,
-          taskUrl: urlTrimmed,
-          taskText: textTrimmed,
-          submittedAt: new Date(),
-          status: 'Pending',
-          feedback: '',
-          grade: ''
-        });
-      }
-      await student.save();
-      return res.json(student);
+    const students = getLocalStudents();
+    const idx = students.findIndex(s => s.id === id || s._id === id || s.accessCode === id.trim());
+    if (idx === -1) return res.status(404).json({ error: 'Student not found!' });
+
+    const student = students[idx];
+    if (!student.tasks) student.tasks = [];
+
+    const existingTask = student.tasks.find(t => t.moduleId === moduleId && t.tabId === tabId);
+    if (existingTask) {
+      existingTask.taskUrl = urlTrimmed;
+      existingTask.taskText = textTrimmed;
+      existingTask.submittedAt = new Date().toISOString();
+      existingTask.status = 'Pending';
+      existingTask.feedback = '';
+      existingTask.grade = '';
     } else {
-      const students = getLocalStudents();
-      const idx = students.findIndex(s => s.id === id || s.accessCode === id.trim());
-      if (idx === -1) return res.status(404).json({ error: 'Student not found!' });
-      
-      const student = students[idx];
-      if (!student.tasks) student.tasks = [];
-      
-      const existingTask = student.tasks.find(t => t.moduleId === moduleId && t.tabId === tabId);
-      if (existingTask) {
-        existingTask.taskUrl = urlTrimmed;
-        existingTask.taskText = textTrimmed;
-        existingTask.submittedAt = new Date();
-        existingTask.status = 'Pending';
-        existingTask.feedback = '';
-        existingTask.grade = '';
-      } else {
-        const newTask = {
-          _id: 'task-' + Date.now() + '-' + Math.floor(Math.random() * 1000),
-          moduleId,
-          tabId,
-          taskUrl: urlTrimmed,
-          taskText: textTrimmed,
-          submittedAt: new Date(),
-          status: 'Pending',
-          feedback: '',
-          grade: ''
-        };
-        student.tasks.push(newTask);
-      }
-      saveLocalStudents(students);
-      return res.json(student);
+      const newTask = {
+        _id: 'task-' + Date.now() + '-' + Math.floor(Math.random() * 1000),
+        moduleId,
+        tabId,
+        taskUrl: urlTrimmed,
+        taskText: textTrimmed,
+        submittedAt: new Date().toISOString(),
+        status: 'Pending',
+        feedback: '',
+        grade: ''
+      };
+      student.tasks.push(newTask);
     }
+
+    saveLocalStudents(students);
+    await syncStudentToSupabase(student);
+
+    return res.json(student);
   } catch (e) {
     return res.status(500).json({ error: e.message });
   }
@@ -587,38 +430,24 @@ app.post('/api/students/tasks/:taskId/grade', async (req, res) => {
   }
 
   try {
-    const isDbConnected = await checkDbConnection();
-    if (isDbConnected) {
-      const student = await Student.findById(studentId);
-      if (!student) return res.status(404).json({ error: 'Student not found!' });
-      
-      const task = student.tasks.id(taskId);
-      if (!task) return res.status(404).json({ error: 'Task submission not found!' });
-      
-      task.status = statusTrimmed;
-      task.feedback = feedbackTrimmed;
-      task.grade = gradeTrimmed;
-      
-      await student.save();
-      return res.json(student);
-    } else {
-      const students = getLocalStudents();
-      const idx = students.findIndex(s => s.id === studentId || s.accessCode === studentId.trim());
-      if (idx === -1) return res.status(404).json({ error: 'Student not found!' });
-      
-      const student = students[idx];
-      if (!student.tasks) student.tasks = [];
-      
-      const task = student.tasks.find(t => t._id === taskId || t.id === taskId);
-      if (!task) return res.status(404).json({ error: 'Task submission not found!' });
-      
-      task.status = statusTrimmed;
-      task.feedback = feedbackTrimmed;
-      task.grade = gradeTrimmed;
-      
-      saveLocalStudents(students);
-      return res.json(student);
-    }
+    const students = getLocalStudents();
+    const idx = students.findIndex(s => s.id === studentId || s._id === studentId || s.accessCode === studentId.trim());
+    if (idx === -1) return res.status(404).json({ error: 'Student not found!' });
+
+    const student = students[idx];
+    if (!student.tasks) student.tasks = [];
+
+    const task = student.tasks.find(t => t._id === taskId || t.id === taskId);
+    if (!task) return res.status(404).json({ error: 'Task submission not found!' });
+
+    task.status = statusTrimmed;
+    task.feedback = feedbackTrimmed;
+    task.grade = gradeTrimmed;
+
+    saveLocalStudents(students);
+    await syncStudentToSupabase(student);
+
+    return res.json(student);
   } catch (e) {
     return res.status(500).json({ error: e.message });
   }
@@ -628,16 +457,15 @@ app.post('/api/students/tasks/:taskId/grade', async (req, res) => {
 app.delete('/api/students/:id', async (req, res) => {
   const { id } = req.params;
   try {
-    const isDbConnected = await checkDbConnection();
-    if (isDbConnected) {
-      await Student.findByIdAndDelete(id);
-      return res.json({ success: true });
-    } else {
-      let students = getLocalStudents();
-      students = students.filter(s => s.id !== id && s.accessCode !== id);
-      saveLocalStudents(students);
-      return res.json({ success: true });
+    let students = getLocalStudents();
+    const target = students.find(s => s.id === id || s._id === id || s.accessCode === id);
+    students = students.filter(s => s.id !== id && s._id !== id && s.accessCode !== id);
+    saveLocalStudents(students);
+
+    if (target) {
+      await deleteStudentFromSupabase(target.accessCode || target.id);
     }
+    return res.json({ success: true });
   } catch (e) {
     return res.status(500).json({ error: e.message });
   }
@@ -652,24 +480,15 @@ app.put('/api/students/:id', async (req, res) => {
   }
 
   try {
-    const isDbConnected = await checkDbConnection();
-    if (isDbConnected) {
-      const query = mongoose.Types.ObjectId.isValid(id) 
-        ? { _id: id } 
-        : { accessCode: id.trim() };
-        
-      const student = await Student.findOneAndUpdate(query, { enrolledCourse }, { new: true });
-      if (!student) return res.status(404).json({ error: 'Student not found!' });
-      return res.json(student);
-    } else {
-      const students = getLocalStudents();
-      const idx = students.findIndex(s => s.id === id || s.accessCode === id.trim());
-      if (idx === -1) return res.status(404).json({ error: 'Student not found!' });
-      
-      students[idx].enrolledCourse = enrolledCourse;
-      saveLocalStudents(students);
-      return res.json(students[idx]);
-    }
+    const students = getLocalStudents();
+    const idx = students.findIndex(s => s.id === id || s._id === id || s.accessCode === id.trim());
+    if (idx === -1) return res.status(404).json({ error: 'Student not found!' });
+
+    students[idx].enrolledCourse = enrolledCourse;
+    saveLocalStudents(students);
+
+    await syncStudentToSupabase(students[idx]);
+    return res.json(students[idx]);
   } catch (e) {
     return res.status(500).json({ error: e.message });
   }
@@ -678,13 +497,7 @@ app.put('/api/students/:id', async (req, res) => {
 // E. Dynamic Staff Management API Routes
 app.get('/api/staff', async (req, res) => {
   try {
-    const isDbConnected = await checkDbConnection();
-    if (isDbConnected) {
-      const staffList = await Staff.find({});
-      return res.json(staffList);
-    } else {
-      return res.json(getLocalStaff());
-    }
+    return res.json(getLocalStaff());
   } catch (e) {
     return res.status(500).json({ error: e.message });
   }
@@ -697,26 +510,15 @@ app.post('/api/staff', async (req, res) => {
   }
 
   try {
-    const isDbConnected = await checkDbConnection();
-    if (isDbConnected) {
-      const existing = await Staff.findOne({ username: username.trim() });
-      if (existing || username.trim() === 'staff_tutor' || username.trim() === 'admin') {
-        return res.status(400).json({ error: 'Username is already taken!' });
-      }
-      const newStaff = new Staff({ name: name.trim(), username: username.trim(), password: password.trim() });
-      await newStaff.save();
-      return res.json(newStaff);
-    } else {
-      const staffList = getLocalStaff();
-      const existing = staffList.find(s => s.username === username.trim());
-      if (existing || username.trim() === 'staff_tutor' || username.trim() === 'admin') {
-        return res.status(400).json({ error: 'Username is already taken!' });
-      }
-      const newStaff = { id: Date.now().toString(), name: name.trim(), username: username.trim(), password: password.trim() };
-      staffList.push(newStaff);
-      saveLocalStaff(staffList);
-      return res.json(newStaff);
+    const staffList = getLocalStaff();
+    const existing = staffList.find(s => s.username === username.trim());
+    if (existing || username.trim() === 'staff_tutor' || username.trim() === 'admin') {
+      return res.status(400).json({ error: 'Username is already taken!' });
     }
+    const newStaff = { id: 'staff_' + Date.now(), name: name.trim(), username: username.trim(), password: password.trim() };
+    staffList.push(newStaff);
+    saveLocalStaff(staffList);
+    return res.json(newStaff);
   } catch (e) {
     return res.status(500).json({ error: e.message });
   }
@@ -725,24 +527,16 @@ app.post('/api/staff', async (req, res) => {
 app.delete('/api/staff/:id', async (req, res) => {
   const { id } = req.params;
   try {
-    const isDbConnected = await checkDbConnection();
-    if (isDbConnected) {
-      await Staff.findByIdAndDelete(id);
-      return res.json({ success: true });
-    } else {
-      let staffList = getLocalStaff();
-      staffList = staffList.filter(s => s.id !== id);
-      saveLocalStaff(staffList);
-      return res.json({ success: true });
-    }
+    let staffList = getLocalStaff();
+    staffList = staffList.filter(s => s.id !== id);
+    saveLocalStaff(staffList);
+    return res.json({ success: true });
   } catch (e) {
     return res.status(500).json({ error: e.message });
   }
 });
 
 // F. Certificate Routes
-
-// F-1. Upload / update certificate for a student (staff/admin only)
 app.post('/api/students/:id/certificate', async (req, res) => {
   const { id } = req.params;
   const { certificateData, filename, mimeType } = req.body;
@@ -758,76 +552,46 @@ app.post('/api/students/:id/certificate', async (req, res) => {
     data: certificateData.trim(),
     filename: filename.trim(),
     mimeType: mimeType ? mimeType.trim() : 'application/pdf',
-    uploadedAt: new Date()
+    uploadedAt: new Date().toISOString()
   };
 
   try {
-    const isDbConnected = await checkDbConnection();
-    if (isDbConnected) {
-      const query = mongoose.Types.ObjectId.isValid(id)
-        ? { _id: id }
-        : { accessCode: id.trim() };
-      const student = await Student.findOne(query);
-      if (!student) return res.status(404).json({ error: 'Student not found!' });
-      student.certificate = certPayload;
-      await student.save();
-      return res.json({ success: true, student: { _id: student._id, name: student.name, certificate: student.certificate } });
-    } else {
-      const students = getLocalStudents();
-      const idx = students.findIndex(s => s.id === id || s.accessCode === id.trim());
-      if (idx === -1) return res.status(404).json({ error: 'Student not found!' });
-      students[idx].certificate = certPayload;
-      saveLocalStudents(students);
-      return res.json({ success: true, student: students[idx] });
-    }
+    const students = getLocalStudents();
+    const idx = students.findIndex(s => s.id === id || s._id === id || s.accessCode === id.trim());
+    if (idx === -1) return res.status(404).json({ error: 'Student not found!' });
+    students[idx].certificate = certPayload;
+    saveLocalStudents(students);
+
+    await syncStudentToSupabase(students[idx]);
+    return res.json({ success: true, student: students[idx] });
   } catch (e) {
     return res.status(500).json({ error: e.message });
   }
 });
 
-// F-2. Get certificate for a student (student fetches their own)
 app.get('/api/students/:id/certificate', async (req, res) => {
   const { id } = req.params;
   try {
-    const isDbConnected = await checkDbConnection();
-    if (isDbConnected) {
-      const query = mongoose.Types.ObjectId.isValid(id)
-        ? { _id: id }
-        : { accessCode: id.trim() };
-      const student = await Student.findOne(query);
-      if (!student) return res.status(404).json({ error: 'Student not found!' });
-      return res.json(student.certificate || null);
-    } else {
-      const students = getLocalStudents();
-      const student = students.find(s => s.id === id || s.accessCode === id.trim());
-      if (!student) return res.status(404).json({ error: 'Student not found!' });
-      return res.json(student.certificate || null);
-    }
+    const students = getLocalStudents();
+    const student = students.find(s => s.id === id || s._id === id || s.accessCode === id.trim());
+    if (!student) return res.status(404).json({ error: 'Student not found!' });
+    return res.json(student.certificate || null);
   } catch (e) {
     return res.status(500).json({ error: e.message });
   }
 });
 
-// G. INVOICE ROUTES (Staff & Admin Only)
-
-// G-1. Get all invoices (sorted newest first)
+// G. INVOICE ROUTES
 app.get('/api/invoices', async (req, res) => {
   try {
-    const isDbConnected = await checkDbConnection();
-    if (isDbConnected) {
-      const invoices = await Invoice.find({}).sort({ createdAt: -1, _id: -1 });
-      return res.json(invoices);
-    } else {
-      const invoices = getLocalInvoices();
-      invoices.sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
-      return res.json(invoices);
-    }
+    const invoices = getLocalInvoices();
+    invoices.sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
+    return res.json(invoices);
   } catch (e) {
     return res.status(500).json({ error: e.message });
   }
 });
 
-// G-2. Create or Update an Invoice (Upsert by invoiceNo)
 app.post('/api/invoices', async (req, res) => {
   const invoiceData = req.body;
   if (!invoiceData || !invoiceData.invoiceNo || !invoiceData.invoiceNo.trim()) {
@@ -838,65 +602,44 @@ app.post('/api/invoices', async (req, res) => {
   const payload = {
     ...invoiceData,
     invoiceNo,
-    updatedAt: new Date()
+    updatedAt: new Date().toISOString()
   };
 
   try {
-    const isDbConnected = await checkDbConnection();
-    if (isDbConnected) {
-      const updated = await Invoice.findOneAndUpdate(
-        { invoiceNo },
-        { $set: payload },
-        { upsert: true, new: true, setDefaultsOnInsert: true }
-      );
-      return res.json({ success: true, invoice: updated });
+    const invoices = getLocalInvoices();
+    const idx = invoices.findIndex(inv => inv.invoiceNo === invoiceNo);
+    if (idx >= 0) {
+      invoices[idx] = { ...invoices[idx], ...payload };
     } else {
-      const invoices = getLocalInvoices();
-      const idx = invoices.findIndex(inv => inv.invoiceNo === invoiceNo);
-      if (idx >= 0) {
-        invoices[idx] = { ...invoices[idx], ...payload };
-      } else {
-        invoices.unshift({
-          _id: 'inv_' + Math.random().toString(36).substring(2, 11),
-          createdAt: new Date(),
-          ...payload
-        });
-      }
-      saveLocalInvoices(invoices);
-      return res.json({ success: true, invoice: idx >= 0 ? invoices[idx] : invoices[0] });
+      invoices.unshift({
+        _id: 'inv_' + Math.random().toString(36).substring(2, 11),
+        createdAt: new Date().toISOString(),
+        ...payload
+      });
     }
+    saveLocalInvoices(invoices);
+    return res.json({ success: true, invoice: idx >= 0 ? invoices[idx] : invoices[0] });
   } catch (e) {
     return res.status(500).json({ error: e.message });
   }
 });
 
-// G-3. Delete an invoice by ID or invoiceNo
 app.delete('/api/invoices/:id', async (req, res) => {
   const { id } = req.params;
   try {
-    const isDbConnected = await checkDbConnection();
-    if (isDbConnected) {
-      const query = mongoose.Types.ObjectId.isValid(id)
-        ? { _id: id }
-        : { invoiceNo: id };
-      const deleted = await Invoice.findOneAndDelete(query);
-      if (!deleted) return res.status(404).json({ error: 'Invoice not found!' });
-      return res.json({ success: true, message: 'Invoice deleted successfully.' });
-    } else {
-      const invoices = getLocalInvoices();
-      const filtered = invoices.filter(inv => inv._id !== id && inv.id !== id && inv.invoiceNo !== id);
-      if (filtered.length === invoices.length) {
-        return res.status(404).json({ error: 'Invoice not found!' });
-      }
-      saveLocalInvoices(filtered);
-      return res.json({ success: true, message: 'Invoice deleted successfully.' });
+    const invoices = getLocalInvoices();
+    const filtered = invoices.filter(inv => inv._id !== id && inv.id !== id && inv.invoiceNo !== id);
+    if (filtered.length === invoices.length) {
+      return res.status(404).json({ error: 'Invoice not found!' });
     }
+    saveLocalInvoices(filtered);
+    return res.json({ success: true, message: 'Invoice deleted successfully.' });
   } catch (e) {
     return res.status(500).json({ error: e.message });
   }
 });
 
-// Start Server locally (if not running in serverless cloud environments)
+// Start Server locally
 if (!process.env.VERCEL) {
   const PORT = 5000;
   app.listen(PORT, () => {
