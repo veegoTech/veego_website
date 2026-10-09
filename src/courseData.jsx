@@ -222,7 +222,6 @@ export const pythonCourseData = [
       { id: 'variables', label: 'Variables & Data Types', icon: <Database size={18} /> },
       { id: 'print_input', label: 'print() & input()', icon: <Terminal size={18} /> },
       { id: 'type_casting', label: 'Type Casting', icon: <Filter size={18} /> },
-      { id: 'ai_superpowers', label: 'AI Python Superpowers', icon: <Zap size={18} /> },
       { id: 'playground', label: 'Live Python Playground', icon: <Code size={18} /> },
     ]
   },
