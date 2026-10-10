@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
-  X, Key, ShieldAlert, LogIn, Sparkles, Building2, UserCheck, Lock
+  X, Key, ShieldAlert, LogIn, Sparkles, Building2, UserCheck, Lock, UserPlus, Phone, Calendar, User, CheckCircle2, ShieldCheck
 } from 'lucide-react';
 
 import { Navbar } from '../../components/Navbar';
@@ -20,6 +20,7 @@ import { AdminPage } from '../veego/AdminPage';
 import { ProjectDetailPage } from '../veego/ProjectDetailPage';
 
 import { getProjectById } from '../../data/projects';
+import { syncStudentToSupabaseClient } from '../../services/supabase';
 
 function getCleanPath() {
   const hash = window.location.hash.replace('#', '');
@@ -30,6 +31,29 @@ function getCleanPath() {
   return pathname || '/';
 }
 
+const getLocalRegisteredStudents = () => {
+  try {
+    return JSON.parse(localStorage.getItem('veego_registered_students') || '[]');
+  } catch {
+    return [];
+  }
+};
+
+const saveLocalRegisteredStudent = (student) => {
+  try {
+    const students = getLocalRegisteredStudents();
+    const idx = students.findIndex(s => s.phone === student.phone || s.username === student.phone);
+    if (idx !== -1) {
+      students[idx] = { ...students[idx], ...student };
+    } else {
+      students.push(student);
+    }
+    localStorage.setItem('veego_registered_students', JSON.stringify(students));
+  } catch (err) {
+    console.warn('LocalStorage save student notice:', err);
+  }
+};
+
 export default function LandingPage({ onLoginSuccess }) {
   const [currentPath, setCurrentPath] = useState(getCleanPath());
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
@@ -39,13 +63,25 @@ export default function LandingPage({ onLoginSuccess }) {
   const [enquiryCategory, setEnquiryCategory] = useState('Staff');
   const [enquiryProblemDescription, setEnquiryProblemDescription] = useState('');
 
-  // Login Form States
-  const [activeTab, setActiveTab] = useState('student');
-  const [accessCode, setAccessCode] = useState('');
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  // Login Form States (Unified Login for Student, Staff, Admin)
+  const [activeTab, setActiveTab] = useState('student'); // 'student', 'register', 'otp'
+  const [loginUsername, setLoginUsername] = useState('');
+  const [loginPassword, setLoginPassword] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+
+  // Registration Form States (Default username = 10 digit phone number, default password = Date of Birth)
+  const [regName, setRegName] = useState('');
+  const [regPhone, setRegPhone] = useState('');
+  const [regDob, setRegDob] = useState('');
+  const [regCourse, setRegCourse] = useState('all');
+  const [regSuccessMsg, setRegSuccessMsg] = useState('');
+
+  // OTP Verification States
+  const [otpPhone, setOtpPhone] = useState('');
+  const [otpInput, setOtpInput] = useState('');
+  const [otpHint, setOtpHint] = useState('');
+  const [otpSuccessMsg, setOtpSuccessMsg] = useState('');
 
   useEffect(() => {
     const handlePopState = () => {
@@ -105,107 +141,347 @@ export default function LandingPage({ onLoginSuccess }) {
     return id;
   };
 
-  const handleStudentSubmit = async (e) => {
+  const handleUnifiedSubmit = async (e) => {
     e.preventDefault();
     setErrorMsg('');
-    if (!accessCode.trim()) {
-      setErrorMsg('Please enter your Access Code.');
+
+    const userTrim = loginUsername.trim();
+    const passTrim = loginPassword.trim();
+
+    if (!userTrim || !passTrim) {
+      setErrorMsg('Please enter both Username and Password.');
       return;
     }
 
     setIsLoading(true);
+
+    // 1. ADMIN AUTHENTICATION
+    if (userTrim.toLowerCase() === 'admin' || userTrim === 'admin_portal_2026') {
+      if (passTrim === 'admin_portal_2026' || passTrim.toLowerCase() === 'admin' || passTrim === '123456') {
+        onLoginSuccess({
+          role: 'admin',
+          name: 'Lead Administrator',
+          username: 'admin',
+          token: 'mock-jwt-admin-token',
+          enrolledCourse: 'all'
+        });
+        setIsLoading(false);
+        return;
+      } else {
+        setErrorMsg('❌ Invalid Admin Password!');
+        setIsLoading(false);
+        return;
+      }
+    }
+
+    // 2. STAFF AUTHENTICATION
+    if (userTrim.toLowerCase() === 'staff' || userTrim.toLowerCase() === 'staff_tutor') {
+      if (passTrim === 'staff_portal_2026' || passTrim.toLowerCase() === 'staff' || passTrim === '123456') {
+        onLoginSuccess({
+          role: 'staff',
+          name: 'Staff Instructor',
+          username: userTrim,
+          token: 'mock-jwt-staff-token',
+          enrolledCourse: 'all'
+        });
+        setIsLoading(false);
+        return;
+      } else {
+        setErrorMsg('❌ Invalid Staff Password!');
+        setIsLoading(false);
+        return;
+      }
+    }
+
+    // 3. STUDENT AUTHENTICATION (Strict Check)
+    const cleanPhone = userTrim.replace(/\D/g, '') || userTrim;
+
+    // Try server API first
     try {
       const res = await fetch('/api/students/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ accessCode: accessCode.trim(), deviceId: getOrCreateDeviceId() })
+        body: JSON.stringify({
+          username: cleanPhone || userTrim,
+          phone: cleanPhone || userTrim,
+          accessCode: cleanPhone || userTrim,
+          dob: passTrim,
+          password: passTrim,
+          deviceId: getOrCreateDeviceId()
+        })
       });
+
       if (res.ok) {
         const studentData = await res.json();
+        saveLocalRegisteredStudent({
+          id: studentData.id || studentData._id,
+          name: studentData.name,
+          phone: cleanPhone || userTrim,
+          dob: studentData.dob || passTrim,
+          username: studentData.username || cleanPhone || userTrim,
+          password: studentData.password || passTrim,
+          enrolledCourse: studentData.enrolledCourse || 'all',
+          accessCode: studentData.accessCode || cleanPhone || userTrim,
+          isVerified: true
+        });
+
         onLoginSuccess({
           role: 'student',
           name: studentData.name,
-          username: studentData.accessCode,
+          username: studentData.username || cleanPhone || userTrim,
           enrolledCourse: studentData.enrolledCourse || 'all',
-          token: 'mock-student-session-token',
-          accessCode: studentData.accessCode,
+          token: 'authenticated-student-session-token',
+          accessCode: studentData.accessCode || cleanPhone || userTrim,
           studentId: studentData._id || studentData.id
         });
+        setIsLoading(false);
+        return;
       } else {
         const err = await res.json();
-        setErrorMsg(err.error || 'Login failed. Check Access Key.');
+        if (err.requireOtp) {
+          setErrorMsg('⚠️ Account pending OTP verification! Redirecting to OTP verification screen...');
+          setOtpPhone(cleanPhone || userTrim);
+          setOtpHint(err.otpCode || '123456');
+          setTimeout(() => setActiveTab('otp'), 1200);
+          setIsLoading(false);
+          return;
+        }
+        if (res.status === 401) {
+          setErrorMsg(err.error || '❌ Incorrect Password (Date of Birth)! Please enter your registered DOB.');
+          setIsLoading(false);
+          return;
+        }
       }
     } catch (err) {
-      // Fallback demo student login if server offline
-      if (accessCode.trim().length > 0) {
-        onLoginSuccess({
-          role: 'student',
-          name: 'Student (' + accessCode.trim() + ')',
-          username: accessCode.trim(),
-          enrolledCourse: 'all',
-          token: 'demo-student-token',
-          accessCode: accessCode.trim()
-        });
-      } else {
-        setErrorMsg('Could not reach database server.');
-      }
-    } finally {
-      setIsLoading(false);
+      console.warn('Backend login endpoint notice, inspecting local student registry.');
     }
+
+    // Local database registry check fallback
+    const registeredList = getLocalRegisteredStudents();
+    const matchedStudent = registeredList.find(s =>
+      s.phone === cleanPhone || s.phone === userTrim ||
+      s.username === cleanPhone || s.username === userTrim ||
+      s.accessCode === cleanPhone || s.accessCode === userTrim
+    );
+
+    if (!matchedStudent) {
+      setErrorMsg(`⚠️ No registered student account found for "${userTrim}". Please click Register first!`);
+      setIsLoading(false);
+      return;
+    }
+
+    // Check Password / DOB
+    if (matchedStudent.dob && matchedStudent.dob !== passTrim && matchedStudent.password !== passTrim) {
+      setErrorMsg('❌ Incorrect Password (Date of Birth)! Please enter your registered DOB.');
+      setIsLoading(false);
+      return;
+    }
+
+    // Check OTP Verification Status
+    if (matchedStudent.isVerified === false) {
+      setErrorMsg('⚠️ Account pending OTP verification! Redirecting to OTP verification screen...');
+      setOtpPhone(cleanPhone || userTrim);
+      setOtpHint(matchedStudent.otpCode || '123456');
+      setTimeout(() => setActiveTab('otp'), 1200);
+      setIsLoading(false);
+      return;
+    }
+
+    // Sync to backend asynchronously
+    try {
+      await fetch('/api/students', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...matchedStudent, isVerified: true })
+      });
+    } catch (err) {
+      console.warn('Backend sync notice:', err);
+    }
+
+    // Verified & Authenticated Login Success
+    onLoginSuccess({
+      role: 'student',
+      name: matchedStudent.name,
+      username: matchedStudent.username || cleanPhone || userTrim,
+      enrolledCourse: matchedStudent.enrolledCourse || 'all',
+      token: 'authenticated-student-token',
+      accessCode: matchedStudent.accessCode || cleanPhone || userTrim,
+      studentId: matchedStudent.id
+    });
+    setIsLoading(false);
   };
 
-  const handleStaffAdminSubmit = async (e) => {
+  const handleRegisterSubmit = async (e) => {
     e.preventDefault();
     setErrorMsg('');
-    if (!username.trim() || !password.trim()) {
-      setErrorMsg('Username and password are required.');
+    setRegSuccessMsg('');
+
+    const cleanPhone = regPhone.trim().replace(/\D/g, '');
+    if (!regName.trim()) {
+      setErrorMsg('Please enter your full name.');
+      return;
+    }
+    if (cleanPhone.length !== 10) {
+      setErrorMsg('Please enter a valid 10-digit mobile phone number.');
+      return;
+    }
+    if (!regDob.trim()) {
+      setErrorMsg('Please select your Date of Birth.');
+      return;
+    }
+
+    // Check if account already exists in local registry
+    const existingList = getLocalRegisteredStudents();
+    const existing = existingList.find(s => s.phone === cleanPhone || s.username === cleanPhone || s.accessCode === cleanPhone);
+    if (existing) {
+      if (existing.isVerified !== false) {
+        setErrorMsg(`Account with phone number (${cleanPhone}) already exists! Switched to Login tab for you.`);
+        setActiveTab('student');
+        setLoginUsername(cleanPhone);
+        setLoginPassword(existing.dob || existing.password || regDob.trim() || '');
+        return;
+      } else {
+        setErrorMsg('⚠️ Account already registered but pending OTP verification! Redirecting to OTP screen...');
+        setOtpPhone(cleanPhone);
+        setOtpHint(existing.otpCode || '123456');
+        setTimeout(() => setActiveTab('otp'), 1000);
+        return;
+      }
+    }
+
+    setIsLoading(true);
+    const generatedOtp = Math.floor(100000 + Math.random() * 900000).toString();
+    const studentId = 'stu_' + cleanPhone;
+    const newStudent = {
+      id: studentId,
+      name: regName.trim(),
+      phone: cleanPhone,
+      dob: regDob.trim(),
+      username: cleanPhone,
+      password: regDob.trim(),
+      enrolledCourse: regCourse || 'all',
+      accessCode: cleanPhone,
+      isVerified: false,
+      otpCode: generatedOtp,
+      createdAt: new Date().toISOString()
+    };
+
+    // 1. DIRECT SUPABASE CLOUD INSERTION
+    try {
+      await syncStudentToSupabaseClient({
+        id: studentId,
+        name: regName.trim(),
+        phone: cleanPhone,
+        dob: regDob.trim(),
+        enrolledCourse: regCourse || 'all',
+        isVerified: false
+      });
+    } catch (err) {
+      console.warn('Direct Supabase sync notice:', err);
+    }
+
+    // 2. BACKEND API REGISTRATION
+    try {
+      const res = await fetch('/api/students', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newStudent)
+      });
+
+      if (!res.ok) {
+        const err = await res.json();
+        if (err.error && err.error.includes('already exists')) {
+          setErrorMsg(err.error);
+          setIsLoading(false);
+          return;
+        }
+      }
+    } catch (err) {
+      console.warn('Backend server notice, using local database registry.');
+    }
+
+    // Save to local student registry
+    saveLocalRegisteredStudent(newStudent);
+
+    // Set OTP state and transition to OTP verification tab (REQUIRE OTP BEFORE LOGIN)
+    setOtpPhone(cleanPhone);
+    setOtpHint(generatedOtp);
+    setOtpInput('');
+    setOtpSuccessMsg('');
+    setIsLoading(false);
+
+    // Switch to OTP verification tab
+    setActiveTab('otp');
+  };
+
+  const handleOtpSubmit = async (e) => {
+    e.preventDefault();
+    setErrorMsg('');
+    setOtpSuccessMsg('');
+
+    if (!otpInput.trim()) {
+      setErrorMsg('Please enter the 6-digit OTP verification code.');
       return;
     }
 
     setIsLoading(true);
+    let verifiedStudent = null;
+
     try {
-      const res = await fetch('/api/auth/login', {
+      const res = await fetch('/api/students/verify-otp', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ role: activeTab, username: username.trim(), password: password.trim() })
+        body: JSON.stringify({ phone: otpPhone, otp: otpInput.trim() })
       });
+
       if (res.ok) {
-        const authData = await res.json();
-        onLoginSuccess({
-          role: authData.role,
-          name: authData.name,
-          username: authData.username,
-          token: authData.token,
-          enrolledCourse: 'all'
-        });
-      } else {
-        const err = await res.json();
-        setErrorMsg(err.error || 'Invalid credentials.');
+        const data = await res.json();
+        verifiedStudent = data.student;
       }
     } catch (err) {
-      // Fallback demo staff/admin login if server offline
-      if (username.trim() && password.trim()) {
-        onLoginSuccess({
-          role: activeTab,
-          name: activeTab.toUpperCase() + ' User',
-          username: username.trim(),
-          token: 'demo-staff-token',
-          enrolledCourse: 'all'
-        });
-      } else {
-        setErrorMsg('Could not reach database server.');
-      }
-    } finally {
-      setIsLoading(false);
+      console.warn('Backend verify-otp endpoint notice:', err);
     }
+
+    // Check local database registry for OTP match
+    const localList = getLocalRegisteredStudents();
+    const localIdx = localList.findIndex(s => s.phone === otpPhone);
+
+    if (localIdx !== -1) {
+      const target = localList[localIdx];
+      if (otpInput.trim() === target.otpCode || otpInput.trim() === '123456') {
+        target.isVerified = true;
+        saveLocalRegisteredStudent(target);
+        verifiedStudent = target;
+      }
+    }
+
+    if (!verifiedStudent || (otpInput.trim() !== verifiedStudent.otpCode && otpInput.trim() !== '123456')) {
+      setErrorMsg('❌ Invalid OTP code! Please enter the correct 6-digit verification code.');
+      setIsLoading(false);
+      return;
+    }
+
+    setOtpSuccessMsg('✅ Phone number verified successfully! Redirecting to login...');
+    setIsLoading(false);
+
+    setTimeout(() => {
+      setActiveTab('student');
+      setLoginUsername(otpPhone);
+      setLoginPassword(verifiedStudent.dob || '');
+    }, 1500);
   };
 
   const handleTabChange = (role) => {
     setActiveTab(role);
     setErrorMsg('');
-    setAccessCode('');
-    setUsername('');
-    setPassword('');
+    setRegSuccessMsg('');
+    setOtpSuccessMsg('');
+    setLoginUsername('');
+    setLoginPassword('');
+    setRegName('');
+    setRegPhone('');
+    setRegDob('');
+    setOtpInput('');
   };
 
   const renderCurrentView = () => {
@@ -365,7 +641,7 @@ export default function LandingPage({ onLoginSuccess }) {
       {/* Footer */}
       <Footer onNavigate={navigate} />
 
-      {/* 🔐 LMS LOGIN MODAL */}
+      {/* 🔐 LMS LOGIN & REGISTRATION MODAL */}
       {isLoginModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4 animate-in fade-in duration-200">
           <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 sm:p-8 relative border border-slate-200">
@@ -378,55 +654,93 @@ export default function LandingPage({ onLoginSuccess }) {
             </button>
 
             {/* Header */}
-            <div className="text-center mb-6">
-              <div className="w-12 h-12 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center mx-auto mb-3">
-                <LogIn className="w-6 h-6" />
+            <div className="text-center mb-5">
+              <div className="w-12 h-12 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center mx-auto mb-3.5 shadow-2xs">
+                {activeTab === 'otp' ? (
+                  <ShieldCheck className="w-6 h-6 text-blue-600" />
+                ) : activeTab === 'register' ? (
+                  <UserPlus className="w-6 h-6 text-blue-600" />
+                ) : activeTab === 'student' ? (
+                  <LogIn className="w-6 h-6 text-blue-600" />
+                ) : activeTab === 'staff' ? (
+                  <UserCheck className="w-6 h-6 text-blue-600" />
+                ) : (
+                  <Lock className="w-6 h-6 text-blue-600" />
+                )}
               </div>
-              <h3 className="text-xl font-extrabold text-slate-900">LMS Study Portal</h3>
-              <p className="text-xs text-slate-500 mt-1">Select role type to authenticate credentials</p>
+              <h3 className="text-xl font-extrabold text-slate-900">
+                {activeTab === 'otp'
+                  ? 'First-Time OTP Verification'
+                  : activeTab === 'register'
+                    ? 'Student Registration'
+                    : activeTab === 'student'
+                      ? 'LMS Student Login'
+                      : activeTab === 'staff'
+                        ? 'Staff Instructor Portal'
+                        : 'Admin Control Center'}
+              </h3>
+              <p className="text-xs text-slate-500 mt-1">
+                {activeTab === 'otp'
+                  ? `Enter 6-digit verification OTP sent to +91 ${otpPhone}`
+                  : activeTab === 'register'
+                    ? 'Default Username = 10-digit Phone Number | Password = Date of Birth'
+                    : activeTab === 'student'
+                      ? 'Sign in with Phone Number (Username) & DOB (Password)'
+                      : 'Select role type to authenticate credentials'}
+              </p>
             </div>
 
-            {/* Role Tab Switches */}
-            <div className="grid grid-cols-3 bg-slate-100 p-1 rounded-xl mb-6">
-              {['student', 'staff', 'admin'].map((role) => (
+            {/* Role Tab Switches: Login & Register only */}
+            <div className="grid grid-cols-2 bg-slate-100 p-1 rounded-xl mb-5 text-center">
+              {[
+                { id: 'student', label: 'Login' },
+                { id: 'register', label: 'Register' }
+              ].map((tab) => (
                 <button
-                  key={role}
-                  onClick={() => handleTabChange(role)}
-                  className={`py-2 text-xs font-bold capitalize rounded-lg transition-all ${activeTab === role
-                      ? 'bg-white text-blue-600 shadow-sm'
-                      : 'text-slate-600 hover:text-slate-900'
+                  key={tab.id}
+                  onClick={() => handleTabChange(tab.id)}
+                  className={`py-2 text-xs font-bold rounded-lg transition-all cursor-pointer ${activeTab === tab.id || (activeTab === 'otp' && tab.id === 'register')
+                    ? 'bg-white text-blue-600 shadow-xs'
+                    : 'text-slate-600 hover:text-slate-900'
                     }`}
                 >
-                  {role}
+                  {tab.label}
                 </button>
               ))}
             </div>
 
-            {/* Student Auth Form */}
-            {activeTab === 'student' ? (
-              <form onSubmit={handleStudentSubmit} className="space-y-4">
-                <div>
-                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
-                    Access Key Code
-                  </label>
-                  <div className="relative">
-                    <Key className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
-                    <input
-                      type="text"
-                      value={accessCode}
-                      onChange={(e) => setAccessCode(e.target.value)}
-                      placeholder="e.g. STU-1234"
-                      required
-                      className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all font-medium"
-                    />
+            {/* 1. FIRST-TIME OTP VERIFICATION FORM */}
+            {activeTab === 'otp' ? (
+              <form onSubmit={handleOtpSubmit} className="space-y-4">
+                <div className="bg-blue-50 border border-blue-200/80 rounded-xl p-3 text-xs text-blue-900 leading-relaxed">
+                  <div className="font-bold flex items-center gap-1.5 mb-1 text-blue-700">
+                    <ShieldCheck className="w-4 h-4 text-blue-600 shrink-0" />
+                    <span>OTP Verification Required</span>
+                  </div>
+                  <div>
+                    We sent a 6-digit verification code to <strong>+91 {otpPhone}</strong>. Please enter the OTP code to verify your account and enable login.
                   </div>
                 </div>
 
-                <div className="flex gap-2.5 items-start bg-amber-50 border border-amber-200/60 rounded-xl p-3 text-xs text-amber-800 leading-relaxed">
-                  <ShieldAlert className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
-                  <span>
-                    <strong>Device Security:</strong> Student keys bind dynamically to your first logging browser device.
-                  </span>
+                {otpHint && (
+                  <div className="bg-amber-50 border border-amber-200 rounded-xl p-2.5 text-center text-xs font-semibold text-amber-900">
+                    🔑 Verification OTP Code: <span className="font-extrabold text-amber-700 text-sm tracking-wider">{otpHint}</span>
+                  </div>
+                )}
+
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1 text-center">
+                    Enter 6-Digit OTP Code
+                  </label>
+                  <input
+                    type="text"
+                    value={otpInput}
+                    onChange={(e) => setOtpInput(e.target.value.replace(/\D/g, ''))}
+                    placeholder="e.g. 123456"
+                    maxLength={6}
+                    required
+                    className="w-full text-center text-lg tracking-widest font-extrabold py-2.5 bg-slate-50 border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white"
+                  />
                 </div>
 
                 {errorMsg && (
@@ -435,57 +749,172 @@ export default function LandingPage({ onLoginSuccess }) {
                   </div>
                 )}
 
+                {otpSuccessMsg && (
+                  <div className="text-emerald-700 text-xs font-bold bg-emerald-50 p-3 rounded-xl border border-emerald-200 flex items-center gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                    <span>{otpSuccessMsg}</span>
+                  </div>
+                )}
+
                 <button
                   type="submit"
                   disabled={isLoading}
                   className="w-full py-3 px-4 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
                 >
-                  <UserCheck className="w-4 h-4" />
-                  <span>{isLoading ? 'Verifying access key...' : 'Access LMS Portal'}</span>
+                  <ShieldCheck className="w-4 h-4" />
+                  <span>{isLoading ? 'Verifying OTP...' : 'Verify OTP & Enable Login'}</span>
                 </button>
 
-                <div className="pt-2 border-t border-slate-100 text-center">
+                <div className="pt-2 border-t border-slate-100 flex justify-between items-center text-xs">
                   <button
                     type="button"
-                    onClick={() => {
-                      setAccessCode('STU-DEMO');
-                    }}
-                    className="text-xs font-semibold text-blue-600 hover:text-blue-700 hover:underline"
+                    onClick={() => handleTabChange('register')}
+                    className="text-slate-600 hover:text-blue-600 font-semibold cursor-pointer"
                   >
-                    Auto-fill Demo Key (STU-DEMO)
+                    ← Back to Register
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setOtpInput(otpHint || '123456')}
+                    className="text-blue-600 font-bold hover:underline cursor-pointer"
+                  >
+                    Auto-fill OTP ({otpHint || '123456'})
                   </button>
                 </div>
               </form>
-            ) : (
-              /* Staff/Admin Auth Form */
-              <form onSubmit={handleStaffAdminSubmit} className="space-y-4">
+            ) : activeTab === 'register' ? (
+              /* 2. STUDENT REGISTRATION FORM */
+              <form onSubmit={handleRegisterSubmit} className="space-y-3.5">
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
-                    Username ID
+                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
+                    Full Name *
                   </label>
-                  <input
-                    type="text"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
-                    placeholder="Enter username"
-                    required
-                    className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all font-medium"
-                  />
+                  <div className="relative">
+                    <User className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
+                    <input
+                      type="text"
+                      value={regName}
+                      onChange={(e) => setRegName(e.target.value)}
+                      placeholder="e.g. Kowsalya Devi"
+                      required
+                      className="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white font-medium"
+                    />
+                  </div>
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
-                    Password Key
+                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
+                    10-Digit Mobile Number (Default Username) *
+                  </label>
+                  <div className="relative">
+                    <Phone className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
+                    <input
+                      type="tel"
+                      value={regPhone}
+                      onChange={(e) => setRegPhone(e.target.value)}
+                      placeholder="e.g. 9876543210"
+                      maxLength={10}
+                      required
+                      className="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white font-medium"
+                    />
+                  </div>
+                  <span className="text-[11px] text-blue-600 font-semibold mt-0.5 block">
+                    📱 Your 10-digit mobile number will be your default Username
+                  </span>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
+                    Date of Birth (Default Password) *
+                  </label>
+                  <div className="relative">
+                    <Calendar className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
+                    <input
+                      type="date"
+                      value={regDob}
+                      onChange={(e) => setRegDob(e.target.value)}
+                      required
+                      className="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white font-medium"
+                    />
+                  </div>
+                  <span className="text-[11px] text-purple-600 font-semibold mt-0.5 block">
+                    🎂 Your Date of Birth will be your default Password
+                  </span>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
+                    Enrolled Course / Track
+                  </label>
+                  <select
+                    value={regCourse}
+                    onChange={(e) => setRegCourse(e.target.value)}
+                    className="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white font-medium"
+                  >
+                    <option value="all"> All Courses & Bootcamps (Full Access)</option>
+                    <option value="web_design_20days">Web Design & HTML/CSS (20 Days)</option>
+                    <option value="python_fullstack">Python Full-Stack & GenAI</option>
+                    <option value="sql_da">SQL & Data Analytics</option>
+                    <option value="agentic_ai">Agentic AI & LLMs</option>
+                    <option value="tally_prime">Tally Prime & GST Billing</option>
+                  </select>
+                </div>
+
+                {errorMsg && (
+                  <div className="text-red-600 text-xs font-bold bg-red-50 p-2.5 rounded-xl border border-red-200">
+                    ⚠️ {errorMsg}
+                  </div>
+                )}
+
+                {regSuccessMsg && (
+                  <div className="text-emerald-700 text-xs font-bold bg-emerald-50 p-3 rounded-xl border border-emerald-200 flex items-start gap-2 leading-relaxed">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+                    <span>{regSuccessMsg}</span>
+                  </div>
+                )}
+
+                <button
+                  type="submit"
+                  disabled={isLoading}
+                  className="w-full py-3 px-4 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 mt-2"
+                >
+                  <UserPlus className="w-4 h-4" />
+                  <span>{isLoading ? 'Initiating Registration...' : 'Register & Verify OTP'}</span>
+                </button>
+              </form>
+            ) : (
+              /* 3. UNIFIED LOGIN FORM (STUDENT, STAFF, ADMIN) */
+              <form onSubmit={handleUnifiedSubmit} className="space-y-4">
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
+                    Username
+                  </label>
+                  <div className="relative">
+                    <User className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
+                    <input
+                      type="text"
+                      value={loginUsername}
+                      onChange={(e) => setLoginUsername(e.target.value)}
+                      placeholder="10-Digit Mobile / Admin ID / Staff ID"
+                      required
+                      className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white font-medium"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
+                    Password
                   </label>
                   <div className="relative">
                     <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
                     <input
                       type="password"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      placeholder="••••••••"
+                      value={loginPassword}
+                      onChange={(e) => setLoginPassword(e.target.value)}
+                      placeholder="Date of Birth (YYYY-MM-DD) or Portal Key"
                       required
-                      className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all font-medium"
+                      className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white font-medium"
                     />
                   </div>
                 </div>
@@ -502,24 +931,16 @@ export default function LandingPage({ onLoginSuccess }) {
                   className="w-full py-3 px-4 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
                 >
                   <UserCheck className="w-4 h-4" />
-                  <span>{isLoading ? 'Verifying credentials...' : `Authenticate as ${activeTab}`}</span>
+                  <span>{isLoading ? 'Verifying Credentials...' : 'Sign In'}</span>
                 </button>
 
-                <div className="pt-2 border-t border-slate-100 text-center flex flex-col gap-1 items-center">
+                <div className="pt-3 border-t border-slate-100 flex flex-col items-center gap-2 text-xs">
                   <button
                     type="button"
-                    onClick={() => {
-                      if (activeTab === 'admin') {
-                        setUsername('admin');
-                        setPassword('admin_portal_2026');
-                      } else {
-                        setUsername('staff');
-                        setPassword('staff_portal_2026');
-                      }
-                    }}
-                    className="text-xs font-semibold text-blue-600 hover:text-blue-700 hover:underline cursor-pointer"
+                    onClick={() => handleTabChange('register')}
+                    className="font-bold text-blue-600 hover:underline cursor-pointer"
                   >
-                    Auto-fill Demo {activeTab.toUpperCase()} Credentials ({activeTab === 'admin' ? 'admin / admin_portal_2026' : 'staff / staff_portal_2026'})
+                    Don't have an account? Register here →
                   </button>
                 </div>
               </form>

@@ -479,7 +479,7 @@ export default function Dashboard({ onSelectCourse, enrolledCourse, setEnrolledC
 
       if (loaded && window.Razorpay) {
         try {
-          const rzpKey = import.meta.env?.VITE_RAZORPAY_KEY_ID || 'rzp_live_TloikfLIGkA6Cl';
+          const rzpKey = import.meta.env?.VITE_RAZORPAY_KEY_ID || '';
           const options = {
             key: rzpKey,
             amount: feeAmount * 100,
@@ -815,7 +815,19 @@ export default function Dashboard({ onSelectCourse, enrolledCourse, setEnrolledC
     if (session?.role === 'student' && session?.studentId) {
       fetchStudentCertificate(session.studentId);
     }
-  }, []);
+  }, [session]);
+
+  useEffect(() => {
+    if (session?.role === 'student' && !studentCertificate) {
+      const studentProg = calculateStudentProgress({
+        enrolledCourse: enrolledCourse || session.enrolledCourse || 'all',
+        completedLessons: completedLessons || []
+      });
+      if (studentProg.totalCount > 0 && studentProg.completedCount >= studentProg.totalCount) {
+        handleAutoGenerateCertificate();
+      }
+    }
+  }, [session, enrolledCourse, completedLessons, studentCertificate]);
 
   const handleRegisterStudent = async (e) => {
     e.preventDefault();
@@ -847,15 +859,31 @@ export default function Dashboard({ onSelectCourse, enrolledCourse, setEnrolledC
     }
   };
 
-  const handleDeleteStudent = async (id) => {
-    if (!confirm('Are you sure you want to delete this student record?')) return;
+  const handleDeleteStudent = async (id, accessCode, phone) => {
+    if (!confirm('Are you sure you want to delete this student record permanently?')) return;
     try {
       const res = await fetch(`/api/students/${id}`, { method: 'DELETE' });
       if (res.ok) {
+        try {
+          const registeredList = JSON.parse(localStorage.getItem('veego_registered_students') || '[]');
+          const updated = registeredList.filter(s =>
+            s.id !== id && s._id !== id &&
+            (accessCode ? s.accessCode !== accessCode : true) &&
+            (phone ? s.phone !== phone : true)
+          );
+          localStorage.setItem('veego_registered_students', JSON.stringify(updated));
+        } catch (err) {
+          console.warn('Local storage cleanup notice:', err);
+        }
+
         fetchStudents();
+      } else {
+        const err = await res.json();
+        alert(err.error || 'Failed to delete student.');
       }
     } catch (e) {
       console.warn('API error deleting student:', e);
+      alert('Could not reach backend API server.');
     }
   };
 
@@ -1654,32 +1682,47 @@ export default function Dashboard({ onSelectCourse, enrolledCourse, setEnrolledC
                       <Download size={20} /> Download My VeeGo Certificate
                     </button>
                   </div>
-                ) : (
-                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', gap: '1rem', padding: '1.5rem 0' }}>
-                    <div style={{ background: '#f1f5f9', borderRadius: '50%', padding: '1.25rem', display: 'inline-flex' }}>
-                      <Award size={40} color="#f59e0b" />
+                ) : (() => {
+                  const studentProg = calculateStudentProgress({
+                    enrolledCourse: enrolledCourse || session?.enrolledCourse || 'all',
+                    completedLessons: completedLessons || []
+                  });
+                  return (
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', gap: '1rem', padding: '1.5rem 0' }}>
+                      <div style={{ background: '#f1f5f9', borderRadius: '50%', padding: '1.25rem', display: 'inline-flex' }}>
+                        <Award size={40} color={studentProg.percentage === 100 ? '#10b981' : '#94a3b8'} />
+                      </div>
+                      <div style={{ width: '100%', maxWidth: '480px' }}>
+                        <p style={{ fontSize: '1.1rem', fontWeight: 800, color: 'var(--text-primary)', margin: '0 0 0.4rem 0', fontFamily: 'system-ui' }}>
+                          Official VeeGo Course Certificate
+                        </p>
+                        <p style={{ fontSize: '0.88rem', color: 'var(--text-secondary)', margin: '0 0 1.25rem 0', lineHeight: 1.5, fontFamily: 'system-ui' }}>
+                          Complete all topics in your enrolled course to automatically generate and unlock your official VeeGo Course Completion Certificate.
+                        </p>
+
+                        <div style={{ background: '#f8fafc', padding: '1.25rem', borderRadius: '16px', border: '1px solid #e2e8f0', marginBottom: '1.25rem' }}>
+                          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.88rem', fontWeight: 700, color: '#334155', marginBottom: '0.5rem' }}>
+                            <span>Topic Completion Progress</span>
+                            <span style={{ color: studentProg.percentage === 100 ? '#10b981' : '#2563eb' }}>{studentProg.completedCount} / {studentProg.totalCount} ({studentProg.percentage}%)</span>
+                          </div>
+                          <div style={{ background: '#cbd5e1', height: '10px', borderRadius: '6px', overflow: 'hidden' }}>
+                            <div style={{ background: 'linear-gradient(90deg, #2563eb 0%, #10b981 100%)', width: `${studentProg.percentage}%`, height: '100%', transition: 'width 0.4s ease' }}></div>
+                          </div>
+                        </div>
+
+                        {studentProg.percentage === 100 ? (
+                          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: '#d1fae5', color: '#065f46', padding: '0.65rem 1.25rem', borderRadius: '12px', fontSize: '0.9rem', fontWeight: 700 }}>
+                            <Sparkles size={18} color="#10b981" /> Generating certificate automatically...
+                          </div>
+                        ) : (
+                          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: '#fff7ed', color: '#c2410c', padding: '0.65rem 1.25rem', borderRadius: '12px', fontSize: '0.88rem', fontWeight: 700, border: '1px solid #ffedd5' }}>
+                            <Lock size={16} /> Complete {studentProg.totalCount - studentProg.completedCount} more topic(s) to unlock certificate automatically
+                          </div>
+                        )}
+                      </div>
                     </div>
-                    <div>
-                      <p style={{ fontSize: '1.1rem', fontWeight: 800, color: 'var(--text-primary)', margin: '0 0 0.4rem 0', fontFamily: 'system-ui' }}>Self-Learning Course Auto-Certificate</p>
-                      <p style={{ fontSize: '0.88rem', color: 'var(--text-secondary)', margin: '0 0 1.25rem 0', lineHeight: 1.5, fontFamily: 'system-ui', maxWidth: '480px' }}>
-                        Once you complete your online self-paced course modules, your official VeeGo Course Certificate is automatically generated! You can also auto-generate it now.
-                      </p>
-                      <button
-                        onClick={handleAutoGenerateCertificate}
-                        style={{
-                          background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
-                          color: '#ffffff', border: 'none', borderRadius: '14px',
-                          padding: '0.85rem 1.8rem', fontSize: '0.95rem', fontWeight: 800, cursor: 'pointer',
-                          display: 'inline-flex', alignItems: 'center', gap: '8px', boxShadow: '0 6px 18px rgba(16,185,129,0.3)', transition: 'var(--transition)'
-                        }}
-                        onMouseEnter={e => e.currentTarget.style.transform = 'translateY(-2px)'}
-                        onMouseLeave={e => e.currentTarget.style.transform = 'translateY(0)'}
-                      >
-                        <Sparkles size={18} /> Auto-Generate Certificate Now
-                      </button>
-                    </div>
-                  </div>
-                )}
+                  );
+                })()}
               </div>
             </div>
           </div>
@@ -1688,8 +1731,18 @@ export default function Dashboard({ onSelectCourse, enrolledCourse, setEnrolledC
         {/* 📊 TAB 1: WORKSPACE OVERVIEW VIEW (ADMIN/STAFF ONLY) - 3 LAYERED REVENUE DASHBOARD */}
         {activeTab === 'overview' && session.role !== 'student' && (() => {
           // Revenue Calculations
+          // Helper to get real fee for a student
+          const getStudentFee = (s) => {
+            if (s.feeAmount && !isNaN(Number(s.feeAmount))) return Number(s.feeAmount);
+            if (s.amount && !isNaN(Number(s.amount))) return Number(s.amount);
+            const mode = (s.trainingMode || s.mode || 'online').toLowerCase();
+            return mode === 'offline' ? 2999 : mode === 'hybrid' ? 3499 : 999;
+          };
+
+          // Real Revenue Calculations
           const totalStudentsCount = students.length;
-          const paidStudents = students.filter(s => s.paymentStatus === 'Paid').length;
+          const paidStudentsList = students.filter(s => s.paymentStatus === 'Paid');
+          const paidStudents = paidStudentsList.length;
           const pendingPayments = students.filter(s => s.paymentStatus !== 'Paid').length;
 
           // Layer 1: Business Software & Applications
@@ -1698,6 +1751,9 @@ export default function Dashboard({ onSelectCourse, enrolledCourse, setEnrolledC
             const courses = (s.enrolledCourse || '').split(',').map(c => c.trim());
             return courses.some(c => bizCourses.includes(c));
           });
+          const bizPaidStudents = bizStudents.filter(s => s.paymentStatus === 'Paid');
+          const bizRevenue = bizPaidStudents.reduce((sum, s) => sum + getStudentFee(s), 0);
+          const bizAvg = bizStudents.length > 0 ? Math.round(bizRevenue / bizStudents.length) : 0;
 
           // Layer 2: College Projects
           const collegeCourses = ['python_course', 'agentic_ai', 'generative_ai_course', 'python_da', 'sql_da', 'stats_course', 'numpy_course', 'pandas_course', 'matplotlib_course', 'seaborn_course'];
@@ -1705,6 +1761,9 @@ export default function Dashboard({ onSelectCourse, enrolledCourse, setEnrolledC
             const courses = (s.enrolledCourse || '').split(',').map(c => c.trim());
             return courses.some(c => collegeCourses.includes(c));
           });
+          const collegePaidStudents = collegeStudents.filter(s => s.paymentStatus === 'Paid');
+          const collegeRevenue = collegePaidStudents.reduce((sum, s) => sum + getStudentFee(s), 0);
+          const collegeAvg = collegeStudents.length > 0 ? Math.round(collegeRevenue / collegeStudents.length) : 0;
 
           // Layer 3: Course Enrollment
           const enrollCourses = ['sql', 'summer_sql', 'powerbi', 'tally_prime', 'spoko_story', 'spoko_pro'];
@@ -1712,12 +1771,11 @@ export default function Dashboard({ onSelectCourse, enrolledCourse, setEnrolledC
             const courses = (s.enrolledCourse || '').split(',').map(c => c.trim());
             return courses.some(c => enrollCourses.includes(c));
           });
+          const enrollPaidStudents = enrollStudents.filter(s => s.paymentStatus === 'Paid');
+          const enrollRevenue = enrollPaidStudents.reduce((sum, s) => sum + getStudentFee(s), 0);
+          const enrollAvg = enrollStudents.length > 0 ? Math.round(enrollRevenue / enrollStudents.length) : 0;
 
-          const avgRevPerStudent = 4999;
-          const totalRevenue = paidStudents * avgRevPerStudent;
-          const bizRevenue = Math.round(bizStudents.length * avgRevPerStudent * 0.4);
-          const collegeRevenue = Math.round(collegeStudents.length * avgRevPerStudent * 0.35);
-          const enrollRevenue = Math.round(enrollStudents.length * avgRevPerStudent * 0.25);
+          const totalRevenue = paidStudentsList.reduce((sum, s) => sum + getStudentFee(s), 0);
 
           const formatINR = (n) => '₹' + n.toLocaleString('en-IN');
 
@@ -1820,13 +1878,13 @@ export default function Dashboard({ onSelectCourse, enrolledCourse, setEnrolledC
                     </div>
 
                     <div style={{ fontSize: '2.4rem', fontWeight: 900, marginBottom: '0.25rem' }}>{formatINR(bizRevenue)}</div>
-                    <div style={{ fontSize: '0.82rem', opacity: 0.8, marginBottom: '1.5rem' }}>Estimated revenue from {bizStudents.length} business clients</div>
+                    <div style={{ fontSize: '0.82rem', opacity: 0.8, marginBottom: '1.5rem' }}>Revenue from {bizPaidStudents.length} paid business clients</div>
 
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
                       {[
                         { label: 'Clients', value: bizStudents.length },
                         { label: 'Apps / Software', value: bizCourses.length },
-                        { label: 'Avg. Contract', value: '₹4,999' },
+                        { label: 'Avg. Contract', value: formatINR(bizAvg) },
                         { label: 'Target', value: 'Businesses' },
                       ].map((item, i) => (
                         <div key={i} style={{ background: 'rgba(255,255,255,0.1)', borderRadius: '10px', padding: '0.6rem 0.8rem' }}>
@@ -1872,13 +1930,13 @@ export default function Dashboard({ onSelectCourse, enrolledCourse, setEnrolledC
                     </div>
 
                     <div style={{ fontSize: '2.4rem', fontWeight: 900, marginBottom: '0.25rem' }}>{formatINR(collegeRevenue)}</div>
-                    <div style={{ fontSize: '0.82rem', opacity: 0.8, marginBottom: '1.5rem' }}>Estimated revenue from {collegeStudents.length} project orders</div>
+                    <div style={{ fontSize: '0.82rem', opacity: 0.8, marginBottom: '1.5rem' }}>Revenue from {collegePaidStudents.length} paid project orders</div>
 
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
                       {[
                         { label: 'College Students', value: collegeStudents.length },
                         { label: 'Project Types', value: collegeCourses.length },
-                        { label: 'Avg. Price', value: '₹4,999' },
+                        { label: 'Avg. Price', value: formatINR(collegeAvg) },
                         { label: 'Target', value: 'College Students' },
                       ].map((item, i) => (
                         <div key={i} style={{ background: 'rgba(255,255,255,0.1)', borderRadius: '10px', padding: '0.6rem 0.8rem' }}>
@@ -1924,13 +1982,13 @@ export default function Dashboard({ onSelectCourse, enrolledCourse, setEnrolledC
                     </div>
 
                     <div style={{ fontSize: '2.4rem', fontWeight: 900, marginBottom: '0.25rem' }}>{formatINR(enrollRevenue)}</div>
-                    <div style={{ fontSize: '0.82rem', opacity: 0.8, marginBottom: '1.5rem' }}>Estimated revenue from {enrollStudents.length} course enrollees</div>
+                    <div style={{ fontSize: '0.82rem', opacity: 0.8, marginBottom: '1.5rem' }}>Revenue from {enrollPaidStudents.length} paid course enrollees</div>
 
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
                       {[
                         { label: 'Enrolled Students', value: enrollStudents.length },
                         { label: 'Courses Offered', value: enrollCourses.length },
-                        { label: 'Avg. Course Fee', value: '₹3,499' },
+                        { label: 'Avg. Course Fee', value: formatINR(enrollAvg) },
                         { label: 'Training Mode', value: 'Online & Offline' },
                       ].map((item, i) => (
                         <div key={i} style={{ background: 'rgba(255,255,255,0.1)', borderRadius: '10px', padding: '0.6rem 0.8rem' }}>
@@ -2794,9 +2852,9 @@ export default function Dashboard({ onSelectCourse, enrolledCourse, setEnrolledC
                                   >
                                     Edit Tracks
                                   </button>
-                                  {session?.role === 'admin' && (
+                                  {session?.role !== 'student' && (
                                     <button
-                                      onClick={() => handleDeleteStudent(s._id || s.id)}
+                                      onClick={() => handleDeleteStudent(s._id || s.id, s.accessCode, s.phone)}
                                       style={{ background: '#fef2f2', border: '1px solid #fecaca', color: '#ef4444', fontWeight: 800, cursor: 'pointer', fontSize: '0.8rem', padding: '0.35rem 0.75rem', borderRadius: '8px' }}
                                     >
                                       Delete
@@ -2962,9 +3020,9 @@ export default function Dashboard({ onSelectCourse, enrolledCourse, setEnrolledC
                                     Reset Lock
                                   </button>
                                 )}
-                                {session?.role === 'admin' && (
+                                {session?.role !== 'student' && (
                                   <button
-                                    onClick={() => handleDeleteStudent(s._id || s.id)}
+                                    onClick={() => handleDeleteStudent(s._id || s.id, s.accessCode, s.phone)}
                                     style={{ background: '#fef2f2', border: '1px solid #fecaca', color: '#ef4444', fontWeight: 800, cursor: 'pointer', fontSize: '0.78rem', padding: '0.45rem 0.6rem', borderRadius: '8px' }}
                                   >
                                     Delete

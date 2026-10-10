@@ -26,7 +26,7 @@ export interface Project {
   status: 'Live' | 'In Development' | 'Planned';
   image: string;
   liveDemoAvailable: boolean;
-  demoType?: 'stafftrack' | 'billing' | 'veegolms';
+  demoType?: 'stafftrack' | 'billing' | 'veegolms' | 'alphafly';
   workflow: WorkflowStep[];
   architectureNotes: string;
   businessOutcome: string;

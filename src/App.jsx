@@ -939,26 +939,42 @@ function App() {
                       completedLessons.includes(`${activeNode.moduleId}:${activeNode.tabId}`);
                     return (
                       <button
-                        onClick={() => toggleLessonCompletion(currentLessonKey, !isCompleted)}
+                        onClick={async () => {
+                          const nextState = !isCompleted;
+                          await toggleLessonCompletion(currentLessonKey, nextState);
+                          if (nextState) {
+                            const allTopics = (currentCourseData || []).flatMap(m =>
+                              (m.items || []).map(item => ({ moduleId: m.id, tabId: item.id, label: item.label }))
+                            );
+                            const currentIdx = allTopics.findIndex(
+                              t => t.moduleId === activeNode.moduleId && t.tabId === activeNode.tabId
+                            );
+                            if (currentIdx !== -1 && currentIdx < allTopics.length - 1) {
+                              const nextTopic = allTopics[currentIdx + 1];
+                              setActiveNode({ moduleId: nextTopic.moduleId, tabId: nextTopic.tabId });
+                              window.scrollTo({ top: 0, behavior: 'smooth' });
+                            }
+                          }
+                        }}
                         style={{
                           display: 'flex',
                           alignItems: 'center',
                           gap: '8px',
                           border: '1px solid',
-                          borderColor: isCompleted ? '#10b981' : '#cbd5e1',
-                          background: isCompleted ? '#d1fae5' : '#ffffff',
-                          color: isCompleted ? '#065f46' : '#475569',
-                          padding: '0.5rem 1rem',
+                          borderColor: isCompleted ? '#10b981' : '#2563eb',
+                          background: isCompleted ? '#d1fae5' : 'linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%)',
+                          color: isCompleted ? '#065f46' : '#ffffff',
+                          padding: '0.6rem 1.25rem',
                           borderRadius: '10px',
                           fontSize: '0.88rem',
                           fontWeight: 700,
                           cursor: 'pointer',
                           transition: 'all 0.2s ease',
-                          boxShadow: isCompleted ? '0 2px 4px rgba(16, 185, 129, 0.1)' : 'none'
+                          boxShadow: isCompleted ? '0 2px 4px rgba(16, 185, 129, 0.1)' : '0 4px 12px rgba(37, 99, 235, 0.25)'
                         }}
                       >
-                        <CheckCircle size={16} color={isCompleted ? '#10b981' : '#64748b'} fill={isCompleted ? '#ffffff' : 'transparent'} />
-                        {isCompleted ? 'Completed 🎉' : 'Mark Completed'}
+                        <CheckCircle size={16} color={isCompleted ? '#10b981' : '#ffffff'} fill={isCompleted ? '#ffffff' : 'transparent'} />
+                        {isCompleted ? 'Completed 🎉' : 'Mark Completed & Next Topic →'}
                       </button>
                     );
                   })()}

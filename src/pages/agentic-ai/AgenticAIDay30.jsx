@@ -329,7 +329,7 @@ export default function AgenticAIDay30({ onNavigate, openAITutor }) {
                   <span style={{ fontSize: '0.7rem', color: '#94a3b8', fontWeight: 700 }}>Quick Templates:</span>
                   <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
                     {['Need refund on invoice #4422', 'Server error 500 in auth log', 'How do I log in?'].map((t) => (
-                      <button key={t} onClick={() => setTicketInput(t)} disabled={isRunning} style={{ background: '#f1f5f9', border: '1px solid #cbd5e1', borderRadius: 6, padding: '3px 8px', fontSize: '0.72rem', color: '#475569', cursor: 'pointer' }} key={t}>
+                      <button key={t} onClick={() => setTicketInput(t)} disabled={isRunning} style={{ background: '#f1f5f9', border: '1px solid #cbd5e1', borderRadius: 6, padding: '3px 8px', fontSize: '0.72rem', color: '#475569', cursor: 'pointer' }}>
                         {t}
                       </button>
                     ))}

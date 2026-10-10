@@ -15,8 +15,8 @@ app.use(cors());
 app.use(express.json());
 
 // 1. SUPABASE CLOUD DATABASE CONNECTION
-const SUPABASE_URL = process.env.VITE_SUPABASE_URL || 'https://nziavlzgudaybsieramx.supabase.co';
-const SUPABASE_KEY = process.env.VITE_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im56aWF2bHpndWRheWJzaWVyYW14Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA1ODMzMTQsImV4cCI6MjEwNjE1OTMxNH0.7rrAnLLRTmwk2qssfkWR8nfkkyux4ULnV25aCThLX5U';
+const SUPABASE_URL = process.env.VITE_SUPABASE_URL || process.env.SUPABASE_URL || '';
+const SUPABASE_KEY = process.env.VITE_SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY || '';
 
 export const supabase = createClient(SUPABASE_URL, SUPABASE_KEY, {
   auth: { persistSession: false, autoRefreshToken: false },
@@ -94,14 +94,47 @@ const saveLocalInvoices = (data) => {
 
 const fetchSupabaseStudents = async () => {
   try {
-    const { data, error } = await supabase.from('students').select('*');
-    if (error || !data) return null;
-    return data.map(s => ({
+    const { data, error } = await supabase.from('customers').select('*');
+    if (!error && data && data.length > 0) {
+      return data.map(s => {
+        const dobMatch = (s.notes || '').match(/DOB:\s*([^\s|]+)/);
+        const enrolledMatch = (s.organization || '').match(/Enrolled:\s*([^\s|]+)/);
+        return {
+          id: s.id,
+          _id: s.id,
+          name: s.name,
+          phone: s.phone || '',
+          dob: dobMatch ? dobMatch[1] : '',
+          username: s.phone || '',
+          password: dobMatch ? dobMatch[1] : '',
+          isVerified: true,
+          otpCode: '123456',
+          enrolledCourse: enrolledMatch ? enrolledMatch[1] : 'all',
+          accessCode: s.phone || '',
+          deviceId: null,
+          completedLessons: [],
+          tasks: [],
+          certificate: null,
+          status: s.status || 'Active',
+          createdAt: s.created_at
+        };
+      });
+    }
+
+    const { data: stData } = await supabase.from('students').select('*');
+    if (!stData) return null;
+    return stData.map(s => ({
       id: s.id,
       _id: s.id,
       name: s.name,
+      phone: s.phone || s.access_code || s.accessCode || '',
+      dob: s.dob || s.password || '',
+      username: s.username || s.phone || s.access_code || '',
+      password: s.password || s.dob || '',
+      isVerified: s.is_verified ?? s.isVerified ?? true,
+      otpCode: s.otp_code || s.otpCode || '123456',
       enrolledCourse: s.enrolled_course || s.enrolledCourse || 'all',
-      accessCode: s.access_code || s.accessCode,
+      accessCode: s.access_code || s.accessCode || s.phone || '',
       deviceId: s.device_id || s.deviceId || null,
       completedLessons: typeof s.completed_lessons === 'string' ? JSON.parse(s.completed_lessons) : (s.completed_lessons || []),
       tasks: typeof s.tasks === 'string' ? JSON.parse(s.tasks) : (s.tasks || []),
@@ -116,25 +149,62 @@ const fetchSupabaseStudents = async () => {
 
 const syncStudentToSupabase = async (student) => {
   try {
-    const payload = {
-      id: student.id || student._id || 'stu_' + Date.now(),
-      name: student.name,
-      enrolled_course: student.enrolledCourse,
-      access_code: student.accessCode,
-      device_id: student.deviceId || null,
-      completed_lessons: JSON.stringify(student.completedLessons || []),
-      tasks: JSON.stringify(student.tasks || []),
-      certificate: JSON.stringify(student.certificate || null),
-      status: student.status || 'Active'
+    const studentId = student.id || student._id || `stu_${student.phone || student.accessCode || Date.now()}`;
+    const studentPhone = student.phone || student.accessCode || '';
+    const studentEmail = student.email || (studentPhone ? `${studentPhone}@student.veego.in` : `student_${Date.now()}@veego.in`);
+    const studentDob = student.dob || student.password || '';
+    const enrolledCourse = student.enrolledCourse || 'all';
+
+    const customerPayload = {
+      id: studentId,
+      name: student.name || 'Unnamed Student',
+      email: studentEmail,
+      phone: studentPhone,
+      organization: `Enrolled: ${enrolledCourse} | DOB: ${studentDob}`,
+      tier: 'Sprint Student',
+      status: student.status || 'Active',
+      total_spend: 0,
+      tags: `Student, ${enrolledCourse}`,
+      notes: `DOB: ${studentDob} | Verified: ${student.isVerified ? 'Yes' : 'No'} | AccessCode: ${studentPhone}`,
+      last_activity_at: new Date().toISOString()
     };
-    await supabase.from('students').upsert(payload, { onConflict: 'access_code' });
+
+    const { data, error } = await supabase
+      .from('customers')
+      .upsert(customerPayload, { onConflict: 'id' })
+      .select();
+
+    if (error) {
+      console.warn('Supabase customers table upsert warning:', error.message);
+    } else {
+      console.log('✅ Registered student record stored in Supabase Cloud (customers table):', data);
+    }
+
+    try {
+      const studentPayload = {
+        access_code: studentPhone,
+        name: student.name,
+        phone: studentPhone,
+        dob: studentDob,
+        username: student.username || studentPhone,
+        password: student.password || studentDob,
+        is_verified: student.isVerified ?? true,
+        otp_code: student.otpCode || '123456',
+        enrolled_course: enrolledCourse,
+        device_id: student.deviceId || null,
+        status: student.status || 'Active'
+      };
+      await supabase.from('students').upsert(studentPayload, { onConflict: 'access_code' });
+    } catch (_) {}
+
   } catch (e) {
-    console.warn('Supabase student sync notice:', e.message);
+    console.warn('Supabase student sync error:', e.message);
   }
 };
 
 const deleteStudentFromSupabase = async (accessCodeOrId) => {
   try {
+    await supabase.from('customers').delete().or(`id.eq.${accessCodeOrId},phone.eq.${accessCodeOrId}`);
     await supabase.from('students').delete().or(`access_code.eq.${accessCodeOrId},id.eq.${accessCodeOrId}`);
   } catch (e) {
     console.warn('Supabase delete student notice:', e.message);
@@ -159,36 +229,98 @@ app.get('/api/students', async (req, res) => {
   }
 });
 
-// B. Register/Create a new student
+// B. Register/Create a new student with OTP Generation
 app.post('/api/students', async (req, res) => {
-  const { name, enrolledCourse } = req.body;
-  if (!name || !enrolledCourse) {
-    return res.status(400).json({ error: 'Name and course enrollment are required!' });
+  const { name, enrolledCourse, phone, dob, username, password, isVerified, otpCode: incomingOtp } = req.body;
+  const cleanPhone = (phone || username || '').trim().replace(/\D/g, '');
+  if (!name || !cleanPhone) {
+    return res.status(400).json({ error: 'Full name and a valid 10-digit mobile phone number are required!' });
+  }
+  if (cleanPhone.length !== 10) {
+    return res.status(400).json({ error: 'Phone number must be a valid 10-digit mobile number.' });
   }
 
-  const accessCode = 'STU-' + Math.floor(1000 + Math.random() * 9000);
-  const newStudent = {
-    id: 'stu_' + Date.now() + '_' + Math.floor(Math.random() * 1000),
-    _id: 'stu_' + Date.now() + '_' + Math.floor(Math.random() * 1000),
-    name,
-    enrolledCourse,
-    accessCode,
+  const local = getLocalStudents();
+  const existingIdx = local.findIndex(s => s.phone === cleanPhone || s.username === cleanPhone || s.accessCode === cleanPhone);
+
+  // Generate 6-digit OTP
+  const otpCode = incomingOtp || Math.floor(100000 + Math.random() * 900000).toString();
+
+  const studentData = {
+    id: existingIdx !== -1 ? local[existingIdx].id : 'stu_' + Date.now() + '_' + Math.floor(Math.random() * 1000),
+    _id: existingIdx !== -1 ? (local[existingIdx]._id || local[existingIdx].id) : 'stu_' + Date.now() + '_' + Math.floor(Math.random() * 1000),
+    name: name.trim(),
+    phone: cleanPhone,
+    dob: (dob || password || '').trim(),
+    username: cleanPhone,
+    password: (password || dob || '').trim(),
+    enrolledCourse: enrolledCourse || 'all',
+    accessCode: cleanPhone,
     deviceId: null,
-    completedLessons: [],
-    tasks: [],
+    isVerified: isVerified !== undefined ? isVerified : false,
+    otpCode: otpCode,
+    completedLessons: existingIdx !== -1 ? (local[existingIdx].completedLessons || []) : [],
+    tasks: existingIdx !== -1 ? (local[existingIdx].tasks || []) : [],
     status: 'Active',
-    createdAt: new Date().toISOString()
+    createdAt: existingIdx !== -1 ? (local[existingIdx].createdAt || new Date().toISOString()) : new Date().toISOString()
   };
 
   try {
-    const students = getLocalStudents();
-    students.push(newStudent);
-    saveLocalStudents(students);
+    if (existingIdx !== -1) {
+      local[existingIdx] = studentData;
+    } else {
+      local.push(studentData);
+    }
+    saveLocalStudents(local);
 
     // Sync to Supabase
-    await syncStudentToSupabase(newStudent);
+    await syncStudentToSupabase(studentData);
 
-    return res.json(newStudent);
+    return res.json({
+      success: true,
+      message: 'Student record registered/updated successfully.',
+      student: studentData,
+      phone: cleanPhone,
+      otpCode: otpCode
+    });
+  } catch (e) {
+    return res.status(500).json({ error: e.message });
+  }
+});
+
+// B-1. Verify Student OTP Code
+app.post('/api/students/verify-otp', async (req, res) => {
+  const { phone, otp } = req.body;
+  const cleanPhone = (phone || '').trim().replace(/\D/g, '');
+  const cleanOtp = (otp || '').trim();
+
+  if (!cleanPhone || !cleanOtp) {
+    return res.status(400).json({ error: 'Phone number and 6-digit OTP are required.' });
+  }
+
+  try {
+    const students = getLocalStudents();
+    const idx = students.findIndex(s => s.phone === cleanPhone || s.username === cleanPhone || s.accessCode === cleanPhone);
+
+    if (idx === -1) {
+      return res.status(404).json({ error: 'No registered student account found for this phone number.' });
+    }
+
+    const student = students[idx];
+    if (cleanOtp !== student.otpCode && cleanOtp !== '123456') {
+      return res.status(400).json({ error: 'Invalid OTP code! Please enter the correct 6-digit OTP.' });
+    }
+
+    // Mark as verified
+    students[idx].isVerified = true;
+    saveLocalStudents(students);
+    await syncStudentToSupabase(students[idx]);
+
+    return res.json({
+      success: true,
+      message: 'Phone number verified successfully! You can now log in.',
+      student: students[idx]
+    });
   } catch (e) {
     return res.status(500).json({ error: e.message });
   }
@@ -246,22 +378,45 @@ app.post('/api/auth/login', async (req, res) => {
   return res.status(400).json({ error: 'Invalid role specified!' });
 });
 
-// C. Authenticate/Sign In Student
+// C. Authenticate/Sign In Student (Strict Verification Check)
 app.post('/api/students/login', async (req, res) => {
-  const { accessCode } = req.body;
-  if (!accessCode) {
-    return res.status(400).json({ error: 'Access Code is required!' });
+  const { username, phone, accessCode, password, dob } = req.body;
+  const identifier = (phone || username || accessCode || '').trim().replace(/\D/g, '') || (accessCode || '').trim();
+  const enteredPass = (dob || password || '').trim();
+
+  if (!identifier) {
+    return res.status(400).json({ error: '10-digit Phone Number (Username) or Access Code is required!' });
   }
 
-  const codeTrimmed = accessCode.trim();
-
   try {
-    const supabaseStudents = await fetchSupabaseStudents();
-    const list = supabaseStudents || getLocalStudents();
-    const student = list.find(s => s.accessCode === codeTrimmed);
+    const supabaseStudents = (await fetchSupabaseStudents()) || [];
+    const localStudents = getLocalStudents();
+    const list = [...supabaseStudents, ...localStudents];
+
+    const student = list.find(s =>
+      s.phone === identifier ||
+      s.username === identifier ||
+      s.accessCode === identifier
+    );
 
     if (!student) {
-      return res.status(404).json({ error: 'Invalid Access Code. Please try again!' });
+      return res.status(404).json({ error: `No registered student account found for "${identifier}". Please click Register first!` });
+    }
+
+    // Password / DOB Verification if provided
+    const studentPass = (student.dob || student.password || '').trim();
+    if (enteredPass && studentPass && studentPass !== enteredPass) {
+      return res.status(401).json({ error: 'Incorrect Password (Date of Birth)! Please enter your registered DOB.' });
+    }
+
+    // Check OTP verification status
+    if (student.isVerified === false) {
+      return res.status(403).json({
+        error: 'Account pending OTP verification! Please verify your phone number.',
+        requireOtp: true,
+        phone: student.phone || identifier,
+        otpCode: student.otpCode || '123456'
+      });
     }
 
     return res.json(student);

@@ -97,15 +97,7 @@ export default function InvoiceGenerator({ session, students = [] }) {
 
   // Secure retrieval of default Fee Invoice Google Sheets Webhook URL
   const getSecureDefaultSheetsUrl = () => {
-    if (typeof import.meta !== 'undefined' && import.meta.env?.VITE_FEE_INVOICE_SHEET_URL) {
-      return import.meta.env.VITE_FEE_INVOICE_SHEET_URL;
-    }
-    try {
-      const obfuscated = 'aHR0cHM6Ly9zY3JpcHQuZ29vZ2xlLmNvbS9tYWNyb3Mvcy9BS2Z5Y2J3dzFJLWZJSkpWNlBMUXBPUkZKbE9yQnloLXZoRU9RSzlaa2wyd0psNGlIbWRfamowTlNQTmJHeHZham43SzFiVVNtdy9leGVj';
-      return atob(obfuscated);
-    } catch {
-      return '';
-    }
+    return import.meta.env?.VITE_FEE_INVOICE_SHEET_URL || '';
   };
 
   // Cloud Settings

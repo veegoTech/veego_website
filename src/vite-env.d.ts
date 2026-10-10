@@ -3,6 +3,8 @@
 interface ImportMetaEnv {
   readonly VITE_SUPABASE_URL: string;
   readonly VITE_SUPABASE_ANON_KEY: string;
+  readonly VITE_FEE_INVOICE_SHEET_URL: string;
+  readonly VITE_RAZORPAY_KEY_ID: string;
 }
 
 interface ImportMeta {
@@ -28,6 +30,9 @@ declare module '*.svg' {
   const value: string;
   export default value;
 }
+
+declare module 'canvas-confetti';
+
 
 declare module '*.webp' {
   const value: string;

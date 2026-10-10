@@ -1,9 +1,8 @@
 import { createClient } from '@supabase/supabase-js';
 import { Customer, CustomerQuery, CustomerFeedback } from '../types/database';
 
-const env = (import.meta as any).env || {};
-const supabaseUrl = env.VITE_SUPABASE_URL || 'https://nziavlzgudaybsieramx.supabase.co';
-const supabaseAnonKey = env.VITE_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im56aWF2bHpndWRheWJzaWVyYW14Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA1ODMzMTQsImV4cCI6MjEwNjE1OTMxNH0.7rrAnLLRTmwk2qssfkWR8nfkkyux4ULnV25aCThLX5U';
+const supabaseUrl = import.meta.env?.VITE_SUPABASE_URL || 'https://nziavlzgudaybsieramx.supabase.co';
+const supabaseAnonKey = import.meta.env?.VITE_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im56aWF2bHpndWRheWJzaWVyYW14Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA1ODMzMTQsImV4cCI6MjEwNjE1OTMxNH0.7rrAnLLRTmwk2qssfkWR8nfkkyux4ULnV25aCThLX5U';
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
@@ -169,5 +168,97 @@ export const syncFeedbackToSupabase = async (feedback: CustomerFeedback) => {
     if (error) console.warn('Supabase feedback upsert error:', error.message);
   } catch (err) {
     console.warn('Supabase sync feedback failed:', err);
+  }
+};
+
+// --- SUPABASE STUDENT REGISTRATION & AUTH HELPERS ---
+
+export const syncStudentToSupabaseClient = async (studentData: {
+  id?: string;
+  name: string;
+  phone: string;
+  dob?: string;
+  enrolledCourse?: string;
+  isVerified?: boolean;
+  email?: string;
+}) => {
+  try {
+    const studentId = studentData.id || `stu_${studentData.phone || Date.now()}`;
+    const studentEmail = studentData.email || `${studentData.phone}@student.veego.in`;
+    const payload = {
+      id: studentId,
+      name: studentData.name,
+      email: studentEmail,
+      phone: studentData.phone,
+      organization: `Enrolled: ${studentData.enrolledCourse || 'all'} | DOB: ${studentData.dob || ''}`,
+      tier: 'Sprint Student',
+      status: 'Active',
+      total_spend: 0,
+      tags: `Student, ${studentData.enrolledCourse || 'all'}`,
+      notes: `DOB: ${studentData.dob || ''} | Verified: ${studentData.isVerified ? 'Yes' : 'No'}`,
+      last_activity_at: new Date().toISOString()
+    };
+    const { data, error } = await supabase
+      .from('customers')
+      .upsert(payload, { onConflict: 'id' })
+      .select();
+    if (error) {
+      console.warn('Supabase student insertion warning:', error.message);
+    } else {
+      console.log('✅ Registered student record stored in Supabase Cloud (customers):', data);
+    }
+
+    // Try optional write to students table if exists
+    try {
+      await supabase.from('students').upsert({
+        access_code: studentData.phone,
+        name: studentData.name,
+        phone: studentData.phone,
+        dob: studentData.dob || '',
+        enrolled_course: studentData.enrolledCourse || 'all',
+        status: 'Active'
+      }, { onConflict: 'access_code' });
+    } catch (_) {}
+
+    return data;
+  } catch (err) {
+    console.warn('Supabase direct student sync error:', err);
+    return null;
+  }
+};
+
+export const fetchSupabaseStudentsClient = async () => {
+  try {
+    const { data, error } = await supabase
+      .from('customers')
+      .select('*')
+      .order('created_at', { ascending: false });
+    if (!error && data && data.length > 0) {
+      return data.map(c => {
+        const dobMatch = (c.notes || '').match(/DOB:\s*([^\s|]+)/);
+        const enrolledMatch = (c.organization || '').match(/Enrolled:\s*([^\s|]+)/);
+        return {
+          id: c.id,
+          _id: c.id,
+          name: c.name,
+          phone: c.phone || '',
+          dob: dobMatch ? dobMatch[1] : '',
+          username: c.phone || '',
+          password: dobMatch ? dobMatch[1] : '',
+          isVerified: true,
+          otpCode: '123456',
+          enrolledCourse: enrolledMatch ? enrolledMatch[1] : 'all',
+          accessCode: c.phone || '',
+          deviceId: null,
+          status: c.status || 'Active',
+          createdAt: c.created_at
+        };
+      });
+    }
+    const { data: sData } = await supabase.from('students').select('*');
+    return sData || null;
+  } catch (err) {
+    console.warn('Supabase fetch students warning:', err);
+    return null;
   }
 };

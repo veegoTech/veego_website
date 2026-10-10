@@ -3,7 +3,8 @@ import {
   Menu,
   X,
   ArrowRight,
-  Building2
+  Building2,
+  LogIn
 } from 'lucide-react';
 import logoImg from '../assets/logo.png';
 
@@ -77,11 +78,18 @@ export const Navbar: React.FC<NavbarProps> = ({ currentPath, onNavigate, onOpenL
             })}
           </nav>
 
-          {/* Right Action Button: Tell Us Your Problem */}
-          <div className="hidden sm:flex items-center gap-3">
+          {/* Right Action Buttons: Login & Tell Us Your Problem */}
+          <div className="hidden sm:flex items-center gap-2.5">
+            <button
+              onClick={() => onOpenLoginModal?.()}
+              className="px-4 py-2 text-xs sm:text-sm font-bold rounded-full border border-blue-600 text-blue-600 hover:bg-blue-50 transition-all flex items-center gap-1.5 cursor-pointer shadow-2xs"
+            >
+              <LogIn className="w-4 h-4" />
+              <span>Login</span>
+            </button>
             <button
               onClick={() => onNavigate('/contact')}
-              className="px-6 py-2.5 text-xs sm:text-sm font-bold rounded-full bg-blue-600 hover:bg-blue-700 text-white transition-all shadow-md hover:shadow-lg flex items-center gap-2 cursor-pointer group"
+              className="px-5 py-2 text-xs sm:text-sm font-bold rounded-full bg-blue-600 hover:bg-blue-700 text-white transition-all shadow-md hover:shadow-lg flex items-center gap-2 cursor-pointer group"
             >
               <span className="text-white">Tell Us Your Problem</span>
               <ArrowRight className="w-4 h-4 text-white transition-transform group-hover:translate-x-0.5" />
@@ -91,10 +99,11 @@ export const Navbar: React.FC<NavbarProps> = ({ currentPath, onNavigate, onOpenL
           {/* Mobile Menu Hamburger Button */}
           <div className="flex items-center md:hidden gap-2">
             <button
-              onClick={() => onNavigate('/contact')}
-              className="px-3.5 py-1.5 text-xs font-bold rounded-full bg-blue-600 text-white"
+              onClick={() => onOpenLoginModal?.()}
+              className="px-3 py-1.5 text-xs font-bold rounded-full border border-blue-600 text-blue-600 hover:bg-blue-50 flex items-center gap-1"
             >
-              Solve Problem
+              <LogIn className="w-3.5 h-3.5" />
+              <span>Login</span>
             </button>
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -133,6 +142,16 @@ export const Navbar: React.FC<NavbarProps> = ({ currentPath, onNavigate, onOpenL
           </div>
 
           <div className="pt-3 border-t border-slate-100 flex flex-col gap-2">
+            <button
+              onClick={() => {
+                setMobileMenuOpen(false);
+                onOpenLoginModal?.();
+              }}
+              className="w-full py-2.5 px-4 rounded-full border border-blue-600 text-blue-600 font-bold text-xs flex items-center justify-center gap-2"
+            >
+              <LogIn className="w-4 h-4" />
+              <span>Login / Register</span>
+            </button>
             <button
               onClick={() => {
                 setMobileMenuOpen(false);
