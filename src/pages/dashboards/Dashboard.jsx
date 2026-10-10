@@ -2106,31 +2106,7 @@ export default function Dashboard({ onSelectCourse, enrolledCourse, setEnrolledC
                 </div>
               </div>
 
-              {/* ═══════════════════ QUICK ACTIONS ═══════════════════ */}
-              <div style={{ background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: '24px', padding: '2rem', boxShadow: '0 4px 20px rgba(0,0,0,0.05)' }}>
-                <h3 style={{ margin: '0 0 1.25rem 0', fontSize: '1.05rem', fontWeight: 900, color: '#0f172a' }}>⚡ Quick Actions</h3>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '1rem' }}>
-                  {[
-                    { label: 'Enroll Student', desc: 'Add new student record', icon: '➕', color: '#3b82f6', tab: 'register' },
-                    { label: 'Live Database', desc: 'View all student records', icon: '🗄️', color: '#8b5cf6', tab: 'database' },
-                    { label: 'Review Tasks', desc: 'Grade submissions', icon: '✅', color: '#10b981', tab: 'grading' },
-                    { label: 'Course Catalog', desc: 'Browse & launch courses', icon: '📚', color: '#f59e0b', tab: 'courses' },
-                    { label: 'Fee Invoices', desc: 'Generate invoices', icon: '🧾', color: '#ec4899', tab: 'invoices' },
-                    { label: 'Certificates', desc: 'Upload certificates', icon: '🏆', color: '#06b6d4', tab: 'certificates' },
-                  ].map((action, i) => (
-                    <div key={i}
-                      onClick={() => setActiveTab(action.tab)}
-                      style={{ background: action.color + '0d', border: `1.5px solid ${action.color}33`, borderRadius: '16px', padding: '1.25rem', cursor: 'pointer', transition: 'all 0.2s' }}
-                      onMouseEnter={e => { e.currentTarget.style.background = action.color + '1a'; e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = `0 8px 20px ${action.color}22`; }}
-                      onMouseLeave={e => { e.currentTarget.style.background = action.color + '0d'; e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none'; }}
-                    >
-                      <div style={{ fontSize: '1.6rem', marginBottom: '0.5rem' }}>{action.icon}</div>
-                      <div style={{ fontSize: '0.9rem', fontWeight: 800, color: '#0f172a' }}>{action.label}</div>
-                      <div style={{ fontSize: '0.72rem', color: '#64748b', marginTop: '0.2rem' }}>{action.desc}</div>
-                    </div>
-                  ))}
-                </div>
-              </div>
+
 
             </div>
           );
