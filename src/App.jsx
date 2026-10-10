@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, CheckCircle, Send } from 'lucide-react';
+import { Menu, CheckCircle, Send, Lock } from 'lucide-react';
 import Sidebar from './components/Sidebar';
 import Dashboard from './pages/dashboards/Dashboard';
 
