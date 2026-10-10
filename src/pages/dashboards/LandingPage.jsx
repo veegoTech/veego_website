@@ -851,12 +851,17 @@ export default function LandingPage({ onLoginSuccess }) {
                     onChange={(e) => setRegCourse(e.target.value)}
                     className="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white font-medium"
                   >
-                    <option value="all"> All Courses & Bootcamps (Full Access)</option>
-                    <option value="web_design_20days">Web Design & HTML/CSS (20 Days)</option>
-                    <option value="python_fullstack">Python Full-Stack & GenAI</option>
-                    <option value="sql_da">SQL & Data Analytics</option>
-                    <option value="agentic_ai">Agentic AI & LLMs</option>
-                    <option value="tally_prime">Tally Prime & GST Billing</option>
+                    <option value="all">🌟 All Courses & Bootcamps (Full Access)</option>
+                    <option value="web_design_20days">🎨 AI-Powered Web Design (20 Days)</option>
+                    <option value="html_css">🌐 HTML, CSS & Bootstrap</option>
+                    <option value="python_course">🐍 Core Python & OOPs</option>
+                    <option value="python_da">📊 Python for Data Analytics</option>
+                    <option value="sql">🗄️ Databases & SQL (Full Stack)</option>
+                    <option value="sql_da">📈 SQL for Data Analytics</option>
+                    <option value="generative_ai_course">🤖 Generative AI</option>
+                    <option value="agentic_ai">⚡ Agentic AI Development</option>
+                    <option value="summer_sql">☀️ Summer SQL</option>
+                    <option value="tally_prime">💼 AI powered Tally</option>
                   </select>
                 </div>
 

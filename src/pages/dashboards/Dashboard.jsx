@@ -133,25 +133,10 @@ const availableCourseOptions = [
   { value: "sql_da", label: "SQL for Data Analytics" },
   { value: "python_course", label: "Core Python & OOPs" },
   { value: "python_da", label: "Python for Data Analytics" },
-  { value: "javascript_course", label: "AI-Powered JavaScript" },
   { value: "generative_ai_course", label: "Generative AI" },
   { value: "agentic_ai", label: "Agentic AI Development" },
   { value: "summer_sql", label: "Summer SQL" },
-  { value: "powerbi", label: "Power BI Data Analytics" },
-  { value: "react_course", label: "AI-Powered React JS" },
-  { value: "git_github", label: "Git & GitHub" },
-  { value: "json_course", label: "JSON Essentials" },
-  { value: "django_course", label: "Django Framework" },
-  { value: "devops", label: "DevOps Framework" },
-  { value: "stats_course", label: "Statistics for Data Analytics" },
-  { value: "numpy_course", label: "NumPy for Data Science" },
-  { value: "pandas_course", label: "Pandas for Data Science" },
-  { value: "matplotlib_course", label: "Matplotlib for Data Science" },
-  { value: "seaborn_course", label: "Seaborn for Data Science" },
-  { value: "core_js", label: "Core JavaScript" },
-  { value: "tally_prime", label: "AI powered Tally" },
-  { value: "spoko_story", label: "Story-Based Learning (Spoko English)" },
-  { value: "spoko_pro", label: "Professional Track (Soft Skills)" }
+  { value: "tally_prime", label: "AI powered Tally" }
 ];
 
 function getCourseLabel(courseKey) {
