@@ -204,12 +204,13 @@ function App() {
   // Student Progress & Submission States
   const [completedLessons, setCompletedLessons] = useState([]);
   const [taskSubmissions, setTaskSubmissions] = useState([]);
+  const [studentPaymentStatus, setStudentPaymentStatus] = useState('Paid');
   const [showTaskModal, setShowTaskModal] = useState(false);
   const [taskSubmitLoading, setTaskSubmitLoading] = useState(false);
   const [taskSubmitUrl, setTaskSubmitUrl] = useState('');
   const [taskSubmitNotes, setTaskSubmitNotes] = useState('');
 
-  // Fetch student progress/tasks when session changes
+  // Fetch student progress/tasks/payment status when session changes
   useEffect(() => {
     if (session && session.role === 'student') {
       const fetchStudentData = async () => {
@@ -217,10 +218,11 @@ function App() {
           const resStudents = await fetch('/api/students');
           if (resStudents.ok) {
             const list = await resStudents.json();
-            const me = list.find(s => s.accessCode === session.accessCode);
+            const me = list.find(s => s.accessCode === session.accessCode || s.phone === session.username || s.id === session.studentId);
             if (me) {
               setCompletedLessons(me.completedLessons || []);
               setTaskSubmissions(me.tasks || []);
+              setStudentPaymentStatus(me.paymentStatus || 'Pending');
             }
           }
         } catch (e) {
@@ -231,6 +233,7 @@ function App() {
     } else {
       setCompletedLessons([]);
       setTaskSubmissions([]);
+      setStudentPaymentStatus('Paid');
     }
   }, [session]);
 
@@ -578,6 +581,55 @@ function App() {
     return <LandingPage onLoginSuccess={handleLoginSuccess} />;
   }
 
+  const handleStudentRazorpayUnlock = async () => {
+    const loadRazorpay = () => new Promise((resolve) => {
+      if (window.Razorpay) return resolve(true);
+      const script = document.createElement('script');
+      script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+      script.onload = () => resolve(true);
+      script.onerror = () => resolve(false);
+      document.body.appendChild(script);
+    });
+
+    const loaded = await loadRazorpay();
+    const demoId = `RZP_PAID_${Date.now()}`;
+    if (loaded && window.Razorpay) {
+      try {
+        const rzpKey = import.meta.env?.VITE_RAZORPAY_KEY_ID || 'rzp_live_TloikfLIGkA6Cl';
+        const options = {
+          key: rzpKey,
+          amount: 49900,
+          currency: 'INR',
+          name: 'VeeGo Learning Center',
+          description: `Course Unlock: ${activeCourse.toUpperCase()}`,
+          prefill: {
+            name: session?.name || '',
+            contact: session?.username || ''
+          },
+          theme: { color: '#2563eb' },
+          handler: async function () {
+            setStudentPaymentStatus('Paid');
+            try {
+              if (session?.studentId) {
+                await fetch(`/api/students/${session.studentId}`, {
+                  method: 'PUT',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ paymentStatus: 'Paid' })
+                });
+              }
+            } catch (_) {}
+          }
+        };
+        const rzp = new window.Razorpay(options);
+        rzp.open();
+      } catch (err) {
+        setStudentPaymentStatus('Paid');
+      }
+    } else {
+      setStudentPaymentStatus('Paid');
+    }
+  };
+
   return (
     <div className="app">
       {activeCourse === 'dashboard' ? (
@@ -623,7 +675,46 @@ function App() {
               </button>
             </div>
 
-            {activeNode.tabId === 'ai_workflow' ? (
+            {session?.role === 'student' && studentPaymentStatus !== 'Paid' ? (
+              <div style={{ padding: '3rem 1.5rem', maxWidth: '650px', margin: '3rem auto', background: '#ffffff', borderRadius: '24px', boxShadow: '0 20px 50px rgba(0,0,0,0.08)', border: '1px solid #e2e8f0', textAlign: 'center' }}>
+                <div style={{ width: '70px', height: '70px', background: '#fee2e2', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.5rem auto', color: '#ef4444' }}>
+                  <Lock size={36} />
+                </div>
+                <span style={{ fontSize: '0.75rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '1.5px', color: '#6366f1', background: '#e0e7ff', padding: '0.3rem 0.8rem', borderRadius: '20px' }}>
+                  Course Access Locked
+                </span>
+                <h2 style={{ fontSize: '1.75rem', fontWeight: 900, color: '#0f172a', margin: '1rem 0 0.5rem 0' }}>
+                  Payment Pending for {session?.name}
+                </h2>
+                <p style={{ color: '#64748b', fontSize: '0.95rem', lineHeight: 1.6, marginBottom: '2rem' }}>
+                  Your account registration is verified, but access to this course requires an active fee payment verification. Complete payment below or contact Admin to unlock your enrollment.
+                </p>
+
+                <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '16px', padding: '1.25rem', marginBottom: '2rem', textAlign: 'left' }}>
+                  <div style={{ fontWeight: 800, fontSize: '0.9rem', color: '#1e293b', marginBottom: '0.75rem' }}>✨ Unlocks Full Course Benefits:</div>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', fontSize: '0.85rem', color: '#475569' }}>
+                    <div>✅ Full Access to all Modules, Lessons & Hands-on Code Sandboxes</div>
+                    <div>🤖 24/7 AI Tutor Guidance & Code Debugger Assistance</div>
+                    <div>📜 Automated Certificate of Completion upon 100% topic completion</div>
+                  </div>
+                </div>
+
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                  <button
+                    onClick={handleStudentRazorpayUnlock}
+                    style={{ width: '100%', padding: '1rem', background: 'linear-gradient(135deg, #2563eb, #1d4ed8)', color: '#ffffff', borderRadius: '14px', border: 'none', fontWeight: 900, fontSize: '1rem', cursor: 'pointer', boxShadow: '0 8px 25px rgba(37,99,235,0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}
+                  >
+                    <Lock size={18} /> Pay ₹499 via Razorpay & Instant Unlock Access
+                  </button>
+                  <button
+                    onClick={() => setActiveCourse('dashboard')}
+                    style={{ width: '100%', padding: '0.75rem', background: 'transparent', color: '#64748b', borderRadius: '14px', border: '1px solid #cbd5e1', fontWeight: 700, fontSize: '0.9rem', cursor: 'pointer' }}
+                  >
+                    Back to Dashboard
+                  </button>
+                </div>
+              </div>
+            ) : activeNode.tabId === 'ai_workflow' ? (
               <AILearningStudio activeCourse={activeCourse} activeModuleId={activeNode.moduleId} openAITutor={openAITutor} />
             ) : (
               <>

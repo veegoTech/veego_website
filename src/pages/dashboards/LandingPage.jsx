@@ -362,6 +362,7 @@ export default function LandingPage({ onLoginSuccess }) {
       enrolledCourse: regCourse || 'all',
       accessCode: cleanPhone,
       isVerified: false,
+      paymentStatus: 'Pending',
       otpCode: generatedOtp,
       createdAt: new Date().toISOString()
     };

@@ -627,20 +627,19 @@ app.delete('/api/students/:id', async (req, res) => {
   }
 });
 
-// D-2. Update student courses
+// D-2. Update student courses & payment status
 app.put('/api/students/:id', async (req, res) => {
   const { id } = req.params;
-  const { enrolledCourse } = req.body;
-  if (!enrolledCourse) {
-    return res.status(400).json({ error: 'enrolledCourse is required!' });
-  }
+  const { enrolledCourse, paymentStatus } = req.body;
 
   try {
     const students = getLocalStudents();
     const idx = students.findIndex(s => s.id === id || s._id === id || s.accessCode === id.trim());
     if (idx === -1) return res.status(404).json({ error: 'Student not found!' });
 
-    students[idx].enrolledCourse = enrolledCourse;
+    if (enrolledCourse) students[idx].enrolledCourse = enrolledCourse;
+    if (paymentStatus) students[idx].paymentStatus = paymentStatus;
+
     saveLocalStudents(students);
 
     await syncStudentToSupabase(students[idx]);
