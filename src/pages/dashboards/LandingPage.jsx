@@ -384,16 +384,6 @@ export default function LandingPage({ onLoginSuccess }) {
     setOtpSuccessMsg('');
     setIsLoading(false);
 
-    // Auto-launch WhatsApp dispatch immediately upon registration submit
-    try {
-      const waUrl = `https://wa.me/91${cleanPhone}?text=${encodeURIComponent(
-        `Your Veego LMS verification OTP code is: ${generatedOtp}`
-      )}`;
-      window.open(waUrl, '_blank');
-    } catch (e) {
-      console.warn('WhatsApp auto-open popup notice:', e);
-    }
-
     // Switch to OTP verification tab
     setActiveTab('otp');
   };
@@ -695,53 +685,37 @@ export default function LandingPage({ onLoginSuccess }) {
 
             {/* 1. FIRST-TIME OTP VERIFICATION FORM */}
             {activeTab === 'otp' ? (
-              <form onSubmit={handleOtpSubmit} className="space-y-4">
-                <div className="bg-emerald-50 border border-emerald-200/90 rounded-xl p-3.5 text-xs text-emerald-950 leading-relaxed space-y-2">
-                  <div className="font-bold flex items-center gap-1.5 text-emerald-800">
-                    <MessageCircle className="w-4 h-4 text-emerald-600 shrink-0" />
-                    <span>WhatsApp OTP Dispatched</span>
-                  </div>
-                  <div>
-                    We automatically opened WhatsApp to send the 6-digit verification code to <strong>+91 {otpPhone}</strong>. Please check your WhatsApp and enter the code below.
-                  </div>
-                  <div className="pt-1 flex items-center justify-between text-[11px] text-emerald-800 border-t border-emerald-200/60">
-                    <span>Didn't receive or accidentally closed it?</span>
-                    <a
-                      href={`https://wa.me/91${(otpPhone || '').replace(/\D/g, '')}?text=${encodeURIComponent(
-                        `Your Veego LMS verification OTP code is: ${otpHint}`
-                      )}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="font-bold text-emerald-700 hover:underline cursor-pointer flex items-center gap-1"
-                    >
-                      <MessageCircle className="w-3.5 h-3.5" /> Re-open WhatsApp
-                    </a>
-                  </div>
+              <form onSubmit={handleOtpSubmit} className="space-y-4 py-2">
+                <div className="text-center space-y-1 mb-2">
+                  <h3 className="text-lg font-bold text-slate-800">OTP Verification</h3>
+                  <p className="text-xs font-semibold text-emerald-600">
+                    Your OTP has been sent to your mobile number (+91 {otpPhone})
+                  </p>
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1 text-center">
+                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5 text-center">
                     Enter 6-Digit OTP Code
                   </label>
                   <input
                     type="text"
                     value={otpInput}
                     onChange={(e) => setOtpInput(e.target.value.replace(/\D/g, ''))}
-                    placeholder="e.g. 123456"
+                    placeholder="• • • • • •"
                     maxLength={6}
                     required
-                    className="w-full text-center text-lg tracking-widest font-extrabold py-2.5 bg-slate-50 border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white"
+                    className="w-full text-center text-xl tracking-widest font-extrabold py-3 bg-slate-50 border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white"
                   />
                 </div>
 
                 {errorMsg && (
-                  <div className="text-red-600 text-xs font-bold bg-red-50 p-2.5 rounded-xl border border-red-200">
+                  <div className="text-red-600 text-xs font-bold bg-red-50 p-2.5 rounded-xl border border-red-200 text-center">
                     ⚠️ {errorMsg}
                   </div>
                 )}
 
                 {otpSuccessMsg && (
-                  <div className="text-emerald-700 text-xs font-bold bg-emerald-50 p-3 rounded-xl border border-emerald-200 flex items-center gap-2">
+                  <div className="text-emerald-700 text-xs font-bold bg-emerald-50 p-3 rounded-xl border border-emerald-200 flex items-center justify-center gap-2">
                     <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
                     <span>{otpSuccessMsg}</span>
                   </div>
@@ -753,7 +727,7 @@ export default function LandingPage({ onLoginSuccess }) {
                   className="w-full py-3 px-4 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
                 >
                   <ShieldCheck className="w-4 h-4" />
-                  <span>{isLoading ? 'Verifying OTP...' : 'Verify OTP & Enable Login'}</span>
+                  <span>{isLoading ? 'Verifying OTP...' : 'Submit'}</span>
                 </button>
 
                 <div className="pt-2 border-t border-slate-100 flex justify-between items-center text-xs">
