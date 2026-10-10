@@ -697,8 +697,13 @@ export default function LandingPage({ onLoginSuccess }) {
                 </div>
 
                 {otpHint && (
-                  <div className="bg-amber-50 border border-amber-200 rounded-xl p-2.5 text-center text-xs font-semibold text-amber-900">
-                    🔑 Verification OTP Code: <span className="font-extrabold text-amber-700 text-sm tracking-wider">{otpHint}</span>
+                  <div className="bg-amber-50 border border-amber-200 rounded-xl p-3 text-center text-xs font-semibold text-amber-900 leading-relaxed">
+                    <div className="font-extrabold text-amber-950 mb-0.5">
+                      🔑 Dev Simulation Mode: Your OTP Code is <span className="text-amber-700 text-sm font-black underline">{otpHint}</span>
+                    </div>
+                    <div className="text-[11px] text-amber-800 opacity-90">
+                      (No SMS Gateway API key configured in Vercel/env. Click Auto-fill below to verify instantly!)
+                    </div>
                   </div>
                 )}
 
