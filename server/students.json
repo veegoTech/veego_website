@@ -1,1 +1,21 @@
-[]
+[
+  {
+    "completedLessons": [],
+    "tasks": [],
+    "certificate": null,
+    "id": "stu_1791644353564_250",
+    "_id": "stu_1791644353565_321",
+    "name": "Kousalya",
+    "phone": "8939242576",
+    "dob": "1988-12-22",
+    "username": "8939242576",
+    "password": "1988-12-22",
+    "enrolledCourse": "web_design_20days,python_course",
+    "accessCode": "8939242576",
+    "deviceId": null,
+    "isVerified": true,
+    "otpCode": "159489",
+    "status": "Active",
+    "createdAt": "2026-10-10T14:59:13.565Z"
+  }
+]

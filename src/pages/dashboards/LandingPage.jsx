@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
-  X, Key, ShieldAlert, LogIn, Sparkles, Building2, UserCheck, Lock, UserPlus, Phone, Calendar, User, CheckCircle2, ShieldCheck
+  X, Key, ShieldAlert, LogIn, Sparkles, Building2, UserCheck, Lock, UserPlus, Phone, Calendar, User, CheckCircle2, ShieldCheck, MessageCircle
 } from 'lucide-react';
 
 import { Navbar } from '../../components/Navbar';
@@ -697,12 +697,25 @@ export default function LandingPage({ onLoginSuccess }) {
                 </div>
 
                 {otpHint && (
-                  <div className="bg-amber-50 border border-amber-200 rounded-xl p-3 text-center text-xs font-semibold text-amber-900 leading-relaxed">
-                    <div className="font-extrabold text-amber-950 mb-0.5">
-                      🔑 Dev Simulation Mode: Your OTP Code is <span className="text-amber-700 text-sm font-black underline">{otpHint}</span>
+                  <div className="bg-amber-50 border border-amber-200 rounded-xl p-3.5 text-center text-xs font-semibold text-amber-900 leading-relaxed space-y-2">
+                    <div className="font-extrabold text-amber-950">
+                      🔑 Your Verification OTP Code: <span className="text-emerald-700 text-base font-black underline bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">{otpHint}</span>
                     </div>
-                    <div className="text-[11px] text-amber-800 opacity-90">
-                      (No SMS Gateway API key configured in Vercel/env. Click Auto-fill below to verify instantly!)
+
+                    <a
+                      href={`https://wa.me/91${(otpPhone || '').replace(/\D/g, '')}?text=${encodeURIComponent(
+                        `Your Veego LMS verification OTP code is: ${otpHint || '123456'}`
+                      )}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-full py-2.5 px-3 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow transition-all flex items-center justify-center gap-2 cursor-pointer no-underline"
+                    >
+                      <MessageCircle className="w-4 h-4 shrink-0 text-emerald-100" />
+                      <span>Send OTP to +91 {otpPhone} via WhatsApp (100% Free)</span>
+                    </a>
+
+                    <div className="text-[11px] text-amber-800 opacity-90 pt-1">
+                      (Twilio is paid — WhatsApp deep-linking is 100% free with zero cost or key setup!)
                     </div>
                   </div>
                 )}
