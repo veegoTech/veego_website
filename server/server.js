@@ -230,6 +230,62 @@ app.get('/api/students', async (req, res) => {
   }
 });
 
+const sendSmsOtp = async (phone, otpCode) => {
+  const cleanPhone = (phone || '').replace(/\D/g, '');
+  if (!cleanPhone || cleanPhone.length !== 10) return false;
+
+  // 1. Fast2SMS (Indian SMS Gateway)
+  if (process.env.FAST2SMS_API_KEY) {
+    try {
+      const response = await fetch('https://www.fast2sms.com/dev/bulkV2', {
+        method: 'POST',
+        headers: {
+          'authorization': process.env.FAST2SMS_API_KEY,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          route: 'otp',
+          variables_values: otpCode,
+          numbers: cleanPhone
+        })
+      });
+      const data = await response.json();
+      console.log(`📱 Fast2SMS OTP dispatch response for +91${cleanPhone}:`, data);
+      return true;
+    } catch (err) {
+      console.warn('Fast2SMS dispatch error:', err.message);
+    }
+  }
+
+  // 2. Twilio SMS Gateway
+  if (process.env.TWILIO_ACCOUNT_SID && process.env.TWILIO_AUTH_TOKEN && process.env.TWILIO_PHONE_NUMBER) {
+    try {
+      const url = `https://api.twilio.com/2010-04-01/Accounts/${process.env.TWILIO_ACCOUNT_SID}/Messages.json`;
+      const body = new URLSearchParams({
+        To: `+91${cleanPhone}`,
+        From: process.env.TWILIO_PHONE_NUMBER,
+        Body: `Your VeeGo LMS verification code is ${otpCode}.`
+      });
+      const auth = Buffer.from(`${process.env.TWILIO_ACCOUNT_SID}:${process.env.TWILIO_AUTH_TOKEN}`).toString('base64');
+      await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Basic ${auth}`,
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: body.toString()
+      });
+      console.log(`📱 Twilio SMS OTP dispatched to +91${cleanPhone}`);
+      return true;
+    } catch (err) {
+      console.warn('Twilio SMS dispatch error:', err.message);
+    }
+  }
+
+  console.log(`ℹ️ SMS Gateway key not configured. Simulating OTP ${otpCode} for +91${cleanPhone}.`);
+  return false;
+};
+
 // B. Register/Create a new student with OTP Generation
 app.post('/api/students', async (req, res) => {
   const { name, enrolledCourse, phone, dob, username, password, isVerified, otpCode: incomingOtp } = req.body;
@@ -276,6 +332,9 @@ app.post('/api/students', async (req, res) => {
 
     // Sync to Supabase
     await syncStudentToSupabase(studentData);
+
+    // Dispatch SMS OTP if SMS Gateway is configured
+    await sendSmsOtp(cleanPhone, otpCode);
 
     return res.json({
       success: true,
