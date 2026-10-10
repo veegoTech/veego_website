@@ -377,12 +377,22 @@ export default function LandingPage({ onLoginSuccess }) {
     // Save to local student registry
     saveLocalRegisteredStudent(newStudent);
 
-    // Set OTP state and transition to OTP verification tab
+    // Set OTP state
     setOtpPhone(cleanPhone);
     setOtpHint(generatedOtp);
     setOtpInput('');
     setOtpSuccessMsg('');
     setIsLoading(false);
+
+    // Auto-launch WhatsApp dispatch immediately upon registration submit
+    try {
+      const waUrl = `https://wa.me/91${cleanPhone}?text=${encodeURIComponent(
+        `Your Veego LMS verification OTP code is: ${generatedOtp}`
+      )}`;
+      window.open(waUrl, '_blank');
+    } catch (e) {
+      console.warn('WhatsApp auto-open popup notice:', e);
+    }
 
     // Switch to OTP verification tab
     setActiveTab('otp');
@@ -686,39 +696,28 @@ export default function LandingPage({ onLoginSuccess }) {
             {/* 1. FIRST-TIME OTP VERIFICATION FORM */}
             {activeTab === 'otp' ? (
               <form onSubmit={handleOtpSubmit} className="space-y-4">
-                <div className="bg-blue-50 border border-blue-200/80 rounded-xl p-3 text-xs text-blue-900 leading-relaxed">
-                  <div className="font-bold flex items-center gap-1.5 mb-1 text-blue-700">
-                    <ShieldCheck className="w-4 h-4 text-blue-600 shrink-0" />
-                    <span>OTP Verification Required</span>
+                <div className="bg-emerald-50 border border-emerald-200/90 rounded-xl p-3.5 text-xs text-emerald-950 leading-relaxed space-y-2">
+                  <div className="font-bold flex items-center gap-1.5 text-emerald-800">
+                    <MessageCircle className="w-4 h-4 text-emerald-600 shrink-0" />
+                    <span>WhatsApp OTP Dispatched</span>
                   </div>
                   <div>
-                    We sent a 6-digit verification code to <strong>+91 {otpPhone}</strong>. Please enter the OTP code to verify your account and enable login.
+                    We automatically opened WhatsApp to send the 6-digit verification code to <strong>+91 {otpPhone}</strong>. Please check your WhatsApp and enter the code below.
                   </div>
-                </div>
-
-                {otpHint && (
-                  <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-4 text-center space-y-3">
-                    <div className="text-xs font-bold text-emerald-950 leading-relaxed">
-                      📱 Click the button below to send your 6-digit verification code to your registered WhatsApp number:
-                    </div>
-
+                  <div className="pt-1 flex items-center justify-between text-[11px] text-emerald-800 border-t border-emerald-200/60">
+                    <span>Didn't receive or accidentally closed it?</span>
                     <a
                       href={`https://wa.me/91${(otpPhone || '').replace(/\D/g, '')}?text=${encodeURIComponent(
                         `Your Veego LMS verification OTP code is: ${otpHint}`
                       )}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="w-full py-3 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer no-underline"
+                      className="font-bold text-emerald-700 hover:underline cursor-pointer flex items-center gap-1"
                     >
-                      <MessageCircle className="w-5 h-5 shrink-0 text-white" />
-                      <span>Send OTP to +91 {otpPhone} via WhatsApp</span>
+                      <MessageCircle className="w-3.5 h-3.5" /> Re-open WhatsApp
                     </a>
-
-                    <div className="text-[11px] text-emerald-800 font-medium">
-                      (Opens WhatsApp with your pre-filled verification OTP message)
-                    </div>
                   </div>
-                )}
+                </div>
 
                 <div>
                   <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1 text-center">
