@@ -208,15 +208,17 @@ export const syncStudentToSupabaseClient = async (studentData: {
       console.log('✅ Registered student record stored in Supabase Cloud (customers):', data);
     }
 
-    // Try optional write to students table if exists
+    // Write to students table if exists
     try {
       await supabase.from('students').upsert({
         access_code: studentData.phone,
         name: studentData.name,
         phone: studentData.phone,
+        email: studentEmail,
         dob: studentData.dob || '',
         enrolled_course: studentData.enrolledCourse || 'all',
-        status: 'Active'
+        status: 'Active',
+        is_verified: studentData.isVerified ?? true
       }, { onConflict: 'access_code' });
     } catch (_) {}
 

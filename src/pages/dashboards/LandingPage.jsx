@@ -330,25 +330,6 @@ export default function LandingPage({ onLoginSuccess }) {
       return;
     }
 
-    // Check if account already exists in local registry
-    const existingList = getLocalRegisteredStudents();
-    const existing = existingList.find(s => s.phone === cleanPhone || s.username === cleanPhone || s.accessCode === cleanPhone);
-    if (existing) {
-      if (existing.isVerified !== false) {
-        setErrorMsg(`Account with phone number (${cleanPhone}) already exists! Switched to Login tab for you.`);
-        setActiveTab('student');
-        setLoginUsername(cleanPhone);
-        setLoginPassword(existing.dob || existing.password || regDob.trim() || '');
-        return;
-      } else {
-        setErrorMsg('⚠️ Account already registered but pending OTP verification! Redirecting to OTP screen...');
-        setOtpPhone(cleanPhone);
-        setOtpHint(existing.otpCode || '123456');
-        setTimeout(() => setActiveTab('otp'), 1000);
-        return;
-      }
-    }
-
     setIsLoading(true);
     const generatedOtp = Math.floor(100000 + Math.random() * 900000).toString();
     const studentId = 'stu_' + cleanPhone;
@@ -367,7 +348,7 @@ export default function LandingPage({ onLoginSuccess }) {
       createdAt: new Date().toISOString()
     };
 
-    // 1. DIRECT SUPABASE CLOUD INSERTION
+    // 1. DIRECT SUPABASE CLOUD INSERTION / UPSERT
     try {
       await syncStudentToSupabaseClient({
         id: studentId,
@@ -375,7 +356,8 @@ export default function LandingPage({ onLoginSuccess }) {
         phone: cleanPhone,
         dob: regDob.trim(),
         enrolledCourse: regCourse || 'all',
-        isVerified: false
+        isVerified: false,
+        email: `${cleanPhone}@student.veego.in`
       });
     } catch (err) {
       console.warn('Direct Supabase sync notice:', err);
@@ -383,20 +365,11 @@ export default function LandingPage({ onLoginSuccess }) {
 
     // 2. BACKEND API REGISTRATION
     try {
-      const res = await fetch('/api/students', {
+      await fetch('/api/students', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(newStudent)
       });
-
-      if (!res.ok) {
-        const err = await res.json();
-        if (err.error && err.error.includes('already exists')) {
-          setErrorMsg(err.error);
-          setIsLoading(false);
-          return;
-        }
-      }
     } catch (err) {
       console.warn('Backend server notice, using local database registry.');
     }
@@ -404,7 +377,7 @@ export default function LandingPage({ onLoginSuccess }) {
     // Save to local student registry
     saveLocalRegisteredStudent(newStudent);
 
-    // Set OTP state and transition to OTP verification tab (REQUIRE OTP BEFORE LOGIN)
+    // Set OTP state and transition to OTP verification tab
     setOtpPhone(cleanPhone);
     setOtpHint(generatedOtp);
     setOtpInput('');
