@@ -235,19 +235,20 @@ export const fetchSupabaseStudentsClient = async () => {
       .order('created_at', { ascending: false });
     if (!error && data && data.length > 0) {
       return data.map(c => {
-        const dobMatch = (c.notes || '').match(/DOB:\s*([^\s|]+)/);
-        const enrolledMatch = (c.organization || '').match(/Enrolled:\s*([^\s|]+)/);
+        const dobMatch = (c.notes || '').match(/DOB:\s*([^\s|]+)/) || (c.organization || '').match(/DOB:\s*([^\s|]+)/);
+        const enrolledMatch = (c.organization || '').match(/Enrolled:\s*([^\s|]+)/) || (c.tags || '').match(/Student,\s*([^\s|]+)/);
+        const extractedDob = dobMatch ? dobMatch[1].trim() : '';
         return {
           id: c.id,
           _id: c.id,
           name: c.name,
           phone: c.phone || '',
-          dob: dobMatch ? dobMatch[1] : '',
+          dob: extractedDob,
           username: c.phone || '',
-          password: dobMatch ? dobMatch[1] : '',
+          password: extractedDob,
           isVerified: true,
           otpCode: '123456',
-          enrolledCourse: enrolledMatch ? enrolledMatch[1] : 'all',
+          enrolledCourse: enrolledMatch ? enrolledMatch[1].trim() : 'all',
           accessCode: c.phone || '',
           deviceId: null,
           status: c.status || 'Active',
