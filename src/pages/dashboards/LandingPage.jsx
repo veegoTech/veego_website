@@ -697,25 +697,25 @@ export default function LandingPage({ onLoginSuccess }) {
                 </div>
 
                 {otpHint && (
-                  <div className="bg-amber-50 border border-amber-200 rounded-xl p-3.5 text-center text-xs font-semibold text-amber-900 leading-relaxed space-y-2">
-                    <div className="font-extrabold text-amber-950">
-                      🔑 Your Verification OTP Code: <span className="text-emerald-700 text-base font-black underline bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">{otpHint}</span>
+                  <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-4 text-center space-y-3">
+                    <div className="text-xs font-bold text-emerald-950 leading-relaxed">
+                      📱 Click the button below to send your 6-digit verification code to your registered WhatsApp number:
                     </div>
 
                     <a
                       href={`https://wa.me/91${(otpPhone || '').replace(/\D/g, '')}?text=${encodeURIComponent(
-                        `Your Veego LMS verification OTP code is: ${otpHint || '123456'}`
+                        `Your Veego LMS verification OTP code is: ${otpHint}`
                       )}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="w-full py-2.5 px-3 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow transition-all flex items-center justify-center gap-2 cursor-pointer no-underline"
+                      className="w-full py-3 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer no-underline"
                     >
-                      <MessageCircle className="w-4 h-4 shrink-0 text-emerald-100" />
-                      <span>Send OTP to +91 {otpPhone} via WhatsApp (100% Free)</span>
+                      <MessageCircle className="w-5 h-5 shrink-0 text-white" />
+                      <span>Send OTP to +91 {otpPhone} via WhatsApp</span>
                     </a>
 
-                    <div className="text-[11px] text-amber-800 opacity-90 pt-1">
-                      (Twilio is paid — WhatsApp deep-linking is 100% free with zero cost or key setup!)
+                    <div className="text-[11px] text-emerald-800 font-medium">
+                      (Opens WhatsApp with your pre-filled verification OTP message)
                     </div>
                   </div>
                 )}
@@ -764,13 +764,6 @@ export default function LandingPage({ onLoginSuccess }) {
                     className="text-slate-600 hover:text-blue-600 font-semibold cursor-pointer"
                   >
                     ← Back to Register
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setOtpInput(otpHint || '123456')}
-                    className="text-blue-600 font-bold hover:underline cursor-pointer"
-                  >
-                    Auto-fill OTP ({otpHint || '123456'})
                   </button>
                 </div>
               </form>
