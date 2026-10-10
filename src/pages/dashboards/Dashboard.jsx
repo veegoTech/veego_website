@@ -127,16 +127,10 @@ const formatTaskTitle = (task) => {
 };
 
 const availableCourseOptions = [
-  { value: "web_design_20days", label: "AI-Powered Web Design (20 Days)" },
-  { value: "html_css", label: "HTML, CSS & Bootstrap" },
-  { value: "sql", label: "Databases & SQL (Full Stack)" },
-  { value: "sql_da", label: "SQL for Data Analytics" },
   { value: "python_course", label: "Core Python & OOPs" },
-  { value: "python_da", label: "Python for Data Analytics" },
-  { value: "generative_ai_course", label: "Generative AI" },
-  { value: "agentic_ai", label: "Agentic AI Development" },
   { value: "summer_sql", label: "Summer SQL" },
-  { value: "tally_prime", label: "AI powered Tally" }
+  { value: "generative_ai_course", label: "Generative AI" },
+  { value: "agentic_ai", label: "Agentic AI Development" }
 ];
 
 function getCourseLabel(courseKey) {
