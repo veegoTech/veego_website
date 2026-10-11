@@ -594,10 +594,15 @@ function App() {
     const loaded = await loadRazorpay();
     const demoId = `RZP_PAID_${Date.now()}`;
     if (loaded && window.Razorpay) {
-      try {
-        const rzpKey = import.meta.env?.VITE_RAZORPAY_KEY_ID || 'rzp_live_TloikfLIGkA6Cl';
-        const options = {
-          key: rzpKey,
+        const rzpKey = import.meta.env?.VITE_RAZORPAY_KEY_ID;
+        if (!rzpKey) {
+          console.warn('Payment configuration notice: VITE_RAZORPAY_KEY_ID is missing in .env');
+          alert('Payment Gateway key is not configured. Please add VITE_RAZORPAY_KEY_ID to your .env file.');
+          return;
+        }
+        try {
+          const options = {
+            key: rzpKey,
           amount: 49900,
           currency: 'INR',
           name: 'VeeGo Learning Center',
