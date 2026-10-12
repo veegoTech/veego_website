@@ -16,5 +16,6 @@ export default defineConfig({
         secure: false,
       }
     }
-  }
+  },
+  envPrefix: ['VITE_', 'SUPABASE_']
 })

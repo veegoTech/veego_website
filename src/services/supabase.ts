@@ -1,8 +1,16 @@
 import { createClient } from '@supabase/supabase-js';
 import { Customer, CustomerQuery, CustomerFeedback } from '../types/database';
 
-const rawUrl = (typeof import.meta !== 'undefined' && import.meta.env?.VITE_SUPABASE_URL ? String(import.meta.env.VITE_SUPABASE_URL) : '').trim();
-const rawKey = (typeof import.meta !== 'undefined' && import.meta.env?.VITE_SUPABASE_ANON_KEY ? String(import.meta.env.VITE_SUPABASE_ANON_KEY) : '').trim();
+const rawUrl = (
+  typeof import.meta !== 'undefined'
+    ? (import.meta.env?.VITE_SUPABASE_URL || import.meta.env?.SUPABASE_URL || '')
+    : ''
+).trim();
+const rawKey = (
+  typeof import.meta !== 'undefined'
+    ? (import.meta.env?.VITE_SUPABASE_ANON_KEY || import.meta.env?.SUPABASE_ANON_KEY || '')
+    : ''
+).trim();
 
 export const isSupabaseConfigured = Boolean(
   rawUrl &&
