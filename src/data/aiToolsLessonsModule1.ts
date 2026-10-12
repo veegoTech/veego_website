@@ -58,16 +58,16 @@ The future of intelligence is collaborative: AI is a cognitive engine designed t
       result: 'Early disease detection rates increase by 24%, diagnostic turnaround drops from hours to minutes, and human radiologists focus their expertise on high-risk patient consultations.'
     },
     {
-      title: 'College Student Exam Revision',
-      scenario: 'Pooja is a 2nd-year B.Com student in Coimbatore with 80 pages of textbook notes on Accounting Principles. She has an internal test tomorrow morning and needs the top 5 golden rules with real shopkeeper examples.',
-      aiWorkflow: 'Pooja pastes the textbook definition of Real, Personal, and Nominal accounts into Gemini and requests: "Explain each rule as if explaining to a provision store owner in Tamil Nadu with simple debits and credits."',
-      result: 'Instead of memorizing dry jargon, Pooja gets concrete grocery store inventory examples that stick in her memory and help her ace the viva.'
+      title: 'Banking & Financial Fraud Prevention',
+      scenario: 'Payment gateways process millions of UPI, credit card, and NEFT transactions every second where fraudulent transactions occur in split seconds.',
+      aiWorkflow: 'Machine Learning pattern models evaluate transaction velocities, device fingerprints, and geolocation anomalies in under 50 milliseconds.',
+      result: 'Suspicious transactions are flagged or frozen before money leaves accounts, preventing unauthorized financial losses.'
     },
     {
-      title: 'Small Business Vendor Communication',
-      scenario: 'Karthik runs a logistics transport service in Tiruppur. A client payment of ₹45,000 has been overdue for 18 days. Karthik does not want to sound rude, but needs firm commitment by Friday.',
-      aiWorkflow: 'Karthik prompts Copilot: "Draft a firm, polite, respectful payment reminder email from a logistics vendor to a longstanding corporate client requesting RTGS/NEFT settlement by Friday."',
-      result: 'Copilot produces a polished 120-word email with invoice reference and polite tone, saving Karthik 30 minutes of stressful drafting.'
+      title: 'Dynamic Traffic & Navigation Optimization',
+      scenario: 'City roads experience unpredictable traffic spikes during rush hours and monsoon rains.',
+      aiWorkflow: 'Predictive Narrow AI ingests live GPS location pings from millions of vehicles to calculate congestion patterns and recommend alternate routes.',
+      result: 'Commuters save 20-30 minutes per journey, vehicle idle emissions decline, and road congestion is dynamically distributed.'
     }
   ],
   prompts: [
