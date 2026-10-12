@@ -146,27 +146,89 @@ export const AuthModal = ({ isOpen, onClose, onLoginSuccess }) => {
 
     setIsLoading(true);
 
-    // 1. Check Hardcoded / Admin Bypass Credentials
+    // 1. Check Hardcoded / Admin & Staff Bypass Credentials
     const cleanUser = userTrim.toLowerCase();
     const cleanPass = passTrim;
 
+    // Admin Credentials
     if (
-      (cleanUser === 'admin' && cleanPass === 'admin123') ||
-      (cleanUser === 'veego' && cleanPass === 'veego@2026') ||
-      (cleanUser === '9876543210' && (cleanPass === '01-01-2000' || cleanPass === '2000-01-01'))
+      (cleanUser === 'admin' && (cleanPass === 'admin123' || cleanPass === 'admin')) ||
+      (cleanUser === 'veego' && cleanPass === 'veego@2026')
     ) {
       setTimeout(() => {
         setIsLoading(false);
         onLoginSuccess({
-          role: cleanUser === 'admin' ? 'admin' : 'student',
-          name: cleanUser === 'admin' ? 'System Administrator' : 'Demo Student',
+          role: 'admin',
+          name: 'System Administrator',
+          username: 'admin',
+          enrolledCourse: 'all',
+          token: 'authenticated-admin-session-token',
+          accessCode: 'MASTER_DEV'
+        });
+        onClose();
+      }, 500);
+      return;
+    }
+
+    // Staff / Tutor Credentials
+    if (
+      (cleanUser === 'staff' && (cleanPass === 'staff123' || cleanPass === 'staff')) ||
+      (cleanUser === 'tutor' && (cleanPass === 'tutor123' || cleanPass === 'tutor')) ||
+      (cleanUser === 'instructor' && cleanPass === 'instructor123')
+    ) {
+      setTimeout(() => {
+        setIsLoading(false);
+        onLoginSuccess({
+          role: 'staff',
+          name: 'Staff Instructor',
+          username: userTrim,
+          enrolledCourse: 'all',
+          token: 'authenticated-staff-session-token',
+          accessCode: 'STAFF_TUTOR'
+        });
+        onClose();
+      }, 500);
+      return;
+    }
+
+    // Dynamic Staff Database Check from Server
+    try {
+      const staffRes = await fetch('/api/staff');
+      if (staffRes.ok) {
+        const staffList = await staffRes.json();
+        const matchedStaff = staffList.find(
+          s => s.username?.toLowerCase() === cleanUser && s.password === cleanPass
+        );
+        if (matchedStaff) {
+          setIsLoading(false);
+          onLoginSuccess({
+            role: 'staff',
+            name: matchedStaff.name || 'Staff Tutor',
+            username: matchedStaff.username,
+            enrolledCourse: 'all',
+            token: 'authenticated-staff-token',
+            accessCode: matchedStaff.id || 'STAFF'
+          });
+          onClose();
+          return;
+        }
+      }
+    } catch (_) {}
+
+    // Demo Student Bypass
+    if (cleanUser === '9876543210' && (cleanPass === '01-01-2000' || cleanPass === '2000-01-01')) {
+      setTimeout(() => {
+        setIsLoading(false);
+        onLoginSuccess({
+          role: 'student',
+          name: 'Demo Student',
           username: userTrim,
           enrolledCourse: 'all',
           token: 'authenticated-session-token',
           accessCode: 'MASTER_DEV'
         });
         onClose();
-      }, 600);
+      }, 500);
       return;
     }
 
@@ -581,6 +643,37 @@ export const AuthModal = ({ isOpen, onClose, onLoginSuccess }) => {
                     </div>
                   </div>
 
+                  {/* QUICK DEMO CREDENTIAL PILLS */}
+                  <div className="pt-1">
+                    <span className="text-[10px] font-mono uppercase tracking-wider text-slate-500 font-bold block mb-1.5">
+                      Quick Auto-Fill Test Roles:
+                    </span>
+                    <div className="flex gap-2 flex-wrap">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setLoginUsername('admin');
+                          setLoginPassword('admin123');
+                          setErrorMsg('');
+                        }}
+                        className="px-2.5 py-1 bg-slate-100 hover:bg-blue-50 hover:text-blue-700 text-slate-700 text-[11px] font-mono font-bold rounded-[4px] border border-slate-200 transition-colors cursor-pointer"
+                      >
+                        🔑 Admin (admin / admin123)
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setLoginUsername('staff');
+                          setLoginPassword('staff123');
+                          setErrorMsg('');
+                        }}
+                        className="px-2.5 py-1 bg-slate-100 hover:bg-emerald-50 hover:text-emerald-700 text-slate-700 text-[11px] font-mono font-bold rounded-[4px] border border-slate-200 transition-colors cursor-pointer"
+                      >
+                        👥 Staff (staff / staff123)
+                      </button>
+                    </div>
+                  </div>
+
                   {/* SUBMIT BUTTON */}
                   <button
                     type="submit"
@@ -601,17 +694,25 @@ export const AuthModal = ({ isOpen, onClose, onLoginSuccess }) => {
                     )}
                   </button>
 
-                  <div className="pt-2 text-center">
+                  <div className="pt-2 flex items-center justify-between text-xs text-slate-500">
                     <button
                       type="button"
                       onClick={() => {
                         setActiveTab('register');
                         setErrorMsg('');
                       }}
-                      className="text-xs text-blue-600 hover:text-blue-700 font-medium cursor-pointer"
+                      className="text-blue-600 hover:text-blue-700 font-medium cursor-pointer"
                     >
                       Don&apos;t have an account? <span className="underline font-bold">Register</span>
                     </button>
+
+                    <a
+                      href="/admin"
+                      onClick={() => onClose()}
+                      className="text-slate-500 hover:text-slate-900 font-mono text-[11px] underline"
+                    >
+                      Open /admin Center →
+                    </a>
                   </div>
                 </form>
               </div>
