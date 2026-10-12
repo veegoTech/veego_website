@@ -36,6 +36,7 @@ import {
 } from '../../data/aiToolsLessons';
 import { generateAndStoreCertificate } from '../../services/certificateService';
 import { CertificateModal } from './CertificateModal';
+import { Lesson1ModuleView, Lesson2ModuleView } from './Module1Lessons';
 
 const Section = ({ id, eyebrow, title, badge, children }) => (
   <motion.div
@@ -97,9 +98,14 @@ export default function AIToolsCourseView({
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [activeTab]);
 
-  // Find lesson data matching activeTab (e.g. 'lesson-1', 'lesson-2', etc.)
+  // Find lesson data matching activeTab (e.g. 'lesson-1', 'lesson-2', 'aitools_lesson1', etc.)
   const currentLesson = useMemo(() => {
-    return allAIToolsLessons.find(l => l.id === activeTab);
+    return allAIToolsLessons.find(
+      l =>
+        l.id === activeTab ||
+        l.id === `aitools_${activeTab.replace('-', '')}` ||
+        l.lessonNumber === parseInt(activeTab.replace('lesson-', ''))
+    );
   }, [activeTab]);
 
   // Check if current lesson is completed
@@ -532,290 +538,306 @@ export default function AIToolsCourseView({
             </p>
           </div>
 
-          {/* Section 1: Conceptual Foundation & Real World Analogy */}
-          <div style={{ marginBottom: '2.5rem' }}>
-            <h3 style={{ fontSize: '1.35rem', fontWeight: 800, color: '#0f172a', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <BookOpen size={20} color="#3b82f6" /> 1. Concept Overview & Practical Foundation
-            </h3>
-            <p style={{ fontSize: '1rem', lineHeight: 1.7, color: '#334155' }}>
-              {currentLesson.description}
-            </p>
-
-            {/* Real World Analogy Card */}
-            {currentLesson.analogy && (
-              <div style={{ marginTop: '1.25rem', padding: '1.25rem 1.5rem', background: '#f8fafc', borderRadius: '10px', border: '1px solid #e2e8f0' }}>
-                <span style={{ fontSize: '0.78rem', fontWeight: 800, textTransform: 'uppercase', color: '#f59e0b', letterSpacing: '0.5px' }}>
-                  💡 Real-World Analogy
-                </span>
-                <p style={{ margin: '0.35rem 0 0 0', fontStyle: 'italic', color: '#475569', lineHeight: 1.6, fontSize: '0.95rem' }}>
-                  "{currentLesson.analogy}"
+          {currentLesson.lessonNumber === 1 ? (
+            <Lesson1ModuleView
+              onCopy={handleCopy}
+              copiedIndex={copiedIndex}
+              openAITutor={openAITutor}
+            />
+          ) : currentLesson.lessonNumber === 2 ? (
+            <Lesson2ModuleView
+              onCopy={handleCopy}
+              copiedIndex={copiedIndex}
+              openAITutor={openAITutor}
+            />
+          ) : (
+            <>
+              {/* Section 1: Conceptual Foundation & Real World Analogy */}
+              <div style={{ marginBottom: '2.5rem' }}>
+                <h3 style={{ fontSize: '1.35rem', fontWeight: 800, color: '#0f172a', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <BookOpen size={20} color="#3b82f6" /> 1. Concept Overview & Practical Foundation
+                </h3>
+                <p style={{ fontSize: '1rem', lineHeight: 1.7, color: '#334155' }}>
+                  {currentLesson.description}
                 </p>
+
+                {/* Real World Analogy Card */}
+                {currentLesson.analogy && (
+                  <div style={{ marginTop: '1.25rem', padding: '1.25rem 1.5rem', background: '#f8fafc', borderRadius: '10px', border: '1px solid #e2e8f0' }}>
+                    <span style={{ fontSize: '0.78rem', fontWeight: 800, textTransform: 'uppercase', color: '#f59e0b', letterSpacing: '0.5px' }}>
+                      💡 Real-World Analogy
+                    </span>
+                    <p style={{ margin: '0.35rem 0 0 0', fontStyle: 'italic', color: '#475569', lineHeight: 1.6, fontSize: '0.95rem' }}>
+                      "{currentLesson.analogy}"
+                    </p>
+                  </div>
+                )}
+
+                {/* Key Takeaways */}
+                {currentLesson.keyTakeaways && currentLesson.keyTakeaways.length > 0 && (
+                  <div style={{ marginTop: '1.5rem' }}>
+                    <h4 style={{ fontSize: '1rem', fontWeight: 700, color: '#1e293b', marginBottom: '0.75rem' }}>
+                      Core Takeaways:
+                    </h4>
+                    <ul style={{ paddingLeft: '1.25rem', lineHeight: 1.7, color: '#334155', margin: 0 }}>
+                      {currentLesson.keyTakeaways.map((point, pIdx) => (
+                        <li key={pIdx} style={{ marginBottom: '0.35rem' }}>
+                          {point}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
               </div>
-            )}
 
-            {/* Key Takeaways */}
-            {currentLesson.keyTakeaways && currentLesson.keyTakeaways.length > 0 && (
-              <div style={{ marginTop: '1.5rem' }}>
-                <h4 style={{ fontSize: '1rem', fontWeight: 700, color: '#1e293b', marginBottom: '0.75rem' }}>
-                  Core Takeaways:
-                </h4>
-                <ul style={{ paddingLeft: '1.25rem', lineHeight: 1.7, color: '#334155', margin: 0 }}>
-                  {currentLesson.keyTakeaways.map((point, pIdx) => (
-                    <li key={pIdx} style={{ marginBottom: '0.35rem' }}>
-                      {point}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-          </div>
+              {/* Section 2: Ready-to-Use Prompts & Framework */}
+              {currentLesson.prompts && currentLesson.prompts.length > 0 && (
+                <div style={{ marginBottom: '2.5rem' }}>
+                  <h3 style={{ fontSize: '1.35rem', fontWeight: 800, color: '#0f172a', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <Terminal size={20} color="#10b981" /> 2. Tested Prompt Templates (Copy & Run)
+                  </h3>
+                  <p style={{ color: '#475569', fontSize: '0.92rem', marginBottom: '1.25rem' }}>
+                    Copy these verified prompt templates directly into ChatGPT, Gemini, or Copilot for instant results:
+                  </p>
 
-          {/* Section 2: Ready-to-Use Prompts & Framework */}
-          {currentLesson.prompts && currentLesson.prompts.length > 0 && (
-            <div style={{ marginBottom: '2.5rem' }}>
-              <h3 style={{ fontSize: '1.35rem', fontWeight: 800, color: '#0f172a', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <Terminal size={20} color="#10b981" /> 2. Tested Prompt Templates (Copy & Run)
-              </h3>
-              <p style={{ color: '#475569', fontSize: '0.92rem', marginBottom: '1.25rem' }}>
-                Copy these verified prompt templates directly into ChatGPT, Gemini, or Copilot for instant results:
-              </p>
-
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-                {currentLesson.prompts.map((p, pIdx) => (
-                  <div
-                    key={pIdx}
-                    style={{
-                      background: '#0f172a',
-                      color: '#f8fafc',
-                      borderRadius: '10px',
-                      padding: '1.25rem 1.5rem',
-                      position: 'relative'
-                    }}
-                  >
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem', borderBottom: '1px solid #334155', paddingBottom: '0.5rem' }}>
-                      <span style={{ fontSize: '0.8rem', fontWeight: 700, color: '#93c5fd', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-                        {p.title || `Prompt Template #${pIdx + 1}`}
-                      </span>
-                      <button
-                        type="button"
-                        onClick={() => handleCopy(p.prompt, pIdx)}
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+                    {currentLesson.prompts.map((p, pIdx) => (
+                      <div
+                        key={pIdx}
                         style={{
-                          background: copiedIndex === pIdx ? '#10b981' : '#334155',
-                          border: 'none',
-                          color: '#ffffff',
-                          padding: '0.3rem 0.75rem',
-                          borderRadius: '6px',
-                          fontSize: '0.75rem',
-                          fontWeight: 700,
-                          cursor: 'pointer',
-                          display: 'inline-flex',
-                          alignItems: 'center',
-                          gap: '5px'
+                          background: '#0f172a',
+                          color: '#f8fafc',
+                          borderRadius: '10px',
+                          padding: '1.25rem 1.5rem',
+                          position: 'relative'
                         }}
                       >
-                        {copiedIndex === pIdx ? <Check size={14} /> : <Copy size={14} />}
-                        {copiedIndex === pIdx ? 'Copied!' : 'Copy Prompt'}
-                      </button>
-                    </div>
-
-                    <pre style={{ margin: 0, fontFamily: 'monospace', fontSize: '0.9rem', lineHeight: 1.6, whiteSpace: 'pre-wrap', color: '#e2e8f0' }}>
-                      {p.prompt}
-                    </pre>
-
-                    {p.explanation && (
-                      <p style={{ margin: '0.75rem 0 0 0', fontSize: '0.8rem', color: '#94a3b8', fontStyle: 'italic', borderTop: '1px dashed #334155', paddingTop: '0.5rem' }}>
-                        💡 {p.explanation}
-                      </p>
-                    )}
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* Section 3: Step-by-Step Hands-On Practice */}
-          {currentLesson.practiceSteps && currentLesson.practiceSteps.length > 0 && (
-            <div style={{ marginBottom: '2.5rem' }}>
-              <h3 style={{ fontSize: '1.35rem', fontWeight: 800, color: '#0f172a', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <Sparkles size={20} color="#f59e0b" /> 3. Hands-On Practice Exercise ("Try It Yourself")
-              </h3>
-
-              <div style={{ background: '#f8fafc', padding: '1.5rem', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                  {currentLesson.practiceSteps.map((step, sIdx) => (
-                    <div key={sIdx} style={{ display: 'flex', alignItems: 'flex-start', gap: '12px' }}>
-                      <span style={{
-                        width: '26px',
-                        height: '26px',
-                        borderRadius: '50%',
-                        background: '#3b82f6',
-                        color: '#ffffff',
-                        fontSize: '0.82rem',
-                        fontWeight: 800,
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        flexShrink: 0
-                      }}>
-                        {sIdx + 1}
-                      </span>
-                      <p style={{ margin: 0, color: '#334155', fontSize: '0.95rem', lineHeight: 1.6 }}>
-                        {step}
-                      </p>
-                    </div>
-                  ))}
-                </div>
-
-                {/* Direct Tool Launch Buttons */}
-                <div style={{ marginTop: '1.5rem', paddingTop: '1.25rem', borderTop: '1px solid #e2e8f0', display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-                  <a
-                    href="https://chatgpt.com"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="btn btn-outline"
-                    style={{ fontSize: '0.82rem', padding: '0.45rem 0.9rem', display: 'inline-flex', alignItems: 'center', gap: '6px', textDecoration: 'none' }}
-                  >
-                    Open ChatGPT <ExternalLink size={13} />
-                  </a>
-                  <a
-                    href="https://gemini.google.com"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="btn btn-outline"
-                    style={{ fontSize: '0.82rem', padding: '0.45rem 0.9rem', display: 'inline-flex', alignItems: 'center', gap: '6px', textDecoration: 'none' }}
-                  >
-                    Open Gemini <ExternalLink size={13} />
-                  </a>
-                  <a
-                    href="https://copilot.microsoft.com"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="btn btn-outline"
-                    style={{ fontSize: '0.82rem', padding: '0.45rem 0.9rem', display: 'inline-flex', alignItems: 'center', gap: '6px', textDecoration: 'none' }}
-                  >
-                    Open Copilot <ExternalLink size={13} />
-                  </a>
-                  <a
-                    href="https://gamma.app"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="btn btn-outline"
-                    style={{ fontSize: '0.82rem', padding: '0.45rem 0.9rem', display: 'inline-flex', alignItems: 'center', gap: '6px', textDecoration: 'none' }}
-                  >
-                    Open Gamma <ExternalLink size={13} />
-                  </a>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* Section 4: Interactive Lesson Quiz (5 MCQs) */}
-          {currentLesson.quiz && currentLesson.quiz.length > 0 && (
-            <div style={{ marginBottom: '2.5rem' }}>
-              <h3 style={{ fontSize: '1.35rem', fontWeight: 800, color: '#0f172a', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <CheckSquare size={20} color="#8b5cf6" /> 4. Knowledge Check Quiz ({currentLesson.quiz.length} Questions)
-              </h3>
-
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-                {currentLesson.quiz.map((q, qIdx) => {
-                  const selected = selectedQuizAnswers[qIdx];
-                  const isCorrect = selected === q.correctAnswer;
-
-                  return (
-                    <div
-                      key={qIdx}
-                      style={{
-                        background: '#ffffff',
-                        border: '1px solid #e2e8f0',
-                        borderRadius: '10px',
-                        padding: '1.25rem 1.5rem',
-                        boxShadow: '0 1px 3px rgba(0,0,0,0.03)'
-                      }}
-                    >
-                      <h4 style={{ margin: '0 0 0.85rem 0', fontSize: '0.98rem', fontWeight: 700, color: '#0f172a' }}>
-                        Q{qIdx + 1}: {q.question}
-                      </h4>
-
-                      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '8px' }}>
-                        {q.options.map((opt, optIdx) => {
-                          let btnBg = '#f8fafc';
-                          let btnBorder = '#cbd5e1';
-                          let btnColor = '#1e293b';
-
-                          if (selected === optIdx) {
-                            btnBg = '#eff6ff';
-                            btnBorder = '#3b82f6';
-                            btnColor = '#1d4ed8';
-                          }
-
-                          if (quizSubmitted) {
-                            if (optIdx === q.correctAnswer) {
-                              btnBg = '#ecfdf5';
-                              btnBorder = '#10b981';
-                              btnColor = '#065f46';
-                            } else if (selected === optIdx && !isCorrect) {
-                              btnBg = '#fef2f2';
-                              btnBorder = '#ef4444';
-                              btnColor = '#991b1b';
-                            }
-                          }
-
-                          return (
-                            <button
-                              key={optIdx}
-                              type="button"
-                              disabled={quizSubmitted}
-                              onClick={() => handleSelectQuizAnswer(qIdx, optIdx)}
-                              style={{
-                                textAlign: 'left',
-                                padding: '0.65rem 0.9rem',
-                                borderRadius: '6px',
-                                border: `1.5px solid ${btnBorder}`,
-                                background: btnBg,
-                                color: btnColor,
-                                fontSize: '0.85rem',
-                                fontWeight: selected === optIdx ? 700 : 500,
-                                cursor: quizSubmitted ? 'default' : 'pointer',
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: '8px',
-                                transition: 'all 0.15s'
-                              }}
-                            >
-                              <span style={{ fontWeight: 800, color: '#64748b' }}>
-                                {String.fromCharCode(65 + optIdx)}.
-                              </span>
-                              <span style={{ flex: 1 }}>{opt}</span>
-                              {quizSubmitted && optIdx === q.correctAnswer && (
-                                <CheckCircle size={14} color="#10b981" />
-                              )}
-                            </button>
-                          );
-                        })}
-                      </div>
-
-                      {quizSubmitted && (
-                        <div style={{ marginTop: '0.65rem', padding: '0.5rem 0.85rem', borderRadius: '6px', background: isCorrect ? '#ecfdf5' : '#fef2f2', border: `1px solid ${isCorrect ? '#a7f3d0' : '#fecaca'}`, fontSize: '0.8rem', color: isCorrect ? '#065f46' : '#991b1b' }}>
-                          <strong>{isCorrect ? '✅ Correct!' : '❌ Incorrect.'}</strong> {q.explanation}
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem', borderBottom: '1px solid #334155', paddingBottom: '0.5rem' }}>
+                          <span style={{ fontSize: '0.8rem', fontWeight: 700, color: '#93c5fd', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                            {p.title || `Prompt Template #${pIdx + 1}`}
+                          </span>
+                          <button
+                            type="button"
+                            onClick={() => handleCopy(p.prompt, pIdx)}
+                            style={{
+                              background: copiedIndex === pIdx ? '#10b981' : '#334155',
+                              border: 'none',
+                              color: '#ffffff',
+                              padding: '0.3rem 0.75rem',
+                              borderRadius: '6px',
+                              fontSize: '0.75rem',
+                              fontWeight: 700,
+                              cursor: 'pointer',
+                              display: 'inline-flex',
+                              alignItems: 'center',
+                              gap: '5px'
+                            }}
+                          >
+                            {copiedIndex === pIdx ? <Check size={14} /> : <Copy size={14} />}
+                            {copiedIndex === pIdx ? 'Copied!' : 'Copy Prompt'}
+                          </button>
                         </div>
-                      )}
-                    </div>
-                  );
-                })}
-              </div>
 
-              {!quizSubmitted && Object.keys(selectedQuizAnswers).length > 0 && (
-                <div style={{ marginTop: '1rem', textAlign: 'right' }}>
-                  <button
-                    className="btn btn-primary"
-                    onClick={handleSubmitQuiz}
-                    style={{ fontSize: '0.88rem', padding: '0.6rem 1.4rem' }}
-                  >
-                    Check Answers
-                  </button>
+                        <pre style={{ margin: 0, fontFamily: 'monospace', fontSize: '0.9rem', lineHeight: 1.6, whiteSpace: 'pre-wrap', color: '#e2e8f0' }}>
+                          {p.prompt}
+                        </pre>
+
+                        {p.explanation && (
+                          <p style={{ margin: '0.75rem 0 0 0', fontSize: '0.8rem', color: '#94a3b8', fontStyle: 'italic', borderTop: '1px dashed #334155', paddingTop: '0.5rem' }}>
+                            💡 {p.explanation}
+                          </p>
+                        )}
+                      </div>
+                    ))}
+                  </div>
                 </div>
               )}
-            </div>
+
+              {/* Section 3: Step-by-Step Hands-On Practice */}
+              {currentLesson.practiceSteps && currentLesson.practiceSteps.length > 0 && (
+                <div style={{ marginBottom: '2.5rem' }}>
+                  <h3 style={{ fontSize: '1.35rem', fontWeight: 800, color: '#0f172a', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <Sparkles size={20} color="#f59e0b" /> 3. Hands-On Practice Exercise ("Try It Yourself")
+                  </h3>
+
+                  <div style={{ background: '#f8fafc', padding: '1.5rem', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                      {currentLesson.practiceSteps.map((step, sIdx) => (
+                        <div key={sIdx} style={{ display: 'flex', alignItems: 'flex-start', gap: '12px' }}>
+                          <span style={{
+                            width: '26px',
+                            height: '26px',
+                            borderRadius: '50%',
+                            background: '#3b82f6',
+                            color: '#ffffff',
+                            fontSize: '0.82rem',
+                            fontWeight: 800,
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            flexShrink: 0
+                          }}>
+                            {sIdx + 1}
+                          </span>
+                          <p style={{ margin: 0, color: '#334155', fontSize: '0.95rem', lineHeight: 1.6 }}>
+                            {step}
+                          </p>
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* Direct Tool Launch Buttons */}
+                    <div style={{ marginTop: '1.5rem', paddingTop: '1.25rem', borderTop: '1px solid #e2e8f0', display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+                      <a
+                        href="https://chatgpt.com"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="btn btn-outline"
+                        style={{ fontSize: '0.82rem', padding: '0.45rem 0.9rem', display: 'inline-flex', alignItems: 'center', gap: '6px', textDecoration: 'none' }}
+                      >
+                        Open ChatGPT <ExternalLink size={13} />
+                      </a>
+                      <a
+                        href="https://gemini.google.com"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="btn btn-outline"
+                        style={{ fontSize: '0.82rem', padding: '0.45rem 0.9rem', display: 'inline-flex', alignItems: 'center', gap: '6px', textDecoration: 'none' }}
+                      >
+                        Open Gemini <ExternalLink size={13} />
+                      </a>
+                      <a
+                        href="https://copilot.microsoft.com"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="btn btn-outline"
+                        style={{ fontSize: '0.82rem', padding: '0.45rem 0.9rem', display: 'inline-flex', alignItems: 'center', gap: '6px', textDecoration: 'none' }}
+                      >
+                        Open Copilot <ExternalLink size={13} />
+                      </a>
+                      <a
+                        href="https://gamma.app"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="btn btn-outline"
+                        style={{ fontSize: '0.82rem', padding: '0.45rem 0.9rem', display: 'inline-flex', alignItems: 'center', gap: '6px', textDecoration: 'none' }}
+                      >
+                        Open Gamma <ExternalLink size={13} />
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Section 4: Interactive Lesson Quiz (5 MCQs) */}
+              {currentLesson.quiz && currentLesson.quiz.length > 0 && (
+                <div style={{ marginBottom: '2.5rem' }}>
+                  <h3 style={{ fontSize: '1.35rem', fontWeight: 800, color: '#0f172a', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <CheckSquare size={20} color="#8b5cf6" /> 4. Knowledge Check Quiz ({currentLesson.quiz.length} Questions)
+                  </h3>
+
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+                    {currentLesson.quiz.map((q, qIdx) => {
+                      const selected = selectedQuizAnswers[qIdx];
+                      const isCorrect = selected === q.correctAnswer;
+
+                      return (
+                        <div
+                          key={qIdx}
+                          style={{
+                            background: '#ffffff',
+                            border: '1px solid #e2e8f0',
+                            borderRadius: '10px',
+                            padding: '1.25rem 1.5rem',
+                            boxShadow: '0 1px 3px rgba(0,0,0,0.03)'
+                          }}
+                        >
+                          <h4 style={{ margin: '0 0 0.85rem 0', fontSize: '0.98rem', fontWeight: 700, color: '#0f172a' }}>
+                            Q{qIdx + 1}: {q.question}
+                          </h4>
+
+                          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '8px' }}>
+                            {q.options.map((opt, optIdx) => {
+                              let btnBg = '#f8fafc';
+                              let btnBorder = '#cbd5e1';
+                              let btnColor = '#1e293b';
+
+                              if (selected === optIdx) {
+                                btnBg = '#eff6ff';
+                                btnBorder = '#3b82f6';
+                                btnColor = '#1d4ed8';
+                              }
+
+                              if (quizSubmitted) {
+                                if (optIdx === q.correctAnswer) {
+                                  btnBg = '#ecfdf5';
+                                  btnBorder = '#10b981';
+                                  btnColor = '#065f46';
+                                } else if (selected === optIdx && !isCorrect) {
+                                  btnBg = '#fef2f2';
+                                  btnBorder = '#ef4444';
+                                  btnColor = '#991b1b';
+                                }
+                              }
+
+                              return (
+                                <button
+                                  key={optIdx}
+                                  type="button"
+                                  disabled={quizSubmitted}
+                                  onClick={() => handleSelectQuizAnswer(qIdx, optIdx)}
+                                  style={{
+                                    textAlign: 'left',
+                                    padding: '0.65rem 0.9rem',
+                                    borderRadius: '6px',
+                                    border: `1.5px solid ${btnBorder}`,
+                                    background: btnBg,
+                                    color: btnColor,
+                                    fontSize: '0.85rem',
+                                    fontWeight: selected === optIdx ? 700 : 500,
+                                    cursor: quizSubmitted ? 'default' : 'pointer',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '8px',
+                                    transition: 'all 0.15s'
+                                  }}
+                                >
+                                  <span style={{ fontWeight: 800, color: '#64748b' }}>
+                                    {String.fromCharCode(65 + optIdx)}.
+                                  </span>
+                                  <span style={{ flex: 1 }}>{opt}</span>
+                                  {quizSubmitted && optIdx === q.correctAnswer && (
+                                    <CheckCircle size={14} color="#10b981" />
+                                  )}
+                                </button>
+                              );
+                            })}
+                          </div>
+
+                          {quizSubmitted && (
+                            <div style={{ marginTop: '0.65rem', padding: '0.5rem 0.85rem', borderRadius: '6px', background: isCorrect ? '#ecfdf5' : '#fef2f2', border: `1px solid ${isCorrect ? '#a7f3d0' : '#fecaca'}`, fontSize: '0.8rem', color: isCorrect ? '#065f46' : '#991b1b' }}>
+                              <strong>{isCorrect ? '✅ Correct!' : '❌ Incorrect.'}</strong> {q.explanation}
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+
+                  {!quizSubmitted && Object.keys(selectedQuizAnswers).length > 0 && (
+                    <div style={{ marginTop: '1rem', textAlign: 'right' }}>
+                      <button
+                        className="btn btn-primary"
+                        onClick={handleSubmitQuiz}
+                        style={{ fontSize: '0.88rem', padding: '0.6rem 1.4rem' }}
+                      >
+                        Check Answers
+                      </button>
+                    </div>
+                  )}
+                </div>
+              )}
+            </>
           )}
 
           {/* Action Bar at the Bottom — Matches Summer SQL Buttons */}
