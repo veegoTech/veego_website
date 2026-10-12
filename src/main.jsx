@@ -38,12 +38,19 @@ class ErrorBoundary extends Component {
 
 import { BrowserRouter } from 'react-router-dom';
 
-createRoot(document.getElementById('root')).render(
-  <StrictMode>
-    <ErrorBoundary>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
-    </ErrorBoundary>
-  </StrictMode>,
-);
+const rootElement = document.getElementById('root');
+if (!window.__reactRoot && rootElement) {
+  window.__reactRoot = createRoot(rootElement);
+}
+
+if (window.__reactRoot) {
+  window.__reactRoot.render(
+    <StrictMode>
+      <ErrorBoundary>
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
+      </ErrorBoundary>
+    </StrictMode>,
+  );
+}

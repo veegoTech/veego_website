@@ -222,8 +222,6 @@ app.get('/api/students', async (req, res) => {
   try {
     const supabaseStudents = await fetchSupabaseStudents();
     if (supabaseStudents) {
-      // Keep local JSON in sync
-      saveLocalStudents(supabaseStudents);
       return res.json(supabaseStudents);
     }
     const local = getLocalStudents();
