@@ -51,6 +51,9 @@ import {
 // LESSON 1 COMPONENT: WHAT IS ARTIFICIAL INTELLIGENCE?
 // =========================================================================
 export function Lesson1ModuleView({ onCopy, copiedIndex, openAITutor }) {
+  // Language Mode: 'en' (English), 'ta' (Tamil), 'both' (Bilingual)
+  const [langMode, setLangMode] = useState('both');
+
   // Mini Quiz State for Lesson 1
   const [selectedAnswers, setSelectedAnswers] = useState({});
   const [showResults, setShowResults] = useState(false);
@@ -379,35 +382,49 @@ export function Lesson1ModuleView({ onCopy, copiedIndex, openAITutor }) {
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '1rem', position: 'relative', zIndex: 1 }}>
           <div>
             <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', background: 'rgba(59, 130, 246, 0.2)', border: '1px solid rgba(59, 130, 246, 0.4)', borderRadius: '20px', padding: '3px 12px', fontSize: '0.78rem', color: '#93c5fd', fontWeight: 700, marginBottom: '0.65rem' }}>
-              <Sparkles size={14} /> Official Curriculum · NotebookLM Grounded
+              <Sparkles size={14} /> Official Curriculum · NotebookLM Grounded · தமிழ் & English
             </div>
             <h2 style={{ fontSize: '1.75rem', fontWeight: 800, margin: '0 0 0.5rem 0', color: '#ffffff', letterSpacing: '-0.02em' }}>
               Introduction to AI: Understanding the Future of Intelligence
             </h2>
-            <p style={{ margin: 0, fontSize: '0.95rem', color: '#cbd5e1', maxWidth: '780px', lineHeight: 1.6 }}>
-              Artificial Intelligence has rapidly shifted from science fiction into the foundation of modern technology. Explore the core definition of AI, its nested building blocks, the 3 classifications, real-world industry transformations, and the ethical foundations of Responsible AI.
+            <div style={{ fontSize: '1.1rem', fontWeight: 700, color: '#60a5fa', marginBottom: '0.4rem' }}>
+              செயற்கை நுண்ணறிவு அறிமுகம்: நவீன அறிவாற்றலின் எதிர்காலம்
+            </div>
+            <p style={{ margin: '0 0 0.85rem 0', fontSize: '0.92rem', color: '#cbd5e1', maxWidth: '780px', lineHeight: 1.6 }}>
+              {langMode !== 'ta' && "Artificial Intelligence has rapidly shifted from science fiction into the foundation of modern technology. Explore the core definition of AI, its nested building blocks, the 3 classifications, real-world industry transformations, and the ethical foundations of Responsible AI."}
+              {langMode === 'both' && <br />}
+              {langMode !== 'en' && <span style={{ color: '#93c5fd' }}>அறிவியல் புனைகதையிலிருந்து விடுபட்டு இன்றைய தொழில்நுட்பத்தின் அடித்தளமாக மாறியுள்ளது AI. செயற்கை நுண்ணறிவு என்றால் என்ன, அதன் 3 அடிப்படைக் கூறுகள், 3 வகைப்பாடுகள், வேலைவாய்ப்பு மற்றும் நிஜ உலகப் பயன்பாடுகளை எளிய தமிழில் கற்றுக் கொள்ளுங்கள்.</span>}
             </p>
+
+            {/* Language Mode Toggle */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+              <span style={{ fontSize: '0.8rem', color: '#94a3b8', fontWeight: 700 }}>கற்கும் மொழி / Language:</span>
+              {[
+                { id: 'both', label: '🌐 இருமொழி (Bilingual)' },
+                { id: 'ta', label: '🇮🇳 தமிழ் மட்டும் (Tamil Only)' },
+                { id: 'en', label: '🇬🇧 English Only' }
+              ].map(item => (
+                <button
+                  key={item.id}
+                  type="button"
+                  onClick={() => setLangMode(item.id)}
+                  style={{
+                    background: langMode === item.id ? '#3b82f6' : 'rgba(255,255,255,0.1)',
+                    color: '#ffffff',
+                    border: langMode === item.id ? '1.5px solid #93c5fd' : '1px solid rgba(255,255,255,0.2)',
+                    borderRadius: '20px',
+                    padding: '4px 12px',
+                    fontSize: '0.78rem',
+                    fontWeight: 700,
+                    cursor: 'pointer',
+                    boxShadow: langMode === item.id ? '0 2px 8px rgba(59,130,246,0.5)' : 'none'
+                  }}
+                >
+                  {item.label}
+                </button>
+              ))}
+            </div>
           </div>
-          <button
-            type="button"
-            onClick={() => openAITutor?.("Help me understand Lesson 1: What is AI, its building blocks, and classifications?")}
-            style={{
-              background: '#3b82f6',
-              color: '#ffffff',
-              border: 'none',
-              borderRadius: '8px',
-              padding: '0.7rem 1.25rem',
-              fontSize: '0.88rem',
-              fontWeight: 700,
-              cursor: 'pointer',
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '6px',
-              boxShadow: '0 4px 12px rgba(59, 130, 246, 0.3)'
-            }}
-          >
-            <Bot size={18} /> Ask AI Tutor
-          </button>
         </div>
       </div>
 
@@ -415,24 +432,36 @@ export function Lesson1ModuleView({ onCopy, copiedIndex, openAITutor }) {
       <div style={{ background: '#ffffff', borderRadius: '14px', border: '1px solid #e2e8f0', padding: '1.75rem', boxShadow: '0 2px 8px rgba(0,0,0,0.03)' }}>
         <div style={{ borderLeft: '4px solid #3b82f6', paddingLeft: '1rem', marginBottom: '1.25rem' }}>
           <span style={{ fontSize: '0.78rem', fontWeight: 800, color: '#3b82f6', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
-            TOPIC 1 · CORE DEFINITION
+            TOPIC 1 · CORE DEFINITION · அடிப்படைக் கருத்து
           </span>
           <h3 style={{ fontSize: '1.45rem', fontWeight: 800, color: '#0f172a', margin: '0.2rem 0 0 0' }}>
-            What Is Artificial Intelligence? Demystifying AI with Real-Life Examples
+            {langMode !== 'ta' && "What Is Artificial Intelligence? Demystifying AI with Real-Life Examples"}
+            {langMode === 'both' && <span style={{ display: 'block', fontSize: '1.15rem', color: '#2563eb', marginTop: '0.2rem' }}>செயற்கை நுண்ணறிவு என்றால் என்ன? எளிய நிஜ வாழ்க்கை உதாரணங்கள்</span>}
+            {langMode === 'ta' && "செயற்கை நுண்ணறிவு என்றால் என்ன? எளிய நிஜ வாழ்க்கை உதாரணங்கள்"}
           </h3>
         </div>
 
-        <p style={{ fontSize: '1rem', lineHeight: 1.75, color: '#334155', margin: '0 0 1rem 0' }}>
-          At its core, <strong>Artificial Intelligence (AI)</strong> refers to the simulation of human intelligence in machines programmed to <strong>think, learn, adapt, and problem-solve</strong>. Unlike traditional software that follows rigid, human-written rules to yield a specific output, AI systems ingest massive amounts of data, identify subtle patterns, and make decisions or predictions autonomously.
-        </p>
+        {langMode !== 'ta' && (
+          <p style={{ fontSize: '1rem', lineHeight: 1.75, color: '#334155', margin: '0 0 0.85rem 0' }}>
+            At its core, <strong>Artificial Intelligence (AI)</strong> refers to the simulation of human intelligence in machines programmed to <strong>think, learn, adapt, and problem-solve</strong>. Unlike traditional software that follows rigid, human-written rules to yield a specific output, AI systems ingest massive amounts of data, identify subtle patterns, and make decisions or predictions autonomously.
+          </p>
+        )}
+
+        {langMode !== 'en' && (
+          <div style={{ background: '#f8fafc', padding: '1rem 1.25rem', borderRadius: '10px', borderLeft: '4px solid #3b82f6', marginBottom: '1.25rem', fontSize: '0.95rem', color: '#1e293b', lineHeight: 1.75 }}>
+            <strong style={{ color: '#1d4ed8' }}>🎯 எளிய தமிழ் விளக்கம்:</strong> மனிதனைப் போல <strong>சுயமாக சிந்தித்து, பழைய தரவுகளிலிருந்து கற்றுக்கொண்டு, சூழலுக்கு ஏற்ப முடிவெடுத்து சிக்கல்களைத் தீர்க்கும்</strong> கணினி அமைப்புகளே "செயற்கை நுண்ணறிவு" (AI) எனப்படுகின்றன. மனித புரோகிராமர் எழுதும் நிலையான விதிகளுக்கு மட்டுமே அடிபணியாமல், தரவுகளிலிருந்து தானாகவே வடிவங்களைக் (patterns) கண்டறிந்து புதிய பதில்களை இது உருவாக்குகிறது.
+          </div>
+        )}
 
         {/* The Mental Model Card */}
         <div style={{ background: '#eff6ff', borderRadius: '12px', padding: '1.25rem 1.5rem', border: '1px solid #bfdbfe', marginBottom: '1.75rem' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#1d4ed8', fontWeight: 800, fontSize: '0.95rem', marginBottom: '0.4rem' }}>
-            <Brain size={20} /> The "Junior Super-Assistant" Mental Model:
+            <Brain size={20} /> The "Junior Super-Assistant" Mental Model / "ஜூனியர் உதவியாளர்" மனப் படிமம்:
           </div>
-          <p style={{ margin: 0, color: '#1e3a8a', fontSize: '0.92rem', lineHeight: 1.65 }}>
-            Think of AI as an <strong>extremely fast, well-read junior intern</strong> who has read millions of books, websites, and research papers. If you give this intern vague instructions (<em>"write about sales"</em>), they produce generic filler. But if you give them clear, structured guidelines (<em>"act as a sales manager, write a 120-word email highlighting 3 benefits"</em>), they save you 10 to 15 hours every week!
+          <p style={{ margin: 0, color: '#1e3a8a', fontSize: '0.92rem', lineHeight: 1.7 }}>
+            {langMode !== 'ta' && <>Think of AI as an <strong>extremely fast, well-read junior intern</strong> who has read millions of books, websites, and research papers. If you give this intern vague instructions (<em>"write about sales"</em>), they produce generic filler. But if you give them clear, structured guidelines (<em>"act as a sales manager, write a 120-word email highlighting 3 benefits"</em>), they save you 10 to 15 hours every week!</>}
+            {langMode === 'both' && <br />}
+            {langMode !== 'en' && <span style={{ display: 'block', marginTop: langMode === 'both' ? '0.5rem' : 0 }}>💡 <strong>தமிழ் விளக்கம்:</strong> AI என்பது மாயாஜாலமோ அல்லது உங்களை வேலைநீக்கம் செய்யும் ரோபோவோ அல்ல. அது <strong>கோடிக்கணக்கான புத்தகங்களையும் இணையப் பக்கங்களையும் நொடியில் வாசித்த ஒரு அதிவேக ஜூனியர் உதவியாளர்</strong> போன்றது. அவரிடம் அரைகுறையாக கேள்வி கேட்டால் பொதுவான பதிலையே தருவார்; ஆனால் தெளிவான கட்டளைகளை (Prompt) கொடுத்தால், உங்கள் வாரத்தின் 15 மணிநேர வேலைப்பளுவை உடனடியாகக் குறைத்துவிடுவார்!</span>}
           </p>
         </div>
 

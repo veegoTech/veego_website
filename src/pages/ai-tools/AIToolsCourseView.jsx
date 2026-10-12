@@ -888,17 +888,6 @@ export default function AIToolsCourseView({
                 <CheckCircle size={16} />
                 {isCurrentLessonDone ? 'Lesson Completed' : 'Mark as Completed'}
               </button>
-
-              {openAITutor && (
-                <button
-                  type="button"
-                  className="btn btn-outline"
-                  onClick={() => openAITutor(`Explain ${currentLesson.title} in simple terms with an example.`)}
-                  style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}
-                >
-                  <Bot size={16} /> Ask AI Tutor
-                </button>
-              )}
             </div>
 
             {nextNavigationTarget && (
