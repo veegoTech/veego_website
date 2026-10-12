@@ -220,10 +220,10 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
       </header>
 
       {/* ✨ ARCHITECTURAL SECTION DIVIDER */}
-      <WaveDivider />
+      <WaveDivider fromColor="#ffffff" toColor="#f1f5f9" type="curve-1" />
 
       {/* 🎨 2. MIDDLE SECTION - STORYTELLING & SYSTEMS EXPERTS (LIGHT SLATE SURFACE) */}
-      <section className="py-12 sm:py-16 bg-[#f8fafc] text-slate-900 relative z-20 overflow-hidden border-y border-slate-200/60">
+      <section className="py-12 sm:py-16 bg-[#f1f5f9] text-slate-900 relative z-20 overflow-hidden">
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 z-10">
 
           {/* Section Header */}
@@ -308,7 +308,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
       </section>
 
       {/* ✨ ARCHITECTURAL SECTION DIVIDER */}
-      <WaveDivider />
+      <WaveDivider fromColor="#f1f5f9" toColor="#ffffff" type="curve-2" />
 
       {/* 3. CORE SERVICES SECTION (REAL ENGINEERING · HAND-CRAFTED SYSTEMS) */}
       <div id="services">
@@ -319,7 +319,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
       </div>
 
       {/* ✨ ARCHITECTURAL SECTION DIVIDER */}
-      <WaveDivider />
+      <WaveDivider fromColor="#ffffff" toColor="#f1f5f9" type="curve-1" />
 
       {/* 5. ENGINEERING STANDARD: TECHNOLOGY IS ONLY USEFUL WHEN IT SOLVES SOMETHING */}
       <div id="connection">
@@ -327,7 +327,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
       </div>
 
       {/* ✨ ARCHITECTURAL SECTION DIVIDER */}
-      <WaveDivider />
+      <WaveDivider fromColor="#f1f5f9" toColor="#ffffff" type="curve-2" />
 
       {/* 6. THE TWO MAIN SIDES OF VEEGO (BUSINESS SOLUTIONS & PRODUCTION SOFTWARE PROJECTS) */}
       <div id="pathways">
@@ -340,7 +340,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
       </div>
 
       {/* ✨ ARCHITECTURAL SECTION DIVIDER */}
-      <WaveDivider />
+      <WaveDivider fromColor="#ffffff" toColor="#f1f5f9" type="curve-1" />
 
       {/* 7. HOW IT WORKS (UNDERSTAND · BUILD · GROW) */}
       <div id="how-it-works" className="scroll-mt-16">
@@ -350,7 +350,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
       </div>
 
       {/* ✨ ARCHITECTURAL SECTION DIVIDER */}
-      <WaveDivider />
+      <WaveDivider fromColor="#f1f5f9" toColor="#ffffff" type="curve-2" />
 
       {/* ✉️ 9. DIRECT CONSULTATION FORM - "WHAT IS YOUR BUSINESS PROBLEM?" */}
       <section id="contact" className="relative py-12 sm:py-16 bg-white scroll-mt-16 overflow-hidden text-slate-900">
@@ -491,7 +491,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
       </section>
 
       {/* ✨ ARCHITECTURAL SECTION DIVIDER */}
-      <WaveDivider />
+      <WaveDivider fromColor="#ffffff" toColor="#f1f5f9" type="curve-1" />
 
       {/* 10. WHY VEEGO PRINCIPLES & FINAL BOTTOM CALL TO ACTION */}
       <div id="about" className="scroll-mt-16">

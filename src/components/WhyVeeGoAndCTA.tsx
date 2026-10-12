@@ -41,7 +41,7 @@ export const WhyVeeGoAndCTA: React.FC<WhyVeeGoAndCTAProps> = ({
   return (
     <>
       {/* SECTION: WHY VEEGO */}
-      <section className="relative py-12 sm:py-16 bg-[#f8fafc] text-slate-900 overflow-hidden border-b border-slate-200/60">
+      <section className="relative py-12 sm:py-16 bg-[#f1f5f9] text-slate-900 overflow-hidden">
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 z-10">
           <div className="text-center max-w-3xl mx-auto mb-16">
             <motion.div
@@ -103,7 +103,7 @@ export const WhyVeeGoAndCTA: React.FC<WhyVeeGoAndCTAProps> = ({
       </section>
 
       {/* ✨ ARCHITECTURAL SECTION DIVIDER */}
-      <WaveDivider />
+      <WaveDivider fromColor="#f1f5f9" toColor="#ffffff" type="curve-2" />
 
       {/* SECTION: FINAL BOTTOM CTA */}
       <section className="relative overflow-hidden py-12 sm:py-16 pb-20 sm:pb-24 bg-white text-slate-900">

@@ -41,7 +41,7 @@ export const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({ onStartDis
   ];
 
   return (
-    <section className="relative py-12 sm:py-16 bg-[#f8fafc] text-slate-900 overflow-hidden border-b border-slate-200/60">
+    <section className="relative py-12 sm:py-16 bg-[#f1f5f9] text-slate-900 overflow-hidden">
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 z-10">
         <div className="text-center max-w-3xl mx-auto mb-16">
           <motion.div
