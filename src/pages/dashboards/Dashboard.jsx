@@ -5,7 +5,7 @@ import {
   Server, RefreshCw, Trash2, Key, Star, ShieldAlert, Award, Grid, HelpCircle,
   BookOpen, ExternalLink, Upload, Download, FileText, Lock, AlertTriangle, Menu, X,
   Search, ChevronLeft, ChevronRight, Copy, Receipt, Briefcase,
-  CreditCard, FileCheck2
+  CreditCard, FileCheck2, Edit3
 } from 'lucide-react';
 import {
   getAssignmentValidations,
