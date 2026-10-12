@@ -55,17 +55,29 @@ export function Lesson1ModuleView({ onCopy, copiedIndex, openAITutor }) {
   const [selectedAnswers, setSelectedAnswers] = useState({});
   const [showResults, setShowResults] = useState(false);
 
-  // Active Real-World Example Card Tab
+  // Active Real-World Everyday Example Tab
   const [activeExampleTab, setActiveExampleTab] = useState('maps');
 
   // Interactive Traditional vs AI View Mode
   const [activeComparisonView, setActiveComparisonView] = useState('table'); // 'table' | 'flowchart'
 
+  // Interactive Building Blocks Tab
+  const [activeBuildingBlock, setActiveBuildingBlock] = useState('ml'); // 'ml' | 'dl' | 'genai'
+
+  // Interactive Classifications of AI Tab
+  const [activeClassification, setActiveClassification] = useState('ani'); // 'ani' | 'agi' | 'asi'
+
+  // Interactive Industry Impact Tab
+  const [activeImpactSector, setActiveImpactSector] = useState('healthcare'); // 'healthcare' | 'finance' | 'education' | 'dailylife'
+
+  // Interactive Responsible AI Tab
+  const [activeEthicsTab, setActiveEthicsTab] = useState('bias'); // 'bias' | 'privacy' | 'economics' | 'governance'
+
   const realWorldExamples = {
     maps: {
       title: 'Google Maps Live Rerouting',
       icon: <MapPin size={22} color="#2563eb" />,
-      tag: 'Predictive AI in Daily Commutes',
+      tag: 'Predictive Narrow AI in Daily Commutes',
       summary: 'Analyzes live GPS signals from millions of moving smartphones across India in real-time.',
       traditionalApproach: 'Calculates fixed distance divided by standard speed limit: Time = Distance / Speed. It cannot predict sudden traffic jams on MG Road or Anna Salai.',
       aiApproach: 'Predictive machine learning models continuously ingest live speed data from autos, bikes, and buses, recognizing developing congestion patterns and rerouting you 15 minutes before you reach the traffic knot.',
@@ -92,7 +104,7 @@ export function Lesson1ModuleView({ onCopy, copiedIndex, openAITutor }) {
     faceid: {
       title: 'Smartphone Face Unlock & Biometrics',
       icon: <Smartphone size={22} color="#9333ea" />,
-      tag: 'Computer Vision & Neural Networks',
+      tag: 'Computer Vision & Deep Neural Networks',
       summary: 'Maps 30,000 infrared facial depth dots in less than 0.2 seconds.',
       traditionalApproach: 'Compares a 2D photograph pixel-by-pixel. If lighting changes, or you put on reading glasses, traditional software fails to match the photo.',
       aiApproach: 'Deep convolutional neural networks learn abstract 3D facial contours and depth vectors, recognizing your face in dark rooms, with beard growth, or with spectacles.',
@@ -101,6 +113,152 @@ export function Lesson1ModuleView({ onCopy, copiedIndex, openAITutor }) {
   };
 
   const currentExample = realWorldExamples[activeExampleTab];
+
+  // Building Blocks Data (from NotebookLM)
+  const buildingBlocks = {
+    ml: {
+      name: 'Machine Learning (ML)',
+      badge: 'Core Foundation',
+      color: '#2563eb',
+      definition: 'A subset of AI where algorithms are trained on datasets to discover patterns and make predictions without being explicitly hardcoded for every scenario.',
+      howItWorks: 'Instead of writing manual rules (e.g. IF income > 50k), the algorithm analyzes historical records of loan approvals, calculates statistical correlations, and predicts probability scores for new applicants.',
+      everydayExamples: 'Netflix/YouTube recommendation feeds, spam filters, predictive maintenance in factories, stock market trend indicators.',
+      keyTakeaway: 'The machine learns from historical examples; as data volume grows, accuracy improves.'
+    },
+    dl: {
+      name: 'Deep Learning (DL)',
+      badge: 'Neural Network Architecture',
+      color: '#7c3aed',
+      definition: 'A specialized branch of machine learning utilizing multi-layered Artificial Neural Networks (ANNs) inspired by the biological human brain.',
+      howItWorks: 'Raw signals pass through input, hidden, and output neuron layers. Early layers detect low-level edges/pixels; middle layers recognize shapes and contours; deep layers identify complete concepts like human faces or tumor boundaries.',
+      everydayExamples: 'Self-driving Tesla/Waymo computer vision, MRI medical scan diagnosis, real-time voice translation, facial unlock biometrics.',
+      keyTakeaway: 'Excels at complex sensory data (images, video, audio) that traditional algorithms cannot decipher.'
+    },
+    genai: {
+      name: 'Generative AI (GenAI)',
+      badge: 'Creative & Conversational Wave',
+      color: '#059669',
+      definition: 'Advanced AI systems (such as Large Language Models and diffusion models) trained on vast internet corpuses to create brand-new original content from natural language prompts.',
+      howItWorks: 'Trained on trillions of text tokens or image-caption pairs using transformer architectures, predicting probable next tokens or denoising latent vectors to synthesize cohesive answers, code, or art.',
+      everydayExamples: 'ChatGPT, Google Gemini, Microsoft Copilot, Claude, Midjourney, GitHub Copilot.',
+      keyTakeaway: 'Moves beyond analyzing and classifying data to synthesizing entirely new text, code, graphics, and strategies.'
+    }
+  };
+
+  // Classifications of AI (from NotebookLM)
+  const classifications = {
+    ani: {
+      name: 'Artificial Narrow Intelligence (ANI)',
+      aka: 'Weak AI',
+      status: '✅ ACTIVE TODAY (100% of current AI)',
+      statusColor: '#16a34a',
+      scope: 'Specialized for a single, well-defined task domain.',
+      description: 'Systems engineered to excel at one specific problem — such as playing grandmaster chess, transcribing audio, recognizing faces, or drafting text. A chess engine cannot drive a car, and ChatGPT cannot perform heart surgery.',
+      examples: ['Google Maps navigation', 'AlphaGo & Stockfish', 'Siri & Alexa voice commands', 'ChatGPT & Gemini conversational models']
+    },
+    agi: {
+      name: 'Artificial General Intelligence (AGI)',
+      aka: 'Strong AI',
+      status: '⏳ THEORETICAL MILESTONE (Under Active Research)',
+      statusColor: '#d97706',
+      scope: 'Human-level cognitive capability across all intellectual tasks.',
+      description: 'A theoretical future machine capable of comprehending, learning, reasoning, abstracting, and adapting across any intellectual task just like a human being. It would transfer knowledge across completely unrelated fields without specialized retraining.',
+      examples: ['Autonomous scientific discovery across physics and medicine', 'Self-evolving general software engineers', 'General cognitive problem-solving across all human professions']
+    },
+    asi: {
+      name: 'Artificial Superintelligence (ASI)',
+      aka: 'Superhuman Intelligence',
+      status: '🔮 HYPOTHETICAL FUTURE STAGE',
+      statusColor: '#9333ea',
+      scope: 'Surpasses the collective intelligence of all human minds combined.',
+      description: 'A hypothetical stage where artificial systems exceed human cognitive capabilities in every single domain — including scientific creativity, general wisdom, philosophical reasoning, and social skills.',
+      examples: ['Instant solutions to global climate physics', 'Interstellar propulsion breakthroughs', 'Autonomous macro-economic optimization at planetary scale']
+    }
+  };
+
+  // Real-World Industry Impact Data (from NotebookLM)
+  const industryImpacts = {
+    healthcare: {
+      title: 'Healthcare & Medicine',
+      icon: <Brain size={22} color="#dc2626" />,
+      color: '#dc2626',
+      headline: 'Early Disease Detection & Molecular Drug Discovery',
+      points: [
+        { label: 'Radiology Imaging', desc: 'CNN models inspect X-rays, MRIs, and CT scans in seconds to detect micro-tumors and fractures earlier than the human eye.' },
+        { label: 'Drug Discovery', desc: 'Accelerates screening of billions of chemical compounds from 10 years to weeks (e.g. DeepMind AlphaFold predicting protein structures).' },
+        { label: 'Personalized Treatment', desc: 'Analyzes patient genomic profiles to customize oncology chemotherapy plans with reduced side effects.' }
+      ]
+    },
+    finance: {
+      title: 'Business & Finance',
+      icon: <TrendingUp size={22} color="#059669" />,
+      color: '#059669',
+      headline: 'Real-Time Fraud Prevention & Algorithmic Market Forecasting',
+      points: [
+        { label: 'Instant Fraud Detection', desc: 'Analyzes millions of UPI, credit card, and NEFT transactions per second, freezing fraudulent account transfers before money leaves the bank.' },
+        { label: 'Algorithmic Risk Underwriting', desc: 'Assesses loan applications in seconds based on multi-variable credit signals rather than rigid paper forms.' },
+        { label: 'Workflow Automation', desc: 'Parses incoming vendor invoices, matches purchase orders, and logs bookkeeping entries automatically.' }
+      ]
+    },
+    education: {
+      title: 'Education & Creativity',
+      icon: <BookOpen size={22} color="#2563eb" />,
+      color: '#2563eb',
+      headline: '24/7 Personalized AI Tutors & Synthetic Media Generation',
+      points: [
+        { label: 'Adaptive Tutoring', desc: 'Personalizes lesson pacing, explanations, and analogies to each student\'s learning speed without judgment.' },
+        { label: 'Developer Coding Copilots', desc: 'Suggests unit tests, autocompletes functions, and debugs syntax errors in real-time, tripling engineering velocity.' },
+        { label: 'Creative Content Creation', desc: 'Generates initial drafts of presentation decks, social media banners, marketing copy, and podcast scripts.' }
+      ]
+    },
+    dailylife: {
+      title: 'Daily Life & Society',
+      icon: <Smartphone size={22} color="#7c3aed" />,
+      color: '#7c3aed',
+      headline: 'Intelligent Navigation, Speech Translation & Smart Living',
+      points: [
+        { label: 'Predictive Navigation', desc: 'Dynamically routes millions of vehicles around traffic accidents and road repairs in real-time.' },
+        { label: 'Live Multilingual Translation', desc: 'Breaks communication barriers by translating speech between languages instantly in video calls and messaging.' },
+        { label: 'Smart Home Automation', desc: 'Learns household temperature preferences, optimizes electricity consumption, and manages smart appliances.' }
+      ]
+    }
+  };
+
+  // Responsible AI & Ethics Data (from NotebookLM)
+  const ethicsTopics = {
+    bias: {
+      title: 'Algorithmic Bias & Fairness',
+      badge: 'Data Integrity Risk',
+      color: '#dc2626',
+      problem: 'AI systems learn from historical human-generated datasets. If historical data contains societal prejudices or gender/demographic disparities, the AI algorithm will learn, mirror, and amplify that bias.',
+      realExample: 'A recruitment AI trained on 10 years of predominantly male tech resumes may unfairly penalize female applicants because it statistically associates success with male profile phrasing.',
+      safeguard: 'Audit training data for demographic representation, implement algorithmic fairness metrics, and mandate diverse human oversight panels.'
+    },
+    privacy: {
+      title: 'Privacy & Data Security',
+      badge: 'Information Protection',
+      color: '#d97706',
+      problem: 'AI models require vast data volumes. Consumer free tools often log user inputs to train future models, creating risks of leaking sensitive personal data, corporate secrets, or student records.',
+      realExample: 'An employee pasting confidential quarterly financials or customer Aadhaar card numbers into a public chatbot inadvertently exposes proprietary data to third-party cloud servers.',
+      safeguard: 'Never paste passwords, banking details, or confidential records into free public AI; utilize enterprise instances with zero-data-retention guarantees.'
+    },
+    economics: {
+      title: 'Workforce Shifts & Reskilling',
+      badge: 'Economic Reality',
+      color: '#2563eb',
+      problem: 'AI automates repetitive analytical and drafting tasks. While routine cognitive tasks will be transformed, jobs that blend AI proficiency with human emotional intelligence will expand rapidly.',
+      realExample: 'Data entry, basic translation, and repetitive boilerplate writing are heavily impacted; prompt-skilled professionals and strategic managers gain a massive productivity edge.',
+      safeguard: 'Focus on continuous upskilling: learn to pilot AI tools effectively while cultivating uniquely human skills like critical thinking, empathy, and ethical judgment.'
+    },
+    governance: {
+      title: 'Governance & Alignment (Responsible AI)',
+      badge: 'Safety Standards',
+      color: '#059669',
+      problem: 'Ensuring advanced AI systems remain transparent, interpretable, safe, and aligned with human values and safety standards rather than operating as black boxes.',
+      realExample: 'Deepfakes and automated synthetic disinformation on social media distorting public trust during elections or business announcements.',
+      safeguard: 'Cryptographic digital watermarking on AI-generated media, clear disclosure policies, and strict regulatory frameworks for high-stakes AI applications.'
+    }
+  };
 
   // Recharts Task Execution Speed Data
   const executionSpeedData = [
@@ -125,27 +283,27 @@ export function Lesson1ModuleView({ onCopy, copiedIndex, openAITutor }) {
     },
     {
       id: 'q2',
-      question: 'Which of the following represents an everyday application of AI you already use in India?',
+      question: 'Which of the following describes the nested relationship between AI, Machine Learning (ML), and Deep Learning (DL)?',
       options: [
-        'A manual wall clock ticking on the wall.',
-        'Google Maps rerouting you around a traffic bottleneck on MG Road in real-time.',
-        'A paper notebook with handwritten algebra formulas.',
-        'A standard pocket calculator doing 50 + 25 = 75.'
+        'They are 3 unrelated technologies developed by separate rival companies.',
+        'AI is the broad umbrella; Machine Learning is a subset learning from data; Deep Learning is a subset of ML using Artificial Neural Networks.',
+        'Deep Learning is the umbrella, and AI is just a small mobile app.',
+        'Machine Learning only works on spreadsheets; Deep Learning only works on gaming consoles.'
       ],
       correctIndex: 1,
-      explanation: 'Google Maps uses predictive machine learning to aggregate live speeds and sensor data from millions of smartphones to dynamically forecast traffic and reroute drivers.'
+      explanation: 'AI is the overarching field. Machine Learning focuses on learning from data, and Deep Learning specializes in multi-layered Artificial Neural Networks inspired by the brain.'
     },
     {
       id: 'q3',
-      question: 'What is "Generative AI" primarily designed to do?',
+      question: 'Which classification represents ALL Artificial Intelligence systems currently active in the world today?',
       options: [
-        'Generate electrical current to charge laptop batteries.',
-        'Synthesize brand-new original content such as text, images, slide outlines, and code from natural language prompts.',
-        'Repair broken hardware screens and laptop keyboards.',
-        'Clean dust from computer cooling fans automatically.'
+        'Artificial General Intelligence (AGI / Strong AI)',
+        'Artificial Superintelligence (ASI)',
+        'Artificial Narrow Intelligence (ANI / Weak AI)',
+        'Sentient Quantum Consciousness (SQC)'
       ],
-      correctIndex: 1,
-      explanation: 'Generative AI models create novel outputs (essays, summaries, emails, graphics, scripts) rather than merely classifying or sorting existing data.'
+      correctIndex: 2,
+      explanation: 'Every current AI system — including Google Maps, AlphaGo, ChatGPT, and medical vision scanners — is Artificial Narrow Intelligence (ANI), specialized for specific tasks. General AI (AGI) remains theoretical.'
     },
     {
       id: 'q4',
@@ -161,15 +319,27 @@ export function Lesson1ModuleView({ onCopy, copiedIndex, openAITutor }) {
     },
     {
       id: 'q5',
-      question: 'Why can AI never fully replace human common sense and ethical verification?',
+      question: 'Why can AI decision-making algorithms exhibit demographic or gender bias in hiring or loan screening?',
       options: [
-        'Because AI does not have real-world physical experience, genuine empathy, or moral accountability.',
-        'Because AI algorithms are programmed to erase their memory every 24 hours.',
-        'Because AI models are strictly prohibited by law from generating text over 100 words.',
-        'Because computers cannot perform mathematical calculations.'
+        'Because computer chips inherently hold prejudices against specific postal codes.',
+        'Because AI models train on historical human datasets, inheriting and amplifying existing historical human disparities.',
+        'Because AI is legally mandated to discriminate.',
+        'Because AI algorithms are programmed in foreign languages.'
       ],
-      correctIndex: 0,
-      explanation: 'AI possesses vast pattern recognition, but humans supply emotional intelligence, real-world context, ethical judgment, and factual verification.'
+      correctIndex: 1,
+      explanation: 'AI algorithms learn statistical patterns from historical data. If the historical data reflects past societal biases or underrepresentation, the model will reproduce that bias unless active mitigation safeguards are applied.'
+    },
+    {
+      id: 'q6',
+      question: 'Why does the future of intelligence center on "Collaborative Intelligence" rather than human replacement?',
+      options: [
+        'Because computers will run out of electricity by next year.',
+        'Because AI acts as a force multiplier for drafting and analysis, while humans supply empathy, ethical judgment, common sense, and factual verification.',
+        'Because international laws prohibit computers from communicating with adults.',
+        'Because AI cannot understand numbers higher than 100.'
+      ],
+      correctIndex: 1,
+      explanation: 'The most effective outcome occurs when humans pilot AI: leveraging AI for rapid drafting and pattern recognition, while humans contribute critical discernment, ethical integrity, and context.'
     }
   ];
 
@@ -180,25 +350,72 @@ export function Lesson1ModuleView({ onCopy, copiedIndex, openAITutor }) {
       purpose: 'Demystify complex technical, accounting, or legal topics in under 10 seconds.'
     },
     {
+      title: 'AI Building Blocks Breakdown (ML vs DL vs GenAI)',
+      prompt: 'Explain the difference between Machine Learning, Deep Learning, and Generative AI for someone working in [Your Industry/Domain, e.g., Healthcare, Accounting, or Marketing]. Provide 1 concrete real-world use case for each in simple language.',
+      purpose: 'Clarify the nested technical architecture of modern AI systems for real-world projects.'
+    },
+    {
       title: 'Traditional Software vs AI Comparison Generator',
       prompt: 'I am learning the difference between traditional rule-based software and modern AI. Create a clean 3-column Markdown comparison table for the field of [e.g., Hospital Healthcare or Banking]. Columns: Feature, Traditional Software Approach, AI-Assisted Approach. Keep each row under 20 words.',
       purpose: 'Build crystal-clear intuitive mental models for work or exams.'
     },
     {
+      title: 'Responsible AI & Ethical Bias Audit',
+      prompt: 'I am planning to deploy an AI system to assist with [Task or Process, e.g., resume screening, student grading, or loan approvals]. List 3 potential sources of historical training bias that could harm users, and 3 specific safeguards I should implement.',
+      purpose: 'Evaluate algorithmic bias and implement Responsible AI best practices before deploying workflows.'
+    },
+    {
       title: 'AI Reality Check & Verification Guide',
       prompt: 'I want to use AI to help me with [Task, e.g., preparing a history seminar on the Chola Dynasty]. List 3 things AI will do exceptionally well for this task, and 3 specific facts where AI might hallucinate and where I must double-check official textbooks myself.',
-      purpose: 'Prevent blind copy-pasting and establish strong academic integrity.'
+      purpose: 'Prevent blind copy-pasting and establish strong academic and professional integrity.'
     }
   ];
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '2.5rem' }}>
 
-      {/* TOPIC 1: AI EXPLAINED WITH SIMPLE REAL-LIFE EXAMPLES */}
+      {/* LESSON HEADER BANNER */}
+      <div style={{ background: 'linear-gradient(135deg, #1e293b 0%, #0f172a 100%)', borderRadius: '14px', padding: '1.75rem', color: '#ffffff', border: '1px solid #334155', position: 'relative', overflow: 'hidden' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '1rem', position: 'relative', zIndex: 1 }}>
+          <div>
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', background: 'rgba(59, 130, 246, 0.2)', border: '1px solid rgba(59, 130, 246, 0.4)', borderRadius: '20px', padding: '3px 12px', fontSize: '0.78rem', color: '#93c5fd', fontWeight: 700, marginBottom: '0.65rem' }}>
+              <Sparkles size={14} /> Official Curriculum · NotebookLM Grounded
+            </div>
+            <h2 style={{ fontSize: '1.75rem', fontWeight: 800, margin: '0 0 0.5rem 0', color: '#ffffff', letterSpacing: '-0.02em' }}>
+              Introduction to AI: Understanding the Future of Intelligence
+            </h2>
+            <p style={{ margin: 0, fontSize: '0.95rem', color: '#cbd5e1', maxWidth: '780px', lineHeight: 1.6 }}>
+              Artificial Intelligence has rapidly shifted from science fiction into the foundation of modern technology. Explore the core definition of AI, its nested building blocks, the 3 classifications, real-world industry transformations, and the ethical foundations of Responsible AI.
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={openAITutor}
+            style={{
+              background: '#3b82f6',
+              color: '#ffffff',
+              border: 'none',
+              borderRadius: '8px',
+              padding: '0.7rem 1.25rem',
+              fontSize: '0.88rem',
+              fontWeight: 700,
+              cursor: 'pointer',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '6px',
+              boxShadow: '0 4px 12px rgba(59, 130, 246, 0.3)'
+            }}
+          >
+            <Bot size={18} /> Ask AI Tutor
+          </button>
+        </div>
+      </div>
+
+      {/* TOPIC 1: WHAT IS ARTIFICIAL INTELLIGENCE? */}
       <div style={{ background: '#ffffff', borderRadius: '14px', border: '1px solid #e2e8f0', padding: '1.75rem', boxShadow: '0 2px 8px rgba(0,0,0,0.03)' }}>
         <div style={{ borderLeft: '4px solid #3b82f6', paddingLeft: '1rem', marginBottom: '1.25rem' }}>
           <span style={{ fontSize: '0.78rem', fontWeight: 800, color: '#3b82f6', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
-            TOPIC 1 · CONCEPTUAL FOUNDATION
+            TOPIC 1 · CORE DEFINITION
           </span>
           <h3 style={{ fontSize: '1.45rem', fontWeight: 800, color: '#0f172a', margin: '0.2rem 0 0 0' }}>
             What Is Artificial Intelligence? Demystifying AI with Real-Life Examples
@@ -206,7 +423,7 @@ export function Lesson1ModuleView({ onCopy, copiedIndex, openAITutor }) {
         </div>
 
         <p style={{ fontSize: '1rem', lineHeight: 1.75, color: '#334155', margin: '0 0 1rem 0' }}>
-          When most beginners hear <strong>Artificial Intelligence (AI)</strong>, they imagine science-fiction robots or magical computers. In reality, modern AI is neither magic nor human consciousness.
+          At its core, <strong>Artificial Intelligence (AI)</strong> refers to the simulation of human intelligence in machines programmed to <strong>think, learn, adapt, and problem-solve</strong>. Unlike traditional software that follows rigid, human-written rules to yield a specific output, AI systems ingest massive amounts of data, identify subtle patterns, and make decisions or predictions autonomously.
         </p>
 
         {/* The Mental Model Card */}
@@ -265,7 +482,7 @@ export function Lesson1ModuleView({ onCopy, copiedIndex, openAITutor }) {
               {currentExample.tag}
             </span>
             <span style={{ fontSize: '0.82rem', color: '#16a34a', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '4px' }}>
-              <CheckCircle size={15} /> Active Indian Application
+              <CheckCircle size={15} /> Active Everyday Application
             </span>
           </div>
 
@@ -427,69 +644,294 @@ export function Lesson1ModuleView({ onCopy, copiedIndex, openAITutor }) {
         </div>
       </div>
 
-      {/* TOPIC 3: GENERATIVE AI AND AI ASSISTANTS */}
+      {/* TOPIC 3: THE BUILDING BLOCKS OF AI (ML, DL, GENAI) */}
       <div style={{ background: '#ffffff', borderRadius: '14px', border: '1px solid #e2e8f0', padding: '1.75rem', boxShadow: '0 2px 8px rgba(0,0,0,0.03)' }}>
-        <div style={{ borderLeft: '4px solid #f59e0b', paddingLeft: '1rem', marginBottom: '1.25rem' }}>
-          <span style={{ fontSize: '0.78rem', fontWeight: 800, color: '#f59e0b', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
-            TOPIC 3 · THE MODERN WAVE
+        <div style={{ borderLeft: '4px solid #7c3aed', paddingLeft: '1rem', marginBottom: '1.25rem' }}>
+          <span style={{ fontSize: '0.78rem', fontWeight: 800, color: '#7c3aed', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+            TOPIC 3 · NESTED ARCHITECTURE
           </span>
           <h3 style={{ fontSize: '1.45rem', fontWeight: 800, color: '#0f172a', margin: '0.2rem 0 0 0' }}>
-            Generative AI and Conversational Assistants: The Paradigm Shift
+            The 3 Building Blocks of AI: Machine Learning, Deep Learning & Generative AI
           </h3>
         </div>
 
         <p style={{ fontSize: '1rem', lineHeight: 1.75, color: '#334155', margin: '0 0 1.25rem 0' }}>
-          Until 2022, most AI systems were <strong>Predictive or Discriminative</strong> — they merely classified existing data: <em>"Is this transaction on PhonePe fraudulent: Yes or No?"</em> or <em>"Does this image contain a helmet: Yes or No?"</em>
+          Artificial Intelligence is an overarching umbrella concept. Beneath it lies a hierarchy of nested technologies that have evolved over decades, culminating in today's generative models:
         </p>
 
-        <p style={{ fontSize: '1rem', lineHeight: 1.75, color: '#334155', margin: '0 0 1.5rem 0' }}>
-          <strong>Generative AI</strong> fundamentally broke through by creating <strong>brand-new original content</strong> from plain English prompts:
-        </p>
-
-        {/* Generative Modality Grid */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1rem', marginBottom: '1.5rem' }}>
-          <div style={{ background: '#f8fafc', padding: '1rem 1.25rem', borderRadius: '10px', border: '1px solid #e2e8f0' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#2563eb', fontWeight: 800, fontSize: '0.92rem', marginBottom: '0.35rem' }}>
-              <FileText size={18} /> Text & Code
-            </div>
-            <p style={{ margin: 0, fontSize: '0.85rem', color: '#64748b', lineHeight: 1.5 }}>
-              Summaries, email replies, Excel formulas, Python scripts, study notes, and legal clauses.
-            </p>
-          </div>
-
-          <div style={{ background: '#f8fafc', padding: '1rem 1.25rem', borderRadius: '10px', border: '1px solid #e2e8f0' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#9333ea', fontWeight: 800, fontSize: '0.92rem', marginBottom: '0.35rem' }}>
-              <ImageIcon size={18} /> Visual Graphics
-            </div>
-            <p style={{ margin: 0, fontSize: '0.85rem', color: '#64748b', lineHeight: 1.5 }}>
-              Photorealistic imagery, company logos, social media banners, diagrams, and thumbnails.
-            </p>
-          </div>
-
-          <div style={{ background: '#f8fafc', padding: '1rem 1.25rem', borderRadius: '10px', border: '1px solid #e2e8f0' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#16a34a', fontWeight: 800, fontSize: '0.92rem', marginBottom: '0.35rem' }}>
-              <Presentation size={18} /> Presentations
-            </div>
-            <p style={{ margin: 0, fontSize: '0.85rem', color: '#64748b', lineHeight: 1.5 }}>
-              Generates 10-slide decks with titles, bullets, icons, and themes from rough raw notes.
-            </p>
-          </div>
-
-          <div style={{ background: '#f8fafc', padding: '1rem 1.25rem', borderRadius: '10px', border: '1px solid #e2e8f0' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#ea580c', fontWeight: 800, fontSize: '0.92rem', marginBottom: '0.35rem' }}>
-              <Bot size={18} /> Conversational Chat
-            </div>
-            <p style={{ margin: 0, fontSize: '0.85rem', color: '#64748b', lineHeight: 1.5 }}>
-              Interactive assistants (ChatGPT, Gemini, Copilot) answering questions iteratively like a colleague.
-            </p>
+        {/* Visual Hierarchy Diagram */}
+        <div style={{ background: '#f8fafc', borderRadius: '12px', border: '1px solid #e2e8f0', padding: '1.25rem 1.5rem', marginBottom: '1.5rem', textAlign: 'center' }}>
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap', justifyContent: 'center', fontSize: '0.9rem', fontWeight: 700 }}>
+            <span style={{ background: '#dbeafe', color: '#1e40af', padding: '6px 14px', borderRadius: '20px', border: '1px solid #bfdbfe' }}>
+              1. Artificial Intelligence (AI)
+            </span>
+            <span style={{ color: '#94a3b8' }}>&rarr; encompasses &rarr;</span>
+            <span style={{ background: '#e0e7ff', color: '#3730a3', padding: '6px 14px', borderRadius: '20px', border: '1px solid #c7d2fe' }}>
+              2. Machine Learning (ML)
+            </span>
+            <span style={{ color: '#94a3b8' }}>&rarr; includes &rarr;</span>
+            <span style={{ background: '#f3e8ff', color: '#6b21a8', padding: '6px 14px', borderRadius: '20px', border: '1px solid #e9d5ff' }}>
+              3. Deep Learning (DL / ANNs)
+            </span>
+            <span style={{ color: '#94a3b8' }}>&rarr; powers &rarr;</span>
+            <span style={{ background: '#d1fae5', color: '#065f46', padding: '6px 14px', borderRadius: '20px', border: '1px solid #a7f3d0' }}>
+              4. Generative AI (LLMs)
+            </span>
           </div>
         </div>
 
-        {/* Recharts Execution Speed Comparison */}
-        <div style={{ background: '#f8fafc', borderRadius: '12px', border: '1px solid #e2e8f0', padding: '1.25rem' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
+        {/* Building Blocks Interactive Tab Selector */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '10px', marginBottom: '1.25rem' }}>
+          {Object.keys(buildingBlocks).map(key => {
+            const block = buildingBlocks[key];
+            const isSelected = activeBuildingBlock === key;
+            return (
+              <button
+                key={key}
+                type="button"
+                onClick={() => setActiveBuildingBlock(key)}
+                style={{
+                  padding: '0.85rem 1rem',
+                  borderRadius: '10px',
+                  border: isSelected ? `2px solid ${block.color}` : '1px solid #e2e8f0',
+                  background: isSelected ? '#faf5ff' : '#f8fafc',
+                  color: isSelected ? block.color : '#334155',
+                  fontWeight: isSelected ? 800 : 600,
+                  fontSize: '0.9rem',
+                  cursor: 'pointer',
+                  textAlign: 'left',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '4px'
+                }}
+              >
+                <span style={{ fontSize: '0.72rem', textTransform: 'uppercase', color: '#64748b' }}>
+                  {block.badge}
+                </span>
+                <span>{block.name}</span>
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Active Block Inspector */}
+        {(() => {
+          const b = buildingBlocks[activeBuildingBlock];
+          return (
+            <div style={{ background: '#f8fafc', borderRadius: '12px', border: `1.5px solid ${b.color}40`, padding: '1.5rem' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem', flexWrap: 'wrap', gap: '8px' }}>
+                <h4 style={{ margin: 0, fontSize: '1.25rem', fontWeight: 800, color: b.color }}>
+                  {b.name}
+                </h4>
+                <span style={{ fontSize: '0.75rem', fontWeight: 800, background: `${b.color}15`, color: b.color, padding: '3px 10px', borderRadius: '12px' }}>
+                  {b.badge}
+                </span>
+              </div>
+
+              <p style={{ fontSize: '0.95rem', color: '#1e293b', lineHeight: 1.65, margin: '0 0 1rem 0' }}>
+                <strong>Definition:</strong> {b.definition}
+              </p>
+
+              <div style={{ background: '#ffffff', borderRadius: '8px', padding: '1rem', border: '1px solid #e2e8f0', marginBottom: '1rem' }}>
+                <strong style={{ fontSize: '0.82rem', color: '#475569', textTransform: 'uppercase', display: 'block', marginBottom: '0.35rem' }}>
+                  How It Actually Operates:
+                </strong>
+                <p style={{ margin: 0, fontSize: '0.9rem', color: '#334155', lineHeight: 1.6 }}>
+                  {b.howItWorks}
+                </p>
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '1rem' }}>
+                <div style={{ background: '#ffffff', padding: '0.85rem 1rem', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
+                  <strong style={{ fontSize: '0.8rem', color: '#0f172a', display: 'block', marginBottom: '0.25rem' }}>
+                    📱 Everyday Examples:
+                  </strong>
+                  <span style={{ fontSize: '0.85rem', color: '#64748b' }}>{b.everydayExamples}</span>
+                </div>
+                <div style={{ background: '#ecfdf5', padding: '0.85rem 1rem', borderRadius: '8px', border: '1px solid #a7f3d0' }}>
+                  <strong style={{ fontSize: '0.8rem', color: '#065f46', display: 'block', marginBottom: '0.25rem' }}>
+                    💡 Key Insight:
+                  </strong>
+                  <span style={{ fontSize: '0.85rem', color: '#047857' }}>{b.keyTakeaway}</span>
+                </div>
+              </div>
+            </div>
+          );
+        })()}
+      </div>
+
+      {/* TOPIC 4: CLASSIFICATIONS OF AI (ANI, AGI, ASI) */}
+      <div style={{ background: '#ffffff', borderRadius: '14px', border: '1px solid #e2e8f0', padding: '1.75rem', boxShadow: '0 2px 8px rgba(0,0,0,0.03)' }}>
+        <div style={{ borderLeft: '4px solid #f59e0b', paddingLeft: '1rem', marginBottom: '1.25rem' }}>
+          <span style={{ fontSize: '0.78rem', fontWeight: 800, color: '#f59e0b', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+            TOPIC 4 · CAPABILITY SPECTRUM
+          </span>
+          <h3 style={{ fontSize: '1.45rem', fontWeight: 800, color: '#0f172a', margin: '0.2rem 0 0 0' }}>
+            The 3 Classifications of AI: Narrow (ANI), General (AGI), & Superintelligence (ASI)
+          </h3>
+        </div>
+
+        <p style={{ fontSize: '1rem', lineHeight: 1.75, color: '#334155', margin: '0 0 1.25rem 0' }}>
+          In computer science, AI capabilities are categorized into three distinct evolutionary stages. Understanding this taxonomy is crucial to separate actual modern tools from science fiction:
+        </p>
+
+        {/* Classification Cards */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '1rem', marginBottom: '1.5rem' }}>
+          {Object.keys(classifications).map(key => {
+            const c = classifications[key];
+            const isSelected = activeClassification === key;
+            return (
+              <div
+                key={key}
+                onClick={() => setActiveClassification(key)}
+                style={{
+                  background: isSelected ? '#fffbeb' : '#f8fafc',
+                  border: isSelected ? '2px solid #f59e0b' : '1px solid #e2e8f0',
+                  borderRadius: '12px',
+                  padding: '1.25rem',
+                  cursor: 'pointer',
+                  transition: 'all 0.15s ease'
+                }}
+              >
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
+                  <span style={{ fontSize: '0.75rem', fontWeight: 800, color: c.statusColor }}>
+                    {c.aka}
+                  </span>
+                  <span style={{ fontSize: '0.72rem', background: '#ffffff', padding: '2px 8px', borderRadius: '10px', border: '1px solid #cbd5e1', fontWeight: 700 }}>
+                    {key.toUpperCase()}
+                  </span>
+                </div>
+                <h4 style={{ margin: '0 0 0.4rem 0', fontSize: '1.05rem', fontWeight: 800, color: '#0f172a' }}>
+                  {c.name}
+                </h4>
+                <div style={{ fontSize: '0.78rem', color: c.statusColor, fontWeight: 700, marginBottom: '0.65rem' }}>
+                  {c.status}
+                </div>
+                <p style={{ margin: 0, fontSize: '0.85rem', color: '#475569', lineHeight: 1.5 }}>
+                  {c.scope}
+                </p>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Selected Classification Detail */}
+        {(() => {
+          const c = classifications[activeClassification];
+          return (
+            <div style={{ background: '#f8fafc', borderRadius: '12px', border: '1px solid #cbd5e1', padding: '1.5rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '0.75rem' }}>
+                <span style={{ fontSize: '0.85rem', fontWeight: 800, color: c.statusColor, background: '#ffffff', padding: '3px 12px', borderRadius: '20px', border: `1px solid ${c.statusColor}` }}>
+                  {c.status}
+                </span>
+                <span style={{ fontSize: '0.88rem', color: '#64748b' }}>
+                  Also known as: <strong>{c.aka}</strong>
+                </span>
+              </div>
+
+              <p style={{ fontSize: '0.95rem', color: '#334155', lineHeight: 1.7, margin: '0 0 1rem 0' }}>
+                {c.description}
+              </p>
+
+              <div>
+                <strong style={{ fontSize: '0.82rem', color: '#0f172a', textTransform: 'uppercase', display: 'block', marginBottom: '0.4rem' }}>
+                  Representative Examples & Frontiers:
+                </strong>
+                <ul style={{ margin: 0, paddingLeft: '1.25rem', color: '#475569', fontSize: '0.88rem', lineHeight: 1.6 }}>
+                  {c.examples.map((ex, exIdx) => (
+                    <li key={exIdx} style={{ marginBottom: '0.25rem' }}>{ex}</li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          );
+        })()}
+
+        <div style={{ marginTop: '1.25rem', background: '#eff6ff', borderRadius: '10px', padding: '1rem 1.25rem', border: '1px solid #bfdbfe', fontSize: '0.9rem', color: '#1e3a8a', lineHeight: 1.6 }}>
+          <strong>⚡ The Ground Truth:</strong> <em>All AI tools you use today (ChatGPT, Gemini, Midjourney, Google Maps, Tesla Autopilot) are Artificial Narrow Intelligence (ANI).</em> AGI does not exist yet, and claims that today's chatbots have human emotions are false.
+        </div>
+      </div>
+
+      {/* TOPIC 5: REAL-WORLD INDUSTRY IMPACT */}
+      <div style={{ background: '#ffffff', borderRadius: '14px', border: '1px solid #e2e8f0', padding: '1.75rem', boxShadow: '0 2px 8px rgba(0,0,0,0.03)' }}>
+        <div style={{ borderLeft: '4px solid #ec4899', paddingLeft: '1rem', marginBottom: '1.25rem' }}>
+          <span style={{ fontSize: '0.78rem', fontWeight: 800, color: '#ec4899', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+            TOPIC 5 · INDUSTRY DISRUPTIONS
+          </span>
+          <h3 style={{ fontSize: '1.45rem', fontWeight: 800, color: '#0f172a', margin: '0.2rem 0 0 0' }}>
+            Real-World Impact & Applications Across Sectors
+          </h3>
+        </div>
+
+        <p style={{ fontSize: '1rem', lineHeight: 1.75, color: '#334155', margin: '0 0 1.25rem 0' }}>
+          AI is reshaping virtually every major sector of human industry. Explore the primary application domains below:
+        </p>
+
+        {/* Industry Sector Tab Buttons */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '10px', marginBottom: '1.25rem' }}>
+          {Object.keys(industryImpacts).map(key => {
+            const sec = industryImpacts[key];
+            const isSelected = activeImpactSector === key;
+            return (
+              <button
+                key={key}
+                type="button"
+                onClick={() => setActiveImpactSector(key)}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  padding: '0.75rem 1rem',
+                  borderRadius: '10px',
+                  border: isSelected ? `2px solid ${sec.color}` : '1px solid #e2e8f0',
+                  background: isSelected ? '#fdf2f8' : '#f8fafc',
+                  color: isSelected ? sec.color : '#334155',
+                  fontWeight: isSelected ? 800 : 600,
+                  fontSize: '0.88rem',
+                  cursor: 'pointer',
+                  textAlign: 'left'
+                }}
+              >
+                {sec.icon}
+                <span>{sec.title}</span>
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Active Industry Deep-Dive */}
+        {(() => {
+          const sec = industryImpacts[activeImpactSector];
+          return (
+            <div style={{ background: '#f8fafc', borderRadius: '12px', border: '1px solid #cbd5e1', padding: '1.5rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '0.5rem' }}>
+                {sec.icon}
+                <h4 style={{ margin: 0, fontSize: '1.2rem', fontWeight: 800, color: sec.color }}>
+                  {sec.headline}
+                </h4>
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '1rem', marginTop: '1rem' }}>
+                {sec.points.map((pt, pIdx) => (
+                  <div key={pIdx} style={{ background: '#ffffff', borderRadius: '8px', padding: '1rem', border: '1px solid #e2e8f0' }}>
+                    <strong style={{ fontSize: '0.88rem', color: '#0f172a', display: 'block', marginBottom: '0.35rem' }}>
+                      {pt.label}
+                    </strong>
+                    <p style={{ margin: 0, fontSize: '0.85rem', color: '#475569', lineHeight: 1.6 }}>
+                      {pt.desc}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          );
+        })()}
+
+        {/* Productivity Speedup Chart */}
+        <div style={{ marginTop: '1.5rem', background: '#f8fafc', borderRadius: '12px', border: '1px solid #e2e8f0', padding: '1.25rem' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem', flexWrap: 'wrap', gap: '8px' }}>
             <strong style={{ fontSize: '0.92rem', color: '#0f172a', display: 'flex', alignItems: 'center', gap: '6px' }}>
-              <BarChart3 size={18} color="#2563eb" /> Productivity Multiplier: Manual Drafting vs. AI Assistance (Minutes)
+              <BarChart3 size={18} color="#2563eb" /> Task Execution Speed: Manual Drafting vs. AI Assistance (Minutes)
             </strong>
             <span style={{ fontSize: '0.78rem', color: '#64748b' }}>First draft generation speed</span>
           </div>
@@ -512,70 +954,101 @@ export function Lesson1ModuleView({ onCopy, copiedIndex, openAITutor }) {
         </div>
       </div>
 
-      {/* TOPIC 4: BENEFITS AND LIMITATIONS OF AI */}
+      {/* TOPIC 6: CHALLENGES & THE ETHICAL FUTURE (RESPONSIBLE AI) */}
       <div style={{ background: '#ffffff', borderRadius: '14px', border: '1px solid #e2e8f0', padding: '1.75rem', boxShadow: '0 2px 8px rgba(0,0,0,0.03)' }}>
-        <div style={{ borderLeft: '4px solid #8b5cf6', paddingLeft: '1rem', marginBottom: '1.25rem' }}>
-          <span style={{ fontSize: '0.78rem', fontWeight: 800, color: '#8b5cf6', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
-            TOPIC 4 · REALISTIC AUDIT
+        <div style={{ borderLeft: '4px solid #dc2626', paddingLeft: '1rem', marginBottom: '1.25rem' }}>
+          <span style={{ fontSize: '0.78rem', fontWeight: 800, color: '#dc2626', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+            TOPIC 6 · RESPONSIBLE AI & ETHICS
           </span>
           <h3 style={{ fontSize: '1.45rem', fontWeight: 800, color: '#0f172a', margin: '0.2rem 0 0 0' }}>
-            Benefits and Critical Limitations of AI: The Honest Reality Check
+            Critical Challenges & The Ethical Future: Responsible AI
           </h3>
         </div>
 
-        <p style={{ fontSize: '1rem', lineHeight: 1.75, color: '#334155', margin: '0 0 1.5rem 0' }}>
-          To operate AI like a professional rather than an amateur, you must know both its immense superpowers and its non-negotiable boundaries:
+        <p style={{ fontSize: '1rem', lineHeight: 1.75, color: '#334155', margin: '0 0 1.25rem 0' }}>
+          As AI systems become embedded in judicial, medical, hiring, and educational decisions, society faces fundamental ethical questions. Explore the 4 primary pillars of <strong>Responsible AI</strong>:
         </p>
 
-        {/* Split Grid: Superpowers vs Guardrails */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '1.5rem', marginBottom: '1.5rem' }}>
-          
-          {/* Superpowers */}
-          <div style={{ background: '#f0fdf4', borderRadius: '12px', border: '1.5px solid #86efac', padding: '1.5rem' }}>
-            <h4 style={{ margin: '0 0 1rem 0', color: '#166534', fontSize: '1.1rem', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <Zap size={20} color="#16a34a" /> 4 Core Superpowers (Benefits)
-            </h4>
-            <ul style={{ margin: 0, paddingLeft: '1.25rem', color: '#14532d', fontSize: '0.9rem', lineHeight: 1.7 }}>
-              <li style={{ marginBottom: '0.5rem' }}>
-                <strong>Infinite Patience:</strong> You can ask AI to re-explain a complex engineering, medical, or accounting topic 25 times in 25 different ways without any hesitation or irritation.
-              </li>
-              <li style={{ marginBottom: '0.5rem' }}>
-                <strong>Overcomes Blank-Page Syndrome:</strong> Starting a fresh resume, project proposal, or client email is hard. AI produces a 70% draft in 3 seconds, so you only spend time refining.
-              </li>
-              <li style={{ marginBottom: '0.5rem' }}>
-                <strong>Instant Language Leveling:</strong> Indian professionals who think in Tamil, Hindi, or Telugu can write rough thoughts and command AI to polish it into fluent international business English.
-              </li>
-              <li>
-                <strong>Versatile Cross-Disciplinary Knowledge:</strong> Capable of analyzing an Excel formula, summarizing a 30-page case law, and writing a marketing tag in the same single chat.
-              </li>
-            </ul>
-          </div>
-
-          {/* Critical Limitations */}
-          <div style={{ background: '#fef2f2', borderRadius: '12px', border: '1.5px solid #fecaca', padding: '1.5rem' }}>
-            <h4 style={{ margin: '0 0 1rem 0', color: '#991b1b', fontSize: '1.1rem', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <AlertTriangle size={20} color="#dc2626" /> 4 Critical Limitations (Guardrails)
-            </h4>
-            <ul style={{ margin: 0, paddingLeft: '1.25rem', color: '#7f1d1d', fontSize: '0.9rem', lineHeight: 1.7 }}>
-              <li style={{ marginBottom: '0.5rem' }}>
-                <strong>AI Hallucinations:</strong> LLMs predict probable word sequences, not verified facts. If unsure, an AI model will smoothly invent fake author names, imaginary court rulings, or made-up statistics with 100% confidence!
-              </li>
-              <li style={{ marginBottom: '0.5rem' }}>
-                <strong>No Real-World Ground Truth:</strong> AI has never lived in a city, visited a bank branch, or spoken to a customer. It lacks common sense and physical intuition.
-              </li>
-              <li style={{ marginBottom: '0.5rem' }}>
-                <strong>Data Privacy & Confidentiality:</strong> Consumer free plans may use chats to train future models. <em>Never paste passwords, customer Aadhaar cards, bank details, or internal corporate secrets into public AI!</em>
-              </li>
-              <li>
-                <strong>The "Garbage In, Garbage Out" Law:</strong> If you input a lazy, vague prompt, you receive useless generic fluff. AI output quality directly reflects prompt engineering quality.
-              </li>
-            </ul>
-          </div>
-
+        {/* Ethics Tab Switcher */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '10px', marginBottom: '1.25rem' }}>
+          {Object.keys(ethicsTopics).map(key => {
+            const et = ethicsTopics[key];
+            const isSelected = activeEthicsTab === key;
+            return (
+              <button
+                key={key}
+                type="button"
+                onClick={() => setActiveEthicsTab(key)}
+                style={{
+                  padding: '0.75rem 1rem',
+                  borderRadius: '10px',
+                  border: isSelected ? `2px solid ${et.color}` : '1px solid #e2e8f0',
+                  background: isSelected ? '#fef2f2' : '#f8fafc',
+                  color: isSelected ? et.color : '#334155',
+                  fontWeight: isSelected ? 800 : 600,
+                  fontSize: '0.88rem',
+                  cursor: 'pointer',
+                  textAlign: 'left',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '3px'
+                }}
+              >
+                <span style={{ fontSize: '0.72rem', textTransform: 'uppercase', color: '#64748b' }}>
+                  {et.badge}
+                </span>
+                <span>{et.title}</span>
+              </button>
+            );
+          })}
         </div>
 
+        {/* Active Ethics Deep-Dive */}
+        {(() => {
+          const et = ethicsTopics[activeEthicsTab];
+          return (
+            <div style={{ background: '#f8fafc', borderRadius: '12px', border: `1.5px solid ${et.color}35`, padding: '1.5rem' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem', flexWrap: 'wrap', gap: '8px' }}>
+                <h4 style={{ margin: 0, fontSize: '1.2rem', fontWeight: 800, color: et.color }}>
+                  {et.title}
+                </h4>
+                <span style={{ fontSize: '0.75rem', fontWeight: 800, background: `${et.color}15`, color: et.color, padding: '3px 10px', borderRadius: '12px' }}>
+                  {et.badge}
+                </span>
+              </div>
+
+              <div style={{ background: '#ffffff', borderRadius: '8px', padding: '1rem', border: '1px solid #e2e8f0', marginBottom: '0.85rem' }}>
+                <strong style={{ fontSize: '0.82rem', color: '#991b1b', textTransform: 'uppercase', display: 'block', marginBottom: '0.25rem' }}>
+                  Core Challenge / Risk:
+                </strong>
+                <p style={{ margin: 0, fontSize: '0.9rem', color: '#334155', lineHeight: 1.6 }}>
+                  {et.problem}
+                </p>
+              </div>
+
+              <div style={{ background: '#ffffff', borderRadius: '8px', padding: '1rem', border: '1px solid #e2e8f0', marginBottom: '0.85rem' }}>
+                <strong style={{ fontSize: '0.82rem', color: '#0f172a', textTransform: 'uppercase', display: 'block', marginBottom: '0.25rem' }}>
+                  Real-World Scenario:
+                </strong>
+                <p style={{ margin: 0, fontSize: '0.9rem', color: '#475569', lineHeight: 1.6 }}>
+                  {et.realExample}
+                </p>
+              </div>
+
+              <div style={{ background: '#ecfdf5', borderRadius: '8px', padding: '0.85rem 1rem', border: '1px solid #a7f3d0' }}>
+                <strong style={{ fontSize: '0.82rem', color: '#065f46', textTransform: 'uppercase', display: 'block', marginBottom: '0.25rem' }}>
+                  Mandatory Safeguard & Best Practice:
+                </strong>
+                <p style={{ margin: 0, fontSize: '0.88rem', color: '#047857', lineHeight: 1.55 }}>
+                  {et.safeguard}
+                </p>
+              </div>
+            </div>
+          );
+        })()}
+
         {/* Verification Rule Banner */}
-        <div style={{ background: '#eff6ff', borderRadius: '10px', padding: '1rem 1.25rem', border: '1px solid #bfdbfe', fontSize: '0.92rem', color: '#1e3a8a', display: 'flex', alignItems: 'center', gap: '10px' }}>
+        <div style={{ marginTop: '1.25rem', background: '#eff6ff', borderRadius: '10px', padding: '1rem 1.25rem', border: '1px solid #bfdbfe', fontSize: '0.92rem', color: '#1e3a8a', display: 'flex', alignItems: 'center', gap: '10px' }}>
           <Shield size={22} color="#2563eb" style={{ flexShrink: 0 }} />
           <span>
             <strong>The Professional AI Golden Rule:</strong> Use AI to generate drafts, ideas, and structures; use your human intelligence to verify facts, apply ethics, and make final decisions. Never copy-paste without reading!
@@ -583,7 +1056,47 @@ export function Lesson1ModuleView({ onCopy, copiedIndex, openAITutor }) {
         </div>
       </div>
 
-      {/* TOPIC 5: PRACTICAL CASE SCENARIOS */}
+      {/* TOPIC 7: LOOKING AHEAD: COLLABORATIVE INTELLIGENCE */}
+      <div style={{ background: 'linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%)', borderRadius: '14px', border: '1.5px solid #86efac', padding: '1.75rem' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '0.75rem' }}>
+          <Award size={24} color="#16a34a" />
+          <h3 style={{ fontSize: '1.35rem', fontWeight: 800, color: '#14532d', margin: 0 }}>
+            Looking Ahead: The Collaborative Intelligence Future
+          </h3>
+        </div>
+
+        <p style={{ fontSize: '0.98rem', lineHeight: 1.75, color: '#166534', margin: '0 0 1rem 0' }}>
+          The future of intelligence is <strong>collaborative rather than replacement-driven</strong>. AI acts as an unmatched cognitive engine designed to augment human potential, creativity, and problem-solving.
+        </p>
+
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1rem' }}>
+          <div style={{ background: '#ffffff', borderRadius: '10px', padding: '1.15rem', border: '1px solid #bbf7d0' }}>
+            <strong style={{ color: '#15803d', fontSize: '0.92rem', display: 'block', marginBottom: '0.35rem' }}>
+              🤖 What AI Supplies:
+            </strong>
+            <ul style={{ margin: 0, paddingLeft: '1.1rem', fontSize: '0.85rem', color: '#166534', lineHeight: 1.6 }}>
+              <li>Instant processing across millions of documents</li>
+              <li>Rapid drafting of boilerplate text, code, and slides</li>
+              <li>Iterative patience without fatigue or mood swings</li>
+              <li>Pattern recognition across massive datasets</li>
+            </ul>
+          </div>
+
+          <div style={{ background: '#ffffff', borderRadius: '10px', padding: '1.15rem', border: '1px solid #bbf7d0' }}>
+            <strong style={{ color: '#15803d', fontSize: '0.92rem', display: 'block', marginBottom: '0.35rem' }}>
+              🧠 What Humans Supply:
+            </strong>
+            <ul style={{ margin: 0, paddingLeft: '1.1rem', fontSize: '0.85rem', color: '#166534', lineHeight: 1.6 }}>
+              <li>Common sense and real-world ground truth</li>
+              <li>Emotional empathy, cultural nuance, and storytelling</li>
+              <li>Ethical accountability and legal verification</li>
+              <li>Strategic judgment and original decision-making</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      {/* TOPIC 8: PRACTICAL CASE SCENARIOS */}
       <div style={{ background: '#ffffff', borderRadius: '14px', border: '1px solid #e2e8f0', padding: '1.75rem', boxShadow: '0 2px 8px rgba(0,0,0,0.03)' }}>
         <h3 style={{ fontSize: '1.3rem', fontWeight: 800, color: '#0f172a', margin: '0 0 1rem 0', display: 'flex', alignItems: 'center', gap: '8px' }}>
           <Sparkles size={20} color="#f59e0b" /> Real Student & Professional Case Scenarios
@@ -624,7 +1137,7 @@ export function Lesson1ModuleView({ onCopy, copiedIndex, openAITutor }) {
         </div>
       </div>
 
-      {/* TOPIC 6: READY-TO-USE TESTED PROMPTS */}
+      {/* TOPIC 9: READY-TO-USE TESTED PROMPTS */}
       <div style={{ background: '#ffffff', borderRadius: '14px', border: '1px solid #e2e8f0', padding: '1.75rem', boxShadow: '0 2px 8px rgba(0,0,0,0.03)' }}>
         <h3 style={{ fontSize: '1.3rem', fontWeight: 800, color: '#0f172a', margin: '0 0 1rem 0', display: 'flex', alignItems: 'center', gap: '8px' }}>
           <Terminal size={20} color="#10b981" /> Tested Prompt Templates for Lesson 1 (Click to Copy)
@@ -674,13 +1187,13 @@ export function Lesson1ModuleView({ onCopy, copiedIndex, openAITutor }) {
         </div>
       </div>
 
-      {/* TOPIC 7: INTERACTIVE KNOWLEDGE CHECK QUIZ */}
+      {/* TOPIC 10: INTERACTIVE KNOWLEDGE CHECK QUIZ */}
       <div style={{ background: '#ffffff', borderRadius: '14px', border: '1px solid #e2e8f0', padding: '1.75rem', boxShadow: '0 2px 8px rgba(0,0,0,0.03)' }}>
         <h3 style={{ fontSize: '1.3rem', fontWeight: 800, color: '#0f172a', margin: '0 0 0.5rem 0', display: 'flex', alignItems: 'center', gap: '8px' }}>
           <CheckSquare size={20} color="#8b5cf6" /> Lesson 1 Knowledge Check Quiz ({quizQuestions.length} MCQs)
         </h3>
         <p style={{ fontSize: '0.9rem', color: '#64748b', margin: '0 0 1.25rem 0' }}>
-          Test your comprehension of core AI principles:
+          Test your comprehension of core AI principles, building blocks, classifications, and ethics:
         </p>
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
