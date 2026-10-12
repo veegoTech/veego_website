@@ -48,6 +48,7 @@ export default function Sidebar({ courseStructure, activeNode, onNavClick, onBac
 
   const getCourseDuration = () => {
     const firstId = courseStructure?.[0]?.id || '';
+    if (firstId.includes('aitools')) return 240; // 4h
     if (firstId.includes('spoko_pro') || firstId.includes('softskills')) return 450; // 7h 30m
     if (firstId.includes('spoko_story')) return 180; // 3h
     if (courseStructure?.some(m => m.id?.includes('sql_da'))) return 540; // 9h

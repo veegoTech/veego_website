@@ -46,6 +46,52 @@ export function generateCertificateId(): string {
   return `VG-AIT-${year}-${hex}`;
 }
 
+export function generateAndStoreCertificate(studentName: string, studentId?: string, finalScore: number = 95): CertificateRecord {
+  const certId = generateCertificateId();
+  const issueDate = new Date().toLocaleDateString('en-GB', {
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric'
+  });
+  const baseUrl = typeof window !== 'undefined' ? window.location.origin : 'https://veegotech.com';
+  const qrCodeUrl = `${baseUrl}/verify-certificate?id=${certId}`;
+
+  const certRecord: CertificateRecord = {
+    id: certId,
+    studentName: (studentName || 'VeeGo Learner').trim(),
+    studentEmail: `${studentId || 'student'}@veegotech.com`,
+    courseTitle: 'AI Tools for Students & Professionals',
+    courseDuration: '4 Hours · 15 Lessons',
+    issueDate,
+    status: 'valid',
+    finalScore: finalScore || 95,
+    projectSubmitted: true,
+    lessonsCompleted: 15,
+    totalLessons: 15,
+    qrCodeUrl
+  };
+
+  const registry = getLocalRegistry();
+  registry[certId] = certRecord;
+  saveLocalRegistry(registry);
+
+  if (isSupabaseConfigured && supabase) {
+    try {
+      supabase.from('certificates').upsert({
+        id: certId,
+        student_name: certRecord.studentName,
+        course_title: certRecord.courseTitle,
+        issue_date: issueDate,
+        status: 'valid',
+        final_score: certRecord.finalScore,
+        qr_code_url: qrCodeUrl
+      }).then(() => {});
+    } catch (_) {}
+  }
+
+  return certRecord;
+}
+
 export async function issueCertificate(params: {
   studentName: string;
   studentEmail?: string;

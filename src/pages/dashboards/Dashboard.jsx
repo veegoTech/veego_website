@@ -19,6 +19,15 @@ import CertificateManager from '../certificate/CertificateManager';
 
 const mainCourses = [
   {
+    id: 'ai_tools_main',
+    title: 'AI Tools & Productivity',
+    desc: 'Hands-on Generative AI for students & professionals: ChatGPT, Gemini, Copilot, Gamma, Prompts & Certification.',
+    icon: <Sparkles size={24} />,
+    color: '#6366f1',
+    gradient: 'linear-gradient(135deg, #6366f1 0%, #4338ca 100%)',
+    bgLight: 'rgba(99, 102, 241, 0.08)'
+  },
+  {
     id: 'python_main',
     title: 'Core Python & OOPs',
     desc: 'Master Python syntax, functions, object-oriented programming, data structures, and practical logic.',
@@ -48,6 +57,18 @@ const mainCourses = [
 ];
 
 const subCourses = [
+  {
+    id: 'ai_tools',
+    mainCourseId: ['ai_tools_main', 'aidevelopment'],
+    title: 'AI Tools for Students & Professionals',
+    desc: 'Master ChatGPT, Gemini, Copilot, Prompt Engineering, Cornell Notes, Slide Generation & Verified Certification in 15 lessons.',
+    icon: <Sparkles size={24} />,
+    bgColor: 'rgba(99, 102, 241, 0.08)',
+    borderColor: '#6366f1',
+    shadowColor: 'rgba(99, 102, 241, 0.25)',
+    modulesCount: '15 Lessons (6 Modules) · Certificate',
+    enrolledKey: 'ai_tools'
+  },
   {
     id: 'python_course',
     mainCourseId: 'python_main',
@@ -716,6 +737,7 @@ export default function Dashboard({ onSelectCourse, enrolledCourse, setEnrolledC
       return combined;
     }
     const map = {
+      ai_tools: CourseData.aiToolsCourseData,
       html_css: CourseData.htmlCourseData,
       sql: CourseData.sqlCourseData,
       sql_da: CourseData.daSqlCourseData,
@@ -748,10 +770,12 @@ export default function Dashboard({ onSelectCourse, enrolledCourse, setEnrolledC
   const getInitialMainCourse = () => {
     const list = enrolledCourse ? enrolledCourse.split(',') : [];
     const firstCourse = list[0];
+    if (firstCourse === 'ai_tools') return 'ai_tools_main';
     if (firstCourse === 'powerbi' || firstCourse === 'stats_course' || firstCourse === 'numpy_course' || firstCourse === 'pandas_course' || firstCourse === 'matplotlib_course' || firstCourse === 'seaborn_course' || firstCourse === 'sql_da' || firstCourse === 'python_da') return 'dataanalytics';
     if (firstCourse === 'summer_sql') return 'summer';
     if (firstCourse === 'generative_ai_course' || firstCourse === 'agentic_ai') return 'aidevelopment';
-    return 'fullstack';
+    if (firstCourse === 'python_course') return 'python_main';
+    return 'ai_tools_main';
   };
   const [activeMainCourse, setActiveMainCourse] = useState(getInitialMainCourse);
 
@@ -1748,7 +1772,7 @@ export default function Dashboard({ onSelectCourse, enrolledCourse, setEnrolledC
           const collegeAvg = collegeStudents.length > 0 ? Math.round(collegeRevenue / collegeStudents.length) : 0;
 
           // Layer 3: Course Enrollment
-          const enrollCourses = ['sql', 'summer_sql', 'powerbi', 'tally_prime', 'spoko_story', 'spoko_pro'];
+          const enrollCourses = ['ai_tools', 'sql', 'summer_sql', 'powerbi', 'tally_prime', 'spoko_story', 'spoko_pro'];
           const enrollStudents = students.filter(s => {
             const courses = (s.enrolledCourse || '').split(',').map(c => c.trim());
             return courses.some(c => enrollCourses.includes(c));

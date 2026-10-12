@@ -4,10 +4,11 @@ import {
   pythonDaCourseData, generativeAiCourseData, reactCourseData, gitCourseData, jsonCourseData, 
   djangoCourseData, devopsCourseData, statsCourseData, numpyCourseData, coreJsCourseData, 
   pandasCourseData, matplotlibCourseData, seabornCourseData, tallyCourseData, webDesignCourseData,
-  spokoStoryCourseData, spokoProCourseData
+  spokoStoryCourseData, spokoProCourseData, aiToolsCourseData
 } from '../courseData';
 
 export const COURSE_DATA_MAP = {
+  ai_tools: aiToolsCourseData,
   html_css: htmlCourseData,
   sql: sqlCourseData,
   summer_sql: summerSqlCourseData,

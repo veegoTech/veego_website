@@ -174,6 +174,7 @@ import LandingPage from './pages/dashboards/LandingPage';
 
 import { htmlCourseData, sqlCourseData, summerSqlCourseData, daSqlCourseData, powerBiCourseData, agenticAiCourseData, inductionCourseData, pythonFullStackCourseData, pythonCourseData, pythonDaCourseData, generativeAiCourseData, reactCourseData, gitCourseData, jsonCourseData, djangoCourseData, devopsCourseData, statsCourseData, numpyCourseData, coreJsCourseData, pandasCourseData, matplotlibCourseData, seabornCourseData, tallyCourseData, webDesignCourseData, spokoStoryCourseData, spokoProCourseData, aiToolsCourseData } from './courseData';
 import { AIToolsLessonPlayer } from './pages/ai-tools/AIToolsLessonPlayer';
+import AIToolsCourseView from './pages/ai-tools/AIToolsCourseView';
 
 import AssignmentSubmissionPage from './components/AssignmentSubmissionPage';
 import { isModuleLocked, getLockReason } from './utils/htmlCssLocking';
@@ -411,7 +412,9 @@ function App() {
         }
       }
 
-      if (course === 'spoko_pro' || course === 'softskills') {
+      if (course === 'ai_tools') {
+        setActiveNode({ moduleId: 'aitools_module1', tabId: 'lesson-1' });
+      } else if (course === 'spoko_pro' || course === 'softskills') {
         setActiveNode({ moduleId: 'spoko_pro_topic1', tabId: 'pro_overview' });
       } else if (course === 'spoko_story') {
         setActiveNode({ moduleId: 'spoko_story_day1', tabId: 'story_reading' });
@@ -651,11 +654,6 @@ function App() {
           completedLessons={completedLessons}
           taskSubmissions={taskSubmissions}
         />
-      ) : activeCourse === 'ai_tools' ? (
-        <AIToolsLessonPlayer
-          onBackToDashboard={() => setActiveCourse('dashboard')}
-          session={session}
-        />
       ) : (
         <>
           <div
@@ -678,7 +676,7 @@ function App() {
             {/* Mobile Header — shown on tablet/mobile via responsive.css */}
             <div className="mobile-header">
               <h2 style={{ fontSize: '1.2rem', margin: 0, color: '#1E3A8A' }}>
-                {activeCourse === 'spoko_pro' || activeCourse === 'softskills' ? 'Professional Track (Soft Skills)' : activeCourse === 'spoko_story' ? 'Spoko Story-Based English' : activeCourse === 'tally_prime' ? 'AI powered Tally' : activeCourse === 'html_css' ? 'HTML, CSS & Bootstrap' : activeCourse === 'javascript_course' ? 'AI-Powered JavaScript' : activeCourse === 'core_js' ? 'Core JavaScript' : activeCourse === 'react_course' ? 'AI-Powered React JS' : activeCourse === 'powerbi' ? 'AI-Powered Data Analytics' : activeCourse === 'agentic_ai' ? 'Agentic AI Development' : activeCourse === 'induction' ? 'Free Induction & Demo Sessions' : activeCourse === 'devops' ? 'DevOps & CI/CD' : activeCourse === 'numpy_course' ? 'NumPy for Data Science' : activeCourse === 'pandas_course' ? 'Pandas for Data Science' : activeCourse === 'matplotlib_course' ? 'Matplotlib for Data Science' : activeCourse === 'seaborn_course' ? 'Seaborn for Data Science' : 'AI-Powered SQL'}
+                {activeCourse === 'ai_tools' ? 'AI Tools for Students & Professionals' : activeCourse === 'spoko_pro' || activeCourse === 'softskills' ? 'Professional Track (Soft Skills)' : activeCourse === 'spoko_story' ? 'Spoko Story-Based English' : activeCourse === 'tally_prime' ? 'AI powered Tally' : activeCourse === 'html_css' ? 'HTML, CSS & Bootstrap' : activeCourse === 'javascript_course' ? 'AI-Powered JavaScript' : activeCourse === 'core_js' ? 'Core JavaScript' : activeCourse === 'react_course' ? 'AI-Powered React JS' : activeCourse === 'powerbi' ? 'AI-Powered Data Analytics' : activeCourse === 'agentic_ai' ? 'Agentic AI Development' : activeCourse === 'induction' ? 'Free Induction & Demo Sessions' : activeCourse === 'devops' ? 'DevOps & CI/CD' : activeCourse === 'numpy_course' ? 'NumPy for Data Science' : activeCourse === 'pandas_course' ? 'Pandas for Data Science' : activeCourse === 'matplotlib_course' ? 'Matplotlib for Data Science' : activeCourse === 'seaborn_course' ? 'Seaborn for Data Science' : 'AI-Powered SQL'}
               </h2>
               <button
                 className="btn btn-outline"
@@ -763,6 +761,19 @@ function App() {
                 {activeNode.moduleId === 'sql_module5' && <SQLDay5 activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
                 {activeNode.moduleId === 'sql_module6' && <SQLDay6 activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
                 {activeNode.moduleId === 'sql_module7' && <SQLDay7 activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
+
+                {/* AI Tools for Students & Professionals Course Rendering */}
+                {activeCourse === 'ai_tools' && (
+                  <AIToolsCourseView
+                    activeModuleId={activeNode.moduleId}
+                    activeTab={activeNode.tabId}
+                    onNavigate={handleNavClick}
+                    openAITutor={openAITutor}
+                    completedLessons={completedLessons}
+                    toggleLessonCompletion={toggleLessonCompletion}
+                    session={session}
+                  />
+                )}
 
                 {activeNode.moduleId === 'sql_final_project' && <SQLFinalProject activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
                 {activeNode.moduleId === 'sql_da_day8' && <SQLDADay8 activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
