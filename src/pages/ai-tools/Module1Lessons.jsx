@@ -30,7 +30,12 @@ import {
   TrendingUp,
   BarChart3,
   SlidersHorizontal,
-  Compass
+  Compass,
+  CheckSquare,
+  Lock,
+  Eye,
+  Award,
+  Share2
 } from 'lucide-react';
 import {
   ResponsiveContainer,
@@ -43,47 +48,66 @@ import {
 } from 'recharts';
 
 // =========================================================================
-// LESSON 1: WHAT IS ARTIFICIAL INTELLIGENCE? (INTERACTIVE LAB)
+// LESSON 1 COMPONENT: WHAT IS ARTIFICIAL INTELLIGENCE?
 // =========================================================================
 export function Lesson1ModuleView({ onCopy, copiedIndex, openAITutor }) {
   // Mini Quiz State for Lesson 1
   const [selectedAnswers, setSelectedAnswers] = useState({});
   const [showResults, setShowResults] = useState(false);
 
-  // Interactive Traditional vs AI Mode Tab
-  const [comparisonTab, setComparisonTab] = useState('maps'); // 'calculator' | 'maps' | 'spam' | 'chat'
+  // Active Real-World Example Card Tab
+  const [activeExampleTab, setActiveExampleTab] = useState('maps');
 
-  // Interactive Token Prediction Simulator State
-  const [selectedSeed, setSelectedSeed] = useState('The capital city of Tamil Nadu is');
-  const [predictedToken, setPredictedToken] = useState('Chennai');
+  // Interactive Traditional vs AI View Mode
+  const [activeComparisonView, setActiveComparisonView] = useState('table'); // 'table' | 'flowchart'
 
-  const tokenProbabilityMap = {
-    'The capital city of Tamil Nadu is': [
-      { word: 'Chennai', prob: 98.4, color: '#16a34a' },
-      { word: 'Coimbatore', prob: 1.1, color: '#f59e0b' },
-      { word: 'Madurai', prob: 0.4, color: '#64748b' },
-      { word: 'Trichy', prob: 0.1, color: '#64748b' }
-    ],
-    'Artificial Intelligence learns from': [
-      { word: 'patterns', prob: 94.2, color: '#16a34a' },
-      { word: 'electricity', prob: 3.5, color: '#f59e0b' },
-      { word: 'magic', prob: 1.8, color: '#64748b' },
-      { word: 'batteries', prob: 0.5, color: '#64748b' }
-    ],
-    'Traditional software operates on rigid': [
-      { word: 'rules', prob: 96.1, color: '#16a34a' },
-      { word: 'guesses', prob: 2.1, color: '#f59e0b' },
-      { word: 'feelings', prob: 1.2, color: '#64748b' },
-      { word: 'dreams', prob: 0.6, color: '#64748b' }
-    ]
+  const realWorldExamples = {
+    maps: {
+      title: 'Google Maps Live Rerouting',
+      icon: <MapPin size={22} color="#2563eb" />,
+      tag: 'Predictive AI in Daily Commutes',
+      summary: 'Analyzes live GPS signals from millions of moving smartphones across India in real-time.',
+      traditionalApproach: 'Calculates fixed distance divided by standard speed limit: Time = Distance / Speed. It cannot predict sudden traffic jams on MG Road or Anna Salai.',
+      aiApproach: 'Predictive machine learning models continuously ingest live speed data from autos, bikes, and buses, recognizing developing congestion patterns and rerouting you 15 minutes before you reach the traffic knot.',
+      impact: 'Saves 20–40 minutes per commute, reduces vehicle fuel consumption, and updates arrival estimates dynamically.'
+    },
+    swiggy: {
+      title: 'Swiggy & Zomato Delivery Dispatch',
+      icon: <ShoppingBag size={22} color="#ea580c" />,
+      tag: 'Dynamic Logistics Optimization',
+      summary: 'Matches thousands of restaurant orders with nearby delivery partners during peak rain and lunch hours.',
+      traditionalApproach: 'Dispatches the first driver who logs onto the app nearest to the restaurant, ignoring kitchen prep delays, traffic lights, and multi-order bundling.',
+      aiApproach: 'AI algorithms calculate restaurant kitchen prep time, weather delays, and traffic patterns simultaneously, dispatching the driver precisely when the food is packed.',
+      impact: 'Food arrives warm, delivery partner fuel costs drop by 18%, and customers receive accurate live arrival minutes.'
+    },
+    gmail: {
+      title: 'Gmail Spam Shield & Smart Compose',
+      icon: <Mail size={22} color="#16a34a" />,
+      tag: 'Natural Language Pattern Filtering',
+      summary: 'Blocks 99.9% of phishing scams and autocompletes professional email sentences.',
+      traditionalApproach: 'Simple keyword blacklists: IF subject contains "lottery" THEN spam. Spammers bypass this instantly by spelling "L0tt3ry" or "Prize Winner".',
+      aiApproach: 'Natural Language Processing (NLP) models examine sender domain reputation, sentence semantic intent, and link authenticity, blocking deceptive emails regardless of spelling tricks.',
+      impact: 'Protects millions of Indian bank accounts from credential phishing without user intervention.'
+    },
+    faceid: {
+      title: 'Smartphone Face Unlock & Biometrics',
+      icon: <Smartphone size={22} color="#9333ea" />,
+      tag: 'Computer Vision & Neural Networks',
+      summary: 'Maps 30,000 infrared facial depth dots in less than 0.2 seconds.',
+      traditionalApproach: 'Compares a 2D photograph pixel-by-pixel. If lighting changes, or you put on reading glasses, traditional software fails to match the photo.',
+      aiApproach: 'Deep convolutional neural networks learn abstract 3D facial contours and depth vectors, recognizing your face in dark rooms, with beard growth, or with spectacles.',
+      impact: 'Instant frictionless security preventing unauthorized access even with physical 2D photograph spoofs.'
+    }
   };
 
-  // Recharts Data: Time to execute common tasks
+  const currentExample = realWorldExamples[activeExampleTab];
+
+  // Recharts Task Execution Speed Data
   const executionSpeedData = [
-    { task: 'Drafting 150-word Email', human: 18, ai: 0.05 },
-    { task: 'Summarizing 30-Page PDF', human: 90, ai: 0.15 },
-    { task: 'Extracting Table to Excel', human: 45, ai: 0.08 },
-    { task: 'Generating 5 Topic Ideas', human: 25, ai: 0.03 }
+    { task: 'Drafting 150-word Email', manual: 15, ai: 0.1 },
+    { task: 'Summarizing 20-Page PDF', manual: 60, ai: 0.2 },
+    { task: 'Categorizing 50 Invoices', manual: 40, ai: 0.15 },
+    { task: 'Outlining 8-Slide Deck', manual: 45, ai: 0.25 }
   ];
 
   const quizQuestions = [
@@ -91,360 +115,643 @@ export function Lesson1ModuleView({ onCopy, copiedIndex, openAITutor }) {
       id: 'q1',
       question: 'What is the fundamental difference between traditional software and Artificial Intelligence?',
       options: [
-        'Traditional software uses internet; AI runs without electricity.',
-        'Traditional software follows explicit pre-coded rules (IF/THEN); AI learns patterns from data to synthesize contextual responses.',
+        'Traditional software uses internet; AI runs completely offline without electricity.',
+        'Traditional software follows rigid, pre-coded rules (IF/THEN); AI learns statistical patterns from training datasets to synthesize contextual responses.',
         'Traditional software is only for mobile phones; AI only runs on supercomputers.',
-        'There is no difference; both are identical technologies.'
+        'There is no difference; both are identical technologies with different brand names.'
       ],
       correctIndex: 1,
-      explanation: 'Traditional software relies on fixed deterministic instructions written by human programmers, whereas AI analyzes vast datasets to recognize patterns and generate original responses.'
+      explanation: 'Traditional software relies on explicit, deterministic instructions written by human programmers (e.g., calculators, spreadsheets). AI analyzes millions of examples to discover patterns and generate original contextual answers.'
     },
     {
       id: 'q2',
-      question: 'Which of the following is an everyday example of AI you already use in India?',
+      question: 'Which of the following represents an everyday application of AI you already use in India?',
       options: [
         'A manual wall clock ticking on the wall.',
-        'Google Maps rerouting you around a traffic jam on MG Road in real-time.',
-        'A paper notebook with handwritten formulas.',
-        'A standard calculator doing 25 + 75 = 100.'
+        'Google Maps rerouting you around a traffic bottleneck on MG Road in real-time.',
+        'A paper notebook with handwritten algebra formulas.',
+        'A standard pocket calculator doing 50 + 25 = 75.'
       ],
       correctIndex: 1,
-      explanation: 'Google Maps uses predictive AI algorithms to analyze live road speeds, traffic patterns, and sensor data to dynamically recommend the fastest routes.'
+      explanation: 'Google Maps uses predictive machine learning to aggregate live speeds and sensor data from millions of smartphones to dynamically forecast traffic and reroute drivers.'
     },
     {
       id: 'q3',
-      question: 'What does the term "AI Hallucination" mean?',
+      question: 'What is "Generative AI" primarily designed to do?',
       options: [
-        'When the laptop screen flickers due to low battery.',
-        'When an AI model confidently states factually incorrect statements, fake citations, or made-up statistics.',
-        'When the server goes to sleep during nighttime maintenance.',
-        'When a user types with caps lock on.'
+        'Generate electrical current to charge laptop batteries.',
+        'Synthesize brand-new original content such as text, images, slide outlines, and code from natural language prompts.',
+        'Repair broken hardware screens and laptop keyboards.',
+        'Clean dust from computer cooling fans automatically.'
       ],
       correctIndex: 1,
-      explanation: 'Because LLMs predict probable words rather than consulting an absolute database of facts, they can occasionally fabricate details with high confidence — requiring human fact-checking.'
+      explanation: 'Generative AI models create novel outputs (essays, summaries, emails, graphics, scripts) rather than merely classifying or sorting existing data.'
+    },
+    {
+      id: 'q4',
+      question: 'In AI terminology, what is a "hallucination"?',
+      options: [
+        'When the laptop screen flickers due to low battery voltage.',
+        'When an AI model confidently states factually incorrect statements, fake citations, or made-up statistics.',
+        'When the cloud server goes to sleep during scheduled midnight maintenance.',
+        'When a user types with Caps Lock enabled.'
+      ],
+      correctIndex: 1,
+      explanation: 'Because Large Language Models predict probable word sequences rather than consulting an absolute database of facts, they can occasionally fabricate details with complete confidence — requiring human fact-checking.'
+    },
+    {
+      id: 'q5',
+      question: 'Why can AI never fully replace human common sense and ethical verification?',
+      options: [
+        'Because AI does not have real-world physical experience, genuine empathy, or moral accountability.',
+        'Because AI algorithms are programmed to erase their memory every 24 hours.',
+        'Because AI models are strictly prohibited by law from generating text over 100 words.',
+        'Because computers cannot perform mathematical calculations.'
+      ],
+      correctIndex: 0,
+      explanation: 'AI possesses vast pattern recognition, but humans supply emotional intelligence, real-world context, ethical judgment, and factual verification.'
     }
   ];
 
-  const prompts = [
+  const testedPrompts = [
     {
-      title: 'Role-Based Concept Explainer',
-      text: 'Act as a patient college professor. Explain [Difficult Concept] to a complete beginner using an everyday Indian scenario (like making chai or a cricket match). Keep it under 150 words and end with a 1-sentence summary.',
-      purpose: 'Demystify complex technical, accounting, or legal topics in seconds.'
+      title: 'Role-Based Concept Explainer (Analogy Generator)',
+      prompt: 'Act as a patient college professor. Explain [Difficult Concept, e.g., Cloud Computing or GST] to a complete beginner using an everyday Indian scenario (like making chai or a cricket match). Keep it under 150 words and end with a 1-sentence summary.',
+      purpose: 'Demystify complex technical, accounting, or legal topics in under 10 seconds.'
     },
     {
-      title: 'Traditional Software vs AI Analogy Generator',
-      text: 'I am learning the difference between traditional rule-based software and AI. Give me 3 contrasting examples from: 1) Cooking in a kitchen, 2) Driving a car, and 3) Managing a grocery store.',
-      purpose: 'Build crystal-clear intuitive mental models.'
+      title: 'Traditional Software vs AI Comparison Generator',
+      prompt: 'I am learning the difference between traditional rule-based software and modern AI. Create a clean 3-column Markdown comparison table for the field of [e.g., Hospital Healthcare or Banking]. Columns: Feature, Traditional Software Approach, AI-Assisted Approach. Keep each row under 20 words.',
+      purpose: 'Build crystal-clear intuitive mental models for work or exams.'
+    },
+    {
+      title: 'AI Reality Check & Verification Guide',
+      prompt: 'I want to use AI to help me with [Task, e.g., preparing a history seminar on the Chola Dynasty]. List 3 things AI will do exceptionally well for this task, and 3 specific facts where AI might hallucinate and where I must double-check official textbooks myself.',
+      purpose: 'Prevent blind copy-pasting and establish strong academic integrity.'
     }
   ];
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '2.5rem' }}>
 
-      {/* 1. INTERACTIVE NEXT-TOKEN PREDICTION FLOWCHART / SIMULATOR */}
-      <div style={{ background: '#ffffff', borderRadius: '14px', border: '1px solid #e2e8f0', padding: '1.5rem', boxShadow: '0 2px 8px rgba(0,0,0,0.03)' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem', flexWrap: 'wrap', gap: '8px' }}>
-          <div>
-            <span style={{ fontSize: '0.78rem', fontWeight: 800, color: '#3b82f6', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
-              HOW GENERATIVE AI ACTUALLY THINKS
-            </span>
-            <h3 style={{ margin: '0.25rem 0 0 0', fontSize: '1.3rem', fontWeight: 800, color: '#0f172a', display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <Brain size={20} color="#3b82f6" /> Next-Token Probability Visualizer
-            </h3>
-          </div>
-          <span style={{ fontSize: '0.8rem', background: '#eff6ff', color: '#1d4ed8', padding: '4px 10px', borderRadius: '20px', fontWeight: 700 }}>
-            Interactive Demo
+      {/* TOPIC 1: AI EXPLAINED WITH SIMPLE REAL-LIFE EXAMPLES */}
+      <div style={{ background: '#ffffff', borderRadius: '14px', border: '1px solid #e2e8f0', padding: '1.75rem', boxShadow: '0 2px 8px rgba(0,0,0,0.03)' }}>
+        <div style={{ borderLeft: '4px solid #3b82f6', paddingLeft: '1rem', marginBottom: '1.25rem' }}>
+          <span style={{ fontSize: '0.78rem', fontWeight: 800, color: '#3b82f6', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+            TOPIC 1 · CONCEPTUAL FOUNDATION
           </span>
+          <h3 style={{ fontSize: '1.45rem', fontWeight: 800, color: '#0f172a', margin: '0.2rem 0 0 0' }}>
+            What Is Artificial Intelligence? Demystifying AI with Real-Life Examples
+          </h3>
         </div>
 
-        <p style={{ fontSize: '0.92rem', color: '#475569', margin: '0 0 1.25rem 0' }}>
-          LLMs (ChatGPT, Gemini) do not memorize full paragraphs. Instead, they read your prompt and calculate the <strong>probability of the next most logical word (token)</strong> based on billions of parameters:
+        <p style={{ fontSize: '1rem', lineHeight: 1.75, color: '#334155', margin: '0 0 1rem 0' }}>
+          When most beginners hear <strong>Artificial Intelligence (AI)</strong>, they imagine science-fiction robots or magical computers. In reality, modern AI is neither magic nor human consciousness.
         </p>
 
-        {/* Prompt Seed Buttons */}
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginBottom: '1.25rem' }}>
-          {Object.keys(tokenProbabilityMap).map((seed, idx) => (
-            <button
-              key={idx}
-              type="button"
-              onClick={() => {
-                setSelectedSeed(seed);
-                setPredictedToken(tokenProbabilityMap[seed][0].word);
-              }}
-              style={{
-                padding: '0.5rem 0.9rem',
-                borderRadius: '8px',
-                border: selectedSeed === seed ? '2px solid #3b82f6' : '1px solid #cbd5e1',
-                background: selectedSeed === seed ? '#eff6ff' : '#f8fafc',
-                color: selectedSeed === seed ? '#1d4ed8' : '#334155',
-                fontSize: '0.85rem',
-                fontWeight: selectedSeed === seed ? 700 : 500,
-                cursor: 'pointer'
-              }}
-            >
-              "{seed}..."
-            </button>
-          ))}
+        {/* The Mental Model Card */}
+        <div style={{ background: '#eff6ff', borderRadius: '12px', padding: '1.25rem 1.5rem', border: '1px solid #bfdbfe', marginBottom: '1.75rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#1d4ed8', fontWeight: 800, fontSize: '0.95rem', marginBottom: '0.4rem' }}>
+            <Brain size={20} /> The "Junior Super-Assistant" Mental Model:
+          </div>
+          <p style={{ margin: 0, color: '#1e3a8a', fontSize: '0.92rem', lineHeight: 1.65 }}>
+            Think of AI as an <strong>extremely fast, well-read junior intern</strong> who has read millions of books, websites, and research papers. If you give this intern vague instructions (<em>"write about sales"</em>), they produce generic filler. But if you give them clear, structured guidelines (<em>"act as a sales manager, write a 120-word email highlighting 3 benefits"</em>), they save you 10 to 15 hours every week!
+          </p>
         </div>
 
-        {/* Live Probability Distribution Card */}
-        <div style={{ background: '#0f172a', borderRadius: '12px', padding: '1.25rem', color: '#f8fafc' }}>
-          <div style={{ fontSize: '0.95rem', fontFamily: 'monospace', marginBottom: '1rem', color: '#93c5fd' }}>
-            Input Sentence: <span style={{ color: '#ffffff', fontWeight: 700 }}>"{selectedSeed}"</span>
-            <span style={{ background: '#10b981', color: '#fff', padding: '2px 8px', borderRadius: '4px', marginLeft: '8px', fontWeight: 800 }}>
-              [{predictedToken}]
-            </span>
-          </div>
+        <h4 style={{ fontSize: '1.1rem', fontWeight: 800, color: '#0f172a', marginBottom: '0.75rem' }}>
+          Interactive Real-World Case Studies (You Already Use AI Daily in India):
+        </h4>
+        <p style={{ fontSize: '0.9rem', color: '#64748b', margin: '0 0 1rem 0' }}>
+          Click each everyday application below to inspect how AI operates behind the scenes:
+        </p>
 
-          <div style={{ fontSize: '0.8rem', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', marginBottom: '0.5rem' }}>
-            Calculated Probability Candidate Weights:
-          </div>
-
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '10px' }}>
-            {tokenProbabilityMap[selectedSeed].map((cand, cIdx) => (
-              <div
-                key={cIdx}
-                onClick={() => setPredictedToken(cand.word)}
+        {/* Tab Buttons */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '10px', marginBottom: '1.25rem' }}>
+          {Object.keys(realWorldExamples).map(key => {
+            const ex = realWorldExamples[key];
+            const isSelected = activeExampleTab === key;
+            return (
+              <button
+                key={key}
+                type="button"
+                onClick={() => setActiveExampleTab(key)}
                 style={{
-                  background: predictedToken === cand.word ? '#1e293b' : '#1e293b80',
-                  border: predictedToken === cand.word ? '2px solid #10b981' : '1px solid #334155',
-                  padding: '0.75rem',
-                  borderRadius: '8px',
-                  cursor: 'pointer'
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  padding: '0.75rem 1rem',
+                  borderRadius: '10px',
+                  border: isSelected ? '2px solid #3b82f6' : '1px solid #e2e8f0',
+                  background: isSelected ? '#eff6ff' : '#f8fafc',
+                  color: isSelected ? '#1d4ed8' : '#334155',
+                  fontWeight: isSelected ? 800 : 600,
+                  fontSize: '0.88rem',
+                  cursor: 'pointer',
+                  textAlign: 'left'
                 }}
               >
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <strong style={{ fontSize: '0.9rem', color: '#ffffff' }}>"{cand.word}"</strong>
-                  <span style={{ fontSize: '0.82rem', fontWeight: 800, color: cand.color }}>{cand.prob}%</span>
-                </div>
-                <div style={{ width: '100%', height: '4px', background: '#334155', borderRadius: '2px', marginTop: '6px' }}>
-                  <div style={{ width: `${cand.prob}%`, height: '100%', background: cand.color, borderRadius: '2px' }} />
+                {ex.icon}
+                <span style={{ flex: 1 }}>{ex.title}</span>
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Active Example Deep-Dive Card */}
+        <div style={{ background: '#f8fafc', borderRadius: '12px', border: '1.5px solid #cbd5e1', padding: '1.5rem' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '8px', marginBottom: '0.75rem' }}>
+            <span style={{ fontSize: '0.78rem', fontWeight: 800, color: '#2563eb', textTransform: 'uppercase', background: '#dbeafe', padding: '3px 10px', borderRadius: '20px' }}>
+              {currentExample.tag}
+            </span>
+            <span style={{ fontSize: '0.82rem', color: '#16a34a', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '4px' }}>
+              <CheckCircle size={15} /> Active Indian Application
+            </span>
+          </div>
+
+          <h4 style={{ margin: '0 0 0.5rem 0', fontSize: '1.2rem', fontWeight: 800, color: '#0f172a' }}>
+            {currentExample.title}
+          </h4>
+          <p style={{ fontSize: '0.92rem', color: '#475569', lineHeight: 1.6, margin: '0 0 1.25rem 0' }}>
+            {currentExample.summary}
+          </p>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1rem', marginBottom: '1.25rem' }}>
+            <div style={{ background: '#ffffff', padding: '1rem', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
+              <strong style={{ fontSize: '0.82rem', color: '#dc2626', textTransform: 'uppercase', display: 'block', marginBottom: '0.35rem' }}>
+                Without AI (Old Deterministic Code):
+              </strong>
+              <p style={{ margin: 0, fontSize: '0.88rem', color: '#334155', lineHeight: 1.55 }}>
+                {currentExample.traditionalApproach}
+              </p>
+            </div>
+            <div style={{ background: '#ffffff', padding: '1rem', borderRadius: '8px', border: '1px solid #86efac' }}>
+              <strong style={{ fontSize: '0.82rem', color: '#16a34a', textTransform: 'uppercase', display: 'block', marginBottom: '0.35rem' }}>
+                With AI (Pattern-Learning Engine):
+              </strong>
+              <p style={{ margin: 0, fontSize: '0.88rem', color: '#14532d', lineHeight: 1.55 }}>
+                {currentExample.aiApproach}
+              </p>
+            </div>
+          </div>
+
+          <div style={{ background: '#ecfdf5', borderRadius: '8px', padding: '0.85rem 1rem', border: '1px solid #a7f3d0', fontSize: '0.88rem', color: '#065f46' }}>
+            <strong>Real-World Impact:</strong> {currentExample.impact}
+          </div>
+        </div>
+      </div>
+
+      {/* TOPIC 2: AI VERSUS TRADITIONAL SOFTWARE */}
+      <div style={{ background: '#ffffff', borderRadius: '14px', border: '1px solid #e2e8f0', padding: '1.75rem', boxShadow: '0 2px 8px rgba(0,0,0,0.03)' }}>
+        <div style={{ borderLeft: '4px solid #10b981', paddingLeft: '1rem', marginBottom: '1.25rem' }}>
+          <span style={{ fontSize: '0.78rem', fontWeight: 800, color: '#10b981', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+            TOPIC 2 · ARCHITECTURAL CONTRAST
+          </span>
+          <h3 style={{ fontSize: '1.45rem', fontWeight: 800, color: '#0f172a', margin: '0.2rem 0 0 0' }}>
+            AI versus Traditional Software: Rules vs. Learned Patterns
+          </h3>
+        </div>
+
+        <p style={{ fontSize: '1rem', lineHeight: 1.75, color: '#334155', margin: '0 0 1.25rem 0' }}>
+          For 50 years, computers operated entirely on <strong>deterministic rules</strong>. A human programmer wrote exact steps: <code>IF password matches THEN allow login</code>. If you misspelled a word, or faced an unpredicted edge case, the program threw an error. AI fundamentally changes this paradigm by <strong>learning patterns from data</strong> rather than relying on pre-programmed IF statements.
+        </p>
+
+        {/* View Mode Toggle */}
+        <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '1rem', gap: '8px' }}>
+          <button
+            type="button"
+            onClick={() => setActiveComparisonView('table')}
+            style={{
+              padding: '0.35rem 0.75rem',
+              borderRadius: '6px',
+              border: activeComparisonView === 'table' ? '2px solid #10b981' : '1px solid #cbd5e1',
+              background: activeComparisonView === 'table' ? '#ecfdf5' : '#fff',
+              color: activeComparisonView === 'table' ? '#065f46' : '#64748b',
+              fontWeight: 700,
+              fontSize: '0.82rem',
+              cursor: 'pointer'
+            }}
+          >
+            Detailed Comparison Table
+          </button>
+          <button
+            type="button"
+            onClick={() => setActiveComparisonView('flowchart')}
+            style={{
+              padding: '0.35rem 0.75rem',
+              borderRadius: '6px',
+              border: activeComparisonView === 'flowchart' ? '2px solid #10b981' : '1px solid #cbd5e1',
+              background: activeComparisonView === 'flowchart' ? '#ecfdf5' : '#fff',
+              color: activeComparisonView === 'flowchart' ? '#065f46' : '#64748b',
+              fontWeight: 700,
+              fontSize: '0.82rem',
+              cursor: 'pointer'
+            }}
+          >
+            Visual Pipeline Diagram
+          </button>
+        </div>
+
+        {activeComparisonView === 'table' ? (
+          <div style={{ overflowX: 'auto', marginBottom: '1.25rem' }}>
+            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.92rem', textAlign: 'left' }}>
+              <thead>
+                <tr style={{ background: '#f1f5f9', borderBottom: '2px solid #cbd5e1' }}>
+                  <th style={{ padding: '0.85rem 1rem', color: '#334155', fontWeight: 800 }}>Dimension</th>
+                  <th style={{ padding: '0.85rem 1rem', color: '#2563eb', fontWeight: 800 }}>Traditional Software</th>
+                  <th style={{ padding: '0.85rem 1rem', color: '#16a34a', fontWeight: 800 }}>Modern Artificial Intelligence</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr style={{ borderBottom: '1px solid #e2e8f0' }}>
+                  <td style={{ padding: '0.85rem 1rem', fontWeight: 700, color: '#0f172a' }}>Core Logic</td>
+                  <td style={{ padding: '0.85rem 1rem', color: '#475569' }}>Hand-crafted deterministic rules (<code>IF / THEN / ELSE</code>)</td>
+                  <td style={{ padding: '0.85rem 1rem', color: '#475569' }}>Statistical neural weights trained on billions of parameters</td>
+                </tr>
+                <tr style={{ borderBottom: '1px solid #e2e8f0', background: '#fafafa' }}>
+                  <td style={{ padding: '0.85rem 1rem', fontWeight: 700, color: '#0f172a' }}>Real-World Example</td>
+                  <td style={{ padding: '0.85rem 1rem', color: '#475569' }}>Pocket calculator: <code>50 * 20 = 1000</code> (100% fixed output)</td>
+                  <td style={{ padding: '0.85rem 1rem', color: '#475569' }}>ChatGPT drafting a customized job application for an Indian startup</td>
+                </tr>
+                <tr style={{ borderBottom: '1px solid #e2e8f0' }}>
+                  <td style={{ padding: '0.85rem 1rem', fontWeight: 700, color: '#0f172a' }}>Handling Ambiguity & Typos</td>
+                  <td style={{ padding: '0.85rem 1rem', color: '#475569' }}>Crashes or throws syntax error if input doesn't match format</td>
+                  <td style={{ padding: '0.85rem 1rem', color: '#475569' }}>Infers meaning from context, slang, messy voice transcripts, or typos</td>
+                </tr>
+                <tr style={{ borderBottom: '1px solid #e2e8f0', background: '#fafafa' }}>
+                  <td style={{ padding: '0.85rem 1rem', fontWeight: 700, color: '#0f172a' }}>Adaptability</td>
+                  <td style={{ padding: '0.85rem 1rem', color: '#475569' }}>Requires human developer to recode and deploy new software version</td>
+                  <td style={{ padding: '0.85rem 1rem', color: '#475569' }}>Adapts in seconds when prompted with new instructions or context</td>
+                </tr>
+                <tr style={{ borderBottom: '1px solid #e2e8f0' }}>
+                  <td style={{ padding: '0.85rem 1rem', fontWeight: 700, color: '#0f172a' }}>Best Used For</td>
+                  <td style={{ padding: '0.85rem 1rem', color: '#475569' }}>Exact bank ledger balances, payroll calculations, railway reservations</td>
+                  <td style={{ padding: '0.85rem 1rem', color: '#475569' }}>Brainstorming, document summarization, draft generation, language translation</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        ) : (
+          <div style={{ background: '#f8fafc', borderRadius: '12px', border: '1px solid #e2e8f0', padding: '1.5rem', marginBottom: '1.25rem' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.5rem' }}>
+              <div style={{ background: '#eff6ff', borderRadius: '10px', padding: '1.25rem', border: '1px solid #bfdbfe' }}>
+                <strong style={{ color: '#1d4ed8', fontSize: '0.95rem', display: 'block', marginBottom: '0.5rem' }}>
+                  ⚙️ Traditional Software Pipeline:
+                </strong>
+                <div style={{ fontFamily: 'monospace', fontSize: '0.85rem', color: '#1e3a8a', lineHeight: 1.8 }}>
+                  [Input: User Data]<br />
+                  &nbsp;&nbsp;⬇️<br />
+                  [Fixed Logic: IF Input == X THEN Y]<br />
+                  &nbsp;&nbsp;⬇️<br />
+                  [Output: Predictable Result (or Crash)]
                 </div>
               </div>
-            ))}
+              <div style={{ background: '#ecfdf5', borderRadius: '10px', padding: '1.25rem', border: '1px solid #a7f3d0' }}>
+                <strong style={{ color: '#065f46', fontSize: '0.95rem', display: 'block', marginBottom: '0.5rem' }}>
+                  🧠 AI Pattern-Learning Pipeline:
+                </strong>
+                <div style={{ fontFamily: 'monospace', fontSize: '0.85rem', color: '#064e3b', lineHeight: 1.8 }}>
+                  [Input: Messy Natural Language Prompt]<br />
+                  &nbsp;&nbsp;⬇️<br />
+                  [Neural Net: Matches Contextual Patterns across Billions of Tokens]<br />
+                  &nbsp;&nbsp;⬇️<br />
+                  [Output: Dynamic, Contextual Synthesis]
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        <div style={{ background: '#f0fdf4', borderRadius: '10px', padding: '1rem 1.25rem', borderLeft: '4px solid #16a34a', fontSize: '0.9rem', color: '#166534', lineHeight: 1.6 }}>
+          <strong>💡 The Microwave vs. Master Chef Analogy:</strong> Traditional software is like a microwave button: you press "30 seconds" and it heats for exactly 30 seconds. Generative AI is like an experienced chef: you say <em>"I have leftover rice, onions, and curry leaves in Coimbatore; what quick dinner can I prepare in 10 minutes?"</em> and it invents a recipe tailored to your kitchen.
+        </div>
+      </div>
+
+      {/* TOPIC 3: GENERATIVE AI AND AI ASSISTANTS */}
+      <div style={{ background: '#ffffff', borderRadius: '14px', border: '1px solid #e2e8f0', padding: '1.75rem', boxShadow: '0 2px 8px rgba(0,0,0,0.03)' }}>
+        <div style={{ borderLeft: '4px solid #f59e0b', paddingLeft: '1rem', marginBottom: '1.25rem' }}>
+          <span style={{ fontSize: '0.78rem', fontWeight: 800, color: '#f59e0b', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+            TOPIC 3 · THE MODERN WAVE
+          </span>
+          <h3 style={{ fontSize: '1.45rem', fontWeight: 800, color: '#0f172a', margin: '0.2rem 0 0 0' }}>
+            Generative AI and Conversational Assistants: The Paradigm Shift
+          </h3>
+        </div>
+
+        <p style={{ fontSize: '1rem', lineHeight: 1.75, color: '#334155', margin: '0 0 1.25rem 0' }}>
+          Until 2022, most AI systems were <strong>Predictive or Discriminative</strong> — they merely classified existing data: <em>"Is this transaction on PhonePe fraudulent: Yes or No?"</em> or <em>"Does this image contain a helmet: Yes or No?"</em>
+        </p>
+
+        <p style={{ fontSize: '1rem', lineHeight: 1.75, color: '#334155', margin: '0 0 1.5rem 0' }}>
+          <strong>Generative AI</strong> fundamentally broke through by creating <strong>brand-new original content</strong> from plain English prompts:
+        </p>
+
+        {/* Generative Modality Grid */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1rem', marginBottom: '1.5rem' }}>
+          <div style={{ background: '#f8fafc', padding: '1rem 1.25rem', borderRadius: '10px', border: '1px solid #e2e8f0' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#2563eb', fontWeight: 800, fontSize: '0.92rem', marginBottom: '0.35rem' }}>
+              <FileText size={18} /> Text & Code
+            </div>
+            <p style={{ margin: 0, fontSize: '0.85rem', color: '#64748b', lineHeight: 1.5 }}>
+              Summaries, email replies, Excel formulas, Python scripts, study notes, and legal clauses.
+            </p>
+          </div>
+
+          <div style={{ background: '#f8fafc', padding: '1rem 1.25rem', borderRadius: '10px', border: '1px solid #e2e8f0' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#9333ea', fontWeight: 800, fontSize: '0.92rem', marginBottom: '0.35rem' }}>
+              <ImageIcon size={18} /> Visual Graphics
+            </div>
+            <p style={{ margin: 0, fontSize: '0.85rem', color: '#64748b', lineHeight: 1.5 }}>
+              Photorealistic imagery, company logos, social media banners, diagrams, and thumbnails.
+            </p>
+          </div>
+
+          <div style={{ background: '#f8fafc', padding: '1rem 1.25rem', borderRadius: '10px', border: '1px solid #e2e8f0' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#16a34a', fontWeight: 800, fontSize: '0.92rem', marginBottom: '0.35rem' }}>
+              <Presentation size={18} /> Presentations
+            </div>
+            <p style={{ margin: 0, fontSize: '0.85rem', color: '#64748b', lineHeight: 1.5 }}>
+              Generates 10-slide decks with titles, bullets, icons, and themes from rough raw notes.
+            </p>
+          </div>
+
+          <div style={{ background: '#f8fafc', padding: '1rem 1.25rem', borderRadius: '10px', border: '1px solid #e2e8f0' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#ea580c', fontWeight: 800, fontSize: '0.92rem', marginBottom: '0.35rem' }}>
+              <Bot size={18} /> Conversational Chat
+            </div>
+            <p style={{ margin: 0, fontSize: '0.85rem', color: '#64748b', lineHeight: 1.5 }}>
+              Interactive assistants (ChatGPT, Gemini, Copilot) answering questions iteratively like a colleague.
+            </p>
+          </div>
+        </div>
+
+        {/* Recharts Execution Speed Comparison */}
+        <div style={{ background: '#f8fafc', borderRadius: '12px', border: '1px solid #e2e8f0', padding: '1.25rem' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
+            <strong style={{ fontSize: '0.92rem', color: '#0f172a', display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <BarChart3 size={18} color="#2563eb" /> Productivity Multiplier: Manual Drafting vs. AI Assistance (Minutes)
+            </strong>
+            <span style={{ fontSize: '0.78rem', color: '#64748b' }}>First draft generation speed</span>
+          </div>
+
+          <div style={{ height: 200, width: '100%' }}>
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={executionSpeedData} margin={{ top: 10, right: 10, left: -25, bottom: 0 }}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+                <XAxis dataKey="task" tick={{ fontSize: 11, fill: '#64748b' }} />
+                <YAxis tick={{ fontSize: 11, fill: '#64748b' }} unit="m" />
+                <RechartsTooltip
+                  formatter={(val, name) => [`${val} mins`, name === 'manual' ? 'Manual Effort' : 'AI Generation']}
+                  contentStyle={{ background: '#0f172a', borderRadius: '8px', color: '#fff', fontSize: '0.82rem', border: 'none' }}
+                />
+                <Bar dataKey="manual" fill="#cbd5e1" name="manual" radius={[4, 4, 0, 0]} />
+                <Bar dataKey="ai" fill="#3b82f6" name="ai" radius={[4, 4, 0, 0]} />
+              </BarChart>
+            </ResponsiveContainer>
           </div>
         </div>
       </div>
 
-      {/* 2. INTERACTIVE COMPARISON TABS: TRADITIONAL SOFTWARE VS AI */}
-      <div style={{ background: '#ffffff', borderRadius: '14px', border: '1px solid #e2e8f0', padding: '1.5rem', boxShadow: '0 2px 8px rgba(0,0,0,0.03)' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem', flexWrap: 'wrap', gap: '8px' }}>
-          <div>
-            <span style={{ fontSize: '0.78rem', fontWeight: 800, color: '#10b981', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
-              INTERACTIVE ARCHITECTURE COMPARISON
-            </span>
-            <h3 style={{ margin: '0.25rem 0 0 0', fontSize: '1.3rem', fontWeight: 800, color: '#0f172a' }}>
-              Traditional Rule-Based Software vs. Generative AI
-            </h3>
-          </div>
-
-          {/* Scenario Tabs */}
-          <div style={{ display: 'flex', gap: '6px', background: '#f1f5f9', padding: '4px', borderRadius: '8px' }}>
-            <button
-              type="button"
-              onClick={() => setComparisonTab('maps')}
-              style={{
-                padding: '0.4rem 0.8rem',
-                borderRadius: '6px',
-                border: 'none',
-                fontSize: '0.82rem',
-                fontWeight: comparisonTab === 'maps' ? 800 : 600,
-                background: comparisonTab === 'maps' ? '#ffffff' : 'transparent',
-                color: comparisonTab === 'maps' ? '#1d4ed8' : '#64748b',
-                cursor: 'pointer'
-              }}
-            >
-              Traffic Rerouting
-            </button>
-            <button
-              type="button"
-              onClick={() => setComparisonTab('calculator')}
-              style={{
-                padding: '0.4rem 0.8rem',
-                borderRadius: '6px',
-                border: 'none',
-                fontSize: '0.82rem',
-                fontWeight: comparisonTab === 'calculator' ? 800 : 600,
-                background: comparisonTab === 'calculator' ? '#ffffff' : 'transparent',
-                color: comparisonTab === 'calculator' ? '#1d4ed8' : '#64748b',
-                cursor: 'pointer'
-              }}
-            >
-              Math & Accounts
-            </button>
-            <button
-              type="button"
-              onClick={() => setComparisonTab('spam')}
-              style={{
-                padding: '0.4rem 0.8rem',
-                borderRadius: '6px',
-                border: 'none',
-                fontSize: '0.82rem',
-                fontWeight: comparisonTab === 'spam' ? 800 : 600,
-                background: comparisonTab === 'spam' ? '#ffffff' : 'transparent',
-                color: comparisonTab === 'spam' ? '#1d4ed8' : '#64748b',
-                cursor: 'pointer'
-              }}
-            >
-              Email Spam Detection
-            </button>
-          </div>
+      {/* TOPIC 4: BENEFITS AND LIMITATIONS OF AI */}
+      <div style={{ background: '#ffffff', borderRadius: '14px', border: '1px solid #e2e8f0', padding: '1.75rem', boxShadow: '0 2px 8px rgba(0,0,0,0.03)' }}>
+        <div style={{ borderLeft: '4px solid #8b5cf6', paddingLeft: '1rem', marginBottom: '1.25rem' }}>
+          <span style={{ fontSize: '0.78rem', fontWeight: 800, color: '#8b5cf6', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+            TOPIC 4 · REALISTIC AUDIT
+          </span>
+          <h3 style={{ fontSize: '1.45rem', fontWeight: 800, color: '#0f172a', margin: '0.2rem 0 0 0' }}>
+            Benefits and Critical Limitations of AI: The Honest Reality Check
+          </h3>
         </div>
 
-        {/* Comparison Content */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.25rem' }}>
+        <p style={{ fontSize: '1rem', lineHeight: 1.75, color: '#334155', margin: '0 0 1.5rem 0' }}>
+          To operate AI like a professional rather than an amateur, you must know both its immense superpowers and its non-negotiable boundaries:
+        </p>
+
+        {/* Split Grid: Superpowers vs Guardrails */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '1.5rem', marginBottom: '1.5rem' }}>
           
-          {/* Traditional Card */}
-          <div style={{ background: '#f8fafc', padding: '1.25rem', borderRadius: '12px', border: '1.5px solid #cbd5e1' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#2563eb', fontWeight: 800, marginBottom: '0.75rem', fontSize: '0.95rem' }}>
-              <Cpu size={18} /> Traditional Deterministic Code
-            </div>
-            {comparisonTab === 'maps' && (
-              <p style={{ margin: 0, fontSize: '0.88rem', color: '#475569', lineHeight: 1.6 }}>
-                Calculates shortest straight line distance using fixed formulas: <code>Time = Distance / SpeedLimit</code>. Fails to account for unexpected road closures, weddings, or sudden monsoon waterlogging because human coders didn't write an explicit rule for that street today.
-              </p>
-            )}
-            {comparisonTab === 'calculator' && (
-              <p style={{ margin: 0, fontSize: '0.88rem', color: '#475569', lineHeight: 1.6 }}>
-                Calculator logic: <code>50 * 20 = 1000</code>. Absolutely 100% deterministic. If you type a typo like <code>50 ** 20</code>, it throws a Syntax Error rather than inferring your intention.
-              </p>
-            )}
-            {comparisonTab === 'spam' && (
-              <p style={{ margin: 0, fontSize: '0.88rem', color: '#475569', lineHeight: 1.6 }}>
-                Static keyword blacklist: <code>IF subject CONTAINS "lottery" THEN mark_spam()</code>. Spammers easily bypass this by writing "L0ttery" or "Prize winner", breaking the rigid rule.
-              </p>
-            )}
+          {/* Superpowers */}
+          <div style={{ background: '#f0fdf4', borderRadius: '12px', border: '1.5px solid #86efac', padding: '1.5rem' }}>
+            <h4 style={{ margin: '0 0 1rem 0', color: '#166534', fontSize: '1.1rem', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <Zap size={20} color="#16a34a" /> 4 Core Superpowers (Benefits)
+            </h4>
+            <ul style={{ margin: 0, paddingLeft: '1.25rem', color: '#14532d', fontSize: '0.9rem', lineHeight: 1.7 }}>
+              <li style={{ marginBottom: '0.5rem' }}>
+                <strong>Infinite Patience:</strong> You can ask AI to re-explain a complex engineering, medical, or accounting topic 25 times in 25 different ways without any hesitation or irritation.
+              </li>
+              <li style={{ marginBottom: '0.5rem' }}>
+                <strong>Overcomes Blank-Page Syndrome:</strong> Starting a fresh resume, project proposal, or client email is hard. AI produces a 70% draft in 3 seconds, so you only spend time refining.
+              </li>
+              <li style={{ marginBottom: '0.5rem' }}>
+                <strong>Instant Language Leveling:</strong> Indian professionals who think in Tamil, Hindi, or Telugu can write rough thoughts and command AI to polish it into fluent international business English.
+              </li>
+              <li>
+                <strong>Versatile Cross-Disciplinary Knowledge:</strong> Capable of analyzing an Excel formula, summarizing a 30-page case law, and writing a marketing tag in the same single chat.
+              </li>
+            </ul>
           </div>
 
-          {/* AI Card */}
-          <div style={{ background: '#f0fdf4', padding: '1.25rem', borderRadius: '12px', border: '1.5px solid #86efac' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#16a34a', fontWeight: 800, marginBottom: '0.75rem', fontSize: '0.95rem' }}>
-              <Sparkles size={18} /> Modern AI Pattern Learning
-            </div>
-            {comparisonTab === 'maps' && (
-              <p style={{ margin: 0, fontSize: '0.88rem', color: '#14532d', lineHeight: 1.6 }}>
-                Predictive AI continuously aggregates millions of live GPS signals from auto-rickshaws, cabs, and delivery drivers to anticipate slowing traffic 20 minutes before you even reach the intersection!
-              </p>
-            )}
-            {comparisonTab === 'calculator' && (
-              <p style={{ margin: 0, fontSize: '0.88rem', color: '#14532d', lineHeight: 1.6 }}>
-                You can feed AI a messy, handwritten photo of a provision store receipt with torn edges and Tamil notes. The AI extracts the items, categorizes them into GST slabs, and explains your expenditure!
-              </p>
-            )}
-            {comparisonTab === 'spam' && (
-              <p style={{ margin: 0, fontSize: '0.88rem', color: '#14532d', lineHeight: 1.6 }}>
-                AI analyzes contextual intent, sender reputational history, grammatical anomalies, and hyperlink structures to block 99.9% of attacks regardless of clever spelling tricks.
-              </p>
-            )}
+          {/* Critical Limitations */}
+          <div style={{ background: '#fef2f2', borderRadius: '12px', border: '1.5px solid #fecaca', padding: '1.5rem' }}>
+            <h4 style={{ margin: '0 0 1rem 0', color: '#991b1b', fontSize: '1.1rem', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <AlertTriangle size={20} color="#dc2626" /> 4 Critical Limitations (Guardrails)
+            </h4>
+            <ul style={{ margin: 0, paddingLeft: '1.25rem', color: '#7f1d1d', fontSize: '0.9rem', lineHeight: 1.7 }}>
+              <li style={{ marginBottom: '0.5rem' }}>
+                <strong>AI Hallucinations:</strong> LLMs predict probable word sequences, not verified facts. If unsure, an AI model will smoothly invent fake author names, imaginary court rulings, or made-up statistics with 100% confidence!
+              </li>
+              <li style={{ marginBottom: '0.5rem' }}>
+                <strong>No Real-World Ground Truth:</strong> AI has never lived in a city, visited a bank branch, or spoken to a customer. It lacks common sense and physical intuition.
+              </li>
+              <li style={{ marginBottom: '0.5rem' }}>
+                <strong>Data Privacy & Confidentiality:</strong> Consumer free plans may use chats to train future models. <em>Never paste passwords, customer Aadhaar cards, bank details, or internal corporate secrets into public AI!</em>
+              </li>
+              <li>
+                <strong>The "Garbage In, Garbage Out" Law:</strong> If you input a lazy, vague prompt, you receive useless generic fluff. AI output quality directly reflects prompt engineering quality.
+              </li>
+            </ul>
           </div>
 
         </div>
-      </div>
 
-      {/* 3. RECHARTS GRAPH: HUMAN VS AI EXECUTION SPEED */}
-      <div style={{ background: '#ffffff', borderRadius: '14px', border: '1px solid #e2e8f0', padding: '1.5rem', boxShadow: '0 2px 8px rgba(0,0,0,0.03)' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem', flexWrap: 'wrap', gap: '8px' }}>
-          <div>
-            <span style={{ fontSize: '0.78rem', fontWeight: 800, color: '#f59e0b', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
-              PRODUCTIVITY LEVERAGE METRIC
-            </span>
-            <h3 style={{ margin: '0.25rem 0 0 0', fontSize: '1.3rem', fontWeight: 800, color: '#0f172a', display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <BarChart3 size={20} color="#f59e0b" /> Task Execution Speed: Manual Effort vs. AI Assistance (Minutes)
-            </h3>
-          </div>
-          <span style={{ fontSize: '0.8rem', color: '#64748b' }}>
-            Minutes to initial first draft
+        {/* Verification Rule Banner */}
+        <div style={{ background: '#eff6ff', borderRadius: '10px', padding: '1rem 1.25rem', border: '1px solid #bfdbfe', fontSize: '0.92rem', color: '#1e3a8a', display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <Shield size={22} color="#2563eb" style={{ flexShrink: 0 }} />
+          <span>
+            <strong>The Professional AI Golden Rule:</strong> Use AI to generate drafts, ideas, and structures; use your human intelligence to verify facts, apply ethics, and make final decisions. Never copy-paste without reading!
           </span>
         </div>
+      </div>
 
-        <div style={{ height: 250, width: '100%' }}>
-          <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={executionSpeedData} margin={{ top: 10, right: 20, left: -20, bottom: 0 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
-              <XAxis dataKey="task" tick={{ fontSize: 11, fill: '#64748b' }} />
-              <YAxis tick={{ fontSize: 11, fill: '#64748b' }} unit="m" />
-              <RechartsTooltip
-                formatter={(val, name) => [`${val} mins`, name === 'human' ? 'Manual Work' : 'AI-Assisted First Pass']}
-                contentStyle={{ background: '#0f172a', borderRadius: '8px', color: '#fff', fontSize: '0.85rem', border: 'none' }}
-              />
-              <Bar dataKey="human" fill="#94a3b8" name="human" radius={[4, 4, 0, 0]} />
-              <Bar dataKey="ai" fill="#3b82f6" name="ai" radius={[4, 4, 0, 0]} />
-            </BarChart>
-          </ResponsiveContainer>
+      {/* TOPIC 5: PRACTICAL CASE SCENARIOS */}
+      <div style={{ background: '#ffffff', borderRadius: '14px', border: '1px solid #e2e8f0', padding: '1.75rem', boxShadow: '0 2px 8px rgba(0,0,0,0.03)' }}>
+        <h3 style={{ fontSize: '1.3rem', fontWeight: 800, color: '#0f172a', margin: '0 0 1rem 0', display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <Sparkles size={20} color="#f59e0b" /> Real Student & Professional Case Scenarios
+        </h3>
+
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '1.25rem' }}>
+          {/* Scenario 1 */}
+          <div style={{ background: '#f8fafc', padding: '1.25rem', borderRadius: '10px', border: '1px solid #e2e8f0' }}>
+            <span style={{ fontSize: '0.75rem', fontWeight: 800, color: '#2563eb', textTransform: 'uppercase' }}>
+              Student Case: Exam Revision
+            </span>
+            <h4 style={{ margin: '0.35rem 0 0.5rem 0', fontSize: '1.05rem', fontWeight: 800, color: '#0f172a' }}>
+              Pooja (2nd-Year B.Com Student, Coimbatore)
+            </h4>
+            <p style={{ fontSize: '0.88rem', color: '#475569', lineHeight: 1.6, margin: '0 0 0.75rem 0' }}>
+              <strong>Challenge:</strong> 80 pages of textbook notes on Accounting Principles. She has an internal test tomorrow morning and struggles to memorize dry definitions of Real, Personal, and Nominal accounts.
+            </p>
+            <div style={{ background: '#ffffff', padding: '0.75rem', borderRadius: '6px', border: '1px solid #e2e8f0', fontSize: '0.85rem', color: '#1e293b' }}>
+              <strong>AI Solution:</strong> Pooja prompts ChatGPT: <em>"Explain the 3 Golden Rules of Accounting using simple examples from an everyday Tamil Nadu grocery store."</em> Result: Concrete inventory and cash drawer examples that stick in her memory and help her ace the viva.
+            </div>
+          </div>
+
+          {/* Scenario 2 */}
+          <div style={{ background: '#f8fafc', padding: '1.25rem', borderRadius: '10px', border: '1px solid #e2e8f0' }}>
+            <span style={{ fontSize: '0.75rem', fontWeight: 800, color: '#16a34a', textTransform: 'uppercase' }}>
+              Professional Case: Vendor Relations
+            </span>
+            <h4 style={{ margin: '0.35rem 0 0.5rem 0', fontSize: '1.05rem', fontWeight: 800, color: '#0f172a' }}>
+              Karthik (Logistics Transport Manager, Tiruppur)
+            </h4>
+            <p style={{ fontSize: '0.88rem', color: '#475569', lineHeight: 1.6, margin: '0 0 0.75rem 0' }}>
+              <strong>Challenge:</strong> A corporate client invoice of ₹45,000 is overdue by 18 days. Karthik does not want to damage a longstanding client relationship by sounding rude, but needs firm commitment by Friday.
+            </p>
+            <div style={{ background: '#ffffff', padding: '0.75rem', borderRadius: '6px', border: '1px solid #e2e8f0', fontSize: '0.85rem', color: '#1e293b' }}>
+              <strong>AI Solution:</strong> Karthik prompts Copilot: <em>"Draft a polite, respectful, yet firm payment reminder email from a logistics vendor to a longstanding client requesting RTGS settlement by Friday."</em> Copilot produces an email in 4 seconds, saving Karthik 30 minutes of stressful drafting.
+            </div>
+          </div>
         </div>
       </div>
 
-      {/* 4. VERIFIED PROMPT TEMPLATES */}
-      <div style={{ background: '#ffffff', borderRadius: '14px', border: '1px solid #e2e8f0', padding: '1.5rem', boxShadow: '0 2px 8px rgba(0,0,0,0.03)' }}>
-        <h3 style={{ margin: '0 0 1rem 0', fontSize: '1.25rem', fontWeight: 800, color: '#0f172a', display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <Terminal size={18} color="#10b981" /> Ready-to-Use Prompt Templates (Click to Copy)
+      {/* TOPIC 6: READY-TO-USE TESTED PROMPTS */}
+      <div style={{ background: '#ffffff', borderRadius: '14px', border: '1px solid #e2e8f0', padding: '1.75rem', boxShadow: '0 2px 8px rgba(0,0,0,0.03)' }}>
+        <h3 style={{ fontSize: '1.3rem', fontWeight: 800, color: '#0f172a', margin: '0 0 1rem 0', display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <Terminal size={20} color="#10b981" /> Tested Prompt Templates for Lesson 1 (Click to Copy)
         </h3>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-          {prompts.map((p, idx) => (
-            <div key={idx} style={{ background: '#0f172a', color: '#f8fafc', padding: '1.25rem', borderRadius: '10px' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem', borderBottom: '1px solid #334155', paddingBottom: '0.5rem' }}>
-                <span style={{ fontSize: '0.82rem', fontWeight: 700, color: '#93c5fd' }}>{p.title}</span>
+        <p style={{ fontSize: '0.9rem', color: '#64748b', margin: '0 0 1.25rem 0' }}>
+          Copy these verified templates directly into ChatGPT, Gemini, or Copilot for instant results:
+        </p>
+
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+          {testedPrompts.map((p, pIdx) => (
+            <div key={pIdx} style={{ background: '#0f172a', color: '#f8fafc', borderRadius: '10px', padding: '1.25rem 1.5rem', position: 'relative' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.65rem', borderBottom: '1px solid #334155', paddingBottom: '0.5rem' }}>
+                <span style={{ fontSize: '0.82rem', fontWeight: 800, color: '#93c5fd', textTransform: 'uppercase' }}>
+                  {p.title}
+                </span>
                 <button
                   type="button"
-                  onClick={() => onCopy(p.text, idx)}
-                  style={{ background: copiedIndex === idx ? '#10b981' : '#334155', border: 'none', color: '#fff', padding: '0.25rem 0.65rem', borderRadius: '4px', fontSize: '0.75rem', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}
+                  onClick={() => onCopy(p.prompt, pIdx)}
+                  style={{
+                    background: copiedIndex === pIdx ? '#10b981' : '#334155',
+                    border: 'none',
+                    color: '#ffffff',
+                    padding: '0.3rem 0.8rem',
+                    borderRadius: '6px',
+                    fontSize: '0.78rem',
+                    fontWeight: 700,
+                    cursor: 'pointer',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '5px'
+                  }}
                 >
-                  {copiedIndex === idx ? <Check size={13} /> : <Copy size={13} />}
-                  {copiedIndex === idx ? 'Copied!' : 'Copy'}
+                  {copiedIndex === pIdx ? <Check size={14} /> : <Copy size={14} />}
+                  {copiedIndex === pIdx ? 'Copied!' : 'Copy Prompt'}
                 </button>
               </div>
-              <pre style={{ margin: 0, fontFamily: 'monospace', fontSize: '0.88rem', whiteSpace: 'pre-wrap', color: '#e2e8f0' }}>{p.text}</pre>
+
+              <pre style={{ margin: 0, fontFamily: 'monospace', fontSize: '0.9rem', lineHeight: 1.6, whiteSpace: 'pre-wrap', color: '#e2e8f0' }}>
+                {p.prompt}
+              </pre>
+
+              <p style={{ margin: '0.75rem 0 0 0', fontSize: '0.8rem', color: '#94a3b8', fontStyle: 'italic', borderTop: '1px dashed #334155', paddingTop: '0.5rem' }}>
+                💡 Purpose: {p.purpose}
+              </p>
             </div>
           ))}
         </div>
       </div>
 
-      {/* 5. INTERACTIVE 3-QUESTION MINI QUIZ */}
-      <div style={{ background: '#ffffff', borderRadius: '14px', border: '1px solid #e2e8f0', padding: '1.5rem', boxShadow: '0 2px 8px rgba(0,0,0,0.03)' }}>
-        <h3 style={{ margin: '0 0 1rem 0', fontSize: '1.25rem', fontWeight: 800, color: '#0f172a' }}>
-          Lesson 1 Concept Check
+      {/* TOPIC 7: INTERACTIVE KNOWLEDGE CHECK QUIZ */}
+      <div style={{ background: '#ffffff', borderRadius: '14px', border: '1px solid #e2e8f0', padding: '1.75rem', boxShadow: '0 2px 8px rgba(0,0,0,0.03)' }}>
+        <h3 style={{ fontSize: '1.3rem', fontWeight: 800, color: '#0f172a', margin: '0 0 0.5rem 0', display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <CheckSquare size={20} color="#8b5cf6" /> Lesson 1 Knowledge Check Quiz ({quizQuestions.length} MCQs)
         </h3>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+        <p style={{ fontSize: '0.9rem', color: '#64748b', margin: '0 0 1.25rem 0' }}>
+          Test your comprehension of core AI principles:
+        </p>
+
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
           {quizQuestions.map((q, qIdx) => {
             const selected = selectedAnswers[qIdx];
             const isCorrect = selected === q.correctIndex;
             return (
-              <div key={q.id} style={{ background: '#f8fafc', padding: '1rem', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
-                <p style={{ margin: '0 0 0.5rem 0', fontWeight: 700, fontSize: '0.9rem' }}>Q{qIdx + 1}: {q.question}</p>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                  {q.options.map((opt, optIdx) => (
-                    <button
-                      key={optIdx}
-                      type="button"
-                      disabled={showResults}
-                      onClick={() => setSelectedAnswers({ ...selectedAnswers, [qIdx]: optIdx })}
-                      style={{
-                        textAlign: 'left',
-                        padding: '0.55rem 0.8rem',
-                        borderRadius: '6px',
-                        border: selected === optIdx ? '2px solid #3b82f6' : '1px solid #cbd5e1',
-                        background: selected === optIdx ? '#eff6ff' : '#fff',
-                        fontSize: '0.85rem',
-                        cursor: showResults ? 'default' : 'pointer'
-                      }}
-                    >
-                      {opt}
-                    </button>
-                  ))}
+              <div key={q.id} style={{ background: '#f8fafc', padding: '1.25rem', borderRadius: '10px', border: '1px solid #e2e8f0' }}>
+                <p style={{ margin: '0 0 0.85rem 0', fontWeight: 700, fontSize: '0.95rem', color: '#0f172a' }}>
+                  Q{qIdx + 1}: {q.question}
+                </p>
+
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '8px' }}>
+                  {q.options.map((opt, optIdx) => {
+                    let btnBorder = selected === optIdx ? '#3b82f6' : '#cbd5e1';
+                    let btnBg = selected === optIdx ? '#eff6ff' : '#ffffff';
+                    let btnColor = selected === optIdx ? '#1d4ed8' : '#1e293b';
+
+                    if (showResults) {
+                      if (optIdx === q.correctIndex) {
+                        btnBorder = '#10b981';
+                        btnBg = '#ecfdf5';
+                        btnColor = '#065f46';
+                      } else if (selected === optIdx && !isCorrect) {
+                        btnBorder = '#ef4444';
+                        btnBg = '#fef2f2';
+                        btnColor = '#991b1b';
+                      }
+                    }
+
+                    return (
+                      <button
+                        key={optIdx}
+                        type="button"
+                        disabled={showResults}
+                        onClick={() => setSelectedAnswers({ ...selectedAnswers, [qIdx]: optIdx })}
+                        style={{
+                          textAlign: 'left',
+                          padding: '0.65rem 0.9rem',
+                          borderRadius: '6px',
+                          border: `1.5px solid ${btnBorder}`,
+                          background: btnBg,
+                          color: btnColor,
+                          fontSize: '0.85rem',
+                          fontWeight: selected === optIdx ? 700 : 500,
+                          cursor: showResults ? 'default' : 'pointer'
+                        }}
+                      >
+                        <span style={{ fontWeight: 800, color: '#64748b', marginRight: '6px' }}>
+                          {String.fromCharCode(65 + optIdx)}.
+                        </span>
+                        {opt}
+                      </button>
+                    );
+                  })}
                 </div>
+
                 {showResults && (
-                  <div style={{ marginTop: '0.5rem', padding: '0.4rem 0.75rem', borderRadius: '6px', background: isCorrect ? '#ecfdf5' : '#fef2f2', fontSize: '0.8rem', color: isCorrect ? '#065f46' : '#991b1b' }}>
-                    {isCorrect ? '✅ Correct!' : '❌ Incorrect.'} {q.explanation}
+                  <div style={{ marginTop: '0.75rem', padding: '0.5rem 0.85rem', borderRadius: '6px', background: isCorrect ? '#ecfdf5' : '#fef2f2', border: `1px solid ${isCorrect ? '#a7f3d0' : '#fecaca'}`, fontSize: '0.82rem', color: isCorrect ? '#065f46' : '#991b1b' }}>
+                    <strong>{isCorrect ? '✅ Correct!' : '❌ Incorrect.'}</strong> {q.explanation}
                   </div>
                 )}
               </div>
             );
           })}
         </div>
-        {!showResults && Object.keys(selectedAnswers).length === quizQuestions.length && (
-          <div style={{ textAlign: 'right', marginTop: '1rem' }}>
+
+        {!showResults && Object.keys(selectedAnswers).length > 0 && (
+          <div style={{ textAlign: 'right', marginTop: '1.25rem' }}>
             <button className="btn btn-primary" onClick={() => setShowResults(true)}>
-              Check Answers
+              Check Lesson 1 Quiz Answers
             </button>
           </div>
         )}
@@ -456,201 +763,483 @@ export function Lesson1ModuleView({ onCopy, copiedIndex, openAITutor }) {
 
 
 // =========================================================================
-// LESSON 2: INTRODUCTION TO POPULAR AI TOOLS (INTERACTIVE LAB)
+// LESSON 2 COMPONENT: INTRODUCTION TO POPULAR AI TOOLS
 // =========================================================================
 export function Lesson2ModuleView({ onCopy, copiedIndex, openAITutor }) {
-  // Interactive Tool Recommendation Selector
-  const [targetTask, setTargetTask] = useState('email'); // 'email' | 'video' | 'research' | 'deck'
+  // Mini Quiz State for Lesson 2
+  const [selectedAnswers, setSelectedAnswers] = useState({});
+  const [showResults, setShowResults] = useState(false);
 
-  const taskRecommendations = {
-    email: {
-      tool: 'ChatGPT (OpenAI)',
-      badge: 'Best for Brainstorming & Writing',
-      model: 'GPT-4o mini',
-      freeLimit: 'High token allowance, resets every 3 hours',
-      why: 'Ideal for conversational role-play, rapid drafting, language translation, and restructuring messy thoughts into professional paragraphs.',
-      directLink: 'https://chatgpt.com',
-      samplePrompt: 'Act as a professional email editor. Rewrite this draft to sound polite, confident, and under 100 words:\n\n"[Draft]"'
+  // Active Tool Tab
+  const [activeToolTab, setActiveToolTab] = useState('chatgpt'); // 'chatgpt' | 'gemini' | 'copilot' | 'specialized'
+
+  const quizQuestions = [
+    {
+      id: 'l2_q1',
+      question: 'Which of the following is the single greatest advantage of Google Gemini for college students and office workers?',
+      options: [
+        'It works completely without an internet connection.',
+        'Deep native integration with Google Workspace (Google Docs, Gmail, Drive) and YouTube lecture video reading.',
+        'It generates video games automatically on Android phones.',
+        'It never makes any mistakes under any circumstances.'
+      ],
+      correctIndex: 1,
+      explanation: 'Google Gemini natively integrates with Google Docs, Gmail, Drive, and YouTube transcripts, allowing one-click summarization of lectures and email drafting.'
     },
-    video: {
-      tool: 'Google Gemini',
-      badge: 'Best for Google Workspace & YouTube',
-      model: 'Gemini 1.5 Flash',
-      freeLimit: 'Generous free tier with Google Account',
-      why: 'Natively reads YouTube video links, processes large 1-million-token contexts, and connects directly to your Google Docs, Gmail, and Google Drive.',
-      directLink: 'https://gemini.google.com',
-      samplePrompt: 'Summarize the core takeaways from this YouTube link: [URL] in 5 numbered action points for students.'
+    {
+      id: 'l2_q2',
+      question: 'Why should researchers and seminar presenters use Perplexity AI or Microsoft Copilot instead of standard ChatGPT without web access?',
+      options: [
+        'Because standard ChatGPT charges ₹500 per question.',
+        'Because Copilot and Perplexity search the live web and provide clickable footnote citations to verify facts with official reports.',
+        'Because Perplexity writes in regional languages only.',
+        'Because Copilot was developed in the 1990s.'
+      ],
+      correctIndex: 1,
+      explanation: 'Copilot and Perplexity are "grounded in search" — they actively read live web pages and return numbered source citations (like RBI, NITI Aayog) so you can verify data.'
     },
-    research: {
-      tool: 'Microsoft Copilot / Perplexity AI',
-      badge: 'Best for Web Grounding & Citations',
-      model: 'Search-Grounded Model',
-      freeLimit: 'Free Bing web search & basic Perplexity searches daily',
-      why: 'Unlike standard chat models that may hallucinate older data, Copilot and Perplexity search the live web and provide clickable footnote sources for every statistic.',
-      directLink: 'https://copilot.microsoft.com',
-      samplePrompt: 'What was the total volume of UPI digital transactions recorded in India in the latest financial year? Provide source citations.'
+    {
+      id: 'l2_q3',
+      question: 'Which specialized AI tool is best for converting a rough 1-page outline into an 8-slide presentation deck in 30 seconds?',
+      options: [
+        'Notepad',
+        'Gamma.app (or Canva Magic Studio)',
+        'VLC Media Player',
+        'Command Prompt'
+      ],
+      correctIndex: 1,
+      explanation: 'Gamma.app and Canva Magic Studio specialize in generative presentation design, structuring slides, styling layouts, and inserting relevant graphics automatically.'
     },
-    deck: {
-      tool: 'Gamma.app & Canva Magic',
-      badge: 'Best for Presentation Slides & Visuals',
-      model: 'Generative Design Engine',
-      freeLimit: '400 free credits on Gamma / Free Canva plan',
-      why: 'Converts a rough text outline into a 10-slide presentation with modern card layouts, color palettes, and stock photography in 30 seconds.',
-      directLink: 'https://gamma.app',
-      samplePrompt: 'Generate an 8-slide presentation outline on "Introduction to AI for College Beginners" with 3 bullets per slide.'
+    {
+      id: 'l2_q4',
+      question: 'Why is it important to know that AI features, model names, and free plan limits change frequently?',
+      options: [
+        'Because companies often upgrade model speeds, adjust daily query limits, and rename models — but you can accomplish all student tasks on free tiers.',
+        'Because all AI accounts are deleted every Monday morning.',
+        'Because AI tools will permanently shut down next month.',
+        'Because free users are banned from opening web browsers.'
+      ],
+      correctIndex: 0,
+      explanation: 'AI technology evolves rapidly; model names (like GPT-4o mini or Gemini 1.5) and quota limits change frequently, but free plans remain fully sufficient for productive learning.'
+    },
+    {
+      id: 'l2_q5',
+      question: 'What crucial privacy setting should you check before using consumer AI tools for sensitive office or student work?',
+      options: [
+        'Change screen resolution to 4K.',
+        'Turn off "Model Training / Chat History Sharing" in account settings if you input sensitive confidential notes.',
+        'Delete the web browser every evening.',
+        'Turn off Wi-Fi while chatting with AI.'
+      ],
+      correctIndex: 1,
+      explanation: 'Disabling chat history training in ChatGPT, Gemini, or Copilot settings ensures your proprietary inputs are not saved to train public AI models.'
     }
-  };
+  ];
 
-  const currentRec = taskRecommendations[targetTask];
-
-  // Tool Benchmark Data for Recharts
-  const toolCapabilityData = [
-    { tool: 'ChatGPT-4o mini', writing: 95, reasoning: 92, webSearch: 80, speed: 96 },
-    { tool: 'Google Gemini Flash', writing: 88, reasoning: 86, webSearch: 94, speed: 98 },
-    { tool: 'Microsoft Copilot', writing: 85, reasoning: 88, webSearch: 96, speed: 82 },
-    { tool: 'Perplexity AI', writing: 82, reasoning: 90, webSearch: 99, speed: 88 }
+  const testedPrompts = [
+    {
+      title: 'AI Tool Recommendation Advisor',
+      prompt: 'I need to accomplish the following task: [Describe Task, e.g., Summarize a 40-minute YouTube economics lecture with citations]. Which free AI tool (ChatGPT, Google Gemini, Microsoft Copilot, or Perplexity) is best suited for this task and why? Give a 2-sentence recommendation.',
+      purpose: 'Pick the right AI tool without wasting time guessing.'
+    },
+    {
+      title: 'YouTube Lecture Note-Taker (Gemini Special)',
+      prompt: 'Analyze this video URL: [Paste YouTube Video Link]. Provide: 1) A 3-sentence executive summary, 2) Timeline of core topics discussed with timestamps, and 3) 5 major action points for students.',
+      purpose: 'Extract instant study notes from recorded seminars and video courses.'
+    },
+    {
+      title: 'Sourced Fact Verification Prompt (Copilot / Perplexity)',
+      prompt: 'Find verified, current statistics on [Topic, e.g., UPI Digital Payment growth in India over the past 2 years]. Include: 1) Exact numerical figures, 2) Names of official regulatory sources (e.g. RBI or NPCI), and 3) Provide clickable citations.',
+      purpose: 'Prevent hallucinations and get footnoted references for academic papers.'
+    }
   ];
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '2.5rem' }}>
 
-      {/* 1. INTERACTIVE TOOL SELECTOR ("WHICH AI TOOL SHOULD I USE?") */}
-      <div style={{ background: '#ffffff', borderRadius: '14px', border: '1px solid #e2e8f0', padding: '1.5rem', boxShadow: '0 2px 8px rgba(0,0,0,0.03)' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem', flexWrap: 'wrap', gap: '8px' }}>
-          <div>
-            <span style={{ fontSize: '0.78rem', fontWeight: 800, color: '#3b82f6', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
-              INTERACTIVE TOOL DECISION ENGINE
-            </span>
-            <h3 style={{ margin: '0.25rem 0 0 0', fontSize: '1.3rem', fontWeight: 800, color: '#0f172a', display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <Compass size={20} color="#3b82f6" /> Which AI Tool Fits Your Immediate Task?
-            </h3>
-          </div>
-          <span style={{ fontSize: '0.8rem', background: '#eff6ff', color: '#1d4ed8', padding: '4px 10px', borderRadius: '20px', fontWeight: 700 }}>
-            Select your goal
+      {/* TOPIC 1: THE BIG THREE GENERAL-PURPOSE ASSISTANTS */}
+      <div style={{ background: '#ffffff', borderRadius: '14px', border: '1px solid #e2e8f0', padding: '1.75rem', boxShadow: '0 2px 8px rgba(0,0,0,0.03)' }}>
+        <div style={{ borderLeft: '4px solid #3b82f6', paddingLeft: '1rem', marginBottom: '1.25rem' }}>
+          <span style={{ fontSize: '0.78rem', fontWeight: 800, color: '#3b82f6', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+            TOPIC 1 · THE BIG THREE ECOSYSTEM
           </span>
+          <h3 style={{ fontSize: '1.45rem', fontWeight: 800, color: '#0f172a', margin: '0.2rem 0 0 0' }}>
+            The Big Three AI Assistants: ChatGPT, Google Gemini, and Microsoft Copilot
+          </h3>
         </div>
 
-        {/* Task Choice Buttons */}
+        <p style={{ fontSize: '1rem', lineHeight: 1.75, color: '#334155', margin: '0 0 1.25rem 0' }}>
+          When starting with AI, thousands of new tools are released every month. The secret to professional productivity is simple: <strong>master the Big Three general-purpose assistants</strong>. They handle 90% of your student and career tasks on 100% free plans!
+        </p>
+
+        {/* Tool Switcher Tabs */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '10px', marginBottom: '1.5rem' }}>
           {[
-            { id: 'email', label: '✍️ Email / Writing / Code', icon: <FileText size={16} /> },
-            { id: 'video', label: '📺 YouTube / Docs Summary', icon: <Smartphone size={16} /> },
-            { id: 'research', label: '🔍 Sourced Web Research', icon: <Search size={16} /> },
-            { id: 'deck', label: '📊 Instant Presentation Deck', icon: <Presentation size={16} /> }
-          ].map(tab => (
+            { id: 'chatgpt', name: 'ChatGPT (OpenAI)', badge: 'The Pioneer', color: '#10b981' },
+            { id: 'gemini', name: 'Google Gemini', badge: 'Workspace & YouTube', color: '#3b82f6' },
+            { id: 'copilot', name: 'Microsoft Copilot', badge: 'Search & Office', color: '#8b5cf6' },
+            { id: 'specialized', name: 'Specialized AI Tools', badge: 'Canva, Gamma, Perplexity', color: '#f59e0b' }
+          ].map(tool => (
             <button
-              key={tab.id}
+              key={tool.id}
               type="button"
-              onClick={() => setTargetTask(tab.id)}
+              onClick={() => setActiveToolTab(tool.id)}
               style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '8px',
                 padding: '0.75rem 1rem',
                 borderRadius: '10px',
-                border: targetTask === tab.id ? '2px solid #3b82f6' : '1px solid #e2e8f0',
-                background: targetTask === tab.id ? '#eff6ff' : '#f8fafc',
-                color: targetTask === tab.id ? '#1d4ed8' : '#334155',
-                fontWeight: targetTask === tab.id ? 800 : 600,
+                border: activeToolTab === tool.id ? `2px solid ${tool.color}` : '1px solid #e2e8f0',
+                background: activeToolTab === tool.id ? `${tool.color}15` : '#f8fafc',
+                color: activeToolTab === tool.id ? '#0f172a' : '#475569',
+                fontWeight: activeToolTab === tool.id ? 800 : 600,
                 fontSize: '0.88rem',
                 cursor: 'pointer',
-                transition: 'all 0.15s'
+                textAlign: 'left'
               }}
             >
-              {tab.label}
+              <div style={{ fontSize: '0.72rem', textTransform: 'uppercase', color: tool.color, fontWeight: 800 }}>{tool.badge}</div>
+              <div style={{ fontSize: '0.95rem' }}>{tool.name}</div>
             </button>
           ))}
         </div>
 
-        {/* Live Recommendation Card */}
-        <div style={{ background: '#f8fafc', border: '1.5px solid #cbd5e1', borderRadius: '12px', padding: '1.5rem' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '8px', marginBottom: '1rem' }}>
+        {/* Detailed Breakdown Card for Active Tool */}
+        <div style={{ background: '#f8fafc', borderRadius: '12px', border: '1.5px solid #cbd5e1', padding: '1.5rem' }}>
+          {activeToolTab === 'chatgpt' && (
             <div>
-              <span style={{ fontSize: '0.75rem', fontWeight: 800, color: '#16a34a', textTransform: 'uppercase', background: '#dcfce7', padding: '3px 8px', borderRadius: '4px' }}>
-                Recommended Choice
-              </span>
-              <h4 style={{ margin: '0.4rem 0 0 0', fontSize: '1.25rem', fontWeight: 800, color: '#0f172a' }}>
-                {currentRec.tool}
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem', flexWrap: 'wrap', gap: '8px' }}>
+                <h4 style={{ margin: 0, fontSize: '1.25rem', fontWeight: 800, color: '#0f172a' }}>
+                  1. ChatGPT by OpenAI (<a href="https://chatgpt.com" target="_blank" rel="noopener noreferrer" style={{ color: '#2563eb' }}>chatgpt.com</a>)
+                </h4>
+                <a href="https://chatgpt.com" target="_blank" rel="noopener noreferrer" className="btn btn-outline" style={{ fontSize: '0.82rem', padding: '0.4rem 0.8rem', display: 'inline-flex', alignItems: 'center', gap: '5px' }}>
+                  Open ChatGPT <ExternalLink size={13} />
+                </a>
+              </div>
+              <p style={{ fontSize: '0.92rem', color: '#334155', lineHeight: 1.65, margin: '0 0 1rem 0' }}>
+                The pioneer that started the modern Generative AI wave in late 2022. The free plan runs on <strong>GPT-4o mini</strong>, offering an exceptionally clean conversational interface, strong coding abilities, and natural human-like phrasing.
+              </p>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1rem', marginBottom: '1rem' }}>
+                <div style={{ background: '#ffffff', padding: '0.85rem', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
+                  <strong style={{ fontSize: '0.82rem', color: '#16a34a', textTransform: 'uppercase' }}>Best For</strong>
+                  <p style={{ margin: '0.2rem 0 0 0', fontSize: '0.88rem', color: '#334155' }}>
+                    Brainstorming, drafting emails, programming & debugging code, language translation, role-playing interviews.
+                  </p>
+                </div>
+                <div style={{ background: '#ffffff', padding: '0.85rem', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
+                  <strong style={{ fontSize: '0.82rem', color: '#2563eb', textTransform: 'uppercase' }}>Key Free Features</strong>
+                  <p style={{ margin: '0.2rem 0 0 0', fontSize: '0.88rem', color: '#334155' }}>
+                    Custom instructions, memory across sessions, file attachment uploads (PDFs, images), excellent Android/iOS apps.
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {activeToolTab === 'gemini' && (
+            <div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem', flexWrap: 'wrap', gap: '8px' }}>
+                <h4 style={{ margin: 0, fontSize: '1.25rem', fontWeight: 800, color: '#0f172a' }}>
+                  2. Google Gemini (<a href="https://gemini.google.com" target="_blank" rel="noopener noreferrer" style={{ color: '#2563eb' }}>gemini.google.com</a>)
+                </h4>
+                <a href="https://gemini.google.com" target="_blank" rel="noopener noreferrer" className="btn btn-outline" style={{ fontSize: '0.82rem', padding: '0.4rem 0.8rem', display: 'inline-flex', alignItems: 'center', gap: '5px' }}>
+                  Open Gemini <ExternalLink size={13} />
+                </a>
+              </div>
+              <p style={{ fontSize: '0.92rem', color: '#334155', lineHeight: 1.65, margin: '0 0 1rem 0' }}>
+                Google's multimodal flagship running on <strong>Gemini 1.5 Flash</strong>. For Indian students and professionals, its biggest superpower is its deep native integration with the entire Google ecosystem — YouTube, Google Docs, Gmail, and Google Drive.
+              </p>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1rem', marginBottom: '1rem' }}>
+                <div style={{ background: '#ffffff', padding: '0.85rem', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
+                  <strong style={{ fontSize: '0.82rem', color: '#16a34a', textTransform: 'uppercase' }}>Best For</strong>
+                  <p style={{ margin: '0.2rem 0 0 0', fontSize: '0.88rem', color: '#334155' }}>
+                    Summarizing 45-minute YouTube lectures, drafting emails inside Gmail, processing huge 1-million-token textbook PDFs.
+                  </p>
+                </div>
+                <div style={{ background: '#ffffff', padding: '0.85rem', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
+                  <strong style={{ fontSize: '0.82rem', color: '#2563eb', textTransform: 'uppercase' }}>Key Free Features</strong>
+                  <p style={{ margin: '0.2rem 0 0 0', fontSize: '0.88rem', color: '#334155' }}>
+                    1-click Google sign-in, double-check response button (verifies claims using Google Search), YouTube video transcript reading.
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {activeToolTab === 'copilot' && (
+            <div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem', flexWrap: 'wrap', gap: '8px' }}>
+                <h4 style={{ margin: 0, fontSize: '1.25rem', fontWeight: 800, color: '#0f172a' }}>
+                  3. Microsoft Copilot (<a href="https://copilot.microsoft.com" target="_blank" rel="noopener noreferrer" style={{ color: '#2563eb' }}>copilot.microsoft.com</a>)
+                </h4>
+                <a href="https://copilot.microsoft.com" target="_blank" rel="noopener noreferrer" className="btn btn-outline" style={{ fontSize: '0.82rem', padding: '0.4rem 0.8rem', display: 'inline-flex', alignItems: 'center', gap: '5px' }}>
+                  Open Copilot <ExternalLink size={13} />
+                </a>
+              </div>
+              <p style={{ fontSize: '0.92rem', color: '#334155', lineHeight: 1.65, margin: '0 0 1rem 0' }}>
+                Built directly into Microsoft Edge and Windows 11. Copilot connects OpenAI's advanced models directly with live Bing web search, ensuring every answer is anchored with clickable footnote links.
+              </p>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1rem', marginBottom: '1rem' }}>
+                <div style={{ background: '#ffffff', padding: '0.85rem', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
+                  <strong style={{ fontSize: '0.82rem', color: '#16a34a', textTransform: 'uppercase' }}>Best For</strong>
+                  <p style={{ margin: '0.2rem 0 0 0', fontSize: '0.88rem', color: '#334155' }}>
+                    Live fact-checking, cited college seminar research, drafting letters within Microsoft Word and PowerPoint.
+                  </p>
+                </div>
+                <div style={{ background: '#ffffff', padding: '0.85rem', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
+                  <strong style={{ fontSize: '0.82rem', color: '#2563eb', textTransform: 'uppercase' }}>Key Free Features</strong>
+                  <p style={{ margin: '0.2rem 0 0 0', fontSize: '0.88rem', color: '#334155' }}>
+                    Free access to search grounding, integrated DALL-E image generation (Designer), side-by-side Edge PDF sidebar reading.
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {activeToolTab === 'specialized' && (
+            <div>
+              <h4 style={{ margin: '0 0 0.75rem 0', fontSize: '1.25rem', fontWeight: 800, color: '#0f172a' }}>
+                4. Specialized AI Tools for Research, Slides & Visuals
               </h4>
-            </div>
-            <a
-              href={currentRec.directLink}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn btn-primary"
-              style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', fontSize: '0.85rem', textDecoration: 'none', padding: '0.5rem 1rem' }}
-            >
-              Launch Tool <ExternalLink size={14} />
-            </a>
-          </div>
+              <p style={{ fontSize: '0.92rem', color: '#334155', lineHeight: 1.65, margin: '0 0 1rem 0' }}>
+                While the Big Three are conversational generalists, these specialized platforms dominate specific workflows:
+              </p>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1rem' }}>
+                <div style={{ background: '#ffffff', padding: '1rem', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#2563eb', fontWeight: 800, marginBottom: '0.35rem' }}>
+                    <Search size={16} /> Perplexity AI (perplexity.ai)
+                  </div>
+                  <p style={{ margin: 0, fontSize: '0.85rem', color: '#475569', lineHeight: 1.5 }}>
+                    An AI Answer Engine. Rather than ten spam ad links, Perplexity reads the top web pages and compiles a verified answer with numbered citations to official government, news, and academic papers.
+                  </p>
+                </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1rem', marginBottom: '1.25rem' }}>
-            <div style={{ background: '#ffffff', padding: '0.85rem', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
-              <strong style={{ fontSize: '0.78rem', color: '#64748b', textTransform: 'uppercase' }}>Default Free Model</strong>
-              <p style={{ margin: '0.2rem 0 0 0', fontWeight: 700, color: '#0f172a', fontSize: '0.92rem' }}>{currentRec.model}</p>
-            </div>
-            <div style={{ background: '#ffffff', padding: '0.85rem', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
-              <strong style={{ fontSize: '0.78rem', color: '#64748b', textTransform: 'uppercase' }}>Free Plan Quota</strong>
-              <p style={{ margin: '0.2rem 0 0 0', fontWeight: 700, color: '#0f172a', fontSize: '0.92rem' }}>{currentRec.freeLimit}</p>
-            </div>
-          </div>
+                <div style={{ background: '#ffffff', padding: '1rem', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#f59e0b', fontWeight: 800, marginBottom: '0.35rem' }}>
+                    <Presentation size={16} /> Gamma.app (gamma.app)
+                  </div>
+                  <p style={{ margin: 0, fontSize: '0.85rem', color: '#475569', lineHeight: 1.5 }}>
+                    Instant AI presentation creator. You paste a 1-page text summary, and Gamma automatically formats an 8-slide presentation with card grids, typography, and images in 30 seconds.
+                  </p>
+                </div>
 
-          <p style={{ fontSize: '0.92rem', color: '#334155', lineHeight: 1.6, margin: '0 0 1rem 0' }}>
-            {currentRec.why}
-          </p>
-
-          <div style={{ background: '#0f172a', borderRadius: '8px', padding: '1rem', color: '#f8fafc' }}>
-            <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#93c5fd', textTransform: 'uppercase', marginBottom: '0.35rem' }}>
-              Copyable Starter Prompt:
+                <div style={{ background: '#ffffff', padding: '1rem', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#9333ea', fontWeight: 800, marginBottom: '0.35rem' }}>
+                    <ImageIcon size={16} /> Canva Magic Studio (canva.com)
+                  </div>
+                  <p style={{ margin: 0, fontSize: '0.85rem', color: '#475569', lineHeight: 1.5 }}>
+                    Graphic design powerhouse. Uses AI to expand photos, remove backgrounds with 1 click, rewrite headline copy, and auto-generate social media posters.
+                  </p>
+                </div>
+              </div>
             </div>
-            <pre style={{ margin: 0, fontFamily: 'monospace', fontSize: '0.85rem', whiteSpace: 'pre-wrap', color: '#e2e8f0' }}>
-              {currentRec.samplePrompt}
-            </pre>
-          </div>
+          )}
         </div>
       </div>
 
-      {/* 2. RECHARTS GRAPH: TOOL CAPABILITY BENCHMARK */}
-      <div style={{ background: '#ffffff', borderRadius: '14px', border: '1px solid #e2e8f0', padding: '1.5rem', boxShadow: '0 2px 8px rgba(0,0,0,0.03)' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem', flexWrap: 'wrap', gap: '8px' }}>
-          <div>
-            <span style={{ fontSize: '0.78rem', fontWeight: 800, color: '#10b981', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
-              MODEL BENCHMARK METRICS
-            </span>
-            <h3 style={{ margin: '0.25rem 0 0 0', fontSize: '1.3rem', fontWeight: 800, color: '#0f172a', display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <BarChart3 size={20} color="#10b981" /> AI Assistants Feature Benchmark (Score / 100)
-            </h3>
-          </div>
-          <span style={{ fontSize: '0.8rem', color: '#64748b' }}>
-            Creative Writing vs. Live Web Accuracy
+      {/* TOPIC 2: STEP-BY-STEP ACCOUNT SETUP GUIDE */}
+      <div style={{ background: '#ffffff', borderRadius: '14px', border: '1px solid #e2e8f0', padding: '1.75rem', boxShadow: '0 2px 8px rgba(0,0,0,0.03)' }}>
+        <div style={{ borderLeft: '4px solid #10b981', paddingLeft: '1rem', marginBottom: '1.25rem' }}>
+          <span style={{ fontSize: '0.78rem', fontWeight: 800, color: '#10b981', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+            TOPIC 2 · GETTING STARTED
           </span>
+          <h3 style={{ fontSize: '1.45rem', fontWeight: 800, color: '#0f172a', margin: '0.2rem 0 0 0' }}>
+            Free Plans, Account Setup & Basic Usage: 2-Minute Step-by-Step Guide
+          </h3>
         </div>
 
-        <div style={{ height: 260, width: '100%' }}>
-          <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={toolCapabilityData} margin={{ top: 10, right: 20, left: -20, bottom: 0 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
-              <XAxis dataKey="tool" tick={{ fontSize: 11, fill: '#64748b' }} />
-              <YAxis domain={[0, 100]} tick={{ fontSize: 11, fill: '#64748b' }} />
-              <RechartsTooltip
-                contentStyle={{ background: '#0f172a', borderRadius: '8px', color: '#fff', fontSize: '0.85rem', border: 'none' }}
-              />
-              <Bar dataKey="writing" fill="#3b82f6" name="Writing / Brainstorming" radius={[4, 4, 0, 0]} />
-              <Bar dataKey="webSearch" fill="#10b981" name="Live Web Grounding" radius={[4, 4, 0, 0]} />
-            </BarChart>
-          </ResponsiveContainer>
+        <p style={{ fontSize: '1rem', lineHeight: 1.75, color: '#334155', margin: '0 0 1.25rem 0' }}>
+          Setting up your AI workspace takes less than 120 seconds. Follow these 4 standard steps:
+        </p>
+
+        {/* 4-Step Process Grid */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1rem', marginBottom: '1.5rem' }}>
+          <div style={{ background: '#f8fafc', padding: '1.25rem', borderRadius: '10px', border: '1px solid #e2e8f0' }}>
+            <div style={{ width: 28, height: 28, borderRadius: '50%', background: '#3b82f6', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: '0.85rem', marginBottom: '0.5rem' }}>
+              1
+            </div>
+            <strong style={{ fontSize: '0.92rem', color: '#0f172a', display: 'block', marginBottom: '0.35rem' }}>One-Click Sign-In</strong>
+            <p style={{ margin: 0, fontSize: '0.85rem', color: '#64748b', lineHeight: 1.5 }}>
+              Use your existing Google Account (Gmail) or Microsoft Account to sign into ChatGPT, Gemini, and Copilot. No credit card required!
+            </p>
+          </div>
+
+          <div style={{ background: '#f8fafc', padding: '1.25rem', borderRadius: '10px', border: '1px solid #e2e8f0' }}>
+            <div style={{ width: 28, height: 28, borderRadius: '50%', background: '#3b82f6', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: '0.85rem', marginBottom: '0.5rem' }}>
+              2
+            </div>
+            <strong style={{ fontSize: '0.92rem', color: '#0f172a', display: 'block', marginBottom: '0.35rem' }}>Locate the Input Bar</strong>
+            <p style={{ margin: 0, fontSize: '0.85rem', color: '#64748b', lineHeight: 1.5 }}>
+              The bottom text bar is your command cockpit. Type instructions in plain English (or Tanglish/Hinglish). Press Enter to stream responses.
+            </p>
+          </div>
+
+          <div style={{ background: '#f8fafc', padding: '1.25rem', borderRadius: '10px', border: '1px solid #e2e8f0' }}>
+            <div style={{ width: 28, height: 28, borderRadius: '50%', background: '#3b82f6', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: '0.85rem', marginBottom: '0.5rem' }}>
+              3
+            </div>
+            <strong style={{ fontSize: '0.92rem', color: '#0f172a', display: 'block', marginBottom: '0.35rem' }}>Organize via Chat History</strong>
+            <p style={{ margin: 0, fontSize: '0.85rem', color: '#64748b', lineHeight: 1.5 }}>
+              The left sidebar records your conversations. Start a <em>"New Chat"</em> for each separate project so the AI memory doesn't mix different topics!
+            </p>
+          </div>
+
+          <div style={{ background: '#f8fafc', padding: '1.25rem', borderRadius: '10px', border: '1px solid #e2e8f0' }}>
+            <div style={{ width: 28, height: 28, borderRadius: '50%', background: '#3b82f6', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: '0.85rem', marginBottom: '0.5rem' }}>
+              4
+            </div>
+            <strong style={{ fontSize: '0.92rem', color: '#0f172a', display: 'block', marginBottom: '0.35rem' }}>Protect Data Privacy</strong>
+            <p style={{ margin: 0, fontSize: '0.85rem', color: '#64748b', lineHeight: 1.5 }}>
+              Open Settings &gt; Data Controls &gt; Turn off <em>"Improve model for everyone"</em> if you work with sensitive workplace notes or student marks.
+            </p>
+          </div>
         </div>
       </div>
 
-      {/* 3. CRITICAL NOTICE ON DYNAMIC LIMITS */}
-      <div style={{ background: '#fffbeb', borderRadius: '12px', border: '1px solid #fde68a', padding: '1.25rem', display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
-        <AlertTriangle size={24} color="#d97706" style={{ flexShrink: 0, marginTop: '2px' }} />
-        <div>
-          <strong style={{ color: '#92400e', fontSize: '0.95rem' }}>Important: Model Names & Free Tier Quotas Evolve Periodically</strong>
-          <p style={{ margin: '0.35rem 0 0 0', color: '#b45309', fontSize: '0.88rem', lineHeight: 1.5 }}>
-            OpenAI, Google, and Microsoft regularly update their model versions (e.g. GPT-4o mini, Gemini 1.5 Flash). Do not worry if buttons or daily message limits change slightly — <strong>100% of workflows in this course can be completed on free plans without paying a single rupee.</strong>
-          </p>
+      {/* TOPIC 3: CRITICAL NOTICE ON DYNAMIC LIMITS & MODEL VERSIONS */}
+      <div style={{ background: '#fffbeb', borderRadius: '14px', border: '1.5px solid #fde68a', padding: '1.75rem' }}>
+        <div style={{ display: 'flex', gap: '14px', alignItems: 'flex-start' }}>
+          <AlertTriangle size={28} color="#d97706" style={{ flexShrink: 0, marginTop: '2px' }} />
+          <div>
+            <h4 style={{ margin: '0 0 0.4rem 0', color: '#92400e', fontSize: '1.15rem', fontWeight: 800 }}>
+              Critical Notice: Features, Model Names & Free Plan Limits Change Frequently
+            </h4>
+            <p style={{ margin: '0 0 0.85rem 0', color: '#b45309', fontSize: '0.92rem', lineHeight: 1.65 }}>
+              The AI landscape moves at lightning speed. OpenAI, Google, and Microsoft constantly upgrade model versions (e.g., from GPT-3.5 to GPT-4o mini, from PaLM to Gemini 1.5 Flash). Free-tier message quotas fluctuate during peak traffic hours.
+            </p>
+            <div style={{ background: '#ffffff', padding: '0.85rem 1.15rem', borderRadius: '8px', border: '1px solid #fde68a', fontSize: '0.88rem', color: '#92400e', lineHeight: 1.6 }}>
+              <strong>The VeeGo Assurance:</strong> Never panic if a button shifts or a model is renamed. The core principles of prompting and verification you learn in this course are universal. <strong>Every assignment and productivity workflow in this course can be completed on 100% free tiers without paying a single rupee for paid subscriptions!</strong>
+            </div>
+          </div>
         </div>
+      </div>
+
+      {/* TOPIC 4: TESTED PROMPT TEMPLATES */}
+      <div style={{ background: '#ffffff', borderRadius: '14px', border: '1px solid #e2e8f0', padding: '1.75rem', boxShadow: '0 2px 8px rgba(0,0,0,0.03)' }}>
+        <h3 style={{ fontSize: '1.3rem', fontWeight: 800, color: '#0f172a', margin: '0 0 1rem 0', display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <Terminal size={20} color="#10b981" /> Tested Prompt Templates for Lesson 2 (Click to Copy)
+        </h3>
+
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+          {testedPrompts.map((p, pIdx) => (
+            <div key={pIdx} style={{ background: '#0f172a', color: '#f8fafc', borderRadius: '10px', padding: '1.25rem 1.5rem', position: 'relative' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.65rem', borderBottom: '1px solid #334155', paddingBottom: '0.5rem' }}>
+                <span style={{ fontSize: '0.82rem', fontWeight: 800, color: '#93c5fd', textTransform: 'uppercase' }}>
+                  {p.title}
+                </span>
+                <button
+                  type="button"
+                  onClick={() => onCopy(p.prompt, pIdx + 10)}
+                  style={{
+                    background: copiedIndex === pIdx + 10 ? '#10b981' : '#334155',
+                    border: 'none',
+                    color: '#ffffff',
+                    padding: '0.3rem 0.8rem',
+                    borderRadius: '6px',
+                    fontSize: '0.78rem',
+                    fontWeight: 700,
+                    cursor: 'pointer',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '5px'
+                  }}
+                >
+                  {copiedIndex === pIdx + 10 ? <Check size={14} /> : <Copy size={14} />}
+                  {copiedIndex === pIdx + 10 ? 'Copied!' : 'Copy Prompt'}
+                </button>
+              </div>
+
+              <pre style={{ margin: 0, fontFamily: 'monospace', fontSize: '0.9rem', lineHeight: 1.6, whiteSpace: 'pre-wrap', color: '#e2e8f0' }}>
+                {p.prompt}
+              </pre>
+
+              <p style={{ margin: '0.75rem 0 0 0', fontSize: '0.8rem', color: '#94a3b8', fontStyle: 'italic', borderTop: '1px dashed #334155', paddingTop: '0.5rem' }}>
+                💡 Purpose: {p.purpose}
+              </p>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* TOPIC 5: INTERACTIVE KNOWLEDGE CHECK QUIZ */}
+      <div style={{ background: '#ffffff', borderRadius: '14px', border: '1px solid #e2e8f0', padding: '1.75rem', boxShadow: '0 2px 8px rgba(0,0,0,0.03)' }}>
+        <h3 style={{ fontSize: '1.3rem', fontWeight: 800, color: '#0f172a', margin: '0 0 0.5rem 0', display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <CheckSquare size={20} color="#8b5cf6" /> Lesson 2 Knowledge Check Quiz ({quizQuestions.length} MCQs)
+        </h3>
+        <p style={{ fontSize: '0.9rem', color: '#64748b', margin: '0 0 1.25rem 0' }}>
+          Verify your mastery of popular AI platforms and safe usage:
+        </p>
+
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+          {quizQuestions.map((q, qIdx) => {
+            const selected = selectedAnswers[qIdx];
+            const isCorrect = selected === q.correctIndex;
+            return (
+              <div key={q.id} style={{ background: '#f8fafc', padding: '1.25rem', borderRadius: '10px', border: '1px solid #e2e8f0' }}>
+                <p style={{ margin: '0 0 0.85rem 0', fontWeight: 700, fontSize: '0.95rem', color: '#0f172a' }}>
+                  Q{qIdx + 1}: {q.question}
+                </p>
+
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '8px' }}>
+                  {q.options.map((opt, optIdx) => {
+                    let btnBorder = selected === optIdx ? '#3b82f6' : '#cbd5e1';
+                    let btnBg = selected === optIdx ? '#eff6ff' : '#ffffff';
+                    let btnColor = selected === optIdx ? '#1d4ed8' : '#1e293b';
+
+                    if (showResults) {
+                      if (optIdx === q.correctIndex) {
+                        btnBorder = '#10b981';
+                        btnBg = '#ecfdf5';
+                        btnColor = '#065f46';
+                      } else if (selected === optIdx && !isCorrect) {
+                        btnBorder = '#ef4444';
+                        btnBg = '#fef2f2';
+                        btnColor = '#991b1b';
+                      }
+                    }
+
+                    return (
+                      <button
+                        key={optIdx}
+                        type="button"
+                        disabled={showResults}
+                        onClick={() => setSelectedAnswers({ ...selectedAnswers, [qIdx]: optIdx })}
+                        style={{
+                          textAlign: 'left',
+                          padding: '0.65rem 0.9rem',
+                          borderRadius: '6px',
+                          border: `1.5px solid ${btnBorder}`,
+                          background: btnBg,
+                          color: btnColor,
+                          fontSize: '0.85rem',
+                          fontWeight: selected === optIdx ? 700 : 500,
+                          cursor: showResults ? 'default' : 'pointer'
+                        }}
+                      >
+                        <span style={{ fontWeight: 800, color: '#64748b', marginRight: '6px' }}>
+                          {String.fromCharCode(65 + optIdx)}.
+                        </span>
+                        {opt}
+                      </button>
+                    );
+                  })}
+                </div>
+
+                {showResults && (
+                  <div style={{ marginTop: '0.75rem', padding: '0.5rem 0.85rem', borderRadius: '6px', background: isCorrect ? '#ecfdf5' : '#fef2f2', border: `1px solid ${isCorrect ? '#a7f3d0' : '#fecaca'}`, fontSize: '0.82rem', color: isCorrect ? '#065f46' : '#991b1b' }}>
+                    <strong>{isCorrect ? '✅ Correct!' : '❌ Incorrect.'}</strong> {q.explanation}
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+
+        {!showResults && Object.keys(selectedAnswers).length > 0 && (
+          <div style={{ textAlign: 'right', marginTop: '1.25rem' }}>
+            <button className="btn btn-primary" onClick={() => setShowResults(true)}>
+              Check Lesson 2 Quiz Answers
+            </button>
+          </div>
+        )}
       </div>
 
     </div>
