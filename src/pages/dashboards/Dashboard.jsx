@@ -16,6 +16,8 @@ import {
 import * as CourseData from '../../courseData';
 import InvoiceGenerator from '../invoice/InvoiceGenerator';
 import CertificateManager from '../certificate/CertificateManager';
+import CourseBuilderStudio from '../../components/course-builder/CourseBuilderStudio';
+import { getDynamicCourses } from '../../services/courseManager';
 
 const mainCourses = [
   {
@@ -356,9 +358,18 @@ function calculateStudentProgress(student) {
 }
 
 export default function Dashboard({ onSelectCourse, enrolledCourse, setEnrolledCourse, session, onLogout, completedLessons = [], taskSubmissions = [] }) {
-  const [activeTab, setActiveTab] = useState('overview'); // 'overview' | 'courses' | 'register' | 'database' | 'demos' | 'grading'
+  const [activeTab, setActiveTab] = useState('overview'); // 'overview' | 'courses' | 'register' | 'database' | 'demos' | 'grading' | 'builder'
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(() => typeof window !== 'undefined' && window.innerWidth <= 868);
+  const [dynamicCourses, setDynamicCourses] = useState(() => getDynamicCourses());
+
+  useEffect(() => {
+    const handleDynamicCoursesSync = () => {
+      setDynamicCourses(getDynamicCourses());
+    };
+    window.addEventListener('veego_courses_updated', handleDynamicCoursesSync);
+    return () => window.removeEventListener('veego_courses_updated', handleDynamicCoursesSync);
+  }, []);
 
   useEffect(() => {
     const handleResize = () => {
@@ -1356,6 +1367,20 @@ export default function Dashboard({ onSelectCourse, enrolledCourse, setEnrolledC
                 >
                   <Receipt size={18} /> Fee Invoices
                 </button>
+
+                <button
+                  onClick={() => { setActiveTab('builder'); if (isMobile) setIsMobileMenuOpen(false); }}
+                  style={{
+                    display: 'flex', alignItems: 'center', gap: '10px', width: '100%', border: 'none', padding: '0.8rem 1rem',
+                    fontSize: '0.92rem', fontWeight: 700, borderRadius: '12px', cursor: 'pointer', textAlign: 'left',
+                    background: activeTab === 'builder' ? 'linear-gradient(135deg, #10b981 0%, #059669 100%)' : 'transparent',
+                    color: activeTab === 'builder' ? '#ffffff' : 'var(--text-secondary)',
+                    boxShadow: activeTab === 'builder' ? '0 4px 12px rgba(16, 185, 129, 0.35)' : 'none',
+                    transition: 'var(--transition)'
+                  }}
+                >
+                  <Edit3 size={18} /> Course Builder (LMS Studio)
+                </button>
               </>
             )}
 
@@ -1410,10 +1435,10 @@ export default function Dashboard({ onSelectCourse, enrolledCourse, setEnrolledC
       </aside>
 
       {/* 🖥️ MAIN WORKSPACE CONTENT CONTAINER */}
-      <main style={{ flex: 1, padding: activeTab === 'invoices' ? 0 : (isMobile ? '1.25rem 1rem' : '3rem 4rem'), minHeight: '100vh', overflowY: 'auto', minWidth: 0, background: activeTab === 'invoices' ? '#0f172a' : 'transparent' }}>
+      <main style={{ flex: 1, padding: (activeTab === 'invoices' || activeTab === 'builder') ? 0 : (isMobile ? '1.25rem 1rem' : '3rem 4rem'), minHeight: '100vh', overflowY: 'auto', minWidth: 0, background: activeTab === 'invoices' ? '#0f172a' : 'transparent' }}>
 
         {/* Dynamic header title based on active tab */}
-        {activeTab !== 'invoices' && activeTab !== 'prepare_certs' && activeTab !== 'af_certificates' && activeTab !== 'idcards' && activeTab !== 'foclen' && (
+        {activeTab !== 'invoices' && activeTab !== 'builder' && activeTab !== 'prepare_certs' && activeTab !== 'af_certificates' && activeTab !== 'idcards' && activeTab !== 'foclen' && (
           <div style={{ display: 'flex', flexDirection: isMobile ? 'column' : 'row', justifyContent: 'space-between', alignItems: isMobile ? 'flex-start' : 'center', gap: '1rem', borderBottom: '1px solid var(--surface-border)', paddingBottom: '1.5rem', marginBottom: '2.5rem' }}>
             <div>
               <h1 style={{ fontSize: isMobile ? '1.5rem' : '2.2rem', fontWeight: 900, color: 'var(--text-primary)', margin: 0 }}>
@@ -2387,6 +2412,145 @@ export default function Dashboard({ onSelectCourse, enrolledCourse, setEnrolledC
                       </div>
                     );
                   })}
+              </div>
+            </div>
+
+            {/* Dynamic LMS Courses Section (Added via Studio) */}
+            <div style={{ marginTop: '2rem' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem' }}>
+                <div style={{ borderLeft: '4px solid #10b981', paddingLeft: '1rem' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+                    <h3 style={{ fontSize: '1.35rem', fontWeight: 800, margin: 0 }}>Custom LMS Courses (Course Builder)</h3>
+                    <span style={{ fontSize: '0.75rem', background: 'rgba(16, 185, 129, 0.15)', color: '#34d399', padding: '3px 8px', borderRadius: '12px', fontWeight: 700 }}>
+                      Pure LMS Studio
+                    </span>
+                  </div>
+                  <p style={{ margin: '0.2rem 0 0', fontSize: '0.88rem', color: 'var(--text-secondary)' }}>
+                    Dynamic multi-module courses with live topics, code blocks, and markdown content.
+                  </p>
+                </div>
+
+                {(session?.role === 'admin' || session?.role === 'staff' || !session?.role) && (
+                  <button
+                    onClick={() => setActiveTab('builder')}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.5rem',
+                      background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+                      color: '#ffffff',
+                      border: 'none',
+                      padding: '0.6rem 1.2rem',
+                      borderRadius: '12px',
+                      fontSize: '0.88rem',
+                      fontWeight: 700,
+                      cursor: 'pointer',
+                      boxShadow: '0 4px 14px rgba(16, 185, 129, 0.35)'
+                    }}
+                  >
+                    <Edit3 size={16} /> + Open Course Studio
+                  </button>
+                )}
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1.5rem' }}>
+                {dynamicCourses.map(dynCourse => {
+                  const modCount = dynCourse.modules?.length || 0;
+                  const topicCount = dynCourse.modules?.reduce((acc, m) => acc + (m.topics?.length || 0), 0) || 0;
+
+                  return (
+                    <div
+                      key={dynCourse.id}
+                      style={{
+                        background: 'var(--surface-color)',
+                        border: '1px solid var(--surface-border)',
+                        borderRadius: '24px',
+                        padding: '1.5rem',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'space-between',
+                        boxShadow: 'var(--shadow-sm)',
+                        transition: 'var(--transition)',
+                        minHeight: '220px'
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.transform = 'translateY(-4px)';
+                        e.currentTarget.style.boxShadow = 'var(--shadow-md)';
+                        e.currentTarget.style.borderColor = '#10b981';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.transform = 'translateY(0)';
+                        e.currentTarget.style.boxShadow = 'var(--shadow-sm)';
+                        e.currentTarget.style.borderColor = 'var(--surface-border)';
+                      }}
+                    >
+                      <div>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.8rem' }}>
+                          <span style={{ fontSize: '0.72rem', background: 'rgba(99, 102, 241, 0.1)', color: '#6366f1', padding: '3px 8px', borderRadius: '6px', fontWeight: 700 }}>
+                            {dynCourse.category || 'Dynamic Track'}
+                          </span>
+                          <span style={{ fontSize: '0.72rem', color: 'var(--text-secondary)' }}>
+                            {modCount} Modules · {topicCount} Topics
+                          </span>
+                        </div>
+
+                        <h4 style={{ fontSize: '1.15rem', fontWeight: 800, margin: '0 0 0.5rem', color: 'var(--text-primary)' }}>
+                          {dynCourse.title}
+                        </h4>
+                        <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', lineHeight: 1.5, margin: 0 }}>
+                          {dynCourse.desc || 'Interactive learning track with modular topics.'}
+                        </p>
+                      </div>
+
+                      <div style={{ display: 'flex', gap: '0.6rem', marginTop: '1.5rem' }}>
+                        <button
+                          onClick={() => onSelectCourse(dynCourse.id)}
+                          style={{
+                            flex: 1,
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            gap: '0.4rem',
+                            padding: '0.6rem 1rem',
+                            background: 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)',
+                            color: '#ffffff',
+                            border: 'none',
+                            borderRadius: '12px',
+                            fontSize: '0.85rem',
+                            fontWeight: 700,
+                            cursor: 'pointer',
+                            boxShadow: '0 2px 8px rgba(37,99,235,0.25)'
+                          }}
+                        >
+                          Start Learning <ArrowRight size={14} />
+                        </button>
+
+                        {(session?.role === 'admin' || session?.role === 'staff' || !session?.role) && (
+                          <button
+                            onClick={() => setActiveTab('builder')}
+                            style={{
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              gap: '0.3rem',
+                              padding: '0.6rem 0.8rem',
+                              background: 'rgba(255, 255, 255, 0.05)',
+                              border: '1px solid var(--surface-border)',
+                              color: 'var(--text-primary)',
+                              borderRadius: '12px',
+                              fontSize: '0.85rem',
+                              fontWeight: 600,
+                              cursor: 'pointer'
+                            }}
+                            title="Edit course in Studio"
+                          >
+                            <Edit3 size={14} />
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
             </div>
 
@@ -3916,6 +4080,14 @@ export default function Dashboard({ onSelectCourse, enrolledCourse, setEnrolledC
         {/* 🧾 TAB 7: INVOICE GENERATOR & FEE BILLING (STAFF & ADMIN ONLY) */}
         {activeTab === 'invoices' && (session?.role === 'admin' || session?.role === 'staff') && (
           <InvoiceGenerator session={session} students={students} onBack={() => setActiveTab('overview')} />
+        )}
+
+        {/* 🛠️ TAB 8: DYNAMIC LMS COURSE BUILDER STUDIO */}
+        {activeTab === 'builder' && (
+          <CourseBuilderStudio
+            onBack={() => setActiveTab('overview')}
+            onLaunchPreview={(courseId) => onSelectCourse(courseId)}
+          />
         )}
       </main>
 

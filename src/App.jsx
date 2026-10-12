@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Menu, CheckCircle, Send, Lock } from 'lucide-react';
 import Sidebar from './components/Sidebar';
 import Dashboard from './pages/dashboards/Dashboard';
+import CourseBuilderStudio from './components/course-builder/CourseBuilderStudio';
+import DynamicCourseViewer from './components/course-builder/DynamicCourseViewer';
 
 
 
@@ -398,7 +400,8 @@ function App() {
   const handleSelectCourse = (course, startModuleId = null) => {
     const enrolledCoursesList = session?.enrolledCourse ? session.enrolledCourse.split(',') : [];
     const isEnrolled = session?.enrolledCourse === 'all' || enrolledCoursesList.includes(course);
-    if (session?.role === 'student' && !isEnrolled && course !== 'induction') {
+    const isDynamic = typeof course === 'string' && (course.startsWith('custom_') || course.startsWith('course_') || course === 'course_builder');
+    if (session?.role === 'student' && !isEnrolled && course !== 'induction' && !isDynamic) {
       return; // Block student access to non-enrolled courses
     }
     setActiveCourse(course);
@@ -551,7 +554,8 @@ function App() {
   useEffect(() => {
     const enrolledList = enrolledCourse ? enrolledCourse.split(',') : [];
     const isEnrolled = enrolledCourse === 'all' || enrolledList.includes(activeCourse);
-    if (activeCourse !== 'dashboard' && activeCourse !== 'induction' && !isEnrolled) {
+    const isDynamic = typeof activeCourse === 'string' && (activeCourse.startsWith('custom_') || activeCourse.startsWith('course_') || activeCourse === 'course_builder');
+    if (activeCourse !== 'dashboard' && activeCourse !== 'induction' && !isDynamic && !isEnrolled) {
       setActiveCourse('dashboard');
     }
   }, [activeCourse, enrolledCourse]);
@@ -654,6 +658,18 @@ function App() {
           onLogout={handleLogout}
           completedLessons={completedLessons}
           taskSubmissions={taskSubmissions}
+        />
+      ) : activeCourse === 'course_builder' ? (
+        <CourseBuilderStudio
+          onBack={() => setActiveCourse('dashboard')}
+          onLaunchPreview={(cId) => setActiveCourse(cId)}
+        />
+      ) : (typeof activeCourse === 'string' && (activeCourse.startsWith('custom_') || activeCourse.startsWith('course_'))) ? (
+        <DynamicCourseViewer
+          courseId={activeCourse}
+          session={session}
+          onBack={() => setActiveCourse('dashboard')}
+          onOpenStudio={() => setActiveCourse('course_builder')}
         />
       ) : (
         <>
