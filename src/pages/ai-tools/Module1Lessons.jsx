@@ -45,64 +45,11 @@ export function Lesson1ModuleView({ onCopy, copiedIndex, openAITutor }) {
   // Language Mode: 'en' (English), 'ta' (Tamil), 'both' (Bilingual)
   const [langMode, setLangMode] = useState('both');
 
-  // Active Real-World Everyday Example Tab
-  const [activeExampleTab, setActiveExampleTab] = useState('maps');
-
-  // Interactive Traditional vs AI View Mode
-  const [activeComparisonView, setActiveComparisonView] = useState('table'); // 'table' | 'flowchart'
-
   // Interactive Building Blocks Tab
   const [activeBuildingBlock, setActiveBuildingBlock] = useState('ml'); // 'ml' | 'dl' | 'genai'
 
   // Interactive Classifications of AI Tab
   const [activeClassification, setActiveClassification] = useState('ani'); // 'ani' | 'agi' | 'asi'
-
-  // Interactive Industry Impact Tab
-  const [activeImpactSector, setActiveImpactSector] = useState('healthcare'); // 'healthcare' | 'finance' | 'education' | 'dailylife'
-
-  // Interactive Responsible AI Tab
-  const [activeEthicsTab, setActiveEthicsTab] = useState('bias'); // 'bias' | 'privacy' | 'economics' | 'governance'
-
-  const realWorldExamples = {
-    maps: {
-      title: 'Google Maps Live Rerouting',
-      icon: <MapPin size={22} color="#2563eb" />,
-      tag: 'Predictive Narrow AI in Daily Commutes',
-      summary: 'Analyzes live GPS signals from millions of moving smartphones across India in real-time.',
-      traditionalApproach: 'Calculates fixed distance divided by standard speed limit: Time = Distance / Speed. It cannot predict sudden traffic jams on MG Road or Anna Salai.',
-      aiApproach: 'Predictive machine learning models continuously ingest live speed data from autos, bikes, and buses, recognizing developing congestion patterns and rerouting you 15 minutes before you reach the traffic knot.',
-      impact: 'Saves 20–40 minutes per commute, reduces vehicle fuel consumption, and updates arrival estimates dynamically.'
-    },
-    swiggy: {
-      title: 'Swiggy & Zomato Delivery Dispatch',
-      icon: <ShoppingBag size={22} color="#ea580c" />,
-      tag: 'Dynamic Logistics Optimization',
-      summary: 'Matches thousands of restaurant orders with nearby delivery partners during peak rain and lunch hours.',
-      traditionalApproach: 'Dispatches the first driver who logs onto the app nearest to the restaurant, ignoring kitchen prep delays, traffic lights, and multi-order bundling.',
-      aiApproach: 'AI algorithms calculate restaurant kitchen prep time, weather delays, and traffic patterns simultaneously, dispatching the driver precisely when the food is packed.',
-      impact: 'Food arrives warm, delivery partner fuel costs drop by 18%, and customers receive accurate live arrival minutes.'
-    },
-    gmail: {
-      title: 'Gmail Spam Shield & Smart Compose',
-      icon: <Mail size={22} color="#16a34a" />,
-      tag: 'Natural Language Pattern Filtering',
-      summary: 'Blocks 99.9% of phishing scams and autocompletes professional email sentences.',
-      traditionalApproach: 'Simple keyword blacklists: IF subject contains "lottery" THEN spam. Spammers bypass this instantly by spelling "L0tt3ry" or "Prize Winner".',
-      aiApproach: 'Natural Language Processing (NLP) models examine sender domain reputation, sentence semantic intent, and link authenticity, blocking deceptive emails regardless of spelling tricks.',
-      impact: 'Protects millions of Indian bank accounts from credential phishing without user intervention.'
-    },
-    faceid: {
-      title: 'Smartphone Face Unlock & Biometrics',
-      icon: <Smartphone size={22} color="#9333ea" />,
-      tag: 'Computer Vision & Deep Neural Networks',
-      summary: 'Maps 30,000 infrared facial depth dots in less than 0.2 seconds.',
-      traditionalApproach: 'Compares a 2D photograph pixel-by-pixel. If lighting changes, or you put on reading glasses, traditional software fails to match the photo.',
-      aiApproach: 'Deep convolutional neural networks learn abstract 3D facial contours and depth vectors, recognizing your face in dark rooms, with beard growth, or with spectacles.',
-      impact: 'Instant frictionless security preventing unauthorized access even with physical 2D photograph spoofs.'
-    }
-  };
-
-  const currentExample = realWorldExamples[activeExampleTab];
 
   // Building Blocks Data (from NotebookLM)
   const buildingBlocks = {
@@ -163,90 +110,6 @@ export function Lesson1ModuleView({ onCopy, copiedIndex, openAITutor }) {
       scope: 'Surpasses the collective intelligence of all human minds combined.',
       description: 'A hypothetical stage where artificial systems exceed human cognitive capabilities in every single domain — including scientific creativity, general wisdom, philosophical reasoning, and social skills.',
       examples: ['Instant solutions to global climate physics', 'Interstellar propulsion breakthroughs', 'Autonomous macro-economic optimization at planetary scale']
-    }
-  };
-
-  // Real-World Industry Impact Data (from NotebookLM)
-  const industryImpacts = {
-    healthcare: {
-      title: 'Healthcare & Medicine',
-      icon: <Brain size={22} color="#dc2626" />,
-      color: '#dc2626',
-      headline: 'Early Disease Detection & Molecular Drug Discovery',
-      points: [
-        { label: 'Radiology Imaging', desc: 'CNN models inspect X-rays, MRIs, and CT scans in seconds to detect micro-tumors and fractures earlier than the human eye.' },
-        { label: 'Drug Discovery', desc: 'Accelerates screening of billions of chemical compounds from 10 years to weeks (e.g. DeepMind AlphaFold predicting protein structures).' },
-        { label: 'Personalized Treatment', desc: 'Analyzes patient genomic profiles to customize oncology chemotherapy plans with reduced side effects.' }
-      ]
-    },
-    finance: {
-      title: 'Business & Finance',
-      icon: <TrendingUp size={22} color="#059669" />,
-      color: '#059669',
-      headline: 'Real-Time Fraud Prevention & Algorithmic Market Forecasting',
-      points: [
-        { label: 'Instant Fraud Detection', desc: 'Analyzes millions of UPI, credit card, and NEFT transactions per second, freezing fraudulent account transfers before money leaves the bank.' },
-        { label: 'Algorithmic Risk Underwriting', desc: 'Assesses loan applications in seconds based on multi-variable credit signals rather than rigid paper forms.' },
-        { label: 'Workflow Automation', desc: 'Parses incoming vendor invoices, matches purchase orders, and logs bookkeeping entries automatically.' }
-      ]
-    },
-    education: {
-      title: 'Education & Creativity',
-      icon: <BookOpen size={22} color="#2563eb" />,
-      color: '#2563eb',
-      headline: '24/7 Personalized AI Tutors & Synthetic Media Generation',
-      points: [
-        { label: 'Adaptive Tutoring', desc: 'Personalizes lesson pacing, explanations, and analogies to each student\'s learning speed without judgment.' },
-        { label: 'Developer Coding Copilots', desc: 'Suggests unit tests, autocompletes functions, and debugs syntax errors in real-time, tripling engineering velocity.' },
-        { label: 'Creative Content Creation', desc: 'Generates initial drafts of presentation decks, social media banners, marketing copy, and podcast scripts.' }
-      ]
-    },
-    dailylife: {
-      title: 'Daily Life & Society',
-      icon: <Smartphone size={22} color="#7c3aed" />,
-      color: '#7c3aed',
-      headline: 'Intelligent Navigation, Speech Translation & Smart Living',
-      points: [
-        { label: 'Predictive Navigation', desc: 'Dynamically routes millions of vehicles around traffic accidents and road repairs in real-time.' },
-        { label: 'Live Multilingual Translation', desc: 'Breaks communication barriers by translating speech between languages instantly in video calls and messaging.' },
-        { label: 'Smart Home Automation', desc: 'Learns household temperature preferences, optimizes electricity consumption, and manages smart appliances.' }
-      ]
-    }
-  };
-
-  // Responsible AI & Ethics Data (from NotebookLM)
-  const ethicsTopics = {
-    bias: {
-      title: 'Algorithmic Bias & Fairness',
-      badge: 'Data Integrity Risk',
-      color: '#dc2626',
-      problem: 'AI systems learn from historical human-generated datasets. If historical data contains societal prejudices or gender/demographic disparities, the AI algorithm will learn, mirror, and amplify that bias.',
-      realExample: 'A recruitment AI trained on 10 years of predominantly male tech resumes may unfairly penalize female applicants because it statistically associates success with male profile phrasing.',
-      safeguard: 'Audit training data for demographic representation, implement algorithmic fairness metrics, and mandate diverse human oversight panels.'
-    },
-    privacy: {
-      title: 'Privacy & Data Security',
-      badge: 'Information Protection',
-      color: '#d97706',
-      problem: 'AI models require vast data volumes. Consumer free tools often log user inputs to train future models, creating risks of leaking sensitive personal data, corporate secrets, or student records.',
-      realExample: 'An employee pasting confidential quarterly financials or customer Aadhaar card numbers into a public chatbot inadvertently exposes proprietary data to third-party cloud servers.',
-      safeguard: 'Never paste passwords, banking details, or confidential records into free public AI; utilize enterprise instances with zero-data-retention guarantees.'
-    },
-    economics: {
-      title: 'Workforce Shifts & Reskilling',
-      badge: 'Economic Reality',
-      color: '#2563eb',
-      problem: 'AI automates repetitive analytical and drafting tasks. While routine cognitive tasks will be transformed, jobs that blend AI proficiency with human emotional intelligence will expand rapidly.',
-      realExample: 'Data entry, basic translation, and repetitive boilerplate writing are heavily impacted; prompt-skilled professionals and strategic managers gain a massive productivity edge.',
-      safeguard: 'Focus on continuous upskilling: learn to pilot AI tools effectively while cultivating uniquely human skills like critical thinking, empathy, and ethical judgment.'
-    },
-    governance: {
-      title: 'Governance & Alignment (Responsible AI)',
-      badge: 'Safety Standards',
-      color: '#059669',
-      problem: 'Ensuring advanced AI systems remain transparent, interpretable, safe, and aligned with human values and safety standards rather than operating as black boxes.',
-      realExample: 'Deepfakes and automated synthetic disinformation on social media distorting public trust during elections or business announcements.',
-      safeguard: 'Cryptographic digital watermarking on AI-generated media, clear disclosure policies, and strict regulatory frameworks for high-stakes AI applications.'
     }
   };
 
@@ -340,87 +203,6 @@ export function Lesson1ModuleView({ onCopy, copiedIndex, openAITutor }) {
             {langMode !== 'en' && <span style={{ display: 'block', marginTop: langMode === 'both' ? '0.5rem' : 0 }}>💡 <strong>தமிழ் விளக்கம்:</strong> AI என்பது மாயாஜாலமோ அல்லது உங்களை வேலைநீக்கம் செய்யும் ரோபோவோ அல்ல. அது <strong>கோடிக்கணக்கான புத்தகங்களையும் இணையப் பக்கங்களையும் நொடியில் வாசித்த ஒரு அதிவேக ஜூனியர் உதவியாளர்</strong> போன்றது. அவரிடம் அரைகுறையாக கேள்வி கேட்டால் பொதுவான பதிலையே தருவார்; ஆனால் தெளிவான கட்டளைகளை (Prompt) கொடுத்தால், உங்கள் வாரத்தின் 15 மணிநேர வேலைப்பளுவை உடனடியாகக் குறைத்துவிடுவார்!</span>}
           </p>
         </div>
-
-        <h4 style={{ fontSize: '1.1rem', fontWeight: 800, color: '#0f172a', marginBottom: '0.75rem' }}>
-          Interactive Real-World Case Studies (You Already Use AI Daily in India):
-        </h4>
-        <p style={{ fontSize: '0.9rem', color: '#64748b', margin: '0 0 1rem 0' }}>
-          Click each everyday application below to inspect how AI operates behind the scenes:
-        </p>
-
-        {/* Tab Buttons */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '10px', marginBottom: '1.25rem' }}>
-          {Object.keys(realWorldExamples).map(key => {
-            const ex = realWorldExamples[key];
-            const isSelected = activeExampleTab === key;
-            return (
-              <button
-                key={key}
-                type="button"
-                onClick={() => setActiveExampleTab(key)}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '8px',
-                  padding: '0.75rem 1rem',
-                  borderRadius: '10px',
-                  border: isSelected ? '2px solid #3b82f6' : '1px solid #e2e8f0',
-                  background: isSelected ? '#eff6ff' : '#f8fafc',
-                  color: isSelected ? '#1d4ed8' : '#334155',
-                  fontWeight: isSelected ? 800 : 600,
-                  fontSize: '0.88rem',
-                  cursor: 'pointer',
-                  textAlign: 'left'
-                }}
-              >
-                {ex.icon}
-                <span style={{ flex: 1 }}>{ex.title}</span>
-              </button>
-            );
-          })}
-        </div>
-
-        {/* Active Example Deep-Dive Card */}
-        <div style={{ background: '#f8fafc', borderRadius: '12px', border: '1.5px solid #cbd5e1', padding: '1.5rem' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '8px', marginBottom: '0.75rem' }}>
-            <span style={{ fontSize: '0.78rem', fontWeight: 800, color: '#2563eb', textTransform: 'uppercase', background: '#dbeafe', padding: '3px 10px', borderRadius: '20px' }}>
-              {currentExample.tag}
-            </span>
-            <span style={{ fontSize: '0.82rem', color: '#16a34a', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '4px' }}>
-              <CheckCircle size={15} /> Active Everyday Application
-            </span>
-          </div>
-
-          <h4 style={{ margin: '0 0 0.5rem 0', fontSize: '1.2rem', fontWeight: 800, color: '#0f172a' }}>
-            {currentExample.title}
-          </h4>
-          <p style={{ fontSize: '0.92rem', color: '#475569', lineHeight: 1.6, margin: '0 0 1.25rem 0' }}>
-            {currentExample.summary}
-          </p>
-
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1rem', marginBottom: '1.25rem' }}>
-            <div style={{ background: '#ffffff', padding: '1rem', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
-              <strong style={{ fontSize: '0.82rem', color: '#dc2626', textTransform: 'uppercase', display: 'block', marginBottom: '0.35rem' }}>
-                Without AI (Old Deterministic Code):
-              </strong>
-              <p style={{ margin: 0, fontSize: '0.88rem', color: '#334155', lineHeight: 1.55 }}>
-                {currentExample.traditionalApproach}
-              </p>
-            </div>
-            <div style={{ background: '#ffffff', padding: '1rem', borderRadius: '8px', border: '1px solid #86efac' }}>
-              <strong style={{ fontSize: '0.82rem', color: '#16a34a', textTransform: 'uppercase', display: 'block', marginBottom: '0.35rem' }}>
-                With AI (Pattern-Learning Engine):
-              </strong>
-              <p style={{ margin: 0, fontSize: '0.88rem', color: '#14532d', lineHeight: 1.55 }}>
-                {currentExample.aiApproach}
-              </p>
-            </div>
-          </div>
-
-          <div style={{ background: '#ecfdf5', borderRadius: '8px', padding: '0.85rem 1rem', border: '1px solid #a7f3d0', fontSize: '0.88rem', color: '#065f46' }}>
-            <strong>Real-World Impact:</strong> {currentExample.impact}
-          </div>
-        </div>
       </div>
 
       {/* TOPIC 2: AI VERSUS TRADITIONAL SOFTWARE */}
@@ -438,111 +220,45 @@ export function Lesson1ModuleView({ onCopy, copiedIndex, openAITutor }) {
           For 50 years, computers operated entirely on <strong>deterministic rules</strong>. A human programmer wrote exact steps: <code>IF password matches THEN allow login</code>. If you misspelled a word, or faced an unpredicted edge case, the program threw an error. AI fundamentally changes this paradigm by <strong>learning patterns from data</strong> rather than relying on pre-programmed IF statements.
         </p>
 
-        {/* View Mode Toggle */}
-        <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '1rem', gap: '8px' }}>
-          <button
-            type="button"
-            onClick={() => setActiveComparisonView('table')}
-            style={{
-              padding: '0.35rem 0.75rem',
-              borderRadius: '6px',
-              border: activeComparisonView === 'table' ? '2px solid #10b981' : '1px solid #cbd5e1',
-              background: activeComparisonView === 'table' ? '#ecfdf5' : '#fff',
-              color: activeComparisonView === 'table' ? '#065f46' : '#64748b',
-              fontWeight: 700,
-              fontSize: '0.82rem',
-              cursor: 'pointer'
-            }}
-          >
-            Detailed Comparison Table
-          </button>
-          <button
-            type="button"
-            onClick={() => setActiveComparisonView('flowchart')}
-            style={{
-              padding: '0.35rem 0.75rem',
-              borderRadius: '6px',
-              border: activeComparisonView === 'flowchart' ? '2px solid #10b981' : '1px solid #cbd5e1',
-              background: activeComparisonView === 'flowchart' ? '#ecfdf5' : '#fff',
-              color: activeComparisonView === 'flowchart' ? '#065f46' : '#64748b',
-              fontWeight: 700,
-              fontSize: '0.82rem',
-              cursor: 'pointer'
-            }}
-          >
-            Visual Pipeline Diagram
-          </button>
+        {/* Detailed Comparison Table */}
+        <div style={{ overflowX: 'auto', marginBottom: '1.25rem' }}>
+          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.92rem', textAlign: 'left' }}>
+            <thead>
+              <tr style={{ background: '#f1f5f9', borderBottom: '2px solid #cbd5e1' }}>
+                <th style={{ padding: '0.85rem 1rem', color: '#334155', fontWeight: 800 }}>Dimension</th>
+                <th style={{ padding: '0.85rem 1rem', color: '#2563eb', fontWeight: 800 }}>Traditional Software</th>
+                <th style={{ padding: '0.85rem 1rem', color: '#16a34a', fontWeight: 800 }}>Modern Artificial Intelligence</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style={{ borderBottom: '1px solid #e2e8f0' }}>
+                <td style={{ padding: '0.85rem 1rem', fontWeight: 700, color: '#0f172a' }}>Core Logic</td>
+                <td style={{ padding: '0.85rem 1rem', color: '#475569' }}>Hand-crafted deterministic rules (<code>IF / THEN / ELSE</code>)</td>
+                <td style={{ padding: '0.85rem 1rem', color: '#475569' }}>Statistical neural weights trained on billions of parameters</td>
+              </tr>
+              <tr style={{ borderBottom: '1px solid #e2e8f0', background: '#fafafa' }}>
+                <td style={{ padding: '0.85rem 1rem', fontWeight: 700, color: '#0f172a' }}>Real-World Example</td>
+                <td style={{ padding: '0.85rem 1rem', color: '#475569' }}>Pocket calculator: <code>50 * 20 = 1000</code> (100% fixed output)</td>
+                <td style={{ padding: '0.85rem 1rem', color: '#475569' }}>ChatGPT drafting a customized job application for an Indian startup</td>
+              </tr>
+              <tr style={{ borderBottom: '1px solid #e2e8f0' }}>
+                <td style={{ padding: '0.85rem 1rem', fontWeight: 700, color: '#0f172a' }}>Handling Ambiguity & Typos</td>
+                <td style={{ padding: '0.85rem 1rem', color: '#475569' }}>Crashes or throws syntax error if input doesn't match format</td>
+                <td style={{ padding: '0.85rem 1rem', color: '#475569' }}>Infers meaning from context, slang, messy voice transcripts, or typos</td>
+              </tr>
+              <tr style={{ borderBottom: '1px solid #e2e8f0', background: '#fafafa' }}>
+                <td style={{ padding: '0.85rem 1rem', fontWeight: 700, color: '#0f172a' }}>Adaptability</td>
+                <td style={{ padding: '0.85rem 1rem', color: '#475569' }}>Requires human developer to recode and deploy new software version</td>
+                <td style={{ padding: '0.85rem 1rem', color: '#475569' }}>Adapts in seconds when prompted with new instructions or context</td>
+              </tr>
+              <tr style={{ borderBottom: '1px solid #e2e8f0' }}>
+                <td style={{ padding: '0.85rem 1rem', fontWeight: 700, color: '#0f172a' }}>Best Used For</td>
+                <td style={{ padding: '0.85rem 1rem', color: '#475569' }}>Exact bank ledger balances, payroll calculations, railway reservations</td>
+                <td style={{ padding: '0.85rem 1rem', color: '#475569' }}>Brainstorming, document summarization, draft generation, language translation</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
-
-        {activeComparisonView === 'table' ? (
-          <div style={{ overflowX: 'auto', marginBottom: '1.25rem' }}>
-            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.92rem', textAlign: 'left' }}>
-              <thead>
-                <tr style={{ background: '#f1f5f9', borderBottom: '2px solid #cbd5e1' }}>
-                  <th style={{ padding: '0.85rem 1rem', color: '#334155', fontWeight: 800 }}>Dimension</th>
-                  <th style={{ padding: '0.85rem 1rem', color: '#2563eb', fontWeight: 800 }}>Traditional Software</th>
-                  <th style={{ padding: '0.85rem 1rem', color: '#16a34a', fontWeight: 800 }}>Modern Artificial Intelligence</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr style={{ borderBottom: '1px solid #e2e8f0' }}>
-                  <td style={{ padding: '0.85rem 1rem', fontWeight: 700, color: '#0f172a' }}>Core Logic</td>
-                  <td style={{ padding: '0.85rem 1rem', color: '#475569' }}>Hand-crafted deterministic rules (<code>IF / THEN / ELSE</code>)</td>
-                  <td style={{ padding: '0.85rem 1rem', color: '#475569' }}>Statistical neural weights trained on billions of parameters</td>
-                </tr>
-                <tr style={{ borderBottom: '1px solid #e2e8f0', background: '#fafafa' }}>
-                  <td style={{ padding: '0.85rem 1rem', fontWeight: 700, color: '#0f172a' }}>Real-World Example</td>
-                  <td style={{ padding: '0.85rem 1rem', color: '#475569' }}>Pocket calculator: <code>50 * 20 = 1000</code> (100% fixed output)</td>
-                  <td style={{ padding: '0.85rem 1rem', color: '#475569' }}>ChatGPT drafting a customized job application for an Indian startup</td>
-                </tr>
-                <tr style={{ borderBottom: '1px solid #e2e8f0' }}>
-                  <td style={{ padding: '0.85rem 1rem', fontWeight: 700, color: '#0f172a' }}>Handling Ambiguity & Typos</td>
-                  <td style={{ padding: '0.85rem 1rem', color: '#475569' }}>Crashes or throws syntax error if input doesn't match format</td>
-                  <td style={{ padding: '0.85rem 1rem', color: '#475569' }}>Infers meaning from context, slang, messy voice transcripts, or typos</td>
-                </tr>
-                <tr style={{ borderBottom: '1px solid #e2e8f0', background: '#fafafa' }}>
-                  <td style={{ padding: '0.85rem 1rem', fontWeight: 700, color: '#0f172a' }}>Adaptability</td>
-                  <td style={{ padding: '0.85rem 1rem', color: '#475569' }}>Requires human developer to recode and deploy new software version</td>
-                  <td style={{ padding: '0.85rem 1rem', color: '#475569' }}>Adapts in seconds when prompted with new instructions or context</td>
-                </tr>
-                <tr style={{ borderBottom: '1px solid #e2e8f0' }}>
-                  <td style={{ padding: '0.85rem 1rem', fontWeight: 700, color: '#0f172a' }}>Best Used For</td>
-                  <td style={{ padding: '0.85rem 1rem', color: '#475569' }}>Exact bank ledger balances, payroll calculations, railway reservations</td>
-                  <td style={{ padding: '0.85rem 1rem', color: '#475569' }}>Brainstorming, document summarization, draft generation, language translation</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        ) : (
-          <div style={{ background: '#f8fafc', borderRadius: '12px', border: '1px solid #e2e8f0', padding: '1.5rem', marginBottom: '1.25rem' }}>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.5rem' }}>
-              <div style={{ background: '#eff6ff', borderRadius: '10px', padding: '1.25rem', border: '1px solid #bfdbfe' }}>
-                <strong style={{ color: '#1d4ed8', fontSize: '0.95rem', display: 'block', marginBottom: '0.5rem' }}>
-                  ⚙️ Traditional Software Pipeline:
-                </strong>
-                <div style={{ fontFamily: 'monospace', fontSize: '0.85rem', color: '#1e3a8a', lineHeight: 1.8 }}>
-                  [Input: User Data]<br />
-                  &nbsp;&nbsp;⬇️<br />
-                  [Fixed Logic: IF Input == X THEN Y]<br />
-                  &nbsp;&nbsp;⬇️<br />
-                  [Output: Predictable Result (or Crash)]
-                </div>
-              </div>
-              <div style={{ background: '#ecfdf5', borderRadius: '10px', padding: '1.25rem', border: '1px solid #a7f3d0' }}>
-                <strong style={{ color: '#065f46', fontSize: '0.95rem', display: 'block', marginBottom: '0.5rem' }}>
-                  🧠 AI Pattern-Learning Pipeline:
-                </strong>
-                <div style={{ fontFamily: 'monospace', fontSize: '0.85rem', color: '#064e3b', lineHeight: 1.8 }}>
-                  [Input: Messy Natural Language Prompt]<br />
-                  &nbsp;&nbsp;⬇️<br />
-                  [Neural Net: Matches Contextual Patterns across Billions of Tokens]<br />
-                  &nbsp;&nbsp;⬇️<br />
-                  [Output: Dynamic, Contextual Synthesis]
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
 
         <div style={{ background: '#f0fdf4', borderRadius: '10px', padding: '1rem 1.25rem', borderLeft: '4px solid #16a34a', fontSize: '0.9rem', color: '#166534', lineHeight: 1.6 }}>
           <strong>💡 The Microwave vs. Master Chef Analogy:</strong> Traditional software is like a microwave button: you press "30 seconds" and it heats for exactly 30 seconds. Generative AI is like an experienced chef: you say <em>"I have leftover rice, onions, and curry leaves in Coimbatore; what quick dinner can I prepare in 10 minutes?"</em> and it invents a recipe tailored to your kitchen.
@@ -754,184 +470,6 @@ export function Lesson1ModuleView({ onCopy, copiedIndex, openAITutor }) {
 
         <div style={{ marginTop: '1.25rem', background: '#eff6ff', borderRadius: '10px', padding: '1rem 1.25rem', border: '1px solid #bfdbfe', fontSize: '0.9rem', color: '#1e3a8a', lineHeight: 1.6 }}>
           <strong>⚡ The Ground Truth:</strong> <em>All AI tools you use today (ChatGPT, Gemini, Midjourney, Google Maps, Tesla Autopilot) are Artificial Narrow Intelligence (ANI).</em> AGI does not exist yet, and claims that today's chatbots have human emotions are false.
-        </div>
-      </div>
-
-      {/* TOPIC 5: REAL-WORLD INDUSTRY IMPACT */}
-      <div style={{ background: '#ffffff', borderRadius: '14px', border: '1px solid #e2e8f0', padding: '1.75rem', boxShadow: '0 2px 8px rgba(0,0,0,0.03)' }}>
-        <div style={{ borderLeft: '4px solid #ec4899', paddingLeft: '1rem', marginBottom: '1.25rem' }}>
-          <span style={{ fontSize: '0.78rem', fontWeight: 800, color: '#ec4899', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
-            TOPIC 5 · INDUSTRY DISRUPTIONS
-          </span>
-          <h3 style={{ fontSize: '1.45rem', fontWeight: 800, color: '#0f172a', margin: '0.2rem 0 0 0' }}>
-            Real-World Impact & Applications Across Sectors
-          </h3>
-        </div>
-
-        <p style={{ fontSize: '1rem', lineHeight: 1.75, color: '#334155', margin: '0 0 1.25rem 0' }}>
-          AI is reshaping virtually every major sector of human industry. Explore the primary application domains below:
-        </p>
-
-        {/* Industry Sector Tab Buttons */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '10px', marginBottom: '1.25rem' }}>
-          {Object.keys(industryImpacts).map(key => {
-            const sec = industryImpacts[key];
-            const isSelected = activeImpactSector === key;
-            return (
-              <button
-                key={key}
-                type="button"
-                onClick={() => setActiveImpactSector(key)}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '8px',
-                  padding: '0.75rem 1rem',
-                  borderRadius: '10px',
-                  border: isSelected ? `2px solid ${sec.color}` : '1px solid #e2e8f0',
-                  background: isSelected ? '#fdf2f8' : '#f8fafc',
-                  color: isSelected ? sec.color : '#334155',
-                  fontWeight: isSelected ? 800 : 600,
-                  fontSize: '0.88rem',
-                  cursor: 'pointer',
-                  textAlign: 'left'
-                }}
-              >
-                {sec.icon}
-                <span>{sec.title}</span>
-              </button>
-            );
-          })}
-        </div>
-
-        {/* Active Industry Deep-Dive */}
-        {(() => {
-          const sec = industryImpacts[activeImpactSector];
-          return (
-            <div style={{ background: '#f8fafc', borderRadius: '12px', border: '1px solid #cbd5e1', padding: '1.5rem' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '0.5rem' }}>
-                {sec.icon}
-                <h4 style={{ margin: 0, fontSize: '1.2rem', fontWeight: 800, color: sec.color }}>
-                  {sec.headline}
-                </h4>
-              </div>
-
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '1rem', marginTop: '1rem' }}>
-                {sec.points.map((pt, pIdx) => (
-                  <div key={pIdx} style={{ background: '#ffffff', borderRadius: '8px', padding: '1rem', border: '1px solid #e2e8f0' }}>
-                    <strong style={{ fontSize: '0.88rem', color: '#0f172a', display: 'block', marginBottom: '0.35rem' }}>
-                      {pt.label}
-                    </strong>
-                    <p style={{ margin: 0, fontSize: '0.85rem', color: '#475569', lineHeight: 1.6 }}>
-                      {pt.desc}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          );
-        })()}
-      </div>
-
-      {/* TOPIC 6: CHALLENGES & THE ETHICAL FUTURE (RESPONSIBLE AI) */}
-      <div style={{ background: '#ffffff', borderRadius: '14px', border: '1px solid #e2e8f0', padding: '1.75rem', boxShadow: '0 2px 8px rgba(0,0,0,0.03)' }}>
-        <div style={{ borderLeft: '4px solid #dc2626', paddingLeft: '1rem', marginBottom: '1.25rem' }}>
-          <span style={{ fontSize: '0.78rem', fontWeight: 800, color: '#dc2626', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
-            TOPIC 6 · RESPONSIBLE AI & ETHICS
-          </span>
-          <h3 style={{ fontSize: '1.45rem', fontWeight: 800, color: '#0f172a', margin: '0.2rem 0 0 0' }}>
-            Critical Challenges & The Ethical Future: Responsible AI
-          </h3>
-        </div>
-
-        <p style={{ fontSize: '1rem', lineHeight: 1.75, color: '#334155', margin: '0 0 1.25rem 0' }}>
-          As AI systems become embedded in judicial, medical, hiring, and educational decisions, society faces fundamental ethical questions. Explore the 4 primary pillars of <strong>Responsible AI</strong>:
-        </p>
-
-        {/* Ethics Tab Switcher */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '10px', marginBottom: '1.25rem' }}>
-          {Object.keys(ethicsTopics).map(key => {
-            const et = ethicsTopics[key];
-            const isSelected = activeEthicsTab === key;
-            return (
-              <button
-                key={key}
-                type="button"
-                onClick={() => setActiveEthicsTab(key)}
-                style={{
-                  padding: '0.75rem 1rem',
-                  borderRadius: '10px',
-                  border: isSelected ? `2px solid ${et.color}` : '1px solid #e2e8f0',
-                  background: isSelected ? '#fef2f2' : '#f8fafc',
-                  color: isSelected ? et.color : '#334155',
-                  fontWeight: isSelected ? 800 : 600,
-                  fontSize: '0.88rem',
-                  cursor: 'pointer',
-                  textAlign: 'left',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: '3px'
-                }}
-              >
-                <span style={{ fontSize: '0.72rem', textTransform: 'uppercase', color: '#64748b' }}>
-                  {et.badge}
-                </span>
-                <span>{et.title}</span>
-              </button>
-            );
-          })}
-        </div>
-
-        {/* Active Ethics Deep-Dive */}
-        {(() => {
-          const et = ethicsTopics[activeEthicsTab];
-          return (
-            <div style={{ background: '#f8fafc', borderRadius: '12px', border: `1.5px solid ${et.color}35`, padding: '1.5rem' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem', flexWrap: 'wrap', gap: '8px' }}>
-                <h4 style={{ margin: 0, fontSize: '1.2rem', fontWeight: 800, color: et.color }}>
-                  {et.title}
-                </h4>
-                <span style={{ fontSize: '0.75rem', fontWeight: 800, background: `${et.color}15`, color: et.color, padding: '3px 10px', borderRadius: '12px' }}>
-                  {et.badge}
-                </span>
-              </div>
-
-              <div style={{ background: '#ffffff', borderRadius: '8px', padding: '1rem', border: '1px solid #e2e8f0', marginBottom: '0.85rem' }}>
-                <strong style={{ fontSize: '0.82rem', color: '#991b1b', textTransform: 'uppercase', display: 'block', marginBottom: '0.25rem' }}>
-                  Core Challenge / Risk:
-                </strong>
-                <p style={{ margin: 0, fontSize: '0.9rem', color: '#334155', lineHeight: 1.6 }}>
-                  {et.problem}
-                </p>
-              </div>
-
-              <div style={{ background: '#ffffff', borderRadius: '8px', padding: '1rem', border: '1px solid #e2e8f0', marginBottom: '0.85rem' }}>
-                <strong style={{ fontSize: '0.82rem', color: '#0f172a', textTransform: 'uppercase', display: 'block', marginBottom: '0.25rem' }}>
-                  Real-World Scenario:
-                </strong>
-                <p style={{ margin: 0, fontSize: '0.9rem', color: '#475569', lineHeight: 1.6 }}>
-                  {et.realExample}
-                </p>
-              </div>
-
-              <div style={{ background: '#ecfdf5', borderRadius: '8px', padding: '0.85rem 1rem', border: '1px solid #a7f3d0' }}>
-                <strong style={{ fontSize: '0.82rem', color: '#065f46', textTransform: 'uppercase', display: 'block', marginBottom: '0.25rem' }}>
-                  Mandatory Safeguard & Best Practice:
-                </strong>
-                <p style={{ margin: 0, fontSize: '0.88rem', color: '#047857', lineHeight: 1.55 }}>
-                  {et.safeguard}
-                </p>
-              </div>
-            </div>
-          );
-        })()}
-
-        {/* Verification Rule Banner */}
-        <div style={{ marginTop: '1.25rem', background: '#eff6ff', borderRadius: '10px', padding: '1rem 1.25rem', border: '1px solid #bfdbfe', fontSize: '0.92rem', color: '#1e3a8a', display: 'flex', alignItems: 'center', gap: '10px' }}>
-          <Shield size={22} color="#2563eb" style={{ flexShrink: 0 }} />
-          <span>
-            <strong>The Professional AI Golden Rule:</strong> Use AI to generate drafts, ideas, and structures; use your human intelligence to verify facts, apply ethics, and make final decisions. Never copy-paste without reading!
-          </span>
         </div>
       </div>
 
