@@ -647,6 +647,26 @@ function App() {
     }
   };
 
+  if (activeCourse === 'course_builder') {
+    return (
+      <CourseBuilderStudio
+        onBack={() => setActiveCourse('dashboard')}
+        onLaunchPreview={(cId) => setActiveCourse(cId)}
+      />
+    );
+  }
+
+  if (typeof activeCourse === 'string' && (activeCourse.startsWith('custom_') || activeCourse.startsWith('course_'))) {
+    return (
+      <DynamicCourseViewer
+        courseId={activeCourse}
+        session={session}
+        onBack={() => setActiveCourse('dashboard')}
+        onOpenStudio={() => setActiveCourse('course_builder')}
+      />
+    );
+  }
+
   return (
     <div className="app">
       {activeCourse === 'dashboard' ? (
@@ -658,18 +678,6 @@ function App() {
           onLogout={handleLogout}
           completedLessons={completedLessons}
           taskSubmissions={taskSubmissions}
-        />
-      ) : activeCourse === 'course_builder' ? (
-        <CourseBuilderStudio
-          onBack={() => setActiveCourse('dashboard')}
-          onLaunchPreview={(cId) => setActiveCourse(cId)}
-        />
-      ) : (typeof activeCourse === 'string' && (activeCourse.startsWith('custom_') || activeCourse.startsWith('course_'))) ? (
-        <DynamicCourseViewer
-          courseId={activeCourse}
-          session={session}
-          onBack={() => setActiveCourse('dashboard')}
-          onOpenStudio={() => setActiveCourse('course_builder')}
         />
       ) : (
         <>

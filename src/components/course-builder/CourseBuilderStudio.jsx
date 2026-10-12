@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import {
-  BookOpen, Plus, FolderPlus, FilePlus, Save, Trash2, Edit3, Eye, Code,
-  Download, Upload, Check, AlertCircle, Sparkles, ChevronRight, ChevronDown,
-  Layers, FileText, ArrowLeft, RefreshCw, Layout, Bold, Italic, Heading,
-  List, ListOrdered, Quote, Table, HelpCircle, Globe
+  BookOpen, Plus, FolderPlus, FilePlus, Save, Trash2, Eye, Code,
+  Download, Upload, Check, AlertCircle, ChevronRight, ChevronDown,
+  Layers, FileText, ArrowLeft, Bold, Italic,
+  List, ListOrdered, Quote, Table, Globe, ChevronLeft,
+  Menu, Search, Clock, X, Info, Edit3, Image as ImageIcon
 } from 'lucide-react';
 import {
   getDynamicCourses,
@@ -20,11 +21,16 @@ export default function CourseBuilderStudio({ onBack, onLaunchPreview }) {
   const [activeModuleId, setActiveModuleId] = useState(null);
   const [activeTopicId, setActiveTopicId] = useState(null);
 
+  // Layout states
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [collapsedModules, setCollapsedModules] = useState({});
+  const [searchQuery, setSearchQuery] = useState('');
+
   // Editor states
   const [editorTopicTitle, setEditorTopicTitle] = useState('');
   const [editorTopicDuration, setEditorTopicDuration] = useState('');
   const [editorContent, setEditorContent] = useState('');
-  const [viewMode, setViewMode] = useState('split'); // 'split' | 'edit' | 'preview'
+  const [viewMode, setViewMode] = useState('split'); // 'visual' | 'text' | 'split'
   const [isSaved, setIsSaved] = useState(true);
   const [notification, setNotification] = useState(null);
 
@@ -41,6 +47,14 @@ export default function CourseBuilderStudio({ onBack, onLaunchPreview }) {
   const [showTopicModal, setShowTopicModal] = useState(false);
   const [newTopicTitle, setNewTopicTitle] = useState('');
   const [newTopicDuration, setNewTopicDuration] = useState('15 mins');
+
+  // Media Modal states
+  const [showMediaModal, setShowMediaModal] = useState(false);
+  const [mediaTab, setMediaTab] = useState('upload'); // 'upload' | 'url' | 'presets'
+  const [mediaUrl, setMediaUrl] = useState('');
+  const [mediaAlt, setMediaAlt] = useState('');
+  const [mediaPreview, setMediaPreview] = useState('');
+  const mediaFileInputRef = useRef(null);
 
   const fileInputRef = useRef(null);
   const textareaRef = useRef(null);
@@ -75,9 +89,29 @@ export default function CourseBuilderStudio({ onBack, onLaunchPreview }) {
     }
   }, [activeCourseId]);
 
+  // Keyboard shortcut: Ctrl+S / Cmd+S to save current topic
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+        e.preventDefault();
+        handleSaveCurrentTopic();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [activeCourse, activeModuleId, activeTopicId, editorTopicTitle, editorTopicDuration, editorContent]);
+
   const showToast = (msg, type = 'success') => {
     setNotification({ msg, type });
     setTimeout(() => setNotification(null), 3000);
+  };
+
+  const toggleModuleCollapse = (modId, e) => {
+    if (e) e.stopPropagation();
+    setCollapsedModules(prev => ({
+      ...prev,
+      [modId]: !prev[modId]
+    }));
   };
 
   const selectTopic = (topic, modId) => {
@@ -87,15 +121,25 @@ export default function CourseBuilderStudio({ onBack, onLaunchPreview }) {
     setEditorTopicDuration(topic.duration || '15 mins');
     setEditorContent(topic.content || '');
     setIsSaved(true);
+
+    // Ensure the parent module is expanded
+    setCollapsedModules(prev => ({
+      ...prev,
+      [modId]: false
+    }));
   };
 
-  // Insert markdown syntax at cursor position in textarea
+  // Insert markdown syntax at cursor position in textarea (with fallback if visual mode)
   const insertFormatting = (prefix, suffix = '', placeholder = '') => {
     const textarea = textareaRef.current;
-    if (!textarea) return;
+    if (!textarea) {
+      setEditorContent(prev => prev ? `${prev}\n\n${prefix}${placeholder}${suffix}` : `${prefix}${placeholder}${suffix}`);
+      setIsSaved(false);
+      return;
+    }
 
-    const start = textarea.selectionStart;
-    const end = textarea.selectionEnd;
+    const start = textarea.selectionStart ?? textarea.value.length;
+    const end = textarea.selectionEnd ?? textarea.value.length;
     const currentVal = textarea.value;
     const selectedText = currentVal.substring(start, end) || placeholder;
 
@@ -110,6 +154,41 @@ export default function CourseBuilderStudio({ onBack, onLaunchPreview }) {
       textarea.focus();
       textarea.setSelectionRange(start + prefix.length, start + prefix.length + selectedText.length);
     }, 50);
+  };
+
+  const handleMediaFileUpload = (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (!file.type.startsWith('image/')) {
+      showToast('Please select a valid image file (PNG, JPG, SVG, WebP, GIF)', 'error');
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = (uploadEvent) => {
+      const dataUrl = uploadEvent.target?.result;
+      setMediaPreview(dataUrl);
+      setMediaUrl(dataUrl);
+      if (!mediaAlt) {
+        setMediaAlt(file.name.replace(/\.[^/.]+$/, ''));
+      }
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleInsertMedia = (customUrl, customAlt) => {
+    const finalUrl = customUrl || mediaUrl.trim() || mediaPreview;
+    if (!finalUrl) {
+      showToast('Please upload an image or provide an image URL', 'error');
+      return;
+    }
+    const finalAlt = customAlt || mediaAlt.trim() || 'Lesson Diagram';
+    const md = `\n\n![${finalAlt}](${finalUrl})\n\n`;
+    insertFormatting(md);
+    setShowMediaModal(false);
+    setMediaUrl('');
+    setMediaAlt('');
+    setMediaPreview('');
+    showToast('Media inserted into lesson!');
   };
 
   const insertTamilEnglishTemplate = () => {
@@ -152,9 +231,22 @@ export default function CourseBuilderStudio({ onBack, onLaunchPreview }) {
       await saveDynamicCourse(updatedCourse);
       setCourses(getDynamicCourses());
       setIsSaved(true);
-      showToast('Topic saved and updated in LMS successfully!');
+      showToast('Lesson updated successfully!');
     } catch (e) {
-      showToast('Failed to save topic: ' + e.message, 'error');
+      showToast('Failed to save lesson: ' + e.message, 'error');
+    }
+  };
+
+  // Reset/Cancel current edits
+  const handleCancelEdits = () => {
+    const curMod = activeCourse?.modules?.find(m => m.id === activeModuleId);
+    const curTopic = curMod?.topics?.find(t => t.id === activeTopicId);
+    if (curTopic) {
+      setEditorTopicTitle(curTopic.title || '');
+      setEditorTopicDuration(curTopic.duration || '15 mins');
+      setEditorContent(curTopic.content || '');
+      setIsSaved(true);
+      showToast('Changes reverted to saved state.');
     }
   };
 
@@ -180,9 +272,9 @@ export default function CourseBuilderStudio({ onBack, onLaunchPreview }) {
           topics: [
             {
               id: `top_${Date.now()}_1`,
-              title: 'Topic 1: Getting Started',
+              title: 'Lesson 1',
               duration: '15 mins',
-              content: `# ${newCourseTitle.trim()}\n\nWelcome to this course! Edit this topic using the LMS builder.`
+              content: `# ${newCourseTitle.trim()}\n\nWelcome to this lesson! Edit this lesson using the rich editor.`
             }
           ]
         }
@@ -198,7 +290,7 @@ export default function CourseBuilderStudio({ onBack, onLaunchPreview }) {
       setNewCourseTitle('');
       setNewCourseDesc('');
       showToast(`Course "${newCourseObj.title}" created!`);
-    } catch (err) {
+    } catch {
       showToast('Error creating course', 'error');
     }
   };
@@ -216,7 +308,7 @@ export default function CourseBuilderStudio({ onBack, onLaunchPreview }) {
       topics: [
         {
           id: `top_${Date.now()}_1`,
-          title: 'Topic 1: Introduction',
+          title: 'Lesson 1',
           duration: '15 mins',
           content: `# ${newModuleTitle.trim()}\n\nStart writing lesson content here.`
         }
@@ -248,7 +340,7 @@ export default function CourseBuilderStudio({ onBack, onLaunchPreview }) {
       id: newTopicId,
       title: newTopicTitle.trim(),
       duration: newTopicDuration.trim() || '15 mins',
-      content: `# ${newTopicTitle.trim()}\n\nWrite your interactive topic content here using Markdown.`
+      content: `# ${newTopicTitle.trim()}\n\nWrite your lesson content here.`
     };
 
     const updatedModules = activeCourse.modules.map(m => {
@@ -270,7 +362,7 @@ export default function CourseBuilderStudio({ onBack, onLaunchPreview }) {
     setShowTopicModal(false);
     setNewTopicTitle('');
     setNewTopicDuration('15 mins');
-    showToast(`Topic "${newTopic.title}" added!`);
+    showToast(`Lesson "${newTopic.title}" added!`);
   };
 
   // Delete Course
@@ -285,7 +377,7 @@ export default function CourseBuilderStudio({ onBack, onLaunchPreview }) {
 
   // Delete Module
   const handleDeleteModule = async (modId) => {
-    if (!activeCourse || !window.confirm('Delete this module and all its topics?')) return;
+    if (!activeCourse || !window.confirm('Delete this module and all its lessons?')) return;
     const updatedModules = activeCourse.modules.filter(m => m.id !== modId);
     const updatedCourse = { ...activeCourse, modules: updatedModules };
     await saveDynamicCourse(updatedCourse);
@@ -296,7 +388,7 @@ export default function CourseBuilderStudio({ onBack, onLaunchPreview }) {
 
   // Delete Topic
   const handleDeleteTopic = async (topicId) => {
-    if (!activeCourse || !activeModuleId || !window.confirm('Delete this topic?')) return;
+    if (!activeCourse || !activeModuleId || !window.confirm('Delete this lesson?')) return;
     const updatedModules = activeCourse.modules.map(m => {
       if (m.id !== activeModuleId) return m;
       return {
@@ -314,7 +406,7 @@ export default function CourseBuilderStudio({ onBack, onLaunchPreview }) {
       setActiveTopicId(null);
       setEditorContent('');
     }
-    showToast('Topic deleted');
+    showToast('Lesson deleted');
   };
 
   // Handle Import JSON
@@ -335,27 +427,42 @@ export default function CourseBuilderStudio({ onBack, onLaunchPreview }) {
     e.target.value = '';
   };
 
+  // Filter modules/topics by search query
+  const filteredModules = (activeCourse?.modules || []).map(mod => {
+    if (!searchQuery.trim()) return { ...mod, isMatch: true };
+    const query = searchQuery.toLowerCase();
+    const modMatches = mod.title.toLowerCase().includes(query);
+    const matchingTopics = (mod.topics || []).filter(t => t.title.toLowerCase().includes(query));
+    return {
+      ...mod,
+      isMatch: modMatches || matchingTopics.length > 0,
+      matchingTopicIds: new Set(matchingTopics.map(t => t.id))
+    };
+  }).filter(mod => mod.isMatch);
+
+  const totalTopicsCount = activeCourse?.modules?.reduce((acc, m) => acc + (m.topics?.length || 0), 0) || 0;
+
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', height: '100vh', background: '#090d16', color: '#f8fafc', overflow: 'hidden' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', width: '100vw', maxWidth: '100vw', height: '100vh', maxHeight: '100vh', background: '#eef2f6', color: '#1e293b', overflow: 'hidden', boxSizing: 'border-box', fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>
       {/* Toast Notification */}
       {notification && (
         <div
           style={{
             position: 'fixed',
-            top: '1.5rem',
-            right: '2rem',
+            top: '1.25rem',
+            right: '1.5rem',
             zIndex: 9999,
             display: 'flex',
             alignItems: 'center',
             gap: '0.6rem',
             padding: '0.75rem 1.25rem',
             borderRadius: '8px',
-            background: notification.type === 'error' ? 'rgba(239, 68, 68, 0.95)' : 'rgba(16, 185, 129, 0.95)',
+            background: notification.type === 'error' ? '#ef4444' : '#10b981',
             color: '#ffffff',
-            boxShadow: '0 8px 24px rgba(0,0,0,0.3)',
+            boxShadow: '0 10px 25px -5px rgba(0,0,0,0.15)',
             fontWeight: 500,
-            fontSize: '0.9rem',
-            backdropFilter: 'blur(8px)'
+            fontSize: '0.88rem',
+            animation: 'fadeIn 0.2s ease-out'
           }}
         >
           {notification.type === 'error' ? <AlertCircle size={18} /> : <Check size={18} />}
@@ -363,108 +470,148 @@ export default function CourseBuilderStudio({ onBack, onLaunchPreview }) {
         </div>
       )}
 
-      {/* Top Navigation Bar */}
+      {/* Light Mode Top Navigation Bar */}
       <header
         style={{
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
-          padding: '0.75rem 1.5rem',
-          background: 'rgba(15, 23, 42, 0.85)',
-          borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
-          backdropFilter: 'blur(12px)',
+          height: '58px',
+          padding: '0 1.5rem',
+          background: '#ffffff',
+          borderBottom: '1px solid #e2e8f0',
           gap: '1rem',
-          flexWrap: 'wrap'
+          zIndex: 30,
+          flexShrink: 0,
+          boxShadow: '0 1px 3px rgba(0,0,0,0.04)'
         }}
       >
-        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+        {/* Left: Back + Sidebar Toggle + Brand Logo + Course Switcher */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', minWidth: 0 }}>
           {onBack && (
             <button
               onClick={onBack}
               style={{
                 display: 'flex',
                 alignItems: 'center',
-                gap: '0.4rem',
-                background: 'rgba(255, 255, 255, 0.06)',
-                border: '1px solid rgba(255, 255, 255, 0.1)',
-                color: '#94a3b8',
+                gap: '0.35rem',
+                background: '#f8fafc',
+                border: '1px solid #cbd5e1',
+                color: '#475569',
                 borderRadius: '6px',
-                padding: '0.45rem 0.85rem',
+                padding: '0.4rem 0.75rem',
                 cursor: 'pointer',
-                fontSize: '0.85rem',
-                transition: 'all 0.2s'
+                fontSize: '0.82rem',
+                fontWeight: 600,
+                transition: 'all 0.15s'
               }}
-              onMouseEnter={(e) => { e.currentTarget.style.color = '#fff'; e.currentTarget.style.background = 'rgba(255,255,255,0.1)'; }}
-              onMouseLeave={(e) => { e.currentTarget.style.color = '#94a3b8'; e.currentTarget.style.background = 'rgba(255,255,255,0.06)'; }}
+              onMouseEnter={(e) => { e.currentTarget.style.background = '#f1f5f9'; e.currentTarget.style.color = '#0f172a'; }}
+              onMouseLeave={(e) => { e.currentTarget.style.background = '#f8fafc'; e.currentTarget.style.color = '#475569'; }}
+              title="Return to LMS"
             >
-              <ArrowLeft size={16} /> Back
+              <ArrowLeft size={15} /> Back
             </button>
           )}
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <div style={{ padding: '6px', background: 'linear-gradient(135deg, #3b82f6 0%, #6366f1 100%)', borderRadius: '8px' }}>
-              <Layers size={18} color="#fff" />
-            </div>
-            <div>
-              <h2 style={{ fontSize: '1.1rem', fontWeight: 700, margin: 0, letterSpacing: '-0.01em' }}>
-                Pure LMS Course Studio
-              </h2>
-              <span style={{ fontSize: '0.75rem', color: '#94a3b8' }}>
-                Course &gt; Sub-course (Module) &gt; Topic &gt; Rich Content Editor
-              </span>
-            </div>
-          </div>
-        </div>
-
-        {/* Course Switcher & Global Actions */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
-          {/* Course Selector */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', background: 'rgba(30, 41, 59, 0.7)', padding: '0.3rem 0.6rem', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.1)' }}>
-            <BookOpen size={15} color="#60a5fa" />
-            <select
-              value={activeCourseId || ''}
-              onChange={(e) => setActiveCourseId(e.target.value)}
-              style={{
-                background: 'transparent',
-                border: 'none',
-                color: '#fff',
-                fontSize: '0.9rem',
-                fontWeight: 600,
-                outline: 'none',
-                cursor: 'pointer',
-                maxWidth: '220px'
-              }}
-            >
-              {courses.map(c => (
-                <option key={c.id} value={c.id} style={{ background: '#1e293b', color: '#fff' }}>
-                  {c.title}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {/* New Course Button */}
+          {/* Sidebar Toggle Button */}
           <button
-            onClick={() => setShowCourseModal(true)}
+            onClick={() => setIsSidebarOpen(!isSidebarOpen)}
             style={{
               display: 'flex',
               alignItems: 'center',
-              gap: '0.4rem',
-              background: 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)',
-              border: 'none',
-              color: '#fff',
-              padding: '0.5rem 0.9rem',
+              justifyContent: 'center',
+              width: '34px',
+              height: '34px',
+              background: isSidebarOpen ? '#eff6ff' : '#f8fafc',
+              border: isSidebarOpen ? '1px solid #bfdbfe' : '1px solid #cbd5e1',
+              color: isSidebarOpen ? '#2563eb' : '#64748b',
               borderRadius: '6px',
-              fontSize: '0.85rem',
-              fontWeight: 600,
               cursor: 'pointer',
-              boxShadow: '0 2px 8px rgba(37,99,235,0.35)'
+              transition: 'all 0.15s'
             }}
+            title={isSidebarOpen ? "Hide Curriculum Sidebar" : "Show Curriculum Sidebar"}
           >
-            <Plus size={16} /> New Course
+            <Menu size={16} />
           </button>
 
-          {/* Preview as Student */}
+          {/* Studio Branding */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginRight: '0.5rem' }}>
+            <div style={{ padding: '6px', background: 'linear-gradient(135deg, #0284c7 0%, #2563eb 100%)', borderRadius: '7px', display: 'flex' }}>
+              <Layers size={16} color="#fff" />
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+              <span style={{ fontSize: '0.98rem', fontWeight: 700, color: '#0f172a', letterSpacing: '-0.01em', whiteSpace: 'nowrap' }}>
+                Course Studio
+              </span>
+              <span style={{ fontSize: '0.7rem', background: '#e0f2fe', color: '#0284c7', padding: '1px 6px', borderRadius: '4px', fontWeight: 600 }}>
+                Editor
+              </span>
+            </div>
+          </div>
+
+          <div style={{ width: '1px', height: '22px', background: '#e2e8f0', margin: '0 0.25rem' }} />
+
+          {/* Course Selector Dropdown & + New Course */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.4rem',
+                background: '#f8fafc',
+                padding: '0.3rem 0.65rem',
+                borderRadius: '6px',
+                border: '1px solid #cbd5e1'
+              }}
+            >
+              <BookOpen size={14} color="#0284c7" />
+              <select
+                value={activeCourseId || ''}
+                onChange={(e) => setActiveCourseId(e.target.value)}
+                style={{
+                  background: 'transparent',
+                  border: 'none',
+                  color: '#1e293b',
+                  fontSize: '0.85rem',
+                  fontWeight: 600,
+                  outline: 'none',
+                  cursor: 'pointer',
+                  maxWidth: '240px'
+                }}
+              >
+                {courses.map(c => (
+                  <option key={c.id} value={c.id}>
+                    {c.title}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <button
+              onClick={() => setShowCourseModal(true)}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.25rem',
+                background: '#eff6ff',
+                border: '1px solid #bfdbfe',
+                color: '#2563eb',
+                padding: '0.38rem 0.7rem',
+                borderRadius: '6px',
+                fontSize: '0.8rem',
+                fontWeight: 600,
+                cursor: 'pointer',
+                transition: 'all 0.15s'
+              }}
+              title="Add New Course"
+            >
+              <Plus size={14} /> New
+            </button>
+          </div>
+        </div>
+
+        {/* Right: Preview as Student + Import/Export Tools */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', flexShrink: 0 }}>
           {onLaunchPreview && activeCourse && (
             <button
               onClick={() => onLaunchPreview(activeCourse.id)}
@@ -472,34 +619,43 @@ export default function CourseBuilderStudio({ onBack, onLaunchPreview }) {
                 display: 'flex',
                 alignItems: 'center',
                 gap: '0.4rem',
-                background: 'rgba(16, 185, 129, 0.15)',
-                border: '1px solid rgba(16, 185, 129, 0.4)',
-                color: '#34d399',
-                padding: '0.5rem 0.9rem',
+                background: '#10b981',
+                border: 'none',
+                color: '#ffffff',
+                padding: '0.42rem 0.95rem',
                 borderRadius: '6px',
-                fontSize: '0.85rem',
+                fontSize: '0.82rem',
                 fontWeight: 600,
-                cursor: 'pointer'
+                cursor: 'pointer',
+                boxShadow: '0 2px 6px rgba(16,185,129,0.25)',
+                transition: 'transform 0.15s'
               }}
+              onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-1px)'; }}
+              onMouseLeave={(e) => { e.currentTarget.style.transform = 'none'; }}
+              title="Preview how students view this interactive course"
             >
-              <Eye size={16} /> Preview as Student
+              <Eye size={15} /> Preview as Student
             </button>
           )}
+
+          <div style={{ width: '1px', height: '22px', background: '#e2e8f0' }} />
 
           {/* Export JSON */}
           <button
             onClick={exportCoursesToJson}
-            title="Export Courses Backup"
+            title="Export Courses JSON Backup"
             style={{
-              padding: '0.5rem',
-              background: 'rgba(255, 255, 255, 0.06)',
-              border: '1px solid rgba(255, 255, 255, 0.1)',
+              padding: '0.4rem 0.55rem',
+              background: '#f8fafc',
+              border: '1px solid #cbd5e1',
               borderRadius: '6px',
-              color: '#94a3b8',
-              cursor: 'pointer'
+              color: '#64748b',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center'
             }}
           >
-            <Download size={16} />
+            <Download size={15} />
           </button>
 
           {/* Import JSON */}
@@ -507,15 +663,17 @@ export default function CourseBuilderStudio({ onBack, onLaunchPreview }) {
             onClick={() => fileInputRef.current?.click()}
             title="Import Courses Backup"
             style={{
-              padding: '0.5rem',
-              background: 'rgba(255, 255, 255, 0.06)',
-              border: '1px solid rgba(255, 255, 255, 0.1)',
+              padding: '0.4rem 0.55rem',
+              background: '#f8fafc',
+              border: '1px solid #cbd5e1',
               borderRadius: '6px',
-              color: '#94a3b8',
-              cursor: 'pointer'
+              color: '#64748b',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center'
             }}
           >
-            <Upload size={16} />
+            <Upload size={15} />
           </button>
           <input
             type="file"
@@ -527,115 +685,211 @@ export default function CourseBuilderStudio({ onBack, onLaunchPreview }) {
         </div>
       </header>
 
-      {/* Main Studio Body: 2 Columns (Left Tree, Right Editor) */}
-      <div style={{ display: 'flex', flex: 1, minHeight: 0, overflow: 'hidden' }}>
-        {/* Left Hierarchy Panel: Modules & Topics Tree */}
+      {/* Main Studio Body: Collapsible Left Sidebar + Clean Light Canvas */}
+      <div style={{ display: 'flex', flex: 1, minHeight: 0, overflow: 'hidden', position: 'relative' }}>
+        {/* Left Sidebar: Curriculum Structure */}
         <aside
           style={{
-            width: '320px',
-            minWidth: '280px',
-            background: 'rgba(15, 23, 42, 0.95)',
-            borderRight: '1px solid rgba(255, 255, 255, 0.08)',
+            width: isSidebarOpen ? '320px' : '0px',
+            minWidth: isSidebarOpen ? '290px' : '0px',
+            maxWidth: isSidebarOpen ? '340px' : '0px',
+            background: '#ffffff',
+            borderRight: isSidebarOpen ? '1px solid #e2e8f0' : 'none',
             display: 'flex',
             flexDirection: 'column',
-            overflow: 'hidden'
+            overflow: 'hidden',
+            transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
+            opacity: isSidebarOpen ? 1 : 0,
+            visibility: isSidebarOpen ? 'visible' : 'hidden',
+            zIndex: 20
           }}
         >
-          {/* Module Header & Add Module */}
+          {/* Header & Add Module */}
           <div
             style={{
-              padding: '1rem',
-              borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+              padding: '0.9rem 1rem 0.75rem',
+              borderBottom: '1px solid #f1f5f9',
               display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center'
+              flexDirection: 'column',
+              gap: '0.65rem'
             }}
           >
-            <div>
-              <h3 style={{ fontSize: '0.95rem', fontWeight: 700, margin: 0, color: '#f1f5f9' }}>
-                Curriculum Structure
-              </h3>
-              <span style={{ fontSize: '0.75rem', color: '#64748b' }}>
-                {activeCourse?.modules?.length || 0} Modules · {activeCourse?.modules?.reduce((acc, m) => acc + (m.topics?.length || 0), 0) || 0} Topics
-              </span>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <div>
+                <h3 style={{ fontSize: '0.92rem', fontWeight: 700, margin: 0, color: '#0f172a' }}>
+                  Curriculum Structure
+                </h3>
+                <span style={{ fontSize: '0.74rem', color: '#64748b' }}>
+                  {activeCourse?.modules?.length || 0} Modules · {totalTopicsCount} Lessons
+                </span>
+              </div>
+
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                <button
+                  onClick={() => setShowModuleModal(true)}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.25rem',
+                    background: '#eff6ff',
+                    border: '1px solid #bfdbfe',
+                    color: '#2563eb',
+                    borderRadius: '6px',
+                    padding: '0.3rem 0.6rem',
+                    fontSize: '0.75rem',
+                    fontWeight: 600,
+                    cursor: 'pointer'
+                  }}
+                  title="Add New Module"
+                >
+                  <FolderPlus size={13} /> + Module
+                </button>
+                <button
+                  onClick={() => setIsSidebarOpen(false)}
+                  style={{
+                    background: 'none',
+                    border: 'none',
+                    color: '#94a3b8',
+                    cursor: 'pointer',
+                    padding: '4px',
+                    display: 'flex'
+                  }}
+                  title="Collapse sidebar"
+                >
+                  <ChevronLeft size={16} />
+                </button>
+              </div>
             </div>
 
-            <button
-              onClick={() => setShowModuleModal(true)}
+            {/* Quick Search Bar */}
+            <div
               style={{
                 display: 'flex',
                 alignItems: 'center',
-                gap: '0.3rem',
-                background: 'rgba(99, 102, 241, 0.15)',
-                border: '1px solid rgba(99, 102, 241, 0.3)',
-                color: '#818cf8',
+                gap: '0.4rem',
+                background: '#f8fafc',
+                border: '1px solid #e2e8f0',
                 borderRadius: '6px',
-                padding: '0.35rem 0.65rem',
-                fontSize: '0.75rem',
-                fontWeight: 600,
-                cursor: 'pointer'
+                padding: '0.35rem 0.6rem'
               }}
             >
-              <FolderPlus size={14} /> + Module
-            </button>
+              <Search size={13} color="#94a3b8" />
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search lessons or modules..."
+                style={{
+                  flex: 1,
+                  background: 'transparent',
+                  border: 'none',
+                  outline: 'none',
+                  color: '#334155',
+                  fontSize: '0.8rem'
+                }}
+              />
+              {searchQuery && (
+                <button
+                  onClick={() => setSearchQuery('')}
+                  style={{ background: 'none', border: 'none', color: '#94a3b8', cursor: 'pointer', padding: 0, display: 'flex' }}
+                >
+                  <X size={12} />
+                </button>
+              )}
+            </div>
           </div>
 
           {/* Module & Topic Accordion Tree */}
           <div style={{ flex: 1, overflowY: 'auto', padding: '0.75rem' }}>
             {(!activeCourse?.modules || activeCourse.modules.length === 0) ? (
-              <div style={{ padding: '2rem 1rem', textAlign: 'center', color: '#64748b', fontSize: '0.85rem' }}>
-                <p>No modules in this course yet.</p>
+              <div style={{ padding: '2.5rem 1rem', textAlign: 'center', color: '#64748b', fontSize: '0.85rem' }}>
+                <p style={{ margin: '0 0 0.5rem' }}>No modules in this course yet.</p>
                 <button
                   onClick={() => setShowModuleModal(true)}
                   style={{
-                    marginTop: '0.5rem',
-                    background: '#3b82f6',
+                    background: '#0284c7',
                     border: 'none',
                     color: '#fff',
-                    padding: '0.4rem 0.8rem',
+                    padding: '0.45rem 0.85rem',
                     borderRadius: '6px',
                     fontSize: '0.8rem',
-                    cursor: 'pointer'
+                    cursor: 'pointer',
+                    fontWeight: 600
                   }}
                 >
                   Create First Module
                 </button>
               </div>
+            ) : filteredModules.length === 0 ? (
+              <div style={{ padding: '2rem 1rem', textAlign: 'center', color: '#64748b', fontSize: '0.82rem' }}>
+                No lessons matching "{searchQuery}"
+              </div>
             ) : (
-              activeCourse.modules.map((mod, modIdx) => {
+              filteredModules.map((mod, modIdx) => {
                 const isModSelected = mod.id === activeModuleId;
+                const isCollapsed = !!collapsedModules[mod.id] && !searchQuery;
+                const topicCount = mod.topics?.length || 0;
+
                 return (
                   <div
                     key={mod.id}
                     style={{
-                      marginBottom: '0.75rem',
+                      marginBottom: '0.65rem',
                       borderRadius: '8px',
-                      background: isModSelected ? 'rgba(30, 41, 59, 0.6)' : 'rgba(255, 255, 255, 0.02)',
-                      border: isModSelected ? '1px solid rgba(99, 102, 241, 0.3)' : '1px solid rgba(255, 255, 255, 0.05)',
-                      overflow: 'hidden'
+                      background: '#ffffff',
+                      border: isModSelected ? '1px solid #bfdbfe' : '1px solid #e2e8f0',
+                      boxShadow: isModSelected ? '0 1px 4px rgba(37,99,235,0.08)' : '0 1px 2px rgba(0,0,0,0.02)',
+                      overflow: 'hidden',
+                      transition: 'border 0.2s, box-shadow 0.2s'
                     }}
                   >
                     {/* Module Title Bar */}
                     <div
                       style={{
-                        padding: '0.65rem 0.75rem',
+                        padding: '0.6rem 0.75rem',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'space-between',
                         cursor: 'pointer',
-                        background: isModSelected ? 'rgba(99, 102, 241, 0.08)' : 'transparent'
+                        background: isModSelected ? '#f8fafc' : '#ffffff',
+                        userSelect: 'none'
                       }}
-                      onClick={() => setActiveModuleId(mod.id)}
+                      onClick={() => {
+                        setActiveModuleId(mod.id);
+                        toggleModuleCollapse(mod.id);
+                      }}
                     >
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', minWidth: 0, flex: 1 }}>
-                        <span style={{ fontSize: '0.7rem', background: '#3b82f6', color: '#fff', padding: '2px 5px', borderRadius: '4px', fontWeight: 700 }}>
-                          M{modIdx + 1}
-                        </span>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', minWidth: 0, flex: 1 }}>
+                        <div
+                          style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            color: isModSelected ? '#2563eb' : '#94a3b8',
+                            transition: 'transform 0.2s'
+                          }}
+                        >
+                          {isCollapsed ? <ChevronRight size={15} /> : <ChevronDown size={15} />}
+                        </div>
+
                         <span
                           style={{
-                            fontSize: '0.85rem',
-                            fontWeight: 600,
-                            color: isModSelected ? '#60a5fa' : '#cbd5e1',
+                            fontSize: '0.7rem',
+                            background: isModSelected ? '#eff6ff' : '#f1f5f9',
+                            border: isModSelected ? '1px solid #bfdbfe' : '1px solid #e2e8f0',
+                            color: isModSelected ? '#2563eb' : '#64748b',
+                            padding: '1px 5px',
+                            borderRadius: '4px',
+                            fontWeight: 700
+                          }}
+                        >
+                          M{modIdx + 1}
+                        </span>
+
+                        <span
+                          style={{
+                            fontSize: '0.84rem',
+                            fontWeight: isModSelected ? 600 : 500,
+                            color: isModSelected ? '#1e40af' : '#334155',
                             whiteSpace: 'nowrap',
                             overflow: 'hidden',
                             textOverflow: 'ellipsis'
@@ -646,111 +900,178 @@ export default function CourseBuilderStudio({ onBack, onLaunchPreview }) {
                         </span>
                       </div>
 
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem' }} onClick={(e) => e.stopPropagation()}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.2rem' }} onClick={(e) => e.stopPropagation()}>
+                        <span style={{ fontSize: '0.68rem', color: '#94a3b8', marginRight: '3px' }}>
+                          {topicCount}
+                        </span>
+
                         <button
                           onClick={() => {
                             setActiveModuleId(mod.id);
                             setShowTopicModal(true);
                           }}
-                          title="Add Topic to this Module"
+                          title="Add Lesson to Module"
                           style={{
                             background: 'none',
                             border: 'none',
-                            color: '#34d399',
+                            color: '#10b981',
                             cursor: 'pointer',
-                            padding: '3px'
+                            padding: '3px',
+                            display: 'flex',
+                            borderRadius: '4px'
                           }}
                         >
                           <Plus size={14} />
                         </button>
+
                         <button
                           onClick={() => handleDeleteModule(mod.id)}
                           title="Delete Module"
                           style={{
                             background: 'none',
                             border: 'none',
-                            color: '#ef4444',
+                            color: '#cbd5e1',
                             cursor: 'pointer',
-                            padding: '3px'
+                            padding: '3px',
+                            display: 'flex',
+                            borderRadius: '4px'
                           }}
+                          onMouseEnter={(e) => e.currentTarget.style.color = '#ef4444'}
+                          onMouseLeave={(e) => e.currentTarget.style.color = '#cbd5e1'}
                         >
                           <Trash2 size={13} />
                         </button>
                       </div>
                     </div>
 
-                    {/* Topics inside this module */}
-                    <div style={{ padding: '0.3rem 0.5rem 0.6rem 0.5rem' }}>
-                      {(!mod.topics || mod.topics.length === 0) ? (
-                        <div style={{ padding: '0.5rem', fontSize: '0.75rem', color: '#64748b' }}>
-                          No topics yet.{' '}
-                          <span
-                            onClick={() => { setActiveModuleId(mod.id); setShowTopicModal(true); }}
-                            style={{ color: '#60a5fa', cursor: 'pointer', textDecoration: 'underline' }}
-                          >
-                            + Add Topic
-                          </span>
-                        </div>
-                      ) : (
-                        mod.topics.map((top, topIdx) => {
-                          const isTopActive = top.id === activeTopicId;
-                          return (
-                            <div
-                              key={top.id}
-                              onClick={() => selectTopic(top, mod.id)}
-                              style={{
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'space-between',
-                                padding: '0.45rem 0.6rem',
-                                margin: '0.2rem 0',
-                                borderRadius: '6px',
-                                cursor: 'pointer',
-                                background: isTopActive ? 'linear-gradient(135deg, rgba(59, 130, 246, 0.25) 0%, rgba(99, 102, 241, 0.25) 100%)' : 'rgba(255, 255, 255, 0.02)',
-                                border: isTopActive ? '1px solid rgba(99, 102, 241, 0.5)' : '1px solid transparent',
-                                transition: 'all 0.15s'
-                              }}
-                            >
-                              <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', minWidth: 0, flex: 1 }}>
-                                <FileText size={13} color={isTopActive ? '#60a5fa' : '#94a3b8'} />
-                                <span
-                                  style={{
-                                    fontSize: '0.8rem',
-                                    fontWeight: isTopActive ? 600 : 400,
-                                    color: isTopActive ? '#ffffff' : '#cbd5e1',
-                                    whiteSpace: 'nowrap',
-                                    overflow: 'hidden',
-                                    textOverflow: 'ellipsis'
-                                  }}
-                                  title={top.title}
-                                >
-                                  {top.title}
-                                </span>
-                              </div>
+                    {/* Topics (Lessons) Tree */}
+                    {!isCollapsed && (
+                      <div
+                        style={{
+                          padding: '0.25rem 0.5rem 0.5rem 0.85rem',
+                          borderTop: '1px solid #f1f5f9',
+                          position: 'relative'
+                        }}
+                      >
+                        <div
+                          style={{
+                            position: 'absolute',
+                            left: '1.35rem',
+                            top: 0,
+                            bottom: '0.6rem',
+                            width: '1px',
+                            background: '#e2e8f0'
+                          }}
+                        />
 
-                              <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem' }} onClick={(e) => e.stopPropagation()}>
-                                <span style={{ fontSize: '0.65rem', color: '#64748b', background: 'rgba(0,0,0,0.3)', padding: '2px 4px', borderRadius: '3px' }}>
-                                  {top.duration || '15m'}
-                                </span>
-                                <button
-                                  onClick={() => handleDeleteTopic(top.id)}
-                                  style={{
-                                    background: 'none',
-                                    border: 'none',
-                                    color: '#94a3b8',
-                                    cursor: 'pointer',
-                                    padding: '2px'
-                                  }}
-                                  title="Delete Topic"
-                                >
-                                  <Trash2 size={12} />
-                                </button>
+                        {(!mod.topics || mod.topics.length === 0) ? (
+                          <div style={{ padding: '0.4rem 0.5rem', fontSize: '0.74rem', color: '#94a3b8', marginLeft: '0.75rem' }}>
+                            No lessons yet.{' '}
+                            <span
+                              onClick={() => { setActiveModuleId(mod.id); setShowTopicModal(true); }}
+                              style={{ color: '#0284c7', cursor: 'pointer', textDecoration: 'underline' }}
+                            >
+                              + Add Lesson
+                            </span>
+                          </div>
+                        ) : (
+                          mod.topics.map((top) => {
+                            if (searchQuery && mod.matchingTopicIds && !mod.matchingTopicIds.has(top.id)) {
+                              return null;
+                            }
+
+                            const isTopActive = top.id === activeTopicId;
+                            return (
+                              <div
+                                key={top.id}
+                                onClick={() => selectTopic(top, mod.id)}
+                                style={{
+                                  display: 'flex',
+                                  alignItems: 'center',
+                                  justifyContent: 'space-between',
+                                  padding: '0.45rem 0.6rem 0.45rem 0.75rem',
+                                  margin: '0.2rem 0 0.2rem 0.5rem',
+                                  borderRadius: '6px',
+                                  cursor: 'pointer',
+                                  background: isTopActive ? '#eff6ff' : '#ffffff',
+                                  border: isTopActive ? '1px solid #bfdbfe' : '1px solid transparent',
+                                  position: 'relative',
+                                  transition: 'all 0.15s'
+                                }}
+                                onMouseEnter={(e) => {
+                                  if (!isTopActive) e.currentTarget.style.background = '#f8fafc';
+                                }}
+                                onMouseLeave={(e) => {
+                                  if (!isTopActive) e.currentTarget.style.background = '#ffffff';
+                                }}
+                              >
+                                {isTopActive && (
+                                  <div
+                                    style={{
+                                      position: 'absolute',
+                                      left: '-3px',
+                                      top: '5px',
+                                      bottom: '5px',
+                                      width: '3px',
+                                      borderRadius: '2px',
+                                      background: '#0284c7'
+                                    }}
+                                  />
+                                )}
+
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', minWidth: 0, flex: 1 }}>
+                                  <FileText size={13} color={isTopActive ? '#0284c7' : '#94a3b8'} />
+                                  <span
+                                    style={{
+                                      fontSize: '0.8rem',
+                                      fontWeight: isTopActive ? 600 : 400,
+                                      color: isTopActive ? '#1e40af' : '#334155',
+                                      whiteSpace: 'nowrap',
+                                      overflow: 'hidden',
+                                      textOverflow: 'ellipsis'
+                                    }}
+                                    title={top.title}
+                                  >
+                                    {top.title}
+                                  </span>
+                                </div>
+
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem' }} onClick={(e) => e.stopPropagation()}>
+                                  <span
+                                    style={{
+                                      fontSize: '0.64rem',
+                                      color: '#64748b',
+                                      background: '#f1f5f9',
+                                      padding: '1px 5px',
+                                      borderRadius: '4px',
+                                      whiteSpace: 'nowrap'
+                                    }}
+                                  >
+                                    {top.duration || '15m'}
+                                  </span>
+                                  <button
+                                    onClick={() => handleDeleteTopic(top.id)}
+                                    style={{
+                                      background: 'none',
+                                      border: 'none',
+                                      color: '#cbd5e1',
+                                      cursor: 'pointer',
+                                      padding: '2px',
+                                      display: 'flex'
+                                    }}
+                                    onMouseEnter={(e) => e.currentTarget.style.color = '#ef4444'}
+                                    onMouseLeave={(e) => e.currentTarget.style.color = '#cbd5e1'}
+                                    title="Delete Lesson"
+                                  >
+                                    <Trash2 size={12} />
+                                  </button>
+                                </div>
                               </div>
-                            </div>
-                          );
-                        })
-                      )}
-                    </div>
+                            );
+                          })
+                        )}
+                      </div>
+                    )}
                   </div>
                 );
               })
@@ -759,7 +1080,7 @@ export default function CourseBuilderStudio({ onBack, onLaunchPreview }) {
 
           {/* Delete Course footer button */}
           {activeCourse && (
-            <div style={{ padding: '0.75rem', borderTop: '1px solid rgba(255, 255, 255, 0.08)' }}>
+            <div style={{ padding: '0.75rem', borderTop: '1px solid #f1f5f9' }}>
               <button
                 onClick={() => handleDeleteCourse(activeCourse.id)}
                 style={{
@@ -768,292 +1089,499 @@ export default function CourseBuilderStudio({ onBack, onLaunchPreview }) {
                   alignItems: 'center',
                   justifyContent: 'center',
                   gap: '0.4rem',
-                  padding: '0.4rem',
-                  background: 'rgba(239, 68, 68, 0.1)',
-                  border: '1px solid rgba(239, 68, 68, 0.3)',
-                  color: '#f87171',
+                  padding: '0.45rem',
+                  background: '#fef2f2',
+                  border: '1px solid #fecaca',
+                  color: '#dc2626',
                   borderRadius: '6px',
-                  fontSize: '0.75rem',
-                  cursor: 'pointer'
+                  fontSize: '0.76rem',
+                  fontWeight: 600,
+                  cursor: 'pointer',
+                  transition: 'background 0.15s'
                 }}
+                onMouseEnter={(e) => e.currentTarget.style.background = '#fee2e2'}
+                onMouseLeave={(e) => e.currentTarget.style.background = '#fef2f2'}
               >
-                <Trash2 size={13} /> Delete Entire Course
+                <Trash2 size={13} /> Delete Course
               </button>
             </div>
           )}
         </aside>
 
-        {/* Right Editor & Live Preview Panel */}
-        <main style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0, overflow: 'hidden' }}>
+        {/* Center Editor Canvas: Full-Height Seamlessly Aligned Workspace */}
+        <main
+          style={{
+            flex: 1,
+            display: 'flex',
+            flexDirection: 'column',
+            minWidth: 0,
+            height: '100%',
+            overflow: 'hidden',
+            background: '#ffffff'
+          }}
+        >
           {!activeTopicId ? (
-            <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', color: '#64748b' }}>
-              <FilePlus size={48} style={{ opacity: 0.4, marginBottom: '1rem' }} />
-              <h3 style={{ margin: 0, color: '#94a3b8' }}>Select or create a Topic to begin editing</h3>
-              <p style={{ fontSize: '0.85rem' }}>Use the left sidebar to add a Module and Topics.</p>
-            </div>
-          ) : (
-            <>
-              {/* Topic Meta Header (Title & Duration Input) */}
-              <div
+            <div
+              style={{
+                flex: 1,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                flexDirection: 'column',
+                padding: '2rem',
+                background: '#f8fafc'
+              }}
+            >
+              <div style={{ width: '64px', height: '64px', borderRadius: '16px', background: '#eff6ff', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1.25rem' }}>
+                <FilePlus size={32} color="#0284c7" />
+              </div>
+              <h3 style={{ margin: '0 0 0.5rem', color: '#0f172a', fontSize: '1.2rem', fontWeight: 700 }}>
+                Select or create a Lesson to begin editing
+              </h3>
+              <p style={{ fontSize: '0.88rem', color: '#64748b', maxWidth: '420px', margin: '0 0 1.25rem', textAlign: 'center' }}>
+                Pick a lesson from the curriculum sidebar on the left, or add a new module to start building your content.
+              </p>
+              <button
+                onClick={() => setShowModuleModal(true)}
                 style={{
-                  padding: '0.75rem 1.5rem',
-                  background: 'rgba(15, 23, 42, 0.6)',
-                  borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  gap: '1rem',
-                  flexWrap: 'wrap'
+                  background: '#0284c7',
+                  border: 'none',
+                  color: '#fff',
+                  padding: '0.55rem 1.2rem',
+                  borderRadius: '6px',
+                  fontSize: '0.85rem',
+                  fontWeight: 600,
+                  cursor: 'pointer'
                 }}
               >
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flex: 1, minWidth: '300px' }}>
-                  <input
-                    type="text"
-                    value={editorTopicTitle}
-                    onChange={(e) => { setEditorTopicTitle(e.target.value); setIsSaved(false); }}
-                    placeholder="Topic Title (e.g., Topic 1: Client-Server Architecture)"
-                    style={{
-                      flex: 1,
-                      background: 'rgba(30, 41, 59, 0.8)',
-                      border: '1px solid rgba(255, 255, 255, 0.1)',
-                      color: '#fff',
-                      fontSize: '1rem',
-                      fontWeight: 600,
-                      padding: '0.45rem 0.75rem',
-                      borderRadius: '6px',
-                      outline: 'none'
-                    }}
-                  />
+                + Add First Module
+              </button>
+            </div>
+          ) : (
+            <div
+              style={{
+                flex: 1,
+                display: 'flex',
+                flexDirection: 'column',
+                height: '100%',
+                minHeight: 0,
+                overflow: 'hidden'
+              }}
+            >
+              {/* Top Meta Strip: Lesson Name, Duration & Save Actions */}
+              <div
+                style={{
+                  padding: '0.65rem 1.5rem',
+                  borderBottom: '1px solid #e2e8f0',
+                  background: '#ffffff',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '0.35rem',
+                  flexShrink: 0
+                }}
+              >
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.75rem' }}>
+                  {/* Lesson Name & Duration Input */}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flex: 1, minWidth: '320px' }}>
+                    <label style={{ fontSize: '0.86rem', fontWeight: 700, color: '#1e293b', whiteSpace: 'nowrap' }}>
+                      Lesson Name
+                    </label>
 
-                  <input
-                    type="text"
-                    value={editorTopicDuration}
-                    onChange={(e) => { setEditorTopicDuration(e.target.value); setIsSaved(false); }}
-                    placeholder="Duration (15 mins)"
-                    style={{
-                      width: '120px',
-                      background: 'rgba(30, 41, 59, 0.8)',
-                      border: '1px solid rgba(255, 255, 255, 0.1)',
-                      color: '#cbd5e1',
-                      fontSize: '0.85rem',
-                      padding: '0.45rem 0.6rem',
-                      borderRadius: '6px',
-                      outline: 'none'
-                    }}
-                  />
-                </div>
+                    <input
+                      type="text"
+                      value={editorTopicTitle}
+                      onChange={(e) => { setEditorTopicTitle(e.target.value); setIsSaved(false); }}
+                      placeholder="Lesson 1"
+                      style={{
+                        flex: 1,
+                        maxWidth: '460px',
+                        padding: '0.45rem 0.75rem',
+                        background: '#ffffff',
+                        border: '1px solid #cbd5e1',
+                        borderRadius: '6px',
+                        color: '#0f172a',
+                        fontSize: '0.92rem',
+                        fontWeight: 600,
+                        outline: 'none',
+                        transition: 'border-color 0.15s, box-shadow 0.15s'
+                      }}
+                      onFocus={(e) => { e.target.style.borderColor = '#0284c7'; e.target.style.boxShadow = '0 0 0 3px rgba(2,132,199,0.1)'; }}
+                      onBlur={(e) => { e.target.style.borderColor = '#cbd5e1'; e.target.style.boxShadow = 'none'; }}
+                    />
 
-                {/* View Mode Toggle & Save Button */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                  <div style={{ display: 'flex', background: 'rgba(30, 41, 59, 0.8)', borderRadius: '6px', padding: '2px', border: '1px solid rgba(255,255,255,0.08)' }}>
-                    <button
-                      onClick={() => setViewMode('split')}
+                    <div
                       style={{
-                        padding: '4px 10px',
-                        background: viewMode === 'split' ? '#3b82f6' : 'transparent',
-                        color: viewMode === 'split' ? '#fff' : '#94a3b8',
-                        border: 'none',
-                        borderRadius: '4px',
-                        fontSize: '0.75rem',
-                        fontWeight: 600,
-                        cursor: 'pointer'
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '0.35rem',
+                        background: '#f8fafc',
+                        border: '1px solid #cbd5e1',
+                        borderRadius: '6px',
+                        padding: '0.35rem 0.55rem'
                       }}
                     >
-                      Split View
-                    </button>
-                    <button
-                      onClick={() => setViewMode('edit')}
-                      style={{
-                        padding: '4px 10px',
-                        background: viewMode === 'edit' ? '#3b82f6' : 'transparent',
-                        color: viewMode === 'edit' ? '#fff' : '#94a3b8',
-                        border: 'none',
-                        borderRadius: '4px',
-                        fontSize: '0.75rem',
-                        fontWeight: 600,
-                        cursor: 'pointer'
-                      }}
-                    >
-                      Editor Only
-                    </button>
-                    <button
-                      onClick={() => setViewMode('preview')}
-                      style={{
-                        padding: '4px 10px',
-                        background: viewMode === 'preview' ? '#3b82f6' : 'transparent',
-                        color: viewMode === 'preview' ? '#fff' : '#94a3b8',
-                        border: 'none',
-                        borderRadius: '4px',
-                        fontSize: '0.75rem',
-                        fontWeight: 600,
-                        cursor: 'pointer'
-                      }}
-                    >
-                      Live Preview
-                    </button>
+                      <Clock size={13} color="#64748b" />
+                      <input
+                        type="text"
+                        value={editorTopicDuration}
+                        onChange={(e) => { setEditorTopicDuration(e.target.value); setIsSaved(false); }}
+                        placeholder="15 mins"
+                        style={{
+                          width: '65px',
+                          background: 'transparent',
+                          border: 'none',
+                          color: '#334155',
+                          fontSize: '0.78rem',
+                          outline: 'none',
+                          fontWeight: 500
+                        }}
+                        title="Estimated lesson duration"
+                      />
+                    </div>
                   </div>
 
+                  {/* Actions & Save Status */}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+                    {isSaved ? (
+                      <span style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', fontSize: '0.75rem', color: '#10b981', background: '#ecfdf5', padding: '3px 8px', borderRadius: '4px', fontWeight: 600 }}>
+                        <Check size={13} /> Saved
+                      </span>
+                    ) : (
+                      <span style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', fontSize: '0.75rem', color: '#f59e0b', background: '#fef3c7', padding: '3px 8px', borderRadius: '4px', fontWeight: 600 }}>
+                        ● Unsaved
+                      </span>
+                    )}
+
+                    <button
+                      type="button"
+                      onClick={handleCancelEdits}
+                      style={{
+                        padding: '0.42rem 0.85rem',
+                        background: '#ffffff',
+                        border: '1px solid #cbd5e1',
+                        borderRadius: '6px',
+                        color: '#0284c7',
+                        fontSize: '0.8rem',
+                        fontWeight: 600,
+                        cursor: 'pointer'
+                      }}
+                      onMouseEnter={(e) => e.currentTarget.style.background = '#f8fafc'}
+                      onMouseLeave={(e) => e.currentTarget.style.background = '#ffffff'}
+                    >
+                      Cancel
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={handleSaveCurrentTopic}
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '0.35rem',
+                        padding: '0.45rem 1.15rem',
+                        background: '#0284c7',
+                        border: 'none',
+                        borderRadius: '6px',
+                        color: '#ffffff',
+                        fontSize: '0.82rem',
+                        fontWeight: 600,
+                        cursor: 'pointer',
+                        boxShadow: '0 2px 6px rgba(2,132,199,0.25)',
+                        transition: 'background 0.15s'
+                      }}
+                      onMouseEnter={(e) => e.currentTarget.style.background = '#0369a1'}
+                      onMouseLeave={(e) => e.currentTarget.style.background = '#0284c7'}
+                    >
+                      <Save size={14} /> Update Lesson
+                    </button>
+                  </div>
+                </div>
+
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', fontSize: '0.75rem', color: '#64748b' }}>
+                  <Info size={12} color="#94a3b8" />
+                  <span>Lesson titles are displayed publicly wherever required.</span>
+                </div>
+              </div>
+
+              {/* Lesson Content Header: Add Media + Template + [Visual | Text | Split] Tabs */}
+              <div
+                style={{
+                  padding: '0.45rem 1.5rem',
+                  background: '#f8fafc',
+                  borderBottom: '1px solid #e2e8f0',
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  flexWrap: 'wrap',
+                  gap: '0.5rem',
+                  flexShrink: 0
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+                  <span style={{ fontSize: '0.86rem', fontWeight: 700, color: '#1e293b' }}>
+                    Lesson Content
+                  </span>
+
+                  <span
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '0.25rem',
+                      padding: '2px 7px',
+                      border: '1px solid #ef4444',
+                      borderRadius: '4px',
+                      color: '#0284c7',
+                      background: '#f0f9ff',
+                      fontSize: '0.74rem',
+                      fontWeight: 600
+                    }}
+                  >
+                    <Edit3 size={11} color="#0284c7" /> WP Editor
+                  </span>
+
                   <button
-                    onClick={handleSaveCurrentTopic}
+                    type="button"
+                    onClick={() => setShowMediaModal(true)}
                     style={{
                       display: 'flex',
                       alignItems: 'center',
-                      gap: '0.4rem',
-                      background: isSaved ? 'rgba(16, 185, 129, 0.2)' : 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
-                      border: isSaved ? '1px solid rgba(16, 185, 129, 0.4)' : 'none',
-                      color: '#ffffff',
-                      padding: '0.45rem 1rem',
-                      borderRadius: '6px',
-                      fontSize: '0.85rem',
+                      gap: '0.35rem',
+                      background: '#ffffff',
+                      border: '1px solid #0284c7',
+                      color: '#0284c7',
+                      borderRadius: '5px',
+                      padding: '0.32rem 0.65rem',
+                      fontSize: '0.76rem',
+                      fontWeight: 700,
+                      cursor: 'pointer',
+                      boxShadow: '0 1px 2px rgba(2, 132, 199, 0.08)'
+                    }}
+                    title="Upload or insert image/diagram into lesson"
+                  >
+                    <ImageIcon size={13} color="#0284c7" /> Add Media
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={insertTamilEnglishTemplate}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.35rem',
+                      background: '#f0fdf4',
+                      border: '1px solid #bbf7d0',
+                      color: '#15803d',
+                      borderRadius: '5px',
+                      padding: '0.32rem 0.65rem',
+                      fontSize: '0.76rem',
+                      fontWeight: 600,
+                      cursor: 'pointer'
+                    }}
+                    title="Insert English & தமிழ் dual-explanation template"
+                  >
+                    <Globe size={12} /> + தமிழ் & English Template
+                  </button>
+                </div>
+
+                {/* View Mode Tabs (Visual | Text | Split) */}
+                <div
+                  style={{
+                    display: 'flex',
+                    background: '#e2e8f0',
+                    borderRadius: '6px',
+                    padding: '2px',
+                    border: '1px solid #cbd5e1'
+                  }}
+                >
+                  <button
+                    type="button"
+                    onClick={() => setViewMode('visual')}
+                    style={{
+                      padding: '3px 12px',
+                      background: viewMode === 'visual' ? '#ffffff' : 'transparent',
+                      color: viewMode === 'visual' ? '#0284c7' : '#64748b',
+                      border: viewMode === 'visual' ? '1px solid #cbd5e1' : 'none',
+                      borderRadius: '4px',
+                      fontSize: '0.76rem',
                       fontWeight: 600,
                       cursor: 'pointer',
-                      boxShadow: isSaved ? 'none' : '0 2px 10px rgba(16,185,129,0.3)'
+                      boxShadow: viewMode === 'visual' ? '0 1px 2px rgba(0,0,0,0.06)' : 'none'
                     }}
                   >
-                    <Save size={15} />
-                    {isSaved ? 'Saved' : 'Save Changes'}
+                    Visual
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setViewMode('text')}
+                    style={{
+                      padding: '3px 12px',
+                      background: viewMode === 'text' ? '#ffffff' : 'transparent',
+                      color: viewMode === 'text' ? '#0284c7' : '#64748b',
+                      border: viewMode === 'text' ? '1px solid #cbd5e1' : 'none',
+                      borderRadius: '4px',
+                      fontSize: '0.76rem',
+                      fontWeight: 600,
+                      cursor: 'pointer',
+                      boxShadow: viewMode === 'text' ? '0 1px 2px rgba(0,0,0,0.06)' : 'none'
+                    }}
+                  >
+                    Text
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setViewMode('split')}
+                    style={{
+                      padding: '3px 12px',
+                      background: viewMode === 'split' ? '#ffffff' : 'transparent',
+                      color: viewMode === 'split' ? '#0284c7' : '#64748b',
+                      border: viewMode === 'split' ? '1px solid #cbd5e1' : 'none',
+                      borderRadius: '4px',
+                      fontSize: '0.76rem',
+                      fontWeight: 600,
+                      cursor: 'pointer',
+                      boxShadow: viewMode === 'split' ? '0 1px 2px rgba(0,0,0,0.06)' : 'none'
+                    }}
+                  >
+                    Split
                   </button>
                 </div>
               </div>
 
-              {/* Rich Markdown Formatting Toolbar */}
+              {/* WP-Style Rich Text Formatting Toolbar */}
               <div
                 style={{
+                  background: '#ffffff',
+                  borderBottom: '1px solid #e2e8f0',
+                  padding: '0.38rem 1.5rem',
                   display: 'flex',
                   alignItems: 'center',
                   gap: '0.3rem',
-                  padding: '0.45rem 1.5rem',
-                  background: 'rgba(20, 27, 45, 0.9)',
-                  borderBottom: '1px solid rgba(255, 255, 255, 0.06)',
-                  flexWrap: 'wrap'
+                  flexWrap: 'wrap',
+                  flexShrink: 0
                 }}
               >
-                <button
-                  type="button"
-                  onClick={() => insertFormatting('# ', '', 'Heading 1')}
-                  style={toolbarBtnStyle}
-                  title="Heading 1"
+                <select
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    if (val === 'h1') insertFormatting('# ', '', 'Heading 1');
+                    if (val === 'h2') insertFormatting('## ', '', 'Heading 2');
+                    if (val === 'h3') insertFormatting('### ', '', 'Heading 3');
+                    e.target.value = 'p';
+                  }}
+                  defaultValue="p"
+                  style={{
+                    background: '#ffffff',
+                    border: '1px solid #cbd5e1',
+                    borderRadius: '4px',
+                    padding: '3px 6px',
+                    fontSize: '0.75rem',
+                    color: '#334155',
+                    outline: 'none',
+                    cursor: 'pointer'
+                  }}
                 >
-                  H1
-                </button>
-                <button
-                  type="button"
-                  onClick={() => insertFormatting('## ', '', 'Heading 2')}
-                  style={toolbarBtnStyle}
-                  title="Heading 2"
-                >
-                  H2
-                </button>
-                <button
-                  type="button"
-                  onClick={() => insertFormatting('### ', '', 'Heading 3')}
-                  style={toolbarBtnStyle}
-                  title="Heading 3"
-                >
-                  H3
-                </button>
+                  <option value="p">Paragraph</option>
+                  <option value="h1">Heading 1</option>
+                  <option value="h2">Heading 2</option>
+                  <option value="h3">Heading 3</option>
+                </select>
 
-                <div style={separatorStyle} />
+                <div style={{ width: '1px', height: '16px', background: '#cbd5e1', margin: '0 3px' }} />
 
                 <button
                   type="button"
                   onClick={() => insertFormatting('**', '**', 'bold text')}
-                  style={toolbarBtnStyle}
-                  title="Bold"
+                  style={wpToolbarBtnStyle}
+                  title="Bold (Ctrl+B)"
                 >
-                  <Bold size={14} />
+                  <Bold size={13} />
                 </button>
                 <button
                   type="button"
                   onClick={() => insertFormatting('*', '*', 'italic text')}
-                  style={toolbarBtnStyle}
-                  title="Italic"
+                  style={wpToolbarBtnStyle}
+                  title="Italic (Ctrl+I)"
                 >
-                  <Italic size={14} />
-                </button>
-                <button
-                  type="button"
-                  onClick={() => insertFormatting('`', '`', 'code')}
-                  style={toolbarBtnStyle}
-                  title="Inline Code"
-                >
-                  <Code size={14} />
-                </button>
-                <button
-                  type="button"
-                  onClick={() => insertFormatting('```javascript\n', '\n```', '// Your code here')}
-                  style={toolbarBtnStyle}
-                  title="Code Block"
-                >
-                  {'```'}
+                  <Italic size={13} />
                 </button>
 
-                <div style={separatorStyle} />
+                <div style={{ width: '1px', height: '16px', background: '#cbd5e1', margin: '0 3px' }} />
 
                 <button
                   type="button"
                   onClick={() => insertFormatting('- ', '', 'List item')}
-                  style={toolbarBtnStyle}
+                  style={wpToolbarBtnStyle}
                   title="Bullet List"
                 >
-                  <List size={14} />
+                  <List size={13} />
                 </button>
                 <button
                   type="button"
                   onClick={() => insertFormatting('1. ', '', 'Numbered item')}
-                  style={toolbarBtnStyle}
+                  style={wpToolbarBtnStyle}
                   title="Numbered List"
                 >
-                  <ListOrdered size={14} />
+                  <ListOrdered size={13} />
                 </button>
                 <button
                   type="button"
-                  onClick={() => insertFormatting('> 💡 **Key Takeaway**: ', '', 'Important note or tip')}
-                  style={toolbarBtnStyle}
-                  title="Callout Box"
+                  onClick={() => insertFormatting('> 💡 **Key Takeaway**: ', '', 'Important note or takeaway')}
+                  style={wpToolbarBtnStyle}
+                  title="Blockquote / Callout"
                 >
-                  <Quote size={14} />
+                  <Quote size={13} />
                 </button>
                 <button
                   type="button"
                   onClick={insertTableTemplate}
-                  style={toolbarBtnStyle}
-                  title="Insert Markdown Table"
+                  style={wpToolbarBtnStyle}
+                  title="Insert Table"
                 >
-                  <Table size={14} />
+                  <Table size={13} />
                 </button>
 
-                <div style={separatorStyle} />
+                <div style={{ width: '1px', height: '16px', background: '#cbd5e1', margin: '0 3px' }} />
 
-                {/* Tamil & English side-by-side template button */}
                 <button
                   type="button"
-                  onClick={insertTamilEnglishTemplate}
-                  style={{
-                    ...toolbarBtnStyle,
-                    background: 'rgba(99, 102, 241, 0.15)',
-                    color: '#818cf8',
-                    border: '1px solid rgba(99, 102, 241, 0.3)',
-                    fontWeight: 600
-                  }}
-                  title="Insert English & Tamil dual-explanation template"
+                  onClick={() => insertFormatting('`', '`', 'code')}
+                  style={wpToolbarBtnStyle}
+                  title="Inline Code"
                 >
-                  <Globe size={13} style={{ marginRight: '3px' }} />
-                  + தமிழ் & English Template
+                  <Code size={13} />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => insertFormatting('```javascript\n', '\n```', '// Your code here')}
+                  style={{ ...wpToolbarBtnStyle, fontFamily: 'monospace' }}
+                  title="Code Block"
+                >
+                  {'{;}'}
                 </button>
               </div>
 
-              {/* Editor / Live Preview Panes */}
-              <div style={{ flex: 1, display: 'flex', minHeight: 0, overflow: 'hidden' }}>
-                {/* Editor Textarea */}
-                {(viewMode === 'split' || viewMode === 'edit') && (
+              {/* Full-Height Seamless Split Workspace Canvas */}
+              <div
+                style={{
+                  flex: 1,
+                  display: 'flex',
+                  minHeight: 0,
+                  height: '100%',
+                  overflow: 'hidden'
+                }}
+              >
+                {/* Textarea Editor Pane */}
+                {(viewMode === 'text' || viewMode === 'split') && (
                   <div
                     style={{
                       flex: 1,
                       display: 'flex',
                       flexDirection: 'column',
-                      borderRight: viewMode === 'split' ? '1px solid rgba(255, 255, 255, 0.08)' : 'none',
-                      background: '#0d131f'
+                      height: '100%',
+                      minHeight: 0,
+                      borderRight: viewMode === 'split' ? '1px solid #e2e8f0' : 'none',
+                      background: '#ffffff',
+                      overflow: 'hidden'
                     }}
                   >
                     <textarea
@@ -1063,47 +1591,85 @@ export default function CourseBuilderStudio({ onBack, onLaunchPreview }) {
                       placeholder="Write your topic lesson here using Markdown... You can include headings, tables, Tamil translations, and code blocks."
                       style={{
                         flex: 1,
-                        padding: '1.25rem',
-                        background: 'transparent',
+                        width: '100%',
+                        height: '100%',
+                        padding: '1.25rem 1.5rem',
+                        background: '#ffffff',
                         border: 'none',
-                        color: '#f8fafc',
-                        fontSize: '0.95rem',
+                        color: '#0f172a',
+                        fontSize: '0.92rem',
                         fontFamily: 'Consolas, Monaco, "Courier New", monospace',
-                        lineHeight: 1.7,
+                        lineHeight: 1.75,
                         resize: 'none',
                         outline: 'none',
-                        overflowY: 'auto'
+                        overflowY: 'auto',
+                        boxSizing: 'border-box'
                       }}
                     />
                   </div>
                 )}
 
-                {/* Rendered Markdown Preview */}
-                {(viewMode === 'split' || viewMode === 'preview') && (
+                {/* Rendered Visual Preview Pane */}
+                {(viewMode === 'visual' || viewMode === 'split') && (
                   <div
                     style={{
                       flex: 1,
-                      padding: '1.5rem 2rem',
-                      background: '#090d16',
-                      overflowY: 'auto'
+                      height: '100%',
+                      minHeight: 0,
+                      padding: '1.5rem 2.25rem',
+                      background: '#fafbfc',
+                      overflowY: 'auto',
+                      boxSizing: 'border-box'
                     }}
                   >
                     <div style={{ maxWidth: '850px', margin: '0 auto' }}>
-                      <MarkdownRenderer content={editorContent} />
+                      <MarkdownRenderer content={editorContent} theme="light" />
                     </div>
                   </div>
                 )}
               </div>
-            </>
+
+              {/* Bottom Helper Info Strip */}
+              <div
+                style={{
+                  height: '32px',
+                  borderTop: '1px solid #e2e8f0',
+                  background: '#f8fafc',
+                  padding: '0 1.5rem',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  flexShrink: 0,
+                  fontSize: '0.74rem',
+                  color: '#64748b'
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+                  <Info size={12} color="#94a3b8" />
+                  <span>The idea of a summary is a short text to prepare students for the activities within the topic or week.</span>
+                </div>
+                <span style={{ fontSize: '0.7rem', color: '#94a3b8' }}>
+                  Ctrl+S to save
+                </span>
+              </div>
+            </div>
           )}
         </main>
       </div>
 
-      {/* Modal: Create New Course */}
+      {/* Modal: Create New Course (Light Mode) */}
       {showCourseModal && (
         <div style={modalBackdropStyle}>
           <div style={modalBoxStyle}>
-            <h3 style={{ margin: '0 0 1rem', fontSize: '1.2rem', color: '#fff' }}>Add New Course</h3>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem' }}>
+              <h3 style={{ margin: 0, fontSize: '1.18rem', color: '#0f172a', fontWeight: 700 }}>Add New Course</h3>
+              <button
+                onClick={() => setShowCourseModal(false)}
+                style={{ background: 'none', border: 'none', color: '#94a3b8', cursor: 'pointer', padding: 0 }}
+              >
+                <X size={18} />
+              </button>
+            </div>
             <form onSubmit={handleCreateCourse}>
               <div style={{ marginBottom: '1rem' }}>
                 <label style={labelStyle}>Course Title *</label>
@@ -1159,11 +1725,19 @@ export default function CourseBuilderStudio({ onBack, onLaunchPreview }) {
         </div>
       )}
 
-      {/* Modal: Create New Module */}
+      {/* Modal: Create New Module (Light Mode) */}
       {showModuleModal && (
         <div style={modalBackdropStyle}>
           <div style={modalBoxStyle}>
-            <h3 style={{ margin: '0 0 1rem', fontSize: '1.2rem', color: '#fff' }}>Add New Module / Sub-Course</h3>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem' }}>
+              <h3 style={{ margin: 0, fontSize: '1.18rem', color: '#0f172a', fontWeight: 700 }}>Add New Module</h3>
+              <button
+                onClick={() => setShowModuleModal(false)}
+                style={{ background: 'none', border: 'none', color: '#94a3b8', cursor: 'pointer', padding: 0 }}
+              >
+                <X size={18} />
+              </button>
+            </div>
             <form onSubmit={handleCreateModule}>
               <div style={{ marginBottom: '1rem' }}>
                 <label style={labelStyle}>Module Title *</label>
@@ -1208,20 +1782,28 @@ export default function CourseBuilderStudio({ onBack, onLaunchPreview }) {
         </div>
       )}
 
-      {/* Modal: Create New Topic */}
+      {/* Modal: Create New Topic (Light Mode) */}
       {showTopicModal && (
         <div style={modalBackdropStyle}>
           <div style={modalBoxStyle}>
-            <h3 style={{ margin: '0 0 1rem', fontSize: '1.2rem', color: '#fff' }}>Add New Topic</h3>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem' }}>
+              <h3 style={{ margin: 0, fontSize: '1.18rem', color: '#0f172a', fontWeight: 700 }}>Add New Lesson</h3>
+              <button
+                onClick={() => setShowTopicModal(false)}
+                style={{ background: 'none', border: 'none', color: '#94a3b8', cursor: 'pointer', padding: 0 }}
+              >
+                <X size={18} />
+              </button>
+            </div>
             <form onSubmit={handleCreateTopic}>
               <div style={{ marginBottom: '1rem' }}>
-                <label style={labelStyle}>Topic Title *</label>
+                <label style={labelStyle}>Lesson Name *</label>
                 <input
                   type="text"
                   required
                   value={newTopicTitle}
                   onChange={(e) => setNewTopicTitle(e.target.value)}
-                  placeholder="e.g. Topic 1: Understanding Asynchronous JavaScript"
+                  placeholder="e.g. Lesson 1: Introduction to APIs"
                   style={inputStyle}
                 />
               </div>
@@ -1249,10 +1831,302 @@ export default function CourseBuilderStudio({ onBack, onLaunchPreview }) {
                   type="submit"
                   style={primaryBtnStyle}
                 >
-                  Add Topic
+                  Add Lesson
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* Modal: Interactive Add Media & Diagrams */}
+      {showMediaModal && (
+        <div style={modalBackdropStyle}>
+          <div style={{ ...modalBoxStyle, maxWidth: '620px', padding: '1.75rem' }}>
+            {/* Header */}
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <div style={{ width: '32px', height: '32px', borderRadius: '8px', background: '#eff6ff', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#0284c7' }}>
+                  <ImageIcon size={18} />
+                </div>
+                <div>
+                  <h3 style={{ margin: 0, fontSize: '1.18rem', color: '#0f172a', fontWeight: 700 }}>
+                    Add Media & Diagrams
+                  </h3>
+                  <div style={{ fontSize: '0.74rem', color: '#64748b' }}>
+                    Insert images, diagrams, or flowcharts directly into this lesson
+                  </div>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => {
+                  setShowMediaModal(false);
+                  setMediaPreview('');
+                  setMediaUrl('');
+                  setMediaAlt('');
+                }}
+                style={{ background: 'none', border: 'none', color: '#94a3b8', cursor: 'pointer', padding: 0 }}
+              >
+                <X size={18} />
+              </button>
+            </div>
+
+            {/* Modal Tabs: Upload | URL | Presets */}
+            <div style={{ display: 'flex', gap: '6px', borderBottom: '1px solid #e2e8f0', paddingBottom: '0.75rem', marginBottom: '1.25rem' }}>
+              {[
+                { id: 'upload', label: '📁 Upload File', icon: Upload },
+                { id: 'url', label: '🔗 Image URL', icon: Globe },
+                { id: 'presets', label: '🏛️ Tech Presets', icon: Layers }
+              ].map(tab => (
+                <button
+                  key={tab.id}
+                  type="button"
+                  onClick={() => setMediaTab(tab.id)}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '6px',
+                    padding: '0.45rem 0.85rem',
+                    borderRadius: '6px',
+                    border: 'none',
+                    fontSize: '0.82rem',
+                    fontWeight: mediaTab === tab.id ? 700 : 500,
+                    cursor: 'pointer',
+                    background: mediaTab === tab.id ? '#0284c7' : '#f1f5f9',
+                    color: mediaTab === tab.id ? '#ffffff' : '#475569',
+                    transition: 'all 0.15s ease'
+                  }}
+                >
+                  <tab.icon size={14} />
+                  <span>{tab.label}</span>
+                </button>
+              ))}
+            </div>
+
+            {/* TAB 1: Upload from local disk */}
+            {mediaTab === 'upload' && (
+              <div>
+                <input
+                  type="file"
+                  ref={mediaFileInputRef}
+                  accept="image/*"
+                  onChange={handleMediaFileUpload}
+                  style={{ display: 'none' }}
+                />
+
+                <div
+                  onClick={() => mediaFileInputRef.current?.click()}
+                  style={{
+                    border: '2px dashed #93c5fd',
+                    borderRadius: '10px',
+                    padding: '1.5rem',
+                    textAlign: 'center',
+                    background: '#f8fafc',
+                    cursor: 'pointer',
+                    marginBottom: '1rem',
+                    transition: 'all 0.15s ease'
+                  }}
+                  onMouseEnter={e => e.currentTarget.style.background = '#f0f9ff'}
+                  onMouseLeave={e => e.currentTarget.style.background = '#f8fafc'}
+                >
+                  {mediaPreview ? (
+                    <div>
+                      <img
+                        src={mediaPreview}
+                        alt="Preview"
+                        style={{ maxHeight: '150px', maxWidth: '100%', borderRadius: '6px', objectFit: 'contain', marginBottom: '0.5rem', boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}
+                      />
+                      <div style={{ fontSize: '0.78rem', color: '#0284c7', fontWeight: 600 }}>
+                        Click to change image
+                      </div>
+                    </div>
+                  ) : (
+                    <div>
+                      <div style={{ width: '44px', height: '44px', borderRadius: '50%', background: '#e0f2fe', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', color: '#0284c7', marginBottom: '0.5rem' }}>
+                        <Upload size={22} />
+                      </div>
+                      <div style={{ fontSize: '0.88rem', fontWeight: 700, color: '#0f172a' }}>
+                        Click to upload an image from your computer
+                      </div>
+                      <div style={{ fontSize: '0.75rem', color: '#64748b', marginTop: '0.2rem' }}>
+                        Supports PNG, JPG, SVG, WebP, GIF (auto-converts to embeddable media)
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                <div style={{ marginBottom: '1.25rem' }}>
+                  <label style={labelStyle}>Image Caption / Alt Text</label>
+                  <input
+                    type="text"
+                    value={mediaAlt}
+                    onChange={(e) => setMediaAlt(e.target.value)}
+                    placeholder="e.g. Figure 1: System Component Architecture"
+                    style={inputStyle}
+                  />
+                </div>
+
+                <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.75rem' }}>
+                  <button
+                    type="button"
+                    onClick={() => setShowMediaModal(false)}
+                    style={cancelBtnStyle}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="button"
+                    disabled={!mediaPreview}
+                    onClick={() => handleInsertMedia()}
+                    style={{
+                      ...primaryBtnStyle,
+                      opacity: mediaPreview ? 1 : 0.5,
+                      cursor: mediaPreview ? 'pointer' : 'not-allowed'
+                    }}
+                  >
+                    Insert into Lesson
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* TAB 2: Image URL */}
+            {mediaTab === 'url' && (
+              <div>
+                <div style={{ marginBottom: '1rem' }}>
+                  <label style={labelStyle}>Image URL *</label>
+                  <input
+                    type="url"
+                    value={mediaUrl}
+                    onChange={(e) => {
+                      setMediaUrl(e.target.value);
+                      setMediaPreview(e.target.value);
+                    }}
+                    placeholder="https://example.com/images/architecture.png"
+                    style={inputStyle}
+                  />
+                </div>
+
+                <div style={{ marginBottom: '1rem' }}>
+                  <label style={labelStyle}>Image Caption / Alt Text</label>
+                  <input
+                    type="text"
+                    value={mediaAlt}
+                    onChange={(e) => setMediaAlt(e.target.value)}
+                    placeholder="e.g. Relational Database Flowchart"
+                    style={inputStyle}
+                  />
+                </div>
+
+                {mediaPreview && (
+                  <div style={{ marginBottom: '1.25rem', padding: '0.75rem', background: '#f8fafc', borderRadius: '8px', border: '1px solid #e2e8f0', textAlign: 'center' }}>
+                    <div style={{ fontSize: '0.74rem', color: '#64748b', marginBottom: '0.35rem', fontWeight: 600 }}>Live Image Preview</div>
+                    <img
+                      src={mediaPreview}
+                      alt="Preview"
+                      onError={() => {}}
+                      style={{ maxHeight: '140px', maxWidth: '100%', borderRadius: '6px', objectFit: 'contain' }}
+                    />
+                  </div>
+                )}
+
+                <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.75rem' }}>
+                  <button
+                    type="button"
+                    onClick={() => setShowMediaModal(false)}
+                    style={cancelBtnStyle}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="button"
+                    disabled={!mediaUrl.trim()}
+                    onClick={() => handleInsertMedia()}
+                    style={{
+                      ...primaryBtnStyle,
+                      opacity: mediaUrl.trim() ? 1 : 0.5,
+                      cursor: mediaUrl.trim() ? 'pointer' : 'not-allowed'
+                    }}
+                  >
+                    Insert into Lesson
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* TAB 3: Tech Presets */}
+            {mediaTab === 'presets' && (
+              <div>
+                <div style={{ fontSize: '0.78rem', color: '#64748b', marginBottom: '0.85rem' }}>
+                  Select from pre-curated high-resolution technical diagrams for this course:
+                </div>
+
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '0.75rem', maxHeight: '320px', overflowY: 'auto', paddingRight: '4px', marginBottom: '1.25rem' }}>
+                  {PRESET_MEDIA.map((preset, pIdx) => (
+                    <div
+                      key={pIdx}
+                      style={{
+                        border: '1px solid #e2e8f0',
+                        borderRadius: '8px',
+                        padding: '0.75rem',
+                        background: '#ffffff',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'space-between',
+                        gap: '8px',
+                        transition: 'all 0.15s ease'
+                      }}
+                      onMouseEnter={e => { e.currentTarget.style.borderColor = '#0284c7'; e.currentTarget.style.boxShadow = '0 4px 12px rgba(2, 132, 199, 0.1)'; }}
+                      onMouseLeave={e => { e.currentTarget.style.borderColor = '#e2e8f0'; e.currentTarget.style.boxShadow = 'none'; }}
+                    >
+                      <div style={{ height: '90px', borderRadius: '6px', overflow: 'hidden', background: '#f1f5f9' }}>
+                        <img
+                          src={preset.url}
+                          alt={preset.title}
+                          style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                        />
+                      </div>
+                      <div>
+                        <div style={{ fontSize: '0.82rem', fontWeight: 700, color: '#0f172a' }}>{preset.title}</div>
+                        <div style={{ fontSize: '0.72rem', color: '#64748b', lineHeight: 1.4, marginTop: '2px' }}>{preset.desc}</div>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => handleInsertMedia(preset.url, preset.alt)}
+                        style={{
+                          width: '100%',
+                          border: 'none',
+                          background: '#e0f2fe',
+                          color: '#0369a1',
+                          padding: '0.4rem',
+                          borderRadius: '5px',
+                          fontSize: '0.76rem',
+                          fontWeight: 700,
+                          cursor: 'pointer',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          gap: '4px'
+                        }}
+                      >
+                        <Check size={12} /> Insert Diagram
+                      </button>
+                    </div>
+                  ))}
+                </div>
+
+                <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                  <button
+                    type="button"
+                    onClick={() => setShowMediaModal(false)}
+                    style={cancelBtnStyle}
+                  >
+                    Close
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       )}
@@ -1260,33 +2134,54 @@ export default function CourseBuilderStudio({ onBack, onLaunchPreview }) {
   );
 }
 
-// Inline Styles
-const toolbarBtnStyle = {
-  background: 'rgba(255, 255, 255, 0.05)',
-  border: '1px solid rgba(255, 255, 255, 0.08)',
-  color: '#cbd5e1',
-  padding: '4px 8px',
+// Pre-curated Architecture & Technical Diagrams
+const PRESET_MEDIA = [
+  {
+    title: 'Client-Server Architecture',
+    alt: 'Client-Server Architecture Diagram',
+    desc: 'Frontend browser requests connecting through API gateway to backend servers & DB',
+    url: 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=900&auto=format&fit=crop'
+  },
+  {
+    title: 'Full Stack Web Flow',
+    alt: 'Full Stack Web Application Workflow',
+    desc: 'UI React layer communicating via RESTful endpoints to Node / Python runtime',
+    url: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=900&auto=format&fit=crop'
+  },
+  {
+    title: 'Relational Database Schema',
+    alt: 'Relational Database Schema Diagram',
+    desc: 'Structured tables, primary keys, foreign keys and entity-relationship mapping',
+    url: 'https://images.unsplash.com/photo-1544383835-bda2bc66a55d?w=900&auto=format&fit=crop'
+  },
+  {
+    title: 'Cloud & API Integration',
+    alt: 'Cloud & API Microservices Diagram',
+    desc: 'Microservices architecture with serverless functions and real-time pub/sub',
+    url: 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=900&auto=format&fit=crop'
+  }
+];
+
+// Light Mode Styles
+const wpToolbarBtnStyle = {
+  background: '#ffffff',
+  border: '1px solid #cbd5e1',
+  color: '#475569',
+  padding: '4px 7px',
   borderRadius: '4px',
   fontSize: '0.75rem',
   fontWeight: 600,
   cursor: 'pointer',
   display: 'flex',
   alignItems: 'center',
-  gap: '3px'
-};
-
-const separatorStyle = {
-  width: '1px',
-  height: '16px',
-  background: 'rgba(255, 255, 255, 0.1)',
-  margin: '0 4px'
+  justifyContent: 'center'
 };
 
 const modalBackdropStyle = {
   position: 'fixed',
   inset: 0,
-  background: 'rgba(0, 0, 0, 0.75)',
-  backdropFilter: 'blur(6px)',
+  background: 'rgba(15, 23, 42, 0.45)',
+  backdropFilter: 'blur(4px)',
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
@@ -1295,30 +2190,30 @@ const modalBackdropStyle = {
 };
 
 const modalBoxStyle = {
-  background: '#131b2e',
-  border: '1px solid rgba(255, 255, 255, 0.12)',
+  background: '#ffffff',
+  border: '1px solid #e2e8f0',
   borderRadius: '12px',
   padding: '1.75rem',
   width: '100%',
-  maxWidth: '480px',
-  boxShadow: '0 20px 40px rgba(0, 0, 0, 0.5)'
+  maxWidth: '460px',
+  boxShadow: '0 20px 40px -10px rgba(0, 0, 0, 0.15)'
 };
 
 const labelStyle = {
   display: 'block',
-  fontSize: '0.8rem',
+  fontSize: '0.82rem',
   fontWeight: 600,
-  color: '#94a3b8',
+  color: '#334155',
   marginBottom: '0.35rem'
 };
 
 const inputStyle = {
   width: '100%',
   padding: '0.6rem 0.8rem',
-  background: 'rgba(15, 23, 42, 0.8)',
-  border: '1px solid rgba(255, 255, 255, 0.12)',
+  background: '#ffffff',
+  border: '1px solid #cbd5e1',
   borderRadius: '6px',
-  color: '#ffffff',
+  color: '#0f172a',
   fontSize: '0.9rem',
   outline: 'none',
   boxSizing: 'border-box'
@@ -1326,22 +2221,23 @@ const inputStyle = {
 
 const cancelBtnStyle = {
   padding: '0.5rem 1rem',
-  background: 'rgba(255, 255, 255, 0.08)',
-  border: '1px solid rgba(255, 255, 255, 0.1)',
-  color: '#cbd5e1',
+  background: '#ffffff',
+  border: '1px solid #cbd5e1',
+  color: '#475569',
   borderRadius: '6px',
   fontSize: '0.85rem',
+  fontWeight: 500,
   cursor: 'pointer'
 };
 
 const primaryBtnStyle = {
   padding: '0.5rem 1.25rem',
-  background: 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)',
+  background: '#0284c7',
   border: 'none',
   color: '#ffffff',
   borderRadius: '6px',
   fontSize: '0.85rem',
   fontWeight: 600,
   cursor: 'pointer',
-  boxShadow: '0 2px 10px rgba(37,99,235,0.35)'
+  boxShadow: '0 2px 6px rgba(2,132,199,0.3)'
 };

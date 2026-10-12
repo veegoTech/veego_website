@@ -5,7 +5,7 @@ import {
   Server, RefreshCw, Trash2, Key, Star, ShieldAlert, Award, Grid, HelpCircle,
   BookOpen, ExternalLink, Upload, Download, FileText, Lock, AlertTriangle, Menu, X,
   Search, ChevronLeft, ChevronRight, Copy, Receipt, Briefcase,
-  CreditCard, FileCheck2, Edit3
+  CreditCard, FileCheck2, Edit3, GraduationCap
 } from 'lucide-react';
 import {
   getAssignmentValidations,
@@ -1196,132 +1196,250 @@ export default function Dashboard({ onSelectCourse, enrolledCourse, setEnrolledC
       {/* 🧭 LEFT SIDE NAVIGATION PANEL (DESKTOP + MOBILE DRAWER) */}
       <aside style={{
         width: isMobile ? '280px' : '260px',
+        height: '100vh',
+        maxHeight: '100vh',
+        position: isMobile ? 'fixed' : 'sticky',
+        top: 0,
+        left: 0,
+        bottom: 0,
         background: '#ffffff',
-        borderRight: '1px solid var(--surface-border)',
-        padding: '2.25rem 1.25rem',
+        borderRight: '1px solid #e2e8f0',
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'space-between',
         flexShrink: 0,
-        boxShadow: isMobile ? '0 20px 25px -5px rgba(0,0,0,0.15)' : 'var(--shadow-sm)',
-        position: isMobile ? 'fixed' : 'relative',
-        top: 0,
-        left: 0,
-        bottom: 0,
-        zIndex: isMobile ? 1000 : 'auto',
+        boxShadow: isMobile ? '0 20px 25px -5px rgba(0,0,0,0.15)' : 'none',
+        zIndex: isMobile ? 1000 : 50,
         transform: isMobile && !isMobileMenuOpen ? 'translateX(-100%)' : 'translateX(0)',
-        transition: 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-        overflowY: 'auto'
+        transition: 'transform 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
+        overflow: 'hidden',
+        boxSizing: 'border-box'
       }}>
-        <div>
-          {/* Logo Brand */}
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2.5rem', paddingLeft: '0.5rem' }}>
-            <div style={{ display: 'flex', flexDirection: 'column' }}>
-              <h2 style={{ fontSize: '1.4rem', fontWeight: 900, color: 'var(--text-primary)', margin: 0, letterSpacing: '-0.5px' }}>
-                VEEGO
-              </h2>
-              <span style={{ fontSize: '0.68rem', color: 'var(--accent-primary)', letterSpacing: '2px', fontWeight: 800 }}>LEARNING PORTAL</span>
+        {/* Brand Header */}
+        <div style={{
+          padding: '1.2rem 1.25rem 1rem 1.25rem',
+          borderBottom: '1px solid #f1f5f9',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          flexShrink: 0
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <div style={{
+              width: '36px',
+              height: '36px',
+              borderRadius: '10px',
+              background: 'linear-gradient(135deg, #1d4ed8 0%, #3b82f6 100%)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: '#ffffff',
+              boxShadow: '0 4px 10px rgba(37,99,235,0.25)',
+              flexShrink: 0
+            }}>
+              <GraduationCap size={20} />
             </div>
-            {isMobile && (
+            <div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <span style={{ fontSize: '1.15rem', fontWeight: 900, color: '#0f172a', letterSpacing: '-0.4px', lineHeight: 1.1 }}>
+                  VEEGO
+                </span>
+                <span style={{ fontSize: '0.62rem', fontWeight: 800, color: '#2563eb', background: '#eff6ff', padding: '1px 5px', borderRadius: '4px', border: '1px solid #bfdbfe' }}>
+                  LMS
+                </span>
+              </div>
+              <div style={{ fontSize: '0.65rem', color: '#64748b', fontWeight: 600, letterSpacing: '0.5px' }}>
+                LEARNING PORTAL
+              </div>
+            </div>
+          </div>
+          {isMobile && (
+            <button
+              type="button"
+              onClick={() => setIsMobileMenuOpen(false)}
+              style={{ background: 'none', border: 'none', color: '#64748b', cursor: 'pointer', padding: '4px' }}
+            >
+              <X size={18} />
+            </button>
+          )}
+        </div>
+
+        {/* Navigation Scrollable Body */}
+        <div style={{
+          flex: 1,
+          overflowY: 'auto',
+          padding: '0.75rem 0.65rem',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '1.25rem'
+        }}>
+          {/* Section 1: Main Navigation */}
+          <div>
+            <div style={{
+              fontSize: '0.66rem',
+              fontWeight: 800,
+              color: '#94a3b8',
+              textTransform: 'uppercase',
+              letterSpacing: '0.08em',
+              padding: '0.2rem 0.65rem 0.4rem 0.65rem'
+            }}>
+              Menu
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '3px' }}>
               <button
-                type="button"
-                onClick={() => setIsMobileMenuOpen(false)}
-                style={{ background: 'none', border: 'none', color: '#64748b', cursor: 'pointer', padding: 4 }}
+                onClick={() => { setActiveTab('overview'); if (isMobile) setIsMobileMenuOpen(false); }}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '10px',
+                  width: '100%',
+                  border: 'none',
+                  padding: '0.55rem 0.75rem',
+                  fontSize: '0.86rem',
+                  fontWeight: activeTab === 'overview' ? 700 : 500,
+                  borderRadius: '8px',
+                  cursor: 'pointer',
+                  textAlign: 'left',
+                  background: activeTab === 'overview' ? '#eff6ff' : 'transparent',
+                  color: activeTab === 'overview' ? '#1d4ed8' : '#334155',
+                  borderLeft: activeTab === 'overview' ? '3px solid #2563eb' : '3px solid transparent',
+                  transition: 'all 0.15s ease'
+                }}
+                onMouseEnter={e => { if (activeTab !== 'overview') { e.currentTarget.style.background = '#f8fafc'; e.currentTarget.style.color = '#0f172a'; } }}
+                onMouseLeave={e => { if (activeTab !== 'overview') { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#334155'; } }}
               >
-                <X size={20} />
+                <Grid size={17} color={activeTab === 'overview' ? '#2563eb' : '#64748b'} />
+                <span>Dashboard</span>
               </button>
-            )}
+
+              <button
+                onClick={() => { setActiveTab('courses'); if (isMobile) setIsMobileMenuOpen(false); }}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '10px',
+                  width: '100%',
+                  border: 'none',
+                  padding: '0.55rem 0.75rem',
+                  fontSize: '0.86rem',
+                  fontWeight: activeTab === 'courses' ? 700 : 500,
+                  borderRadius: '8px',
+                  cursor: 'pointer',
+                  textAlign: 'left',
+                  background: activeTab === 'courses' ? '#eff6ff' : 'transparent',
+                  color: activeTab === 'courses' ? '#1d4ed8' : '#334155',
+                  borderLeft: activeTab === 'courses' ? '3px solid #2563eb' : '3px solid transparent',
+                  transition: 'all 0.15s ease'
+                }}
+                onMouseEnter={e => { if (activeTab !== 'courses') { e.currentTarget.style.background = '#f8fafc'; e.currentTarget.style.color = '#0f172a'; } }}
+                onMouseLeave={e => { if (activeTab !== 'courses') { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#334155'; } }}
+              >
+                <BookOpen size={17} color={activeTab === 'courses' ? '#2563eb' : '#64748b'} />
+                <span>Course Catalog</span>
+              </button>
+            </div>
           </div>
 
-          {/* Navigation Links */}
-          <nav style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-            <button
-              onClick={() => { setActiveTab('overview'); if (isMobile) setIsMobileMenuOpen(false); }}
-              style={{
-                display: 'flex', alignItems: 'center', gap: '10px', width: '100%', border: 'none', padding: '0.8rem 1rem',
-                fontSize: '0.92rem', fontWeight: 700, borderRadius: '12px', cursor: 'pointer', textAlign: 'left',
-                background: activeTab === 'overview' ? 'linear-gradient(135deg, #3b82f6 0%, #6366f1 100%)' : 'transparent',
-                color: activeTab === 'overview' ? '#ffffff' : 'var(--text-secondary)',
-                boxShadow: activeTab === 'overview' ? 'var(--glow-primary)' : 'none',
-                transition: 'var(--transition)'
-              }}
-            >
-              <Grid size={18} /> Dashboard
-            </button>
-
-            <button
-              onClick={() => { setActiveTab('courses'); if (isMobile) setIsMobileMenuOpen(false); }}
-              style={{
-                display: 'flex', alignItems: 'center', gap: '10px', width: '100%', border: 'none', padding: '0.8rem 1rem',
-                fontSize: '0.92rem', fontWeight: 700, borderRadius: '12px', cursor: 'pointer', textAlign: 'left',
-                background: activeTab === 'courses' ? 'linear-gradient(135deg, #3b82f6 0%, #6366f1 100%)' : 'transparent',
-                color: activeTab === 'courses' ? '#ffffff' : 'var(--text-secondary)',
-                boxShadow: activeTab === 'courses' ? 'var(--glow-primary)' : 'none',
-                transition: 'var(--transition)'
-              }}
-            >
-              <BookOpen size={18} /> Course Catalog
-            </button>
-
-            {/* Admin only sections */}
-            {(session?.role === 'admin' || session?.role === 'staff') && (
-              <>
-                <div style={{ height: '1px', background: 'var(--surface-border)', margin: '1rem 0' }} />
-                <span style={{ fontSize: '0.68rem', color: 'var(--text-tertiary)', fontWeight: 800, textTransform: 'uppercase', paddingLeft: '1rem', marginBottom: '0.4rem', display: 'block', letterSpacing: '0.5px' }}>Administration</span>
-
+          {/* Section 2: Administration (Admin & Staff) */}
+          {(session?.role === 'admin' || session?.role === 'staff') && (
+            <div>
+              <div style={{
+                fontSize: '0.66rem',
+                fontWeight: 800,
+                color: '#94a3b8',
+                textTransform: 'uppercase',
+                letterSpacing: '0.08em',
+                padding: '0.2rem 0.65rem 0.4rem 0.65rem'
+              }}>
+                Administration
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '3px' }}>
                 <button
                   onClick={() => { setActiveTab('register'); if (isMobile) setIsMobileMenuOpen(false); }}
                   style={{
-                    display: 'flex', alignItems: 'center', gap: '10px', width: '100%', border: 'none', padding: '0.8rem 1rem',
-                    fontSize: '0.92rem', fontWeight: 700, borderRadius: '12px', cursor: 'pointer', textAlign: 'left',
-                    background: activeTab === 'register' ? 'linear-gradient(135deg, #3b82f6 0%, #6366f1 100%)' : 'transparent',
-                    color: activeTab === 'register' ? '#ffffff' : 'var(--text-secondary)',
-                    boxShadow: activeTab === 'register' ? 'var(--glow-primary)' : 'none',
-                    transition: 'var(--transition)'
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '10px',
+                    width: '100%',
+                    border: 'none',
+                    padding: '0.55rem 0.75rem',
+                    fontSize: '0.86rem',
+                    fontWeight: activeTab === 'register' ? 700 : 500,
+                    borderRadius: '8px',
+                    cursor: 'pointer',
+                    textAlign: 'left',
+                    background: activeTab === 'register' ? '#eff6ff' : 'transparent',
+                    color: activeTab === 'register' ? '#1d4ed8' : '#334155',
+                    borderLeft: activeTab === 'register' ? '3px solid #2563eb' : '3px solid transparent',
+                    transition: 'all 0.15s ease'
                   }}
+                  onMouseEnter={e => { if (activeTab !== 'register') { e.currentTarget.style.background = '#f8fafc'; e.currentTarget.style.color = '#0f172a'; } }}
+                  onMouseLeave={e => { if (activeTab !== 'register') { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#334155'; } }}
                 >
-                  <UserPlus size={18} /> Enroll Student
+                  <UserPlus size={17} color={activeTab === 'register' ? '#2563eb' : '#64748b'} />
+                  <span>Enroll Student</span>
                 </button>
 
                 <button
                   onClick={() => { setActiveTab('database'); if (isMobile) setIsMobileMenuOpen(false); }}
                   style={{
-                    display: 'flex', alignItems: 'center', gap: '10px', width: '100%', border: 'none', padding: '0.8rem 1rem',
-                    fontSize: '0.92rem', fontWeight: 700, borderRadius: '12px', cursor: 'pointer', textAlign: 'left',
-                    background: activeTab === 'database' ? 'linear-gradient(135deg, #3b82f6 0%, #6366f1 100%)' : 'transparent',
-                    color: activeTab === 'database' ? '#ffffff' : 'var(--text-secondary)',
-                    boxShadow: activeTab === 'database' ? 'var(--glow-primary)' : 'none',
-                    transition: 'var(--transition)'
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '10px',
+                    width: '100%',
+                    border: 'none',
+                    padding: '0.55rem 0.75rem',
+                    fontSize: '0.86rem',
+                    fontWeight: activeTab === 'database' ? 700 : 500,
+                    borderRadius: '8px',
+                    cursor: 'pointer',
+                    textAlign: 'left',
+                    background: activeTab === 'database' ? '#eff6ff' : 'transparent',
+                    color: activeTab === 'database' ? '#1d4ed8' : '#334155',
+                    borderLeft: activeTab === 'database' ? '3px solid #2563eb' : '3px solid transparent',
+                    transition: 'all 0.15s ease'
                   }}
+                  onMouseEnter={e => { if (activeTab !== 'database') { e.currentTarget.style.background = '#f8fafc'; e.currentTarget.style.color = '#0f172a'; } }}
+                  onMouseLeave={e => { if (activeTab !== 'database') { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#334155'; } }}
                 >
-                  <Users size={18} /> Live Database
+                  <Users size={17} color={activeTab === 'database' ? '#2563eb' : '#64748b'} />
+                  <span>Live Database</span>
                 </button>
 
                 <button
                   onClick={() => { setActiveTab('grading'); fetchStudents(); if (isMobile) setIsMobileMenuOpen(false); }}
                   style={{
-                    display: 'flex', alignItems: 'center', gap: '10px', width: '100%', border: 'none', padding: '0.8rem 1rem',
-                    fontSize: '0.92rem', fontWeight: 700, borderRadius: '12px', cursor: 'pointer', textAlign: 'left',
-                    background: activeTab === 'grading' ? 'linear-gradient(135deg, #3b82f6 0%, #6366f1 100%)' : 'transparent',
-                    color: activeTab === 'grading' ? '#ffffff' : 'var(--text-secondary)',
-                    boxShadow: activeTab === 'grading' ? 'var(--glow-primary)' : 'none',
-                    transition: 'var(--transition)',
-                    position: 'relative'
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '10px',
+                    width: '100%',
+                    border: 'none',
+                    padding: '0.55rem 0.75rem',
+                    fontSize: '0.86rem',
+                    fontWeight: activeTab === 'grading' ? 700 : 500,
+                    borderRadius: '8px',
+                    cursor: 'pointer',
+                    textAlign: 'left',
+                    background: activeTab === 'grading' ? '#eff6ff' : 'transparent',
+                    color: activeTab === 'grading' ? '#1d4ed8' : '#334155',
+                    borderLeft: activeTab === 'grading' ? '3px solid #2563eb' : '3px solid transparent',
+                    transition: 'all 0.15s ease'
                   }}
+                  onMouseEnter={e => { if (activeTab !== 'grading') { e.currentTarget.style.background = '#f8fafc'; e.currentTarget.style.color = '#0f172a'; } }}
+                  onMouseLeave={e => { if (activeTab !== 'grading') { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#334155'; } }}
                 >
-                  <CheckCircle size={18} /> Review Tasks
+                  <CheckCircle size={17} color={activeTab === 'grading' ? '#2563eb' : '#64748b'} />
+                  <span style={{ flex: 1 }}>Review Tasks</span>
                   {pendingCount > 0 && (
                     <span style={{
                       background: '#ef4444',
                       color: '#ffffff',
-                      fontSize: '0.72rem',
+                      fontSize: '0.68rem',
                       fontWeight: 800,
-                      padding: '2px 8px',
-                      borderRadius: '12px',
-                      marginLeft: 'auto',
-                      boxShadow: '0 2px 6px rgba(239, 68, 68, 0.4)'
+                      padding: '1px 6px',
+                      borderRadius: '10px'
                     }}>
-                      {pendingCount} New
+                      {pendingCount}
                     </span>
                   )}
                 </button>
@@ -1329,119 +1447,263 @@ export default function Dashboard({ onSelectCourse, enrolledCourse, setEnrolledC
                 <button
                   onClick={() => { setActiveTab('certificates'); fetchStudents(); if (isMobile) setIsMobileMenuOpen(false); }}
                   style={{
-                    display: 'flex', alignItems: 'center', gap: '10px', width: '100%', border: 'none', padding: '0.8rem 1rem',
-                    fontSize: '0.92rem', fontWeight: 700, borderRadius: '12px', cursor: 'pointer', textAlign: 'left',
-                    background: activeTab === 'certificates' ? 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)' : 'transparent',
-                    color: activeTab === 'certificates' ? '#ffffff' : 'var(--text-secondary)',
-                    boxShadow: activeTab === 'certificates' ? '0 4px 12px rgba(245,158,11,0.35)' : 'none',
-                    transition: 'var(--transition)'
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '10px',
+                    width: '100%',
+                    border: 'none',
+                    padding: '0.55rem 0.75rem',
+                    fontSize: '0.86rem',
+                    fontWeight: activeTab === 'certificates' ? 700 : 500,
+                    borderRadius: '8px',
+                    cursor: 'pointer',
+                    textAlign: 'left',
+                    background: activeTab === 'certificates' ? '#eff6ff' : 'transparent',
+                    color: activeTab === 'certificates' ? '#1d4ed8' : '#334155',
+                    borderLeft: activeTab === 'certificates' ? '3px solid #2563eb' : '3px solid transparent',
+                    transition: 'all 0.15s ease'
                   }}
+                  onMouseEnter={e => { if (activeTab !== 'certificates') { e.currentTarget.style.background = '#f8fafc'; e.currentTarget.style.color = '#0f172a'; } }}
+                  onMouseLeave={e => { if (activeTab !== 'certificates') { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#334155'; } }}
                 >
-                  <Upload size={18} /> Certificate Upload
+                  <Upload size={17} color={activeTab === 'certificates' ? '#2563eb' : '#64748b'} />
+                  <span>Certificate Upload</span>
                 </button>
 
                 <button
                   onClick={() => { setActiveTab('af_certificates'); fetchStudents(); if (isMobile) setIsMobileMenuOpen(false); }}
                   style={{
-                    display: 'flex', alignItems: 'center', gap: '10px', width: '100%', border: 'none', padding: '0.8rem 1rem',
-                    fontSize: '0.92rem', fontWeight: 700, borderRadius: '12px', cursor: 'pointer', textAlign: 'left',
-                    background: (activeTab === 'prepare_certs' || activeTab === 'af_certificates' || activeTab === 'idcards' || activeTab === 'foclen') ? 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)' : 'transparent',
-                    color: (activeTab === 'prepare_certs' || activeTab === 'af_certificates' || activeTab === 'idcards' || activeTab === 'foclen') ? '#ffffff' : 'var(--text-secondary)',
-                    boxShadow: (activeTab === 'prepare_certs' || activeTab === 'af_certificates' || activeTab === 'idcards' || activeTab === 'foclen') ? '0 4px 12px rgba(245,158,11,0.35)' : 'none',
-                    transition: 'var(--transition)'
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '10px',
+                    width: '100%',
+                    border: 'none',
+                    padding: '0.55rem 0.75rem',
+                    fontSize: '0.86rem',
+                    fontWeight: (['prepare_certs', 'af_certificates', 'idcards', 'foclen'].includes(activeTab)) ? 700 : 500,
+                    borderRadius: '8px',
+                    cursor: 'pointer',
+                    textAlign: 'left',
+                    background: (['prepare_certs', 'af_certificates', 'idcards', 'foclen'].includes(activeTab)) ? '#eff6ff' : 'transparent',
+                    color: (['prepare_certs', 'af_certificates', 'idcards', 'foclen'].includes(activeTab)) ? '#1d4ed8' : '#334155',
+                    borderLeft: (['prepare_certs', 'af_certificates', 'idcards', 'foclen'].includes(activeTab)) ? '3px solid #2563eb' : '3px solid transparent',
+                    transition: 'all 0.15s ease'
                   }}
+                  onMouseEnter={e => { if (!['prepare_certs', 'af_certificates', 'idcards', 'foclen'].includes(activeTab)) { e.currentTarget.style.background = '#f8fafc'; e.currentTarget.style.color = '#0f172a'; } }}
+                  onMouseLeave={e => { if (!['prepare_certs', 'af_certificates', 'idcards', 'foclen'].includes(activeTab)) { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#334155'; } }}
                 >
-                  <Award size={18} /> Prepare Certificate / ID Card
+                  <Award size={17} color={['prepare_certs', 'af_certificates', 'idcards', 'foclen'].includes(activeTab) ? '#2563eb' : '#64748b'} />
+                  <span>Certificates & ID</span>
                 </button>
 
                 <button
                   onClick={() => { setActiveTab('invoices'); fetchStudents(); if (isMobile) setIsMobileMenuOpen(false); }}
                   style={{
-                    display: 'flex', alignItems: 'center', gap: '10px', width: '100%', border: 'none', padding: '0.8rem 1rem',
-                    fontSize: '0.92rem', fontWeight: 700, borderRadius: '12px', cursor: 'pointer', textAlign: 'left',
-                    background: activeTab === 'invoices' ? 'linear-gradient(135deg, #0A3D91 0%, #1d4ed8 100%)' : 'transparent',
-                    color: activeTab === 'invoices' ? '#ffffff' : 'var(--text-secondary)',
-                    boxShadow: activeTab === 'invoices' ? '0 4px 12px rgba(10, 61, 145, 0.35)' : 'none',
-                    transition: 'var(--transition)'
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '10px',
+                    width: '100%',
+                    border: 'none',
+                    padding: '0.55rem 0.75rem',
+                    fontSize: '0.86rem',
+                    fontWeight: activeTab === 'invoices' ? 700 : 500,
+                    borderRadius: '8px',
+                    cursor: 'pointer',
+                    textAlign: 'left',
+                    background: activeTab === 'invoices' ? '#eff6ff' : 'transparent',
+                    color: activeTab === 'invoices' ? '#1d4ed8' : '#334155',
+                    borderLeft: activeTab === 'invoices' ? '3px solid #2563eb' : '3px solid transparent',
+                    transition: 'all 0.15s ease'
                   }}
+                  onMouseEnter={e => { if (activeTab !== 'invoices') { e.currentTarget.style.background = '#f8fafc'; e.currentTarget.style.color = '#0f172a'; } }}
+                  onMouseLeave={e => { if (activeTab !== 'invoices') { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#334155'; } }}
                 >
-                  <Receipt size={18} /> Fee Invoices
+                  <Receipt size={17} color={activeTab === 'invoices' ? '#2563eb' : '#64748b'} />
+                  <span>Fee Invoices</span>
                 </button>
+              </div>
+            </div>
+          )}
 
-                <button
-                  onClick={() => { setActiveTab('builder'); if (isMobile) setIsMobileMenuOpen(false); }}
-                  style={{
-                    display: 'flex', alignItems: 'center', gap: '10px', width: '100%', border: 'none', padding: '0.8rem 1rem',
-                    fontSize: '0.92rem', fontWeight: 700, borderRadius: '12px', cursor: 'pointer', textAlign: 'left',
-                    background: activeTab === 'builder' ? 'linear-gradient(135deg, #10b981 0%, #059669 100%)' : 'transparent',
-                    color: activeTab === 'builder' ? '#ffffff' : 'var(--text-secondary)',
-                    boxShadow: activeTab === 'builder' ? '0 4px 12px rgba(16, 185, 129, 0.35)' : 'none',
-                    transition: 'var(--transition)'
-                  }}
-                >
-                  <Edit3 size={18} /> Course Builder (LMS Studio)
-                </button>
-              </>
-            )}
+          {/* Section 3: Studio & Sessions */}
+          <div>
+            <div style={{
+              fontSize: '0.66rem',
+              fontWeight: 800,
+              color: '#94a3b8',
+              textTransform: 'uppercase',
+              letterSpacing: '0.08em',
+              padding: '0.2rem 0.65rem 0.4rem 0.65rem'
+            }}>
+              Studio & Tools
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '3px' }}>
+              <button
+                onClick={() => { setActiveTab('builder'); if (isMobile) setIsMobileMenuOpen(false); }}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '10px',
+                  width: '100%',
+                  padding: '0.55rem 0.75rem',
+                  fontSize: '0.86rem',
+                  fontWeight: activeTab === 'builder' ? 700 : 600,
+                  borderRadius: '8px',
+                  cursor: 'pointer',
+                  textAlign: 'left',
+                  background: activeTab === 'builder' ? '#f0fdf4' : '#fafafa',
+                  color: activeTab === 'builder' ? '#15803d' : '#334155',
+                  border: activeTab === 'builder' ? '1px solid #bbf7d0' : '1px solid #e2e8f0',
+                  borderLeft: activeTab === 'builder' ? '3px solid #16a34a' : '3px solid transparent',
+                  transition: 'all 0.15s ease'
+                }}
+                onMouseEnter={e => { if (activeTab !== 'builder') { e.currentTarget.style.background = '#f1f5f9'; e.currentTarget.style.color = '#0f172a'; } }}
+                onMouseLeave={e => { if (activeTab !== 'builder') { e.currentTarget.style.background = '#fafafa'; e.currentTarget.style.color = '#334155'; } }}
+              >
+                <Edit3 size={16} color={activeTab === 'builder' ? '#16a34a' : '#0284c7'} />
+                <span style={{ flex: 1 }}>Course Builder</span>
+                <span style={{
+                  fontSize: '0.62rem',
+                  background: '#dcfce7',
+                  color: '#15803d',
+                  padding: '1px 6px',
+                  borderRadius: '4px',
+                  fontWeight: 700,
+                  border: '1px solid #bbf7d0'
+                }}>
+                  Studio
+                </span>
+              </button>
 
-            {session?.role !== 'student' && (
-              <>
-                <div style={{ height: '1px', background: 'var(--surface-border)', margin: '1rem 0' }} />
+              {session?.role !== 'student' && (
                 <button
                   onClick={() => { setActiveTab('demos'); if (isMobile) setIsMobileMenuOpen(false); }}
                   style={{
-                    display: 'flex', alignItems: 'center', gap: '10px', width: '100%', border: 'none', padding: '0.8rem 1rem',
-                    fontSize: '0.92rem', fontWeight: 700, borderRadius: '12px', cursor: 'pointer', textAlign: 'left',
-                    background: activeTab === 'demos' ? 'linear-gradient(135deg, #3b82f6 0%, #6366f1 100%)' : 'transparent',
-                    color: activeTab === 'demos' ? '#ffffff' : 'var(--text-secondary)',
-                    boxShadow: activeTab === 'demos' ? 'var(--glow-primary)' : 'none',
-                    transition: 'var(--transition)'
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '10px',
+                    width: '100%',
+                    border: 'none',
+                    padding: '0.55rem 0.75rem',
+                    fontSize: '0.86rem',
+                    fontWeight: activeTab === 'demos' ? 700 : 500,
+                    borderRadius: '8px',
+                    cursor: 'pointer',
+                    textAlign: 'left',
+                    background: activeTab === 'demos' ? '#eff6ff' : 'transparent',
+                    color: activeTab === 'demos' ? '#1d4ed8' : '#334155',
+                    borderLeft: activeTab === 'demos' ? '3px solid #2563eb' : '3px solid transparent',
+                    transition: 'all 0.15s ease'
                   }}
+                  onMouseEnter={e => { if (activeTab !== 'demos') { e.currentTarget.style.background = '#f8fafc'; e.currentTarget.style.color = '#0f172a'; } }}
+                  onMouseLeave={e => { if (activeTab !== 'demos') { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#334155'; } }}
                 >
-                  <Sparkles size={18} /> Induction Sessions
+                  <Sparkles size={17} color={activeTab === 'demos' ? '#2563eb' : '#64748b'} />
+                  <span>Induction Sessions</span>
                 </button>
-              </>
-            )}
-          </nav>
+              )}
+            </div>
+          </div>
         </div>
 
-        {/* Footer Account Details */}
+        {/* Footer User Profile Card */}
         <div style={{
-          background: 'var(--bg-color)',
-          border: '1px solid var(--surface-border)',
-          borderRadius: '16px',
-          padding: '0.88rem',
+          padding: '0.85rem 1rem',
+          borderTop: '1px solid #f1f5f9',
+          background: '#fafbfc',
           display: 'flex',
-          flexDirection: 'column',
-          gap: '8px'
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          flexShrink: 0
         }}>
-          <div>
-            <div style={{ fontSize: '0.85rem', fontWeight: 800, color: 'var(--text-primary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{session.name}</div>
-            <div style={{ fontSize: '0.68rem', fontWeight: 700, color: 'var(--accent-primary)', textTransform: 'uppercase' }}>{session.role} Portal</div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '9px', minWidth: 0 }}>
+            <div style={{
+              width: '32px',
+              height: '32px',
+              borderRadius: '50%',
+              background: 'linear-gradient(135deg, #4f46e5 0%, #3b82f6 100%)',
+              color: '#ffffff',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontWeight: 800,
+              fontSize: '0.78rem',
+              flexShrink: 0
+            }}>
+              {(session?.name || 'U').charAt(0).toUpperCase()}
+            </div>
+            <div style={{ minWidth: 0 }}>
+              <div style={{
+                fontSize: '0.82rem',
+                fontWeight: 700,
+                color: '#0f172a',
+                whiteSpace: 'nowrap',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis'
+              }}>
+                {session?.name || 'User'}
+              </div>
+              <div style={{
+                fontSize: '0.64rem',
+                fontWeight: 700,
+                color: '#2563eb',
+                textTransform: 'uppercase'
+              }}>
+                {session?.role || 'Guest'} Portal
+              </div>
+            </div>
           </div>
+
           <button
             onClick={onLogout}
+            title="Log Out"
             style={{
-              width: '100%', background: 'rgba(239, 68, 68, 0.05)', color: '#ef4444', border: '1px solid rgba(239, 68, 68, 0.15)',
-              borderRadius: '8px', padding: '0.4rem 0', fontSize: '0.78rem', fontWeight: 700, cursor: 'pointer',
-              display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px', transition: 'var(--transition)'
+              background: 'transparent',
+              border: '1px solid #e2e8f0',
+              borderRadius: '6px',
+              padding: '6px',
+              color: '#64748b',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              transition: 'all 0.15s ease'
             }}
-            onMouseEnter={e => e.currentTarget.style.backgroundColor = 'rgba(239, 68, 68, 0.1)'}
-            onMouseLeave={e => e.currentTarget.style.backgroundColor = 'rgba(239, 68, 68, 0.05)'}
+            onMouseEnter={e => { e.currentTarget.style.color = '#ef4444'; e.currentTarget.style.borderColor = '#fca5a5'; e.currentTarget.style.background = '#fef2f2'; }}
+            onMouseLeave={e => { e.currentTarget.style.color = '#64748b'; e.currentTarget.style.borderColor = '#e2e8f0'; e.currentTarget.style.background = 'transparent'; }}
           >
-            <LogOut size={12} /> Log Out
+            <LogOut size={14} />
           </button>
         </div>
       </aside>
 
       {/* 🖥️ MAIN WORKSPACE CONTENT CONTAINER */}
-      <main style={{ flex: 1, padding: (activeTab === 'invoices' || activeTab === 'builder') ? 0 : (isMobile ? '1.25rem 1rem' : '3rem 4rem'), minHeight: '100vh', overflowY: 'auto', minWidth: 0, background: activeTab === 'invoices' ? '#0f172a' : 'transparent' }}>
+      <main style={{
+        flex: 1,
+        padding: (activeTab === 'invoices' || activeTab === 'builder') ? 0 : (isMobile ? '1.25rem 1rem' : '2rem 2.75rem'),
+        minHeight: '100vh',
+        overflowY: 'auto',
+        minWidth: 0,
+        background: activeTab === 'invoices' ? '#0f172a' : 'transparent'
+      }}>
 
         {/* Dynamic header title based on active tab */}
         {activeTab !== 'invoices' && activeTab !== 'builder' && activeTab !== 'prepare_certs' && activeTab !== 'af_certificates' && activeTab !== 'idcards' && activeTab !== 'foclen' && (
-          <div style={{ display: 'flex', flexDirection: isMobile ? 'column' : 'row', justifyContent: 'space-between', alignItems: isMobile ? 'flex-start' : 'center', gap: '1rem', borderBottom: '1px solid var(--surface-border)', paddingBottom: '1.5rem', marginBottom: '2.5rem' }}>
+          <div style={{
+            display: 'flex',
+            flexDirection: isMobile ? 'column' : 'row',
+            justifyContent: 'space-between',
+            alignItems: isMobile ? 'flex-start' : 'center',
+            gap: '1rem',
+            borderBottom: '1px solid #e2e8f0',
+            paddingBottom: '1.25rem',
+            marginBottom: '2rem'
+          }}>
             <div>
-              <h1 style={{ fontSize: isMobile ? '1.5rem' : '2.2rem', fontWeight: 900, color: 'var(--text-primary)', margin: 0 }}>
+              <div style={{ fontSize: '0.72rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#3b82f6', marginBottom: '0.2rem' }}>
+                Portal / {activeTab.toUpperCase()}
+              </div>
+              <h1 style={{ fontSize: isMobile ? '1.45rem' : '1.85rem', fontWeight: 900, color: '#0f172a', margin: 0, letterSpacing: '-0.5px' }}>
                 {activeTab === 'overview' && 'LMS Workspace Dashboard'}
                 {activeTab === 'courses' && 'Interactive Course Catalog'}
                 {activeTab === 'register' && 'Enroll a New Student'}

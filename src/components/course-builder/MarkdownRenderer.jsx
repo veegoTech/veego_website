@@ -1,21 +1,18 @@
 import React from 'react';
 
 /**
- * Lightweight, zero-dependency Markdown parser and renderer for LMS content.
- * Supports:
- * - Headers (# H1, ## H2, ### H3)
- * - Blockquotes (> Note/Tip/Alert)
- * - Code blocks (```language ... ```)
- * - Inline code (`code`)
- * - Tables (| Header 1 | Header 2 |)
- * - Bold (**text**), Italic (*text*), Strike (~~text~~)
- * - Unordered lists (- or *) and ordered lists (1.)
- * - Horizontal rules (---)
- * - Callout boxes with icons
+ * Lightweight Markdown parser and renderer for LMS content.
+ * Supports light & dark themes, headers, blockquotes, code blocks, tables, lists, and formatting.
  */
-export default function MarkdownRenderer({ content = '', className = '' }) {
+export default function MarkdownRenderer({ content = '', className = '', theme = 'light' }) {
+  const isLight = theme === 'light';
+
   if (!content) {
-    return <div style={{ color: 'var(--text-muted, #94a3b8)', fontStyle: 'italic', padding: '1rem' }}>No content provided for this topic yet. Click "Edit Topic" to write content.</div>;
+    return (
+      <div style={{ color: isLight ? '#94a3b8' : '#64748b', fontStyle: 'italic', padding: '1rem' }}>
+        No content provided for this topic yet. Click "Edit Topic" to write content.
+      </div>
+    );
   }
 
   // Parse markdown lines into structured blocks
@@ -144,6 +141,17 @@ export default function MarkdownRenderer({ content = '', className = '' }) {
         continue;
       }
 
+      // Standalone Image: ![alt](url)
+      const imgMatch = line.trim().match(/^!\[(.*?)\]\((.*?)\)$/);
+      if (imgMatch) {
+        elements.push({
+          type: 'image',
+          alt: imgMatch[1],
+          url: imgMatch[2]
+        });
+        continue;
+      }
+
       // Empty line / paragraph
       if (line.trim() === '') {
         continue;
@@ -162,26 +170,26 @@ export default function MarkdownRenderer({ content = '', className = '' }) {
     return elements;
   };
 
-  // Helper to render inline formatting: bold, italic, code, links
-  const renderInline = (str) => {
-    if (!str) return null;
+  // Render inline formatting: **bold**, *italic*, `code`, [link](url)
+  const renderInline = (text) => {
+    if (!text) return null;
 
-    // Convert markdown inline syntax into React elements
-    // Split by inline code first: `code`
-    const parts = str.split(/(`[^`]+`)/g);
+    // Handle inline code `code`
+    const codeParts = text.split(/(`[^`]+`)/g);
 
-    return parts.map((part, idx) => {
+    return codeParts.map((part, pIdx) => {
       if (part.startsWith('`') && part.endsWith('`') && part.length > 2) {
         return (
           <code
-            key={idx}
+            key={pIdx}
             style={{
-              background: 'rgba(99, 102, 241, 0.12)',
-              color: '#818cf8',
-              padding: '0.15rem 0.4rem',
+              background: isLight ? '#f1f5f9' : 'rgba(255, 255, 255, 0.08)',
+              color: isLight ? '#0284c7' : '#38bdf8',
+              padding: '2px 6px',
               borderRadius: '4px',
-              fontFamily: 'Consolas, Monaco, monospace',
-              fontSize: '0.9em'
+              fontSize: '0.88em',
+              fontFamily: 'Consolas, Monaco, "Courier New", monospace',
+              border: isLight ? '1px solid #e2e8f0' : '1px solid rgba(255, 255, 255, 0.1)'
             }}
           >
             {part.slice(1, -1)}
@@ -189,22 +197,38 @@ export default function MarkdownRenderer({ content = '', className = '' }) {
         );
       }
 
-      // Replace bold and italic
-      let formatted = part;
-
       // Handle bold **text**
-      const boldParts = formatted.split(/(\*\*[^*]+\*\*)/g);
+      const boldParts = part.split(/(\*\*[^*]+\*\*)/g);
       return (
-        <span key={idx}>
+        <span key={pIdx}>
           {boldParts.map((bPart, bIdx) => {
             if (bPart.startsWith('**') && bPart.endsWith('**') && bPart.length > 4) {
-              return <strong key={bIdx} style={{ color: '#f8fafc', fontWeight: 600 }}>{bPart.slice(2, -2)}</strong>;
+              return (
+                <strong
+                  key={bIdx}
+                  style={{
+                    color: isLight ? '#0f172a' : '#f8fafc',
+                    fontWeight: 700
+                  }}
+                >
+                  {bPart.slice(2, -2)}
+                </strong>
+              );
             }
             // Handle italic *text*
             const italicParts = bPart.split(/(\*[^*]+\*)/g);
             return italicParts.map((iPart, iIdx) => {
               if (iPart.startsWith('*') && iPart.endsWith('*') && iPart.length > 2) {
-                return <em key={iIdx} style={{ color: '#cbd5e1' }}>{iPart.slice(1, -1)}</em>;
+                return (
+                  <em
+                    key={iIdx}
+                    style={{
+                      color: isLight ? '#475569' : '#cbd5e1'
+                    }}
+                  >
+                    {iPart.slice(1, -1)}
+                  </em>
+                );
               }
               return iPart;
             });
@@ -217,7 +241,14 @@ export default function MarkdownRenderer({ content = '', className = '' }) {
   const blocks = parseMarkdown(content);
 
   return (
-    <div className={`dynamic-lms-renderer ${className}`} style={{ color: '#e2e8f0', lineHeight: 1.75, fontSize: '1rem' }}>
+    <div
+      className={`dynamic-lms-renderer ${className}`}
+      style={{
+        color: isLight ? '#334155' : '#e2e8f0',
+        lineHeight: 1.75,
+        fontSize: '0.98rem'
+      }}
+    >
       {blocks.map((block, idx) => {
         switch (block.type) {
           case 'h1':
@@ -225,15 +256,13 @@ export default function MarkdownRenderer({ content = '', className = '' }) {
               <h1
                 key={idx}
                 style={{
-                  fontSize: '2rem',
+                  fontSize: '1.9rem',
                   fontWeight: 800,
-                  margin: '1.5rem 0 1rem',
-                  color: '#ffffff',
-                  borderBottom: '2px solid rgba(255,255,255,0.08)',
+                  margin: '1.25rem 0 0.85rem',
+                  color: isLight ? '#0f172a' : '#ffffff',
+                  borderBottom: isLight ? '2px solid #e2e8f0' : '2px solid rgba(255,255,255,0.08)',
                   paddingBottom: '0.5rem',
-                  background: 'linear-gradient(135deg, #60a5fa 0%, #a78bfa 100%)',
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent'
+                  letterSpacing: '-0.02em'
                 }}
               >
                 {renderInline(block.text)}
@@ -245,10 +274,10 @@ export default function MarkdownRenderer({ content = '', className = '' }) {
               <h2
                 key={idx}
                 style={{
-                  fontSize: '1.5rem',
+                  fontSize: '1.4rem',
                   fontWeight: 700,
-                  margin: '1.4rem 0 0.8rem',
-                  color: '#93c5fd',
+                  margin: '1.25rem 0 0.65rem',
+                  color: isLight ? '#1e40af' : '#93c5fd',
                   display: 'flex',
                   alignItems: 'center',
                   gap: '0.5rem'
@@ -263,10 +292,10 @@ export default function MarkdownRenderer({ content = '', className = '' }) {
               <h3
                 key={idx}
                 style={{
-                  fontSize: '1.25rem',
+                  fontSize: '1.18rem',
                   fontWeight: 600,
-                  margin: '1.2rem 0 0.6rem',
-                  color: '#c4b5fd'
+                  margin: '1.1rem 0 0.5rem',
+                  color: isLight ? '#334155' : '#c4b5fd'
                 }}
               >
                 {renderInline(block.text)}
@@ -275,7 +304,13 @@ export default function MarkdownRenderer({ content = '', className = '' }) {
 
           case 'p':
             return (
-              <p key={idx} style={{ margin: '0.8rem 0', color: '#cbd5e1' }}>
+              <p
+                key={idx}
+                style={{
+                  margin: '0.75rem 0',
+                  color: isLight ? '#334155' : '#cbd5e1'
+                }}
+              >
                 {renderInline(block.text)}
               </p>
             );
@@ -285,13 +320,13 @@ export default function MarkdownRenderer({ content = '', className = '' }) {
               <blockquote
                 key={idx}
                 style={{
-                  margin: '1.2rem 0',
-                  padding: '0.9rem 1.25rem',
-                  background: 'rgba(30, 41, 59, 0.7)',
-                  borderLeft: '4px solid #6366f1',
+                  margin: '1.1rem 0',
+                  padding: '0.85rem 1.25rem',
+                  background: isLight ? '#f0fdf4' : 'rgba(30, 41, 59, 0.7)',
+                  borderLeft: isLight ? '4px solid #10b981' : '4px solid #6366f1',
                   borderRadius: '0 8px 8px 0',
-                  color: '#e2e8f0',
-                  boxShadow: '0 4px 12px rgba(0,0,0,0.15)'
+                  color: isLight ? '#065f46' : '#e2e8f0',
+                  boxShadow: isLight ? '0 1px 3px rgba(0,0,0,0.05)' : '0 4px 12px rgba(0,0,0,0.15)'
                 }}
               >
                 {renderInline(block.text)}
@@ -300,9 +335,9 @@ export default function MarkdownRenderer({ content = '', className = '' }) {
 
           case 'ul':
             return (
-              <ul key={idx} style={{ margin: '0.8rem 0 1rem 1.5rem', paddingLeft: '1rem', listStyleType: 'disc' }}>
+              <ul key={idx} style={{ margin: '0.75rem 0 1rem 1.25rem', paddingLeft: '1rem', listStyleType: 'disc' }}>
                 {block.items.map((item, itemIdx) => (
-                  <li key={itemIdx} style={{ margin: '0.4rem 0', color: '#cbd5e1' }}>
+                  <li key={itemIdx} style={{ margin: '0.35rem 0', color: isLight ? '#334155' : '#cbd5e1' }}>
                     {renderInline(item)}
                   </li>
                 ))}
@@ -311,9 +346,9 @@ export default function MarkdownRenderer({ content = '', className = '' }) {
 
           case 'ol':
             return (
-              <ol key={idx} style={{ margin: '0.8rem 0 1rem 1.5rem', paddingLeft: '1rem', listStyleType: 'decimal' }}>
+              <ol key={idx} style={{ margin: '0.75rem 0 1rem 1.25rem', paddingLeft: '1rem', listStyleType: 'decimal' }}>
                 {block.items.map((item, itemIdx) => (
-                  <li key={itemIdx} style={{ margin: '0.4rem 0', color: '#cbd5e1' }}>
+                  <li key={itemIdx} style={{ margin: '0.35rem 0', color: isLight ? '#334155' : '#cbd5e1' }}>
                     {renderInline(item)}
                   </li>
                 ))}
@@ -322,13 +357,22 @@ export default function MarkdownRenderer({ content = '', className = '' }) {
 
           case 'table':
             return (
-              <div key={idx} style={{ overflowX: 'auto', margin: '1.5rem 0', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.1)' }}>
-                <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', background: 'rgba(15, 23, 42, 0.6)' }}>
+              <div
+                key={idx}
+                style={{
+                  overflowX: 'auto',
+                  margin: '1.25rem 0',
+                  borderRadius: '8px',
+                  border: isLight ? '1px solid #e2e8f0' : '1px solid rgba(255,255,255,0.1)',
+                  boxShadow: isLight ? '0 1px 3px rgba(0,0,0,0.04)' : 'none'
+                }}
+              >
+                <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', background: isLight ? '#ffffff' : 'rgba(15, 23, 42, 0.6)' }}>
                   <thead>
                     {block.rows.slice(0, 1).map((row, rIdx) => (
-                      <tr key={rIdx} style={{ background: 'rgba(30, 41, 59, 0.9)', borderBottom: '2px solid rgba(255,255,255,0.1)' }}>
+                      <tr key={rIdx} style={{ background: isLight ? '#f8fafc' : 'rgba(30, 41, 59, 0.9)', borderBottom: isLight ? '2px solid #e2e8f0' : '2px solid rgba(255,255,255,0.1)' }}>
                         {row.map((cell, cIdx) => (
-                          <th key={cIdx} style={{ padding: '0.75rem 1rem', color: '#93c5fd', fontWeight: 600, fontSize: '0.95rem' }}>
+                          <th key={cIdx} style={{ padding: '0.7rem 0.95rem', color: isLight ? '#1e293b' : '#93c5fd', fontWeight: 600, fontSize: '0.9rem' }}>
                             {renderInline(cell)}
                           </th>
                         ))}
@@ -337,9 +381,9 @@ export default function MarkdownRenderer({ content = '', className = '' }) {
                   </thead>
                   <tbody>
                     {block.rows.slice(1).map((row, rIdx) => (
-                      <tr key={rIdx} style={{ borderBottom: '1px solid rgba(255,255,255,0.05)', transition: 'background 0.2s' }}>
+                      <tr key={rIdx} style={{ borderBottom: isLight ? '1px solid #f1f5f9' : '1px solid rgba(255,255,255,0.05)' }}>
                         {row.map((cell, cIdx) => (
-                          <td key={cIdx} style={{ padding: '0.75rem 1rem', color: '#cbd5e1', fontSize: '0.92rem' }}>
+                          <td key={cIdx} style={{ padding: '0.7rem 0.95rem', color: isLight ? '#334155' : '#cbd5e1', fontSize: '0.88rem' }}>
                             {renderInline(cell)}
                           </td>
                         ))}
@@ -357,9 +401,10 @@ export default function MarkdownRenderer({ content = '', className = '' }) {
                 style={{
                   margin: '1.2rem 0',
                   borderRadius: '8px',
-                  background: '#090d16',
-                  border: '1px solid rgba(255, 255, 255, 0.1)',
-                  overflow: 'hidden'
+                  background: isLight ? '#1e293b' : '#090d16',
+                  border: isLight ? '1px solid #334155' : '1px solid rgba(255, 255, 255, 0.1)',
+                  overflow: 'hidden',
+                  boxShadow: isLight ? '0 2px 8px rgba(0,0,0,0.08)' : 'none'
                 }}
               >
                 <div
@@ -367,10 +412,10 @@ export default function MarkdownRenderer({ content = '', className = '' }) {
                     display: 'flex',
                     justifyContent: 'space-between',
                     alignItems: 'center',
-                    padding: '0.4rem 1rem',
-                    background: 'rgba(255, 255, 255, 0.04)',
+                    padding: '0.4rem 0.9rem',
+                    background: isLight ? '#0f172a' : 'rgba(255, 255, 255, 0.04)',
                     borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
-                    fontSize: '0.8rem',
+                    fontSize: '0.78rem',
                     color: '#94a3b8',
                     fontFamily: 'monospace'
                   }}
@@ -381,7 +426,7 @@ export default function MarkdownRenderer({ content = '', className = '' }) {
                     style={{
                       background: 'transparent',
                       border: 'none',
-                      color: '#60a5fa',
+                      color: '#38bdf8',
                       fontSize: '0.75rem',
                       cursor: 'pointer',
                       padding: '2px 6px'
@@ -392,11 +437,11 @@ export default function MarkdownRenderer({ content = '', className = '' }) {
                 </div>
                 <pre
                   style={{
-                    padding: '1rem',
+                    padding: '0.95rem',
                     margin: 0,
                     overflowX: 'auto',
                     fontFamily: 'Consolas, Monaco, "Courier New", monospace',
-                    fontSize: '0.9rem',
+                    fontSize: '0.88rem',
                     lineHeight: 1.6,
                     color: '#38bdf8'
                   }}
@@ -406,8 +451,42 @@ export default function MarkdownRenderer({ content = '', className = '' }) {
               </div>
             );
 
+          case 'image':
+            return (
+              <figure key={idx} style={{ margin: '1.5rem 0', textAlign: 'center' }}>
+                <img
+                  src={block.url}
+                  alt={block.alt || 'Lesson Image'}
+                  style={{
+                    maxWidth: '100%',
+                    height: 'auto',
+                    borderRadius: '8px',
+                    border: isLight ? '1px solid #e2e8f0' : '1px solid rgba(255,255,255,0.1)',
+                    boxShadow: isLight ? '0 4px 16px rgba(0,0,0,0.06)' : '0 4px 16px rgba(0,0,0,0.3)',
+                    display: 'inline-block'
+                  }}
+                  loading="lazy"
+                />
+                {block.alt && (
+                  <figcaption style={{ fontSize: '0.8rem', color: isLight ? '#64748b' : '#94a3b8', marginTop: '0.5rem', fontStyle: 'italic' }}>
+                    {block.alt}
+                  </figcaption>
+                )}
+              </figure>
+            );
+
           case 'hr':
-            return <hr key={idx} style={{ margin: '2rem 0', border: 'none', height: '1px', background: 'rgba(255,255,255,0.1)' }} />;
+            return (
+              <hr
+                key={idx}
+                style={{
+                  margin: '1.75rem 0',
+                  border: 'none',
+                  height: '1px',
+                  background: isLight ? '#e2e8f0' : 'rgba(255,255,255,0.1)'
+                }}
+              />
+            );
 
           default:
             return null;
