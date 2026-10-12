@@ -303,7 +303,8 @@ function App() {
   };
 
   const openAITutor = (question) => {
-    setInitialQuestion(question);
+    const cleanQuestion = (typeof question === 'string' && question.trim()) ? question.trim() : '';
+    setInitialQuestion(cleanQuestion);
     setTutorOpen(true);
   };
 

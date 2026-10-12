@@ -390,7 +390,7 @@ export function Lesson1ModuleView({ onCopy, copiedIndex, openAITutor }) {
           </div>
           <button
             type="button"
-            onClick={openAITutor}
+            onClick={() => openAITutor?.("Help me understand Lesson 1: What is AI, its building blocks, and classifications?")}
             style={{
               background: '#3b82f6',
               color: '#ffffff',

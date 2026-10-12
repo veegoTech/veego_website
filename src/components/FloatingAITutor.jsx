@@ -165,14 +165,15 @@ export default function FloatingAITutor({ isOpen, onOpen, onClose, initialQuesti
   };
 
   useEffect(() => {
-    if (isOpen && initialQuestion && initialQuestion !== handledQuestionRef.current) {
+    if (isOpen && typeof initialQuestion === 'string' && initialQuestion.trim() && initialQuestion !== handledQuestionRef.current) {
       handledQuestionRef.current = initialQuestion;
-      setMessages(prev => [...prev, { role: 'user', text: initialQuestion }]);
+      const cleanQ = initialQuestion.trim();
+      setMessages(prev => [...prev, { role: 'user', text: cleanQ }]);
       
       setTimeout(() => {
         setMessages(prev => [...prev, { 
           role: 'ai', 
-          text: generateAIResponse(initialQuestion)
+          text: generateAIResponse(cleanQ)
         }]);
       }, 1000);
     }
@@ -317,7 +318,7 @@ export default function FloatingAITutor({ isOpen, onOpen, onClose, initialQuesti
                   borderBottomLeftRadius: msg.role === 'ai' ? '4px' : 'var(--radius-md)',
                   border: msg.role === 'ai' ? '1px solid var(--surface-border)' : 'none'
                 }}>
-                  {msg.text}
+                  {typeof msg.text === 'string' ? msg.text : JSON.stringify(msg.text)}
                 </div>
               </div>
             ))}
