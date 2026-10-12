@@ -1,9 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
+import React, { useState } from 'react';
+import { motion } from 'framer-motion';
 import {
   BookOpen,
-  ChevronLeft,
-  ChevronRight,
   CheckCircle2,
   Send,
   Sparkles,
@@ -19,8 +17,9 @@ import {
   PhoneCall,
   Mail,
   User,
-  MapPin
+  Check
 } from 'lucide-react';
+import { WaveDivider } from '../../components/WaveDivider';
 
 interface CoursesPageProps {
   onNavigate: (path: string) => void;
@@ -38,15 +37,14 @@ interface OnlineCourse {
   duration: string;
   level: string;
   modules: string[];
-  gradient: string;
-  glowColor: string;
+  accentColor: string;
 }
 
 const ONLINE_COURSES: OnlineCourse[] = [
   {
     id: 'core-python',
     badge: 'Core Program',
-    badgeColor: 'bg-sky-500/20 text-sky-300 border-sky-400/40',
+    badgeColor: 'bg-blue-50 text-blue-700 border-blue-200',
     title: 'Core Python with OOPs',
     subtitle: 'Variables, Logic Structures, Functions, OOP Principles & File I/O',
     description:
@@ -61,13 +59,12 @@ const ONLINE_COURSES: OnlineCourse[] = [
       'Object-Oriented Programming (Classes, Inheritance, Polymorphism)',
       'File Streams, Regular Expressions & Mini Projects'
     ],
-    gradient: 'from-sky-600 via-blue-600 to-sky-700',
-    glowColor: 'rgba(14, 165, 233, 0.2)'
+    accentColor: 'text-blue-600'
   },
   {
     id: 'summer-sql',
     badge: 'Summer Crash',
-    badgeColor: 'bg-emerald-500/20 text-emerald-300 border-emerald-400/40',
+    badgeColor: 'bg-emerald-50 text-emerald-700 border-emerald-200',
     title: 'Summer SQL Crash Course',
     subtitle: 'Relational Database Queries, Filters, Aggregations & Table Structures',
     description:
@@ -82,13 +79,12 @@ const ONLINE_COURSES: OnlineCourse[] = [
       'Aggregations & Grouping: GROUP BY, HAVING',
       'Relational Joins, Primary/Foreign Keys & 7-Day Capstone'
     ],
-    gradient: 'from-emerald-600 via-teal-600 to-emerald-700',
-    glowColor: 'rgba(16, 185, 129, 0.2)'
+    accentColor: 'text-emerald-600'
   },
   {
     id: 'cognitive-ai',
     badge: 'Advanced AI',
-    badgeColor: 'bg-pink-500/20 text-pink-300 border-pink-400/40',
+    badgeColor: 'bg-indigo-50 text-indigo-700 border-indigo-200',
     title: 'Cognitive AI Development & Agentic Engineering',
     subtitle: 'Prompt Engineering, Fine-Tuning, Flowise, CrewAI & Multi-Agent Loops',
     description:
@@ -98,13 +94,12 @@ const ONLINE_COURSES: OnlineCourse[] = [
     level: 'All Levels',
     modules: [
       'Generative AI Foundations & LLM Tokenization',
-      'Prompt Engineering, System Messages & API Integrations',
-      'Flowise Visual Agent Designer & Vector Databases',
-      'LangChain & CrewAI Multi-Agent Workflows',
-      'Autonomous Cognitive AI Capstone Project'
+      'Prompt Engineering Patterns, Few-Shot & Chain-of-Thought',
+      'Embeddings, Vector Stores & Supabase pgvector',
+      'RAG Architecture, Document Indexing & Semantic Search',
+      'Flowise No-Code Agents, LangChain & Multi-Agent Systems'
     ],
-    gradient: 'from-pink-600 via-purple-600 to-pink-700',
-    glowColor: 'rgba(236, 72, 153, 0.2)'
+    accentColor: 'text-indigo-600'
   }
 ];
 
@@ -118,179 +113,150 @@ export const CoursesPage: React.FC<CoursesPageProps> = ({ onNavigate, onOpenLogi
   const [offlinePurpose, setOfflinePurpose] = useState('');
   const [formSubmitted, setFormSubmitted] = useState(false);
 
-  // Parallax Scroll Hooks
-  const { scrollYProgress } = useScroll();
-  const bgOrb1Y = useTransform(scrollYProgress, [0, 0.5], [0, -120]);
-  const bgOrb2Y = useTransform(scrollYProgress, [0.3, 0.9], [-60, 60]);
-
   const handleOfflineSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!offlineName.trim() || !offlinePhone.trim() || !offlineCourse.trim()) return;
     setFormSubmitted(true);
   };
 
+  const scrollToOffline = () => {
+    const el = document.getElementById('offline-training');
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
-    <div className="min-h-screen bg-[#16082e] font-sans text-slate-100 overflow-x-hidden selection:bg-purple-600 selection:text-white scroll-smooth">
+    <div className="min-h-screen bg-white font-sans text-slate-900 overflow-x-hidden selection:bg-blue-600 selection:text-white scroll-smooth">
       
-      {/* 🚀 PAGE HEADER BANNER */}
-      <header className="relative py-20 pb-28 bg-gradient-to-b from-[#1a0735] via-[#280a4e] to-[#1e093c] text-white overflow-hidden">
-        {/* Parallax Floating Glowing Orbs & Star Particles */}
-        <div className="absolute inset-0 pointer-events-none">
-          <motion.div
-            style={{ y: bgOrb1Y }}
-            className="absolute top-[-10%] right-[10%] w-[550px] h-[550px] rounded-full bg-purple-600/25 blur-[130px]"
-          />
-          <motion.div
-            style={{ y: bgOrb1Y }}
-            className="absolute bottom-[0%] left-[5%] w-[450px] h-[450px] rounded-full bg-pink-500/20 blur-[110px]"
-          />
-
-          {/* Animated Particle Stars */}
-          {[...Array(24)].map((_, i) => (
-            <motion.div
-              key={i}
-              className="absolute bg-white rounded-full opacity-60"
-              style={{
-                top: `${(i * 17) % 90}%`,
-                left: `${(i * 23) % 95}%`,
-                width: `${(i % 3) + 2}px`,
-                height: `${(i % 3) + 2}px`,
-              }}
-              animate={{ opacity: [0.2, 0.9, 0.2], scale: [0.8, 1.2, 0.8] }}
-              transition={{ duration: 3 + (i % 4), repeat: Infinity, ease: 'easeInOut' }}
-            />
-          ))}
-        </div>
-
+      {/* 🚀 1. PAGE HEADER BANNER (PURE WHITE) */}
+      <header className="relative pt-12 pb-16 sm:pb-20 bg-white text-slate-900 overflow-hidden">
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center z-10">
           <motion.div
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
-            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-purple-500/20 border border-purple-400/30 text-xs font-semibold text-purple-200 mb-5 shadow-lg"
+            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-50 border border-blue-200 text-xs font-bold text-blue-700 mb-5 shadow-xs"
           >
-            <GraduationCap className="w-4 h-4 text-purple-300" />
-            <span>VEEGO ACADEMY · APPLIED TECHNICAL TRAINING</span>
+            <GraduationCap className="w-4 h-4 text-blue-600" />
+            <span className="tracking-wider uppercase">VEEGO ACADEMY · APPLIED TECHNICAL TRAINING</span>
           </motion.div>
 
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="font-Space Grotesk text-4xl sm:text-6xl font-extrabold tracking-tight text-white mb-5 leading-tight"
+            className="font-Space Grotesk text-4xl sm:text-6xl lg:text-[4.25rem] font-extrabold tracking-tight text-slate-950 mb-5 leading-[1.1]"
             style={{ fontFamily: "'Space Grotesk', sans-serif" }}
           >
             Master Engineering <br className="hidden sm:inline" />
-            <span className="text-purple-300 font-extrabold">Online or Offline</span>
+            <span className="text-blue-600 font-extrabold">Online or Offline</span>
           </motion.h1>
 
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="text-base sm:text-xl text-purple-100/90 max-w-2xl mx-auto leading-relaxed font-normal mb-8"
+            className="text-base sm:text-xl text-slate-600 max-w-2xl mx-auto leading-relaxed font-normal mb-8"
           >
             Explore our hands-on online LMS courses with live project source code, or request personalized offline classroom batches for your college, company, or group.
           </motion.p>
-        </div>
 
-        {/* 🌊 SVG WAVE DIVIDER AT BOTTOM OF HEADER */}
-        <div className="absolute bottom-0 left-0 right-0 w-full overflow-hidden leading-none z-20 pointer-events-none">
-          <svg
-            viewBox="0 0 1440 120"
-            preserveAspectRatio="none"
-            className="relative block w-full h-12 sm:h-16 lg:h-20 text-[#1a0937] fill-current preserve-3d"
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+            className="flex flex-wrap items-center justify-center gap-4 text-sm font-medium"
           >
-            <path d="M0,32 C280,90 560,90 840,40 C1120,-10 1280,50 1440,65 L1440,120 L0,120 Z" />
-          </svg>
+            <button
+              onClick={() => {
+                if (onOpenLoginModal) {
+                  onOpenLoginModal();
+                } else {
+                  onNavigate('/contact');
+                }
+              }}
+              className="px-7 py-3.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-sm shadow-lg shadow-blue-500/25 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center gap-2 cursor-pointer"
+            >
+              <Laptop className="w-4 h-4" />
+              <span>Browse Online Courses</span>
+            </button>
+
+            <button
+              onClick={scrollToOffline}
+              className="px-7 py-3.5 rounded-xl bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 font-bold text-sm shadow-2xs hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center gap-2 cursor-pointer"
+            >
+              <Building2 className="w-4 h-4 text-blue-600" />
+              <span>Request Offline Training</span>
+            </button>
+          </motion.div>
         </div>
       </header>
 
-      {/* 📚 SECTION 1: AVAILABLE ONLINE COURSES (3 CARDS AT ONCE) */}
-      <section className="relative py-20 pb-32 bg-[#1a0937] text-white overflow-hidden">
-        {/* Star Particles */}
-        <div className="absolute inset-0 pointer-events-none z-0">
-          {[...Array(24)].map((_, i) => (
-            <motion.div
-              key={i}
-              className="absolute bg-white rounded-full opacity-60"
-              style={{
-                top: `${(i * 19) % 85 + 8}%`,
-                left: `${(i * 27) % 92 + 4}%`,
-                width: `${(i % 3) + 2}px`,
-                height: `${(i % 3) + 2}px`,
-              }}
-              animate={{ opacity: [0.2, 0.9, 0.2], scale: [0.8, 1.25, 0.8] }}
-              transition={{ duration: 3 + (i % 4), repeat: Infinity, ease: 'easeInOut' }}
-            />
-          ))}
-        </div>
+      {/* ✨ WAVE DIVIDER: WHITE TO SOFT SLATE */}
+      <WaveDivider fromColor="#ffffff" toColor="#f1f5f9" type="curve-1" />
 
+      {/* 📚 2. SECTION: AVAILABLE ONLINE COURSES (SOFT SLATE #f1f5f9) */}
+      <section className="relative py-12 sm:py-16 bg-[#f1f5f9] text-slate-900 overflow-hidden">
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 z-10">
           
           {/* Section Header */}
-          <div className="text-center max-w-3xl mx-auto mb-16">
-            <span className="text-xs uppercase tracking-wider text-purple-300 font-bold px-3.5 py-1.5 rounded-full bg-purple-500/20 border border-purple-400/30 mb-3 inline-flex items-center gap-1.5 shadow-xs">
-              <Laptop className="w-3.5 h-3.5 text-purple-300" />
+          <div className="text-center max-w-3xl mx-auto mb-14">
+            <span className="text-xs uppercase tracking-wider text-blue-700 font-bold px-3.5 py-1.5 rounded-full bg-blue-50 border border-blue-200 mb-3 inline-flex items-center gap-1.5 shadow-xs">
+              <Laptop className="w-3.5 h-3.5 text-blue-600" />
               Live Online LMS Portal
             </span>
-            <h2 className="font-Space Grotesk text-3xl sm:text-5xl font-extrabold tracking-tight text-white mb-4">
+            <h2 className="font-Space Grotesk text-3xl sm:text-5xl font-extrabold tracking-tight text-slate-950 mb-3" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
               Available Online Courses
             </h2>
-            <p className="text-sm sm:text-base text-purple-200/80 max-w-xl mx-auto leading-relaxed">
+            <p className="text-sm sm:text-base text-slate-600 max-w-xl mx-auto leading-relaxed font-normal">
               Structured LMS access with real project source code, interactive quizzes, cloud deployment guides, and 1-on-1 engineer assistance.
             </p>
           </div>
 
-          {/* 3 CARDS AT ONCE GRID */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 items-stretch max-w-7xl mx-auto">
+          {/* 3 Cards Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7 items-stretch max-w-7xl mx-auto">
             {ONLINE_COURSES.map((course, idx) => (
               <motion.div
                 key={course.id}
-                initial={{ opacity: 0, y: 30 }}
+                initial={{ opacity: 0, y: 25 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.4, delay: idx * 0.15 }}
-                className="rounded-3xl p-7 bg-white/5 backdrop-blur-md border border-white/15 shadow-2xl relative overflow-hidden text-white flex flex-col justify-between hover:border-purple-400/50 transition-all duration-300 hover:-translate-y-2 group"
+                transition={{ duration: 0.4, delay: idx * 0.12 }}
+                className="rounded-3xl p-7 bg-white border border-slate-200/90 shadow-sm hover:shadow-xl hover:border-blue-300 transition-all duration-300 flex flex-col justify-between group"
               >
-                {/* Ambient background card glow */}
-                <div
-                  className="absolute -top-12 -right-12 w-64 h-64 rounded-full blur-3xl pointer-events-none group-hover:scale-125 transition-transform duration-500"
-                  style={{ backgroundColor: course.glowColor }}
-                />
-
                 <div>
                   {/* Top Badges */}
                   <div className="flex items-center justify-between gap-2 mb-4 flex-wrap">
                     <span className={`text-[11px] font-extrabold uppercase tracking-wider px-3 py-1 rounded-full border ${course.badgeColor}`}>
                       {course.badge}
                     </span>
-                    <span className="text-xs font-semibold text-purple-200/80 flex items-center gap-1 bg-white/10 px-2.5 py-1 rounded-md border border-white/10">
-                      <Clock className="w-3.5 h-3.5 text-purple-300" />
+                    <span className="text-xs font-semibold text-slate-600 flex items-center gap-1 bg-slate-50 px-2.5 py-1 rounded-md border border-slate-200">
+                      <Clock className="w-3.5 h-3.5 text-blue-600" />
                       {course.duration.split('·')[0]}
                     </span>
                   </div>
 
                   {/* Title & Subtitle */}
-                  <h3 className="font-Space Grotesk text-2xl font-extrabold text-white tracking-tight mb-2 leading-snug group-hover:text-purple-200 transition-colors">
+                  <h3 className="font-Space Grotesk text-xl font-extrabold text-slate-950 tracking-tight mb-2 leading-snug group-hover:text-blue-600 transition-colors" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
                     {course.title}
                   </h3>
 
-                  <p className="text-xs font-semibold text-purple-300 mb-3">
+                  <p className="text-xs font-bold text-blue-600 mb-3">
                     {course.subtitle}
                   </p>
 
-                  <p className="text-xs text-purple-200/80 leading-relaxed mb-5 font-normal line-clamp-3">
+                  <p className="text-xs text-slate-600 leading-relaxed mb-5 font-normal line-clamp-3">
                     {course.description}
                   </p>
 
                   {/* Key Modules Checklist */}
-                  <div className="pt-4 border-t border-white/10 mb-6 space-y-2.5">
-                    <div className="text-[10px] uppercase tracking-wider text-purple-300 font-bold mb-2">
+                  <div className="pt-4 border-t border-slate-100 mb-6 space-y-2.5">
+                    <div className="text-[10px] uppercase tracking-wider text-slate-700 font-bold mb-2">
                       Core Curriculum Highlights:
                     </div>
                     {course.modules.slice(0, 5).map((m) => (
-                      <div key={m} className="flex items-start gap-2 text-xs text-purple-100 font-medium">
-                        <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
+                      <div key={m} className="flex items-start gap-2 text-xs text-slate-700 font-medium">
+                        <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
                         <span className="line-clamp-1">{m}</span>
                       </div>
                     ))}
@@ -298,18 +264,18 @@ export const CoursesPage: React.FC<CoursesPageProps> = ({ onNavigate, onOpenLogi
                 </div>
 
                 {/* Card Footer / CTA */}
-                <div className="pt-4 border-t border-white/10 space-y-4">
+                <div className="pt-4 border-t border-slate-100 space-y-4">
                   <div className="flex items-center justify-between">
                     <div>
-                      <span className="text-[10px] uppercase tracking-wider text-purple-300/70 font-bold block">
+                      <span className="text-[10px] uppercase tracking-wider text-slate-500 font-bold block">
                         Full LMS Access
                       </span>
                       <div className="flex items-baseline gap-1.5">
-                        <span className="text-2xl font-extrabold text-white">{course.price}</span>
-                        <span className="text-[11px] text-purple-200/70 font-normal">/ One-time</span>
+                        <span className="text-2xl font-black text-slate-950">{course.price}</span>
+                        <span className="text-[11px] text-slate-500 font-normal">/ One-time</span>
                       </div>
                     </div>
-                    <span className="text-[11px] text-purple-300 font-bold bg-purple-500/20 border border-purple-400/30 px-2.5 py-1 rounded-md">
+                    <span className="text-[11px] text-slate-700 font-bold bg-slate-100 border border-slate-200 px-2.5 py-1 rounded-md">
                       {course.level}
                     </span>
                   </div>
@@ -322,7 +288,7 @@ export const CoursesPage: React.FC<CoursesPageProps> = ({ onNavigate, onOpenLogi
                         onNavigate('/contact');
                       }
                     }}
-                    className="w-full py-3.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs sm:text-sm transition-all shadow-lg shadow-blue-600/30 flex items-center justify-center gap-2 cursor-pointer group-hover:bg-blue-500"
+                    className="w-full py-3.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs sm:text-sm transition-all shadow-md shadow-blue-500/20 flex items-center justify-center gap-2 cursor-pointer hover:scale-[1.02] active:scale-[0.98]"
                   >
                     <span>Access Online LMS</span>
                     <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
@@ -333,59 +299,23 @@ export const CoursesPage: React.FC<CoursesPageProps> = ({ onNavigate, onOpenLogi
           </div>
 
         </div>
-
-        {/* 🌊 SVG WAVE DIVIDER AT BOTTOM OF CAROUSEL SECTION */}
-        <div className="absolute bottom-0 left-0 right-0 w-full overflow-hidden leading-none z-20 pointer-events-none">
-          <svg
-            viewBox="0 0 1440 120"
-            preserveAspectRatio="none"
-            className="relative block w-full h-12 sm:h-16 lg:h-20 text-[#16082e] fill-current preserve-3d scale-x-[-1]"
-          >
-            <path d="M0,32 C280,90 560,90 840,40 C1120,-10 1280,50 1440,65 L1440,120 L0,120 Z" />
-          </svg>
-        </div>
       </section>
 
-      {/* 🏫 SECTION 2: REQUEST FOR OFFLINE COURSE (FORM) */}
-      <section className="relative py-20 pb-32 bg-[#16082e] text-white overflow-hidden">
-        {/* Background Parallax Orbs & Star Particles */}
-        <div className="absolute inset-0 pointer-events-none overflow-hidden z-0">
-          <motion.div
-            style={{ y: bgOrb2Y }}
-            className="absolute top-1/4 left-10 w-[500px] h-[500px] bg-purple-600/25 rounded-full blur-[130px]"
-          />
-          <motion.div
-            style={{ y: bgOrb2Y }}
-            className="absolute bottom-10 right-10 w-[450px] h-[450px] bg-pink-500/20 rounded-full blur-[110px]"
-          />
+      {/* ✨ WAVE DIVIDER: SOFT SLATE TO PURE WHITE */}
+      <WaveDivider fromColor="#f1f5f9" toColor="#ffffff" type="curve-2" />
 
-          {/* Animated Particle Stars */}
-          {[...Array(24)].map((_, i) => (
-            <motion.div
-              key={i}
-              className="absolute bg-white rounded-full opacity-60"
-              style={{
-                top: `${(i * 19) % 85 + 8}%`,
-                left: `${(i * 27) % 92 + 4}%`,
-                width: `${(i % 3) + 2}px`,
-                height: `${(i % 3) + 2}px`,
-              }}
-              animate={{ opacity: [0.2, 0.9, 0.2], scale: [0.8, 1.25, 0.8] }}
-              transition={{ duration: 3 + (i % 4), repeat: Infinity, ease: 'easeInOut' }}
-            />
-          ))}
-        </div>
-
+      {/* 🏫 3. SECTION: REQUEST OFFLINE COURSE TRAINING (PURE WHITE) */}
+      <section id="offline-training" className="relative py-12 sm:py-16 bg-white text-slate-900 scroll-mt-16 overflow-hidden">
         <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 z-10">
-          <div className="text-center max-w-2xl mx-auto mb-12">
-            <span className="text-xs uppercase tracking-wider text-purple-300 font-bold px-3.5 py-1 rounded-full bg-purple-500/20 border border-purple-400/30 mb-3 inline-flex items-center gap-1.5 shadow-xs">
-              <Building2 className="w-3.5 h-3.5 text-purple-300" />
+          <div className="text-center max-w-2xl mx-auto mb-10">
+            <span className="text-xs uppercase tracking-wider text-blue-700 font-bold px-3.5 py-1 rounded-full bg-blue-50 border border-blue-200 mb-3 inline-flex items-center gap-1.5 shadow-xs">
+              <Building2 className="w-3.5 h-3.5 text-blue-600" />
               In-Person &amp; Offline Batches
             </span>
-            <h2 className="font-Space Grotesk text-3xl sm:text-5xl font-black text-white tracking-tight leading-tight">
+            <h2 className="font-Space Grotesk text-3xl sm:text-5xl font-black text-slate-950 tracking-tight leading-tight" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
               Request Offline Course Training
             </h2>
-            <p className="mt-3 text-xs sm:text-sm text-purple-200/80 leading-relaxed font-normal">
+            <p className="mt-3 text-xs sm:text-sm text-slate-600 leading-relaxed font-normal">
               Looking for face-to-face classroom instruction, campus workshops, or corporate offline bootcamps? Tell us your topic and location, and our academic coordinator will arrange a batch.
             </p>
           </div>
@@ -395,22 +325,22 @@ export const CoursesPage: React.FC<CoursesPageProps> = ({ onNavigate, onOpenLogi
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="rounded-3xl p-8 sm:p-12 bg-white/5 backdrop-blur-md border border-white/10 shadow-2xl relative overflow-hidden text-white"
+            className="rounded-3xl p-8 sm:p-12 bg-white border border-slate-200/90 shadow-xl shadow-blue-500/5 relative overflow-hidden text-slate-900"
           >
-            <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-purple-500 via-pink-500 to-indigo-500" />
+            <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-blue-600 via-indigo-600 to-sky-500" />
 
             {formSubmitted ? (
               <motion.div
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
-                className="p-8 rounded-2xl bg-purple-500/20 border border-purple-400/40 text-center"
+                className="p-8 rounded-2xl bg-blue-50 border border-blue-200 text-center"
               >
-                <CheckCircle2 className="w-14 h-14 text-purple-300 mx-auto mb-3" />
-                <h3 className="text-2xl font-bold text-white mb-2 font-Space Grotesk">
+                <CheckCircle2 className="w-14 h-14 text-blue-600 mx-auto mb-3" />
+                <h3 className="text-2xl font-bold text-slate-950 mb-2 font-Space Grotesk" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
                   Offline Course Request Received!
                 </h3>
-                <p className="text-xs sm:text-sm text-purple-200 max-w-md mx-auto mb-6 font-medium leading-relaxed">
-                  Thank you, <strong className="text-white">{offlineName}</strong>. Our academic training coordinator will review your requested topic (<strong className="text-purple-300">{offlineCourse}</strong>) and contact you at <strong className="text-white">{offlinePhone}</strong> via WhatsApp / Phone within 4 hours.
+                <p className="text-xs sm:text-sm text-slate-600 max-w-md mx-auto mb-6 font-medium leading-relaxed">
+                  Thank you, <strong className="text-slate-900">{offlineName}</strong>. Our academic training coordinator will review your requested topic (<strong className="text-blue-600">{offlineCourse}</strong>) and contact you at <strong className="text-slate-900">{offlinePhone}</strong> via WhatsApp / Phone within 4 hours.
                 </p>
                 <button
                   onClick={() => {
@@ -427,15 +357,15 @@ export const CoursesPage: React.FC<CoursesPageProps> = ({ onNavigate, onOpenLogi
                 </button>
               </motion.div>
             ) : (
-              <form onSubmit={handleOfflineSubmit} className="space-y-6">
+              <form onSubmit={handleOfflineSubmit} className="space-y-5">
                 {/* Row 1: Name & Phone Number (Mandatory) */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label htmlFor="off-name" className="block text-xs font-bold uppercase tracking-wider text-purple-200 mb-1.5 flex items-center justify-between">
+                    <label htmlFor="off-name" className="block text-xs font-bold uppercase tracking-wider text-slate-800 mb-1.5 flex items-center justify-between">
                       <span className="flex items-center gap-1">
-                        <User className="w-3.5 h-3.5 text-purple-300" /> Full Name <span className="text-rose-400">*</span>
+                        <User className="w-3.5 h-3.5 text-blue-600" /> Full Name <span className="text-rose-500">*</span>
                       </span>
-                      <span className="text-[10px] text-purple-300/70 font-normal">Mandatory</span>
+                      <span className="text-[10px] text-slate-500 font-normal">Mandatory</span>
                     </label>
                     <input
                       id="off-name"
@@ -444,16 +374,16 @@ export const CoursesPage: React.FC<CoursesPageProps> = ({ onNavigate, onOpenLogi
                       value={offlineName}
                       onChange={(e) => setOfflineName(e.target.value)}
                       placeholder="e.g. Kowsalya Devi"
-                      className="w-full text-xs sm:text-sm p-3.5 rounded-xl border border-white/20 bg-white/5 text-white placeholder-slate-400 focus:outline-none focus:border-purple-400 focus:ring-2 focus:ring-purple-400/20 shadow-2xs"
+                      className="w-full text-xs sm:text-sm p-3.5 rounded-xl border border-slate-200 bg-slate-50/70 text-slate-900 placeholder-slate-400 focus:outline-none focus:bg-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 shadow-2xs transition-all"
                     />
                   </div>
 
                   <div>
-                    <label htmlFor="off-phone" className="block text-xs font-bold uppercase tracking-wider text-purple-200 mb-1.5 flex items-center justify-between">
+                    <label htmlFor="off-phone" className="block text-xs font-bold uppercase tracking-wider text-slate-800 mb-1.5 flex items-center justify-between">
                       <span className="flex items-center gap-1">
-                        <PhoneCall className="w-3.5 h-3.5 text-purple-300" /> Phone / WhatsApp Number <span className="text-rose-400">*</span>
+                        <PhoneCall className="w-3.5 h-3.5 text-blue-600" /> Phone / WhatsApp <span className="text-rose-500">*</span>
                       </span>
-                      <span className="text-[10px] text-rose-300 font-bold">Mandatory</span>
+                      <span className="text-[10px] text-rose-600 font-bold">Mandatory</span>
                     </label>
                     <input
                       id="off-phone"
@@ -463,19 +393,19 @@ export const CoursesPage: React.FC<CoursesPageProps> = ({ onNavigate, onOpenLogi
                       value={offlinePhone}
                       onChange={(e) => setOfflinePhone(e.target.value.replace(/\D/g, '').slice(0, 10))}
                       placeholder="9876543210"
-                      className="w-full text-xs sm:text-sm p-3.5 rounded-xl border border-white/20 bg-white/5 text-white placeholder-slate-400 focus:outline-none focus:border-purple-400 focus:ring-2 focus:ring-purple-400/20 shadow-2xs"
+                      className="w-full text-xs sm:text-sm p-3.5 rounded-xl border border-slate-200 bg-slate-50/70 text-slate-900 placeholder-slate-400 focus:outline-none focus:bg-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 shadow-2xs transition-all"
                     />
                   </div>
                 </div>
 
                 {/* Row 2: Email ID (Optional) & Profession */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label htmlFor="off-email" className="block text-xs font-bold uppercase tracking-wider text-purple-200 mb-1.5 flex items-center justify-between">
+                    <label htmlFor="off-email" className="block text-xs font-bold uppercase tracking-wider text-slate-800 mb-1.5 flex items-center justify-between">
                       <span className="flex items-center gap-1">
-                        <Mail className="w-3.5 h-3.5 text-purple-300" /> Email ID
+                        <Mail className="w-3.5 h-3.5 text-blue-600" /> Email ID
                       </span>
-                      <span className="text-[10px] text-purple-300/60 font-normal">Optional</span>
+                      <span className="text-[10px] text-slate-500 font-normal">Optional</span>
                     </label>
                     <input
                       id="off-email"
@@ -483,19 +413,19 @@ export const CoursesPage: React.FC<CoursesPageProps> = ({ onNavigate, onOpenLogi
                       value={offlineEmail}
                       onChange={(e) => setOfflineEmail(e.target.value)}
                       placeholder="name@gmail.com (Optional)"
-                      className="w-full text-xs sm:text-sm p-3.5 rounded-xl border border-white/20 bg-white/5 text-white placeholder-slate-400 focus:outline-none focus:border-purple-400 focus:ring-2 focus:ring-purple-400/20 shadow-2xs"
+                      className="w-full text-xs sm:text-sm p-3.5 rounded-xl border border-slate-200 bg-slate-50/70 text-slate-900 placeholder-slate-400 focus:outline-none focus:bg-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 shadow-2xs transition-all"
                     />
                   </div>
 
                   <div>
-                    <label htmlFor="off-profession" className="block text-xs font-bold uppercase tracking-wider text-purple-200 mb-1.5 flex items-center gap-1">
-                      <Building2 className="w-3.5 h-3.5 text-purple-300" /> Profession / Current Role <span className="text-rose-400">*</span>
+                    <label htmlFor="off-profession" className="block text-xs font-bold uppercase tracking-wider text-slate-800 mb-1.5 flex items-center gap-1">
+                      <Building2 className="w-3.5 h-3.5 text-blue-600" /> Profession / Role <span className="text-rose-500">*</span>
                     </label>
                     <select
                       id="off-profession"
                       value={offlineProfession}
                       onChange={(e) => setOfflineProfession(e.target.value)}
-                      className="w-full text-xs sm:text-sm p-3.5 rounded-xl border border-white/20 bg-[#1f093a] text-white focus:outline-none focus:border-purple-400 focus:ring-2 focus:ring-purple-400/20 shadow-2xs"
+                      className="w-full text-xs sm:text-sm p-3.5 rounded-xl border border-slate-200 bg-slate-50/70 text-slate-900 focus:outline-none focus:bg-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 shadow-2xs transition-all cursor-pointer"
                     >
                       <option value="College Student">College Student</option>
                       <option value="Job Seeker">Job Seeker</option>
@@ -507,11 +437,11 @@ export const CoursesPage: React.FC<CoursesPageProps> = ({ onNavigate, onOpenLogi
 
                 {/* Row 3: Course Needed (Text Input - NOT Dropdown!) */}
                 <div>
-                  <label htmlFor="off-course" className="block text-xs font-bold uppercase tracking-wider text-purple-200 mb-1.5 flex items-center justify-between">
+                  <label htmlFor="off-course" className="block text-xs font-bold uppercase tracking-wider text-slate-800 mb-1.5 flex items-center justify-between">
                     <span className="flex items-center gap-1">
-                      <BookOpen className="w-3.5 h-3.5 text-purple-300" /> Course Needed <span className="text-rose-400">*</span>
+                      <BookOpen className="w-3.5 h-3.5 text-blue-600" /> Course Needed <span className="text-rose-500">*</span>
                     </span>
-                    <span className="text-[10px] text-purple-300/70 font-normal">Type custom course or topic name</span>
+                    <span className="text-[10px] text-slate-500 font-normal">Type custom topic name</span>
                   </label>
                   <input
                     id="off-course"
@@ -520,15 +450,15 @@ export const CoursesPage: React.FC<CoursesPageProps> = ({ onNavigate, onOpenLogi
                     value={offlineCourse}
                     onChange={(e) => setOfflineCourse(e.target.value)}
                     placeholder="e.g. Full-Stack Web Development, Data Science with Python, AI Automation, PowerBI..."
-                    className="w-full text-xs sm:text-sm p-3.5 rounded-xl border border-white/20 bg-white/5 text-white placeholder-slate-400 focus:outline-none focus:border-purple-400 focus:ring-2 focus:ring-purple-400/20 shadow-2xs"
+                    className="w-full text-xs sm:text-sm p-3.5 rounded-xl border border-slate-200 bg-slate-50/70 text-slate-900 placeholder-slate-400 focus:outline-none focus:bg-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 shadow-2xs transition-all"
                   />
                 </div>
 
                 {/* Row 4: Purpose to Study This Course */}
                 <div>
-                  <label htmlFor="off-purpose" className="block text-xs font-bold uppercase tracking-wider text-purple-200 mb-1.5 flex items-center justify-between">
+                  <label htmlFor="off-purpose" className="block text-xs font-bold uppercase tracking-wider text-slate-800 mb-1.5 flex items-center justify-between">
                     <span>What is your purpose for studying this course?</span>
-                    <span className="text-[10px] text-purple-300/70 font-normal">e.g. Final year project, Job placement, Upskilling</span>
+                    <span className="text-[10px] text-slate-500 font-normal">e.g. Final year project, Job placement, Upskilling</span>
                   </label>
                   <textarea
                     id="off-purpose"
@@ -537,19 +467,19 @@ export const CoursesPage: React.FC<CoursesPageProps> = ({ onNavigate, onOpenLogi
                     value={offlinePurpose}
                     onChange={(e) => setOfflinePurpose(e.target.value)}
                     placeholder="e.g. Need hands-on training and project source code for final year college placement & interview preparation..."
-                    className="w-full text-xs sm:text-sm p-4 rounded-xl border border-white/20 bg-white/5 text-white placeholder-slate-400 focus:outline-none focus:border-purple-400 focus:ring-2 focus:ring-purple-400/20 shadow-2xs"
+                    className="w-full text-xs sm:text-sm p-4 rounded-xl border border-slate-200 bg-slate-50/70 text-slate-900 placeholder-slate-400 focus:outline-none focus:bg-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 shadow-2xs transition-all"
                   />
                 </div>
 
                 <div className="pt-2 flex flex-col sm:flex-row items-center justify-between gap-4">
-                  <div className="flex items-center gap-2 text-[11px] text-purple-200/70 font-medium">
-                    <ShieldCheck className="w-4 h-4 text-purple-400 shrink-0" />
+                  <div className="flex items-center gap-2 text-[11px] text-slate-500 font-medium">
+                    <ShieldCheck className="w-4 h-4 text-blue-600 shrink-0" />
                     <span>Direct response within 4 business hours. No sales spam.</span>
                   </div>
 
                   <button
                     type="submit"
-                    className="w-full sm:w-auto px-8 py-4 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs sm:text-sm transition-all shadow-lg shadow-blue-600/30 hover:scale-[1.02] flex items-center justify-center gap-2 cursor-pointer"
+                    className="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs sm:text-sm transition-all shadow-lg shadow-blue-500/25 hover:scale-[1.02] flex items-center justify-center gap-2 cursor-pointer"
                   >
                     <span>Submit Offline Course Inquiry</span>
                     <Send className="w-4 h-4" />
@@ -560,6 +490,9 @@ export const CoursesPage: React.FC<CoursesPageProps> = ({ onNavigate, onOpenLogi
           </motion.div>
         </div>
       </section>
+
+      {/* 🌊 WAVE DIVIDER: WHITE TO DARK FOOTER */}
+      <WaveDivider fromColor="#ffffff" toColor="#0f172a" type="footer" />
 
     </div>
   );
