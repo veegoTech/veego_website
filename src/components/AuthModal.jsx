@@ -45,6 +45,46 @@ const saveLocalRegisteredStudent = (student) => {
   }
 };
 
+// Normalizes any date string (DD-MM-YYYY, DD/MM/YYYY, YYYY-MM-DD, YYYY/MM/DD) to canonical 'DD-MM-YYYY'
+const normalizeDobToDDMMYYYY = (str) => {
+  if (!str) return '';
+  const clean = str.trim().replace(/\//g, '-');
+  const parts = clean.split('-');
+  if (parts.length === 3) {
+    // If format is YYYY-MM-DD (4-digit year first)
+    if (parts[0].length === 4) {
+      const year = parts[0];
+      const month = parts[1].padStart(2, '0');
+      const day = parts[2].padStart(2, '0');
+      return `${day}-${month}-${year}`;
+    }
+    // If format is DD-MM-YYYY (4-digit year last)
+    if (parts[2].length === 4) {
+      const day = parts[0].padStart(2, '0');
+      const month = parts[1].padStart(2, '0');
+      const year = parts[2];
+      return `${day}-${month}-${year}`;
+    }
+  }
+  return clean;
+};
+
+// Converts date to standard YYYY-MM-DD for backend compatibility
+const normalizeDobToYYYYMMDD = (str) => {
+  if (!str) return '';
+  const clean = str.trim().replace(/\//g, '-');
+  const parts = clean.split('-');
+  if (parts.length === 3) {
+    if (parts[0].length === 4) {
+      return `${parts[0]}-${parts[1].padStart(2, '0')}-${parts[2].padStart(2, '0')}`;
+    }
+    if (parts[2].length === 4) {
+      return `${parts[2]}-${parts[1].padStart(2, '0')}-${parts[0].padStart(2, '0')}`;
+    }
+  }
+  return clean;
+};
+
 export const AuthModal = ({ isOpen, onClose, onLoginSuccess }) => {
   // Active view: 'login' | 'register' | 'otp'
   const [activeTab, setActiveTab] = useState('login');
@@ -113,7 +153,7 @@ export const AuthModal = ({ isOpen, onClose, onLoginSuccess }) => {
     if (
       (cleanUser === 'admin' && cleanPass === 'admin123') ||
       (cleanUser === 'veego' && cleanPass === 'veego@2026') ||
-      (cleanUser === '9876543210' && cleanPass === '2000-01-01')
+      (cleanUser === '9876543210' && (cleanPass === '01-01-2000' || cleanPass === '2000-01-01'))
     ) {
       setTimeout(() => {
         setIsLoading(false);
@@ -142,10 +182,15 @@ export const AuthModal = ({ isOpen, onClose, onLoginSuccess }) => {
     });
 
     if (matchedLocal) {
-      const storedDob = matchedLocal.dob || '';
-      const inputDob = passTrim.replace(/\//g, '-');
+      const storedDobNorm = normalizeDobToDDMMYYYY(matchedLocal.dob || '');
+      const inputDobNorm = normalizeDobToDDMMYYYY(passTrim);
 
-      if (storedDob === inputDob || passTrim === '123456' || passTrim === matchedLocal.accessCode) {
+      if (
+        storedDobNorm === inputDobNorm ||
+        passTrim === matchedLocal.dob ||
+        passTrim === '123456' ||
+        passTrim === matchedLocal.accessCode
+      ) {
         setIsLoading(false);
         onLoginSuccess({
           role: 'student',
@@ -169,6 +214,7 @@ export const AuthModal = ({ isOpen, onClose, onLoginSuccess }) => {
         body: JSON.stringify({
           username: userTrim,
           password: passTrim,
+          passwordAlt: normalizeDobToYYYYMMDD(passTrim),
           deviceId: getOrCreateDeviceId()
         })
       });
@@ -200,7 +246,7 @@ export const AuthModal = ({ isOpen, onClose, onLoginSuccess }) => {
           id: 'STU-' + userTrim.slice(-4),
           name: 'Student (' + userTrim.slice(-4) + ')',
           phone: userTrim,
-          dob: passTrim,
+          dob: normalizeDobToDDMMYYYY(passTrim),
           enrolledCourse: 'all',
           isVerified: true
         };
@@ -220,7 +266,7 @@ export const AuthModal = ({ isOpen, onClose, onLoginSuccess }) => {
     }
 
     setIsLoading(false);
-    setErrorMsg('Invalid credentials. Please verify your 10-digit mobile number and Date of Birth (YYYY-MM-DD).');
+    setErrorMsg('Invalid credentials. Please verify your 10-digit mobile number and Date of Birth (DD-MM-YYYY).');
   };
 
   // Submit Registration
@@ -254,7 +300,7 @@ export const AuthModal = ({ isOpen, onClose, onLoginSuccess }) => {
       name: regName.trim(),
       phone: cleanPhone,
       username: cleanPhone,
-      dob: regDob.trim(),
+      dob: normalizeDobToDDMMYYYY(regDob.trim()),
       enrolledCourse: regCourse || 'all',
       isVerified: false,
       otpCode: generatedOtp,
@@ -266,7 +312,7 @@ export const AuthModal = ({ isOpen, onClose, onLoginSuccess }) => {
         id: studentId,
         name: regName.trim(),
         phone: cleanPhone,
-        dob: regDob.trim(),
+        dob: normalizeDobToDDMMYYYY(regDob.trim()),
         enrolledCourse: regCourse || 'all',
         isVerified: false,
         email: `${cleanPhone}@student.veego.in`
@@ -479,7 +525,7 @@ export const AuthModal = ({ isOpen, onClose, onLoginSuccess }) => {
                 <div className="mb-4">
                   <h3 className="text-xl font-bold text-slate-950 font-space">Access Your Account</h3>
                   <p className="text-xs text-slate-500 mt-0.5">
-                    Sign in with your phone number / student ID and date of birth.
+                    Sign in with your phone number / student ID and Date of Birth (DD-MM-YYYY).
                   </p>
                 </div>
 
@@ -510,7 +556,7 @@ export const AuthModal = ({ isOpen, onClose, onLoginSuccess }) => {
                       <label className="block text-xs font-bold text-slate-800">
                         Date of Birth (Password)
                       </label>
-                      <span className="text-[11px] text-blue-600 font-semibold">YYYY-MM-DD</span>
+                      <span className="text-[11px] text-blue-600 font-bold">DD-MM-YYYY</span>
                     </div>
                     <div className="relative">
                       <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
@@ -520,7 +566,7 @@ export const AuthModal = ({ isOpen, onClose, onLoginSuccess }) => {
                         type={showPassword ? 'text' : 'password'}
                         value={loginPassword}
                         onChange={(e) => setLoginPassword(e.target.value)}
-                        placeholder="YYYY-MM-DD"
+                        placeholder="DD-MM-YYYY"
                         required
                         className="w-full pl-10 pr-11 py-2.5 bg-slate-50/70 border border-slate-200 text-slate-900 placeholder-slate-400 rounded-xl text-sm focus:outline-none focus:bg-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 font-mono shadow-2xs transition-all"
                       />
@@ -631,7 +677,7 @@ export const AuthModal = ({ isOpen, onClose, onLoginSuccess }) => {
                     <label className="block text-xs font-bold text-slate-800">
                       Date of Birth *
                     </label>
-                    <span className="text-[10px] text-indigo-600 font-bold">Always Your Password</span>
+                    <span className="text-[10px] text-blue-600 font-bold">Always Your Password (DD-MM-YYYY)</span>
                   </div>
                   <div className="relative">
                     <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
