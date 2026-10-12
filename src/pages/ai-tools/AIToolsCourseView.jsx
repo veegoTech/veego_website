@@ -37,6 +37,7 @@ import {
 import { generateAndStoreCertificate } from '../../services/certificateService';
 import { CertificateModal } from './CertificateModal';
 import { Lesson1ModuleView, Lesson2ModuleView } from './Module1Lessons';
+import { Lesson3ModuleView, Lesson4ModuleView } from './Module2Lessons';
 
 const Section = ({ id, eyebrow, title, badge, children }) => (
   <motion.div
@@ -519,38 +520,54 @@ export default function AIToolsCourseView({
     );
   }
 
-  return (
-    <AnimatePresence mode="wait">
-      <Section
-        id={currentLesson.id}
-        eyebrow={`MODULE ${currentLesson.moduleNumber} · ${currentLesson.durationMinutes} MINS · BEGINNER`}
-        title={`Lesson ${currentLesson.lessonNumber}: ${currentLesson.title}`}
-        badge={isCurrentLessonDone ? '✓ Completed' : 'In Progress'}
-      >
-        <div className="panel">
-          {/* Objective Box */}
-          <div style={{ padding: '1.25rem 1.5rem', background: '#eff6ff', borderRadius: '10px', borderLeft: '4px solid #3b82f6', marginBottom: '2rem' }}>
-            <h4 style={{ margin: '0 0 0.4rem 0', color: '#1d4ed8', fontSize: '0.95rem', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '6px' }}>
-              <Brain size={18} /> Lesson Learning Objective
-            </h4>
-            <p style={{ margin: 0, color: '#1e3a8a', fontSize: '0.92rem', lineHeight: 1.5 }}>
-              {currentLesson.objective}
-            </p>
-          </div>
+    const moduleNum = currentLesson.moduleNumber || currentLesson.moduleId?.replace('aitools_module', '') || '1';
+    const cleanTitle = (currentLesson.title || '').replace(/^Lesson\s*\d+:\s*/i, '');
+    const lessonObjective = currentLesson.objective || (currentLesson.learningObjectives && currentLesson.learningObjectives[0]) || 'Master practical artificial intelligence concepts through interactive workflows.';
 
-          {currentLesson.lessonNumber === 1 ? (
-            <Lesson1ModuleView
-              onCopy={handleCopy}
-              copiedIndex={copiedIndex}
-              openAITutor={openAITutor}
-            />
-          ) : currentLesson.lessonNumber === 2 ? (
-            <Lesson2ModuleView
-              onCopy={handleCopy}
-              copiedIndex={copiedIndex}
-              openAITutor={openAITutor}
-            />
-          ) : (
+    return (
+      <AnimatePresence mode="wait">
+        <Section
+          id={currentLesson.id}
+          eyebrow={`MODULE ${moduleNum} · ${currentLesson.durationMinutes || 20} MINS · BEGINNER`}
+          title={`Lesson ${currentLesson.lessonNumber}: ${cleanTitle}`}
+          badge={isCurrentLessonDone ? '✓ Completed' : 'In Progress'}
+        >
+          <div className="panel">
+            {/* Objective Box */}
+            <div style={{ padding: '1.25rem 1.5rem', background: '#eff6ff', borderRadius: '10px', borderLeft: '4px solid #3b82f6', marginBottom: '2rem' }}>
+              <h4 style={{ margin: '0 0 0.4rem 0', color: '#1d4ed8', fontSize: '0.95rem', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <Brain size={18} /> Lesson Learning Objective
+              </h4>
+              <p style={{ margin: 0, color: '#1e3a8a', fontSize: '0.92rem', lineHeight: 1.5 }}>
+                {lessonObjective}
+              </p>
+            </div>
+
+            {currentLesson.lessonNumber === 1 ? (
+              <Lesson1ModuleView
+                onCopy={handleCopy}
+                copiedIndex={copiedIndex}
+                openAITutor={openAITutor}
+              />
+            ) : currentLesson.lessonNumber === 2 ? (
+              <Lesson2ModuleView
+                onCopy={handleCopy}
+                copiedIndex={copiedIndex}
+                openAITutor={openAITutor}
+              />
+            ) : currentLesson.lessonNumber === 3 ? (
+              <Lesson3ModuleView
+                onCopy={handleCopy}
+                copiedIndex={copiedIndex}
+                openAITutor={openAITutor}
+              />
+            ) : currentLesson.lessonNumber === 4 ? (
+              <Lesson4ModuleView
+                onCopy={handleCopy}
+                copiedIndex={copiedIndex}
+                openAITutor={openAITutor}
+              />
+            ) : (
             <>
               {/* Section 1: Conceptual Foundation & Real World Analogy */}
               <div style={{ marginBottom: '2.5rem' }}>

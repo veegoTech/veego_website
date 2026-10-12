@@ -102,7 +102,8 @@ export default function Sidebar({ courseStructure, activeNode, onNavClick, onBac
       {/* Course Title (Dynamic) */}
       <div style={{ padding: '1rem 1.5rem 0' }}>
         <h2 style={{ fontSize: '1.6rem', fontWeight: '800', color: '#0f172a', margin: 0 }}>
-          {courseStructure?.[0]?.id?.includes('spoko_pro') ? 'Spoko Professional Track' :
+          {courseStructure?.[0]?.id?.includes('aitools') ? 'AI Tools & Productivity' :
+           courseStructure?.[0]?.id?.includes('spoko_pro') ? 'Spoko Professional Track' :
            courseStructure?.[0]?.id?.includes('spoko_story') ? 'Spoko Story English' :
            courseStructure?.[0]?.id?.includes('web_design') ? 'AI-Powered Web Design' :
            courseStructure?.some(m => m.id?.includes('sql_da')) ? 'SQL for Data Analytics' :
