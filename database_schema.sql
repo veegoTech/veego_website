@@ -1,6 +1,6 @@
 -- =====================================================================
 --  VEEGO WEBSITE & LMS — COMPLETE SUPABASE POSTGRESQL SCHEMA
---  Database Host: db.gwnvporjhybkcojeloti.supabase.co
+--  Database Host: db.<your_supabase_project_ref>.supabase.co
 -- =====================================================================
 
 -- 1. Enable Required Extensions

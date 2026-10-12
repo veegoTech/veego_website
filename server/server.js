@@ -15,18 +15,28 @@ app.use(cors());
 app.use(express.json());
 
 // 1. SUPABASE CLOUD DATABASE CONNECTION
-const DEFAULT_SUPABASE_URL = 'https://nziavlzgudaybsieramx.supabase.co';
-const DEFAULT_SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im56aWF2bHpndWRheWJzaWVyYW14Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA1ODMzMTQsImV4cCI6MjEwNjE1OTMxNH0.7rrAnLLRTmwk2qssfkWR8nfkkyux4ULnV25aCThLX5U';
+const SUPABASE_URL = (process.env.VITE_SUPABASE_URL || process.env.SUPABASE_URL || '').trim();
+const SUPABASE_KEY = (process.env.VITE_SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY || '').trim();
 
-const SUPABASE_URL = process.env.VITE_SUPABASE_URL || process.env.SUPABASE_URL || DEFAULT_SUPABASE_URL;
-const SUPABASE_KEY = process.env.VITE_SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY || DEFAULT_SUPABASE_ANON_KEY;
+export const isSupabaseConfigured = Boolean(
+  SUPABASE_URL &&
+  SUPABASE_KEY &&
+  SUPABASE_URL.startsWith('http') &&
+  !SUPABASE_URL.includes('placeholder')
+);
 
-export const supabase = createClient(SUPABASE_URL, SUPABASE_KEY, {
-  auth: { persistSession: false, autoRefreshToken: false },
-  realtime: { transport: ws }
-});
+export const supabase = isSupabaseConfigured
+  ? createClient(SUPABASE_URL, SUPABASE_KEY, {
+      auth: { persistSession: false, autoRefreshToken: false },
+      realtime: { transport: ws }
+    })
+  : null;
 
-console.log('📡 Connected Backend Database to Supabase Cloud:', SUPABASE_URL);
+if (isSupabaseConfigured) {
+  console.log('📡 Connected Backend Database to Supabase Cloud:', SUPABASE_URL);
+} else {
+  console.warn('⚠️ Supabase credentials not found in environment. Backend will operate in local JSON storage mode.');
+}
 
 // 2. LOCAL JSON FALLBACK PATHS
 const localDbPath = process.env.VERCEL
@@ -96,6 +106,7 @@ const saveLocalInvoices = (data) => {
 // 3. SUPABASE CLOUD DATABASE OPERATIONAL HELPERS
 
 const fetchSupabaseStudents = async () => {
+  if (!supabase) return null;
   try {
     const { data, error } = await supabase.from('customers').select('*');
     if (!error && data && data.length > 0) {
@@ -152,6 +163,7 @@ const fetchSupabaseStudents = async () => {
 };
 
 const syncStudentToSupabase = async (student) => {
+  if (!supabase) return;
   try {
     const studentId = student.id || student._id || `stu_${student.phone || student.accessCode || Date.now()}`;
     const studentPhone = student.phone || student.accessCode || '';
@@ -207,6 +219,7 @@ const syncStudentToSupabase = async (student) => {
 };
 
 const deleteStudentFromSupabase = async (accessCodeOrId) => {
+  if (!supabase) return;
   try {
     await supabase.from('customers').delete().or(`id.eq.${accessCodeOrId},phone.eq.${accessCodeOrId}`);
     await supabase.from('students').delete().or(`access_code.eq.${accessCodeOrId},id.eq.${accessCodeOrId}`);

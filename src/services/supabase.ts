@@ -1,22 +1,36 @@
 import { createClient } from '@supabase/supabase-js';
 import { Customer, CustomerQuery, CustomerFeedback } from '../types/database';
 
-const DEFAULT_SUPABASE_URL = 'https://nziavlzgudaybsieramx.supabase.co';
-const DEFAULT_SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im56aWF2bHpndWRheWJzaWVyYW14Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA1ODMzMTQsImV4cCI6MjEwNjE1OTMxNH0.7rrAnLLRTmwk2qssfkWR8nfkkyux4ULnV25aCThLX5U';
-
 const rawUrl = (typeof import.meta !== 'undefined' && import.meta.env?.VITE_SUPABASE_URL ? String(import.meta.env.VITE_SUPABASE_URL) : '').trim();
 const rawKey = (typeof import.meta !== 'undefined' && import.meta.env?.VITE_SUPABASE_ANON_KEY ? String(import.meta.env.VITE_SUPABASE_ANON_KEY) : '').trim();
 
-const supabaseUrl = (rawUrl && rawUrl.startsWith('http')) ? rawUrl : DEFAULT_SUPABASE_URL;
-const supabaseAnonKey = (rawKey && rawKey.length > 10) ? rawKey : DEFAULT_SUPABASE_ANON_KEY;
+export const isSupabaseConfigured = Boolean(
+  rawUrl &&
+  rawKey &&
+  rawUrl.startsWith('http') &&
+  !rawUrl.includes('placeholder')
+);
 
-export const isSupabaseConfigured = Boolean(supabaseUrl && supabaseAnonKey && supabaseUrl.startsWith('http'));
+// Fallback dummy credentials to prevent Supabase JS client crash if env vars are unset in build/deployment
+// ("Uncaught Error: supabaseUrl is required")
+const fallbackUrl = 'https://placeholder.supabase.co';
+const fallbackKey = 'dummy-anon-key-placeholder';
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+export const supabase = createClient(
+  isSupabaseConfigured ? rawUrl : fallbackUrl,
+  isSupabaseConfigured ? rawKey : fallbackKey
+);
+
+if (!isSupabaseConfigured && typeof window !== 'undefined') {
+  console.warn(
+    '⚠️ Supabase environment variables not found or incomplete. Set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY in your .env or deployment configuration.'
+  );
+}
 
 // --- SUPABASE CLOUD SYNC HELPERS ---
 
 export const fetchSupabaseCustomers = async (): Promise<Customer[] | null> => {
+  if (!isSupabaseConfigured) return null;
   try {
     const { data, error } = await supabase
       .from('customers')
@@ -47,6 +61,7 @@ export const fetchSupabaseCustomers = async (): Promise<Customer[] | null> => {
 };
 
 export const syncCustomerToSupabase = async (customer: Customer) => {
+  if (!isSupabaseConfigured) return;
   try {
     const payload = {
       id: customer.id,
@@ -69,6 +84,7 @@ export const syncCustomerToSupabase = async (customer: Customer) => {
 };
 
 export const fetchSupabaseQueries = async (): Promise<CustomerQuery[] | null> => {
+  if (!isSupabaseConfigured) return null;
   try {
     const { data, error } = await supabase
       .from('customer_queries')
@@ -101,6 +117,7 @@ export const fetchSupabaseQueries = async (): Promise<CustomerQuery[] | null> =>
 };
 
 export const syncQueryToSupabase = async (query: CustomerQuery) => {
+  if (!isSupabaseConfigured) return;
   try {
     const payload = {
       id: query.id,
@@ -125,6 +142,7 @@ export const syncQueryToSupabase = async (query: CustomerQuery) => {
 };
 
 export const fetchSupabaseFeedback = async (): Promise<CustomerFeedback[] | null> => {
+  if (!isSupabaseConfigured) return null;
   try {
     const { data, error } = await supabase
       .from('customer_feedback')
@@ -156,6 +174,7 @@ export const fetchSupabaseFeedback = async (): Promise<CustomerFeedback[] | null
 };
 
 export const syncFeedbackToSupabase = async (feedback: CustomerFeedback) => {
+  if (!isSupabaseConfigured) return;
   try {
     const payload = {
       id: feedback.id,
@@ -190,6 +209,7 @@ export const syncStudentToSupabaseClient = async (studentData: {
   isVerified?: boolean;
   email?: string;
 }) => {
+  if (!isSupabaseConfigured) return null;
   try {
     const studentId = studentData.id || `stu_${studentData.phone || Date.now()}`;
     const studentEmail = studentData.email || `${studentData.phone}@student.veego.in`;
@@ -238,6 +258,7 @@ export const syncStudentToSupabaseClient = async (studentData: {
 };
 
 export const fetchSupabaseStudentsClient = async () => {
+  if (!isSupabaseConfigured) return null;
   try {
     const { data, error } = await supabase
       .from('customers')

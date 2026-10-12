@@ -1,6 +1,13 @@
 const pg = require('pg');
 
-const connectionString = 'postgresql://postgres:Veego_website@1234@db.gwnvporjhybkcojeloti.supabase.co:5432/postgres';
+const connectionString = process.env.SUPABASE_DB_URL || process.env.DATABASE_URL || '';
+
+if (!connectionString) {
+  console.error('❌ Missing database connection string.');
+  console.error('Please provide SUPABASE_DB_URL or DATABASE_URL in your environment variables.');
+  console.error('Example: SUPABASE_DB_URL="postgresql://postgres:[PASSWORD]@db.[PROJECT-REF].supabase.co:5432/postgres" node init_supabase_db.cjs');
+  process.exit(1);
+}
 
 const client = new pg.Client({
   connectionString,
