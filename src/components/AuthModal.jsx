@@ -447,31 +447,31 @@ export const AuthModal = ({ isOpen, onClose, onLoginSuccess }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5 md:p-6 bg-slate-900/60 backdrop-blur-md overflow-y-auto animate-in fade-in duration-200">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5 md:p-6 bg-slate-900/70 backdrop-blur-xs overflow-y-auto animate-in fade-in duration-200">
       <div
-        className="relative w-full max-w-4xl my-auto bg-white border border-slate-200/90 rounded-3xl shadow-2xl overflow-hidden flex flex-col md:flex-row max-h-[92vh]"
+        className="relative w-full max-w-4xl my-auto bg-white border border-slate-200 rounded-[4px] overflow-hidden flex flex-col md:flex-row max-h-[92vh]"
         onClick={(e) => e.stopPropagation()}
       >
         {/* CLOSE BUTTON */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 z-30 p-2 rounded-xl text-slate-400 hover:text-slate-700 bg-slate-100 hover:bg-slate-200 border border-slate-200/80 transition-all cursor-pointer shadow-xs"
+          className="absolute top-4 right-4 z-30 p-2 rounded-[4px] text-slate-400 hover:text-slate-700 bg-slate-100 hover:bg-slate-200 border border-slate-200 transition-all cursor-pointer"
           aria-label="Close modal"
         >
           <X className="w-5 h-5" />
         </button>
 
         {/* ================= LEFT COLUMN: AUTHENTICATION FORM (PURE WHITE LIGHT THEME) ================= */}
-        <div className="md:w-7/12 bg-white p-6 sm:p-8 flex flex-col justify-between border-b md:border-b-0 md:border-r border-slate-200/80">
+        <div className="md:w-7/12 bg-white p-6 sm:p-8 flex flex-col justify-between border-b md:border-b-0 md:border-r border-slate-200">
           <div>
             {/* BRAND HEADER */}
             <div className="flex items-center gap-2.5 mb-5">
-              <div className="w-9 h-9 rounded-xl bg-blue-600 flex items-center justify-center font-black text-white text-lg shadow-md shadow-blue-500/25">
+              <div className="w-9 h-9 rounded-[4px] bg-blue-600 flex items-center justify-center font-black text-white text-lg">
                 V
               </div>
               <div>
                 <span className="text-lg font-black tracking-tight text-slate-950 font-space">VeeGo</span>
-                <span className="text-[10px] font-bold px-2 py-0.5 ml-2 rounded-full bg-blue-50 text-blue-700 border border-blue-200">
+                <span className="text-[10px] font-bold px-2 py-0.5 ml-2 rounded-[4px] bg-blue-50 text-blue-700 border border-blue-200 font-mono">
                   LMS Portal
                 </span>
               </div>
@@ -479,16 +479,16 @@ export const AuthModal = ({ isOpen, onClose, onLoginSuccess }) => {
 
             {/* TAB SELECTOR */}
             {activeTab !== 'otp' && (
-              <div className="flex items-center p-1 bg-slate-100 rounded-xl border border-slate-200/80 mb-5">
+              <div className="flex items-center p-1 bg-slate-100 rounded-[4px] border border-slate-200 mb-5">
                 <button
                   type="button"
                   onClick={() => {
                     setActiveTab('login');
                     setErrorMsg('');
                   }}
-                  className={`flex-1 py-2 px-3 rounded-lg text-xs sm:text-sm font-bold flex items-center justify-center gap-2 transition-all cursor-pointer ${activeTab === 'login'
-                    ? 'bg-blue-600 text-white shadow-sm'
-                    : 'text-slate-600 hover:text-slate-900'
+                  className={`flex-1 py-2 px-3 rounded-[4px] text-xs sm:text-sm font-bold flex items-center justify-center gap-2 transition-all cursor-pointer border ${activeTab === 'login'
+                    ? 'bg-blue-600 text-white border-blue-600'
+                    : 'text-slate-600 hover:text-slate-900 border-transparent'
                     }`}
                 >
                   <LogIn className="w-3.5 h-3.5" />
@@ -500,9 +500,9 @@ export const AuthModal = ({ isOpen, onClose, onLoginSuccess }) => {
                     setActiveTab('register');
                     setErrorMsg('');
                   }}
-                  className={`flex-1 py-2 px-3 rounded-lg text-xs sm:text-sm font-bold flex items-center justify-center gap-2 transition-all cursor-pointer ${activeTab === 'register'
-                    ? 'bg-blue-600 text-white shadow-sm'
-                    : 'text-slate-600 hover:text-slate-900'
+                  className={`flex-1 py-2 px-3 rounded-[4px] text-xs sm:text-sm font-bold flex items-center justify-center gap-2 transition-all cursor-pointer border ${activeTab === 'register'
+                    ? 'bg-blue-600 text-white border-blue-600'
+                    : 'text-slate-600 hover:text-slate-900 border-transparent'
                     }`}
                 >
                   <UserPlus className="w-3.5 h-3.5" />
@@ -513,7 +513,7 @@ export const AuthModal = ({ isOpen, onClose, onLoginSuccess }) => {
 
             {/* ERROR BANNER */}
             {errorMsg && (
-              <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-xl flex items-start gap-2.5 text-xs text-red-700 font-medium">
+              <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-[4px] flex items-start gap-2.5 text-xs text-red-700 font-medium">
                 <AlertCircle className="w-4 h-4 text-red-600 shrink-0 mt-0.5" />
                 <span className="leading-relaxed">{errorMsg}</span>
               </div>
@@ -545,7 +545,7 @@ export const AuthModal = ({ isOpen, onClose, onLoginSuccess }) => {
                         onChange={(e) => setLoginUsername(e.target.value)}
                         placeholder="10-digit mobile or student ID"
                         required
-                        className="w-full pl-10 pr-4 py-2.5 bg-slate-50/70 border border-slate-200 text-slate-900 placeholder-slate-400 rounded-xl text-sm focus:outline-none focus:bg-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 shadow-2xs transition-all"
+                        className="w-full pl-10 pr-4 py-2.5 bg-slate-50/70 border border-slate-200 text-slate-900 placeholder-slate-400 rounded-[4px] text-sm focus:outline-none focus:bg-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all font-mono"
                       />
                     </div>
                   </div>
@@ -556,7 +556,7 @@ export const AuthModal = ({ isOpen, onClose, onLoginSuccess }) => {
                       <label className="block text-xs font-bold text-slate-800">
                         Date of Birth (Password)
                       </label>
-                      <span className="text-[11px] text-blue-600 font-bold">DD-MM-YYYY</span>
+                      <span className="text-[11px] text-blue-600 font-bold font-mono">DD-MM-YYYY</span>
                     </div>
                     <div className="relative">
                       <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
@@ -568,7 +568,7 @@ export const AuthModal = ({ isOpen, onClose, onLoginSuccess }) => {
                         onChange={(e) => setLoginPassword(e.target.value)}
                         placeholder="DD-MM-YYYY"
                         required
-                        className="w-full pl-10 pr-11 py-2.5 bg-slate-50/70 border border-slate-200 text-slate-900 placeholder-slate-400 rounded-xl text-sm focus:outline-none focus:bg-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 font-mono shadow-2xs transition-all"
+                        className="w-full pl-10 pr-11 py-2.5 bg-slate-50/70 border border-slate-200 text-slate-900 placeholder-slate-400 rounded-[4px] text-sm focus:outline-none focus:bg-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500 font-mono transition-all"
                       />
                       <button
                         type="button"
@@ -585,7 +585,7 @@ export const AuthModal = ({ isOpen, onClose, onLoginSuccess }) => {
                   <button
                     type="submit"
                     disabled={isLoading}
-                    className="w-full mt-2 py-3 px-4 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-sm shadow-lg shadow-blue-500/25 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+                    className="w-full mt-2 py-3 px-4 rounded-[4px] bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
                   >
                     {isLoading ? (
                       <div className="flex items-center gap-2">
@@ -642,7 +642,7 @@ export const AuthModal = ({ isOpen, onClose, onLoginSuccess }) => {
                       onChange={(e) => setRegName(e.target.value)}
                       placeholder="e.g. Kowsalya Devi"
                       required
-                      className="w-full pl-10 pr-4 py-2 bg-slate-50/70 border border-slate-200 text-slate-900 placeholder-slate-400 rounded-xl text-sm focus:outline-none focus:bg-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 shadow-2xs transition-all"
+                      className="w-full pl-10 pr-4 py-2 bg-slate-50/70 border border-slate-200 text-slate-900 placeholder-slate-400 rounded-[4px] text-sm focus:outline-none focus:bg-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
                     />
                   </div>
                 </div>
@@ -653,7 +653,7 @@ export const AuthModal = ({ isOpen, onClose, onLoginSuccess }) => {
                     <label className="block text-xs font-bold text-slate-800">
                       10-Digit Mobile Number *
                     </label>
-                    <span className="text-[10px] text-blue-600 font-bold">Always Your Username</span>
+                    <span className="text-[10px] text-blue-600 font-bold font-mono">Always Your Username</span>
                   </div>
                   <div className="relative">
                     <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
@@ -666,7 +666,7 @@ export const AuthModal = ({ isOpen, onClose, onLoginSuccess }) => {
                       placeholder="9876543210"
                       maxLength={10}
                       required
-                      className="w-full pl-10 pr-4 py-2 bg-slate-50/70 border border-slate-200 text-slate-900 placeholder-slate-400 rounded-xl text-sm focus:outline-none focus:bg-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 font-mono shadow-2xs transition-all"
+                      className="w-full pl-10 pr-4 py-2 bg-slate-50/70 border border-slate-200 text-slate-900 placeholder-slate-400 rounded-[4px] text-sm focus:outline-none focus:bg-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500 font-mono transition-all"
                     />
                   </div>
                 </div>
@@ -677,7 +677,7 @@ export const AuthModal = ({ isOpen, onClose, onLoginSuccess }) => {
                     <label className="block text-xs font-bold text-slate-800">
                       Date of Birth *
                     </label>
-                    <span className="text-[10px] text-blue-600 font-bold">Always Your Password (DD-MM-YYYY)</span>
+                    <span className="text-[10px] text-blue-600 font-bold font-mono">Always Your Password (DD-MM-YYYY)</span>
                   </div>
                   <div className="relative">
                     <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
@@ -688,7 +688,7 @@ export const AuthModal = ({ isOpen, onClose, onLoginSuccess }) => {
                       value={regDob}
                       onChange={(e) => setRegDob(e.target.value)}
                       required
-                      className="w-full pl-10 pr-4 py-2 bg-slate-50/70 border border-slate-200 text-slate-900 placeholder-slate-400 rounded-xl text-sm focus:outline-none focus:bg-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 shadow-2xs transition-all"
+                      className="w-full pl-10 pr-4 py-2 bg-slate-50/70 border border-slate-200 text-slate-900 placeholder-slate-400 rounded-[4px] text-sm focus:outline-none focus:bg-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all font-mono"
                     />
                   </div>
                 </div>
@@ -705,7 +705,7 @@ export const AuthModal = ({ isOpen, onClose, onLoginSuccess }) => {
                     <select
                       value={regCourse}
                       onChange={(e) => setRegCourse(e.target.value)}
-                      className="w-full pl-10 pr-4 py-2 bg-slate-50/70 border border-slate-200 text-slate-900 rounded-xl text-sm focus:outline-none focus:bg-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 shadow-2xs transition-all cursor-pointer"
+                      className="w-full pl-10 pr-4 py-2 bg-slate-50/70 border border-slate-200 text-slate-900 rounded-[4px] text-sm focus:outline-none focus:bg-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all cursor-pointer"
                     >
                       <option value="all">All Applied Tracks (Full Access)</option>
                       <option value="python_course">Core Python & OOPs</option>
@@ -720,7 +720,7 @@ export const AuthModal = ({ isOpen, onClose, onLoginSuccess }) => {
                 <button
                   type="submit"
                   disabled={isLoading}
-                  className="w-full mt-2 py-3 px-4 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-sm shadow-lg shadow-blue-500/25 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+                  className="w-full mt-2 py-3 px-4 rounded-[4px] bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
                 >
                   {isLoading ? (
                     <div className="flex items-center gap-2">
@@ -755,7 +755,7 @@ export const AuthModal = ({ isOpen, onClose, onLoginSuccess }) => {
             {activeTab === 'otp' && (
               <form onSubmit={handleOtpSubmit} className="space-y-4">
                 <div className="text-center mb-3">
-                  <div className="w-12 h-12 rounded-2xl bg-blue-50 border border-blue-200 flex items-center justify-center mx-auto mb-2 text-blue-600 shadow-xs">
+                  <div className="w-12 h-12 rounded-[4px] bg-blue-50 border border-blue-200 flex items-center justify-center mx-auto mb-2 text-blue-600">
                     <ShieldCheck className="w-6 h-6" />
                   </div>
                   <h3 className="text-xl font-bold text-slate-950 font-space">
@@ -763,13 +763,13 @@ export const AuthModal = ({ isOpen, onClose, onLoginSuccess }) => {
                   </h3>
                   <p className="text-xs text-slate-500 mt-1">
                     We sent a 6-digit confirmation code to{' '}
-                    <span className="font-bold text-blue-700">+91 {otpPhone}</span>
+                    <span className="font-bold text-blue-700 font-mono">+91 {otpPhone}</span>
                   </p>
                 </div>
 
                 {/* TEST OTP HELPER BADGE */}
                 {otpHint && (
-                  <div className="bg-blue-50 border border-blue-200 rounded-xl p-2.5 flex items-center justify-between text-xs text-blue-900">
+                  <div className="bg-blue-50 border border-blue-200 rounded-[4px] p-2.5 flex items-center justify-between text-xs text-blue-900">
                     <div className="flex items-center gap-1.5">
                       <Sparkles className="w-4 h-4 text-amber-500" />
                       <span>Test Code: <strong className="font-mono text-blue-950 tracking-widest">{otpHint}</strong></span>
@@ -777,7 +777,7 @@ export const AuthModal = ({ isOpen, onClose, onLoginSuccess }) => {
                     <button
                       type="button"
                       onClick={handleFillDemoOtp}
-                      className="px-2.5 py-1 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-bold text-[11px] cursor-pointer transition-colors shadow-2xs"
+                      className="px-2.5 py-1 rounded-[4px] bg-blue-600 hover:bg-blue-700 text-white font-bold text-[11px] cursor-pointer transition-colors"
                     >
                       Fill Code
                     </button>
@@ -797,13 +797,13 @@ export const AuthModal = ({ isOpen, onClose, onLoginSuccess }) => {
                       onChange={(e) => handleOtpDigitChange(idx, e.target.value)}
                       onKeyDown={(e) => handleOtpKeyDown(idx, e)}
                       onPaste={idx === 0 ? handleOtpPaste : undefined}
-                      className="w-10 sm:w-12 h-12 sm:h-14 text-center text-xl sm:text-2xl font-extrabold font-mono rounded-xl bg-slate-50 border border-slate-200 text-slate-900 focus:bg-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 shadow-2xs transition-all"
+                      className="w-10 sm:w-12 h-12 sm:h-14 text-center text-xl sm:text-2xl font-extrabold font-mono rounded-[4px] bg-slate-50 border border-slate-200 text-slate-900 focus:bg-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
                     />
                   ))}
                 </div>
 
                 {otpSuccessMsg && (
-                  <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-xl flex items-center justify-center gap-2 text-xs text-emerald-800 font-bold">
+                  <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-[4px] flex items-center justify-center gap-2 text-xs text-emerald-800 font-bold">
                     <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
                     <span>{otpSuccessMsg}</span>
                   </div>
@@ -813,7 +813,7 @@ export const AuthModal = ({ isOpen, onClose, onLoginSuccess }) => {
                 <button
                   type="submit"
                   disabled={isLoading}
-                  className="w-full py-3 px-4 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-sm shadow-lg shadow-blue-500/25 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+                  className="w-full py-3 px-4 rounded-[4px] bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
                 >
                   {isLoading ? (
                     <div className="flex items-center gap-2">
@@ -861,9 +861,9 @@ export const AuthModal = ({ isOpen, onClose, onLoginSuccess }) => {
         </div>
 
         {/* ================= RIGHT COLUMN: SERVICES VEEGO DELIVERS (CLEAN LIGHT TECH THEME) ================= */}
-        <div className="lg:w-1/2 bg-[#f8fafc] p-6 sm:p-7 flex flex-col justify-between relative overflow-hidden border-t md:border-t-0 md:border-l border-slate-200/80">
+        <div className="lg:w-1/2 bg-[#f8fafc] p-6 sm:p-7 flex flex-col justify-between relative overflow-hidden border-t md:border-t-0 md:border-l border-slate-200">
           <div className="relative z-10">
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50 border border-blue-200 text-blue-700 text-[11px] font-bold mb-3 shadow-2xs">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-[4px] bg-blue-50 border border-blue-200 text-blue-700 text-[11px] font-bold mb-3 font-mono">
               <Sparkles className="w-3.5 h-3.5 text-blue-600" />
               <span>VeeGo Ecosystem</span>
             </div>
@@ -878,13 +878,13 @@ export const AuthModal = ({ isOpen, onClose, onLoginSuccess }) => {
             {/* THREE SLEEK SERVICE ITEMS */}
             <div className="space-y-3">
               {/* 1. For Business People */}
-              <div className="p-4 rounded-2xl bg-white border border-slate-200/90 hover:border-blue-300 hover:shadow-md transition-all shadow-2xs">
+              <div className="p-4 rounded-[4px] bg-white border border-slate-200 hover:border-blue-400 transition-all">
                 <div className="flex items-start gap-3">
-                  <div className="w-9 h-9 rounded-xl bg-blue-50 border border-blue-200 text-blue-600 flex items-center justify-center shrink-0 mt-0.5 shadow-2xs">
+                  <div className="w-9 h-9 rounded-[4px] bg-blue-50 border border-blue-200 text-blue-600 flex items-center justify-center shrink-0 mt-0.5">
                     <Building2 className="w-4 h-4" />
                   </div>
                   <div className="flex-1">
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-blue-700">
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-blue-700 font-mono">
                       For Business People
                     </span>
                     <h4 className="text-xs font-bold text-slate-900 mt-0.5">
@@ -898,13 +898,13 @@ export const AuthModal = ({ isOpen, onClose, onLoginSuccess }) => {
               </div>
 
               {/* 2. For College Students */}
-              <div className="p-4 rounded-2xl bg-white border border-slate-200/90 hover:border-emerald-300 hover:shadow-md transition-all shadow-2xs">
+              <div className="p-4 rounded-[4px] bg-white border border-slate-200 hover:border-emerald-400 transition-all">
                 <div className="flex items-start gap-3">
-                  <div className="w-9 h-9 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-600 flex items-center justify-center shrink-0 mt-0.5 shadow-2xs">
+                  <div className="w-9 h-9 rounded-[4px] bg-emerald-50 border border-emerald-200 text-emerald-600 flex items-center justify-center shrink-0 mt-0.5">
                     <GraduationCap className="w-4 h-4" />
                   </div>
                   <div className="flex-1">
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-700">
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-700 font-mono">
                       For College Students
                     </span>
                     <h4 className="text-xs font-bold text-slate-900 mt-0.5">
@@ -918,13 +918,13 @@ export const AuthModal = ({ isOpen, onClose, onLoginSuccess }) => {
               </div>
 
               {/* 3. For Upskilling */}
-              <div className="p-4 rounded-2xl bg-white border border-slate-200/90 hover:border-indigo-300 hover:shadow-md transition-all shadow-2xs">
+              <div className="p-4 rounded-[4px] bg-white border border-slate-200 hover:border-indigo-400 transition-all">
                 <div className="flex items-start gap-3">
-                  <div className="w-9 h-9 rounded-xl bg-indigo-50 border border-indigo-200 text-indigo-600 flex items-center justify-center shrink-0 mt-0.5 shadow-2xs">
+                  <div className="w-9 h-9 rounded-[4px] bg-indigo-50 border border-indigo-200 text-indigo-600 flex items-center justify-center shrink-0 mt-0.5">
                     <Rocket className="w-4 h-4" />
                   </div>
                   <div className="flex-1">
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-indigo-700">
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-indigo-700 font-mono">
                       For Upskilling
                     </span>
                     <h4 className="text-xs font-bold text-slate-900 mt-0.5">
@@ -939,7 +939,7 @@ export const AuthModal = ({ isOpen, onClose, onLoginSuccess }) => {
             </div>
           </div>
 
-          <div className="pt-4 mt-4 border-t border-slate-200 flex items-center justify-between text-[11px] text-slate-600">
+          <div className="pt-4 mt-4 border-t border-slate-200 flex items-center justify-between text-[11px] text-slate-600 font-mono">
             <span className="font-medium">Understand • Build • Grow</span>
           </div>
         </div>

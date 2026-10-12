@@ -41,7 +41,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
               </p>
 
               {/* Tagline Pill */}
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-blue-950/60 border border-blue-800/60 text-[11px] font-bold text-blue-400 uppercase tracking-wider mb-6">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-[4px] bg-blue-950/60 border border-blue-800/60 text-[11px] font-bold text-blue-400 uppercase tracking-wider mb-6">
                 <span>Understand</span>
                 <span className="text-blue-600">·</span>
                 <span>Build</span>
@@ -60,7 +60,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                   href="#linkedin"
                   onClick={(e) => e.preventDefault()}
                   aria-label="VeeGo LinkedIn"
-                  className="w-8 h-8 rounded-lg bg-slate-800 hover:bg-blue-600 text-slate-400 hover:text-white border border-slate-700 hover:border-blue-600 flex items-center justify-center transition-all duration-200"
+                  className="w-8 h-8 rounded-[4px] bg-slate-800 hover:bg-blue-600 text-slate-400 hover:text-white border border-slate-700 hover:border-blue-600 flex items-center justify-center transition-all duration-200"
                 >
                   <svg className="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z" /></svg>
                 </a>
@@ -68,7 +68,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                   href="#instagram"
                   onClick={(e) => e.preventDefault()}
                   aria-label="VeeGo Instagram"
-                  className="w-8 h-8 rounded-lg bg-slate-800 hover:bg-pink-600 text-slate-400 hover:text-white border border-slate-700 hover:border-pink-600 flex items-center justify-center transition-all duration-200"
+                  className="w-8 h-8 rounded-[4px] bg-slate-800 hover:bg-pink-600 text-slate-400 hover:text-white border border-slate-700 hover:border-pink-600 flex items-center justify-center transition-all duration-200"
                 >
                   <svg className="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" /></svg>
                 </a>
@@ -76,7 +76,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                   href="#youtube"
                   onClick={(e) => e.preventDefault()}
                   aria-label="VeeGo YouTube"
-                  className="w-8 h-8 rounded-lg bg-slate-800 hover:bg-red-600 text-slate-400 hover:text-white border border-slate-700 hover:border-red-600 flex items-center justify-center transition-all duration-200"
+                  className="w-8 h-8 rounded-[4px] bg-slate-800 hover:bg-red-600 text-slate-400 hover:text-white border border-slate-700 hover:border-red-600 flex items-center justify-center transition-all duration-200"
                 >
                   <svg className="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" /></svg>
                 </a>
@@ -84,7 +84,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                   href="#github"
                   onClick={(e) => e.preventDefault()}
                   aria-label="VeeGo GitHub"
-                  className="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white border border-slate-700 flex items-center justify-center transition-all duration-200"
+                  className="w-8 h-8 rounded-[4px] bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white border border-slate-700 flex items-center justify-center transition-all duration-200"
                 >
                   <svg className="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z" /></svg>
                 </a>
@@ -99,16 +99,16 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
             </h4>
             <ul className="space-y-2.5 text-xs sm:text-sm">
               {[
-                { name: 'Full-Stack Web Development', path: '/courses' },
-                { name: 'Data Science & Machine Learning', path: '/courses' },
-                { name: 'Generative AI & Automation', path: '/courses' },
-                { name: 'Python Software Engineering', path: '/courses' },
-                { name: 'PowerBI Business Analytics', path: '/courses' }
+                { name: 'Core Python with OOPs', path: '/courses' },
+                { name: 'Summer SQL Crash Course', path: '/courses' },
+                { name: 'Cognitive AI & Agentic Engineering', path: '/courses' },
+                { name: 'Python Full-Stack Development', path: '/courses' },
+                { name: 'Power BI & Data Analytics', path: '/courses' }
               ].map((item) => (
                 <li key={item.name}>
                   <button
                     onClick={() => onNavigate(item.path)}
-                    className="text-slate-400 hover:text-blue-400 transition-colors text-left block w-full hover:translate-x-0.5 duration-150"
+                    className="text-slate-400 hover:text-blue-400 transition-colors text-left block w-full hover:translate-x-0.5 duration-150 cursor-pointer"
                   >
                     {item.name}
                   </button>
@@ -124,16 +124,16 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
             </h4>
             <ul className="space-y-2.5 text-xs sm:text-sm">
               {[
-                { name: 'StaffTrack Field OS', path: '/projects' },
-                { name: 'InvoiceMaster Billing Hub', path: '/projects' },
-                { name: 'AlphaFly EdTech Engine', path: '/projects' },
-                { name: 'Spreadsheet AutoReconciler', path: '/projects' },
-                { name: 'Custom ERP Solutions', path: '/projects' }
+                { name: 'StaffTrack (Staff & Attendance)', path: '/projects/stafftrack' },
+                { name: 'Billing Software (GST Invoicing)', path: '/projects/billing-software' },
+                { name: 'AlphaFly LMS (Learning Platform)', path: '/projects/alpha-fly-lms' },
+                { name: 'Custom Business Web Apps', path: '/projects' },
+                { name: 'Software Capstone Projects', path: '/projects' }
               ].map((item) => (
                 <li key={item.name}>
                   <button
                     onClick={() => onNavigate(item.path)}
-                    className="text-slate-400 hover:text-blue-400 transition-colors text-left block w-full hover:translate-x-0.5 duration-150"
+                    className="text-slate-400 hover:text-blue-400 transition-colors text-left block w-full hover:translate-x-0.5 duration-150 cursor-pointer"
                   >
                     {item.name}
                   </button>
@@ -159,7 +159,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                 <li key={item.name}>
                   <button
                     onClick={() => onNavigate(item.path)}
-                    className="text-slate-400 hover:text-blue-400 transition-colors text-left block w-full hover:translate-x-0.5 duration-150"
+                    className="text-slate-400 hover:text-blue-400 transition-colors text-left block w-full hover:translate-x-0.5 duration-150 cursor-pointer"
                   >
                     {item.name}
                   </button>
@@ -171,8 +171,8 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
 
         {/* Contact Highlights Cards */}
         <div className="py-6 grid grid-cols-1 sm:grid-cols-3 gap-4 border-b border-slate-800">
-          <div className="p-3.5 rounded-xl bg-slate-800/80 border border-slate-700 flex items-center gap-3">
-            <div className="w-9 h-9 rounded-lg bg-blue-900/50 border border-blue-700/50 text-blue-400 flex items-center justify-center shrink-0">
+          <div className="p-3.5 rounded-[4px] bg-slate-800/80 border border-slate-700 flex items-center gap-3">
+            <div className="w-9 h-9 rounded-[4px] bg-blue-900/50 border border-blue-700/50 text-blue-400 flex items-center justify-center shrink-0">
               <PhoneCall className="w-4 h-4" />
             </div>
             <div>
@@ -185,8 +185,8 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
             </div>
           </div>
 
-          <div className="p-3.5 rounded-xl bg-slate-800/80 border border-slate-700 flex items-center gap-3">
-            <div className="w-9 h-9 rounded-lg bg-emerald-900/50 border border-emerald-700/50 text-emerald-400 flex items-center justify-center shrink-0">
+          <div className="p-3.5 rounded-[4px] bg-slate-800/80 border border-slate-700 flex items-center gap-3">
+            <div className="w-9 h-9 rounded-[4px] bg-emerald-900/50 border border-emerald-700/50 text-emerald-400 flex items-center justify-center shrink-0">
               <Mail className="w-4 h-4" />
             </div>
             <div>
@@ -199,8 +199,8 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
             </div>
           </div>
 
-          <div className="p-3.5 rounded-xl bg-slate-800/80 border border-slate-700 flex items-center gap-3">
-            <div className="w-9 h-9 rounded-lg bg-amber-900/50 border border-amber-700/50 text-amber-400 flex items-center justify-center shrink-0">
+          <div className="p-3.5 rounded-[4px] bg-slate-800/80 border border-slate-700 flex items-center gap-3">
+            <div className="w-9 h-9 rounded-[4px] bg-amber-900/50 border border-amber-700/50 text-amber-400 flex items-center justify-center shrink-0">
               <Clock className="w-4 h-4" />
             </div>
             <div>
@@ -220,16 +220,11 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
           <div className="flex items-center gap-3">
             <span>&copy; {new Date().getFullYear()} <span className="text-slate-300 font-semibold">VeeGo Technologies</span>. All rights reserved.</span>
             <span className="text-slate-700">·</span>
-            <button
-              onClick={() => onNavigate('/admin')}
-              className="text-slate-500 hover:text-indigo-400 transition-colors font-medium"
-            >
-              Admin Portal
-            </button>
+
           </div>
 
           <div className="flex items-center gap-3">
-            <div className="inline-flex items-center gap-1.5 text-[11px] bg-slate-800 px-2.5 py-1 rounded-md border border-slate-700 text-slate-300">
+            <div className="inline-flex items-center gap-1.5 text-[11px] bg-slate-800 px-2.5 py-1 rounded-[4px] border border-slate-700 text-slate-300">
               <span className="font-medium">Your Problem</span>
               <span className="text-blue-400">→</span>
               <span className="font-medium">Our Blueprint</span>
@@ -240,7 +235,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
             <button
               onClick={scrollToTop}
               aria-label="Back to Top"
-              className="w-7 h-7 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 flex items-center justify-center transition-colors"
+              className="w-7 h-7 rounded-[4px] bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 flex items-center justify-center transition-colors"
             >
               <ArrowUp className="w-3.5 h-3.5" />
             </button>

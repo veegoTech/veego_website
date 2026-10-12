@@ -1,25 +1,19 @@
 import React, { useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, Variants } from 'framer-motion';
 import {
   BookOpen,
   CheckCircle2,
-  Send,
-  Sparkles,
   GraduationCap,
   Clock,
-  Layers,
-  Code2,
   Laptop,
   Building2,
   ShieldCheck,
-  Zap,
   ArrowRight,
   PhoneCall,
   Mail,
   User,
-  Check
+  Send
 } from 'lucide-react';
-import { WaveDivider } from '../../components/WaveDivider';
 
 interface CoursesPageProps {
   onNavigate: (path: string) => void;
@@ -40,11 +34,40 @@ interface OnlineCourse {
   accentColor: string;
 }
 
+const containerVariants: Variants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.08,
+      delayChildren: 0.05
+    }
+  }
+};
+
+const itemVariants: Variants = {
+  hidden: { opacity: 0, y: 16 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.45,
+      ease: [0.16, 1, 0.3, 1] as [number, number, number, number]
+    }
+  }
+};
+
+const cardHoverReaction = {
+  whileHover: { scale: 1.015, y: -2 },
+  whileTap: { scale: 0.985 },
+  transition: { type: 'spring' as const, stiffness: 450, damping: 28 }
+};
+
 const ONLINE_COURSES: OnlineCourse[] = [
   {
     id: 'core-python',
     badge: 'Core Program',
-    badgeColor: 'bg-blue-50 text-blue-700 border-blue-200',
+    badgeColor: 'bg-slate-100 text-blue-700 border-slate-300',
     title: 'Core Python with OOPs',
     subtitle: 'Variables, Logic Structures, Functions, OOP Principles & File I/O',
     description:
@@ -64,7 +87,7 @@ const ONLINE_COURSES: OnlineCourse[] = [
   {
     id: 'summer-sql',
     badge: 'Summer Crash',
-    badgeColor: 'bg-emerald-50 text-emerald-700 border-emerald-200',
+    badgeColor: 'bg-slate-100 text-emerald-700 border-slate-300',
     title: 'Summer SQL Crash Course',
     subtitle: 'Relational Database Queries, Filters, Aggregations & Table Structures',
     description:
@@ -84,7 +107,7 @@ const ONLINE_COURSES: OnlineCourse[] = [
   {
     id: 'cognitive-ai',
     badge: 'Advanced AI',
-    badgeColor: 'bg-indigo-50 text-indigo-700 border-indigo-200',
+    badgeColor: 'bg-slate-100 text-indigo-700 border-slate-300',
     title: 'Cognitive AI Development & Agentic Engineering',
     subtitle: 'Prompt Engineering, Fine-Tuning, Flowise, CrewAI & Multi-Agent Loops',
     description:
@@ -127,17 +150,17 @@ export const CoursesPage: React.FC<CoursesPageProps> = ({ onNavigate, onOpenLogi
   };
 
   return (
-    <div className="min-h-screen bg-white font-sans text-slate-900 overflow-x-hidden selection:bg-blue-600 selection:text-white scroll-smooth">
-      
-      {/* 🚀 1. PAGE HEADER BANNER (PURE WHITE) */}
-      <header className="relative pt-12 pb-16 sm:pb-20 bg-white text-slate-900 overflow-hidden">
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center z-10">
+    <div className="min-h-screen bg-white font-sans text-slate-900 selection:bg-blue-600 selection:text-white">
+
+      {/* 🚀 1. PAGE HEADER BANNER (SOLID WHITE, SWISS GRID) */}
+      <header className="relative pt-12 pb-16 sm:pb-20 bg-white border-b border-slate-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <motion.div
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
-            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-50 border border-blue-200 text-xs font-bold text-blue-700 mb-5 shadow-xs"
+            className="inline-flex items-center gap-2 px-3 py-1 rounded-[4px] bg-slate-100 border border-slate-300 text-xs font-mono font-bold text-slate-900 mb-5"
           >
-            <GraduationCap className="w-4 h-4 text-blue-600" />
+            {/* <GraduationCap className="w-3.5 h-3.5 text-blue-600" /> */}
             <span className="tracking-wider uppercase">VEEGO ACADEMY · APPLIED TECHNICAL TRAINING</span>
           </motion.div>
 
@@ -145,11 +168,10 @@ export const CoursesPage: React.FC<CoursesPageProps> = ({ onNavigate, onOpenLogi
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="font-Space Grotesk text-4xl sm:text-6xl lg:text-[4.25rem] font-extrabold tracking-tight text-slate-950 mb-5 leading-[1.1]"
-            style={{ fontFamily: "'Space Grotesk', sans-serif" }}
+            className="text-4xl sm:text-6xl font-black tracking-tight text-slate-950 mb-5 leading-[1.1]"
           >
             Master Engineering <br className="hidden sm:inline" />
-            <span className="text-blue-600 font-extrabold">Online or Offline</span>
+            <span className="text-blue-600">Online or Offline</span>
           </motion.h1>
 
           <motion.p
@@ -165,7 +187,7 @@ export const CoursesPage: React.FC<CoursesPageProps> = ({ onNavigate, onOpenLogi
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
-            className="flex flex-wrap items-center justify-center gap-4 text-sm font-medium"
+            className="flex flex-wrap items-center justify-center gap-3 text-xs font-bold uppercase tracking-wider"
           >
             <button
               onClick={() => {
@@ -175,7 +197,7 @@ export const CoursesPage: React.FC<CoursesPageProps> = ({ onNavigate, onOpenLogi
                   onNavigate('/contact');
                 }
               }}
-              className="px-7 py-3.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-sm shadow-lg shadow-blue-500/25 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center gap-2 cursor-pointer"
+              className="px-6 py-3.5 rounded-[4px] bg-blue-600 hover:bg-blue-700 text-white transition-colors border border-blue-600 flex items-center gap-2 cursor-pointer"
             >
               <Laptop className="w-4 h-4" />
               <span>Browse Online Courses</span>
@@ -183,80 +205,81 @@ export const CoursesPage: React.FC<CoursesPageProps> = ({ onNavigate, onOpenLogi
 
             <button
               onClick={scrollToOffline}
-              className="px-7 py-3.5 rounded-xl bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 font-bold text-sm shadow-2xs hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center gap-2 cursor-pointer"
+              className="px-6 py-3.5 rounded-[4px] bg-white hover:bg-slate-100 text-slate-900 border border-slate-300 transition-colors flex items-center gap-2 cursor-pointer"
             >
-              <Building2 className="w-4 h-4 text-blue-600" />
+              <Building2 className="w-4 h-4 text-slate-700" />
               <span>Request Offline Training</span>
             </button>
           </motion.div>
         </div>
       </header>
 
-      {/* ✨ WAVE DIVIDER: WHITE TO SOFT SLATE */}
-      <WaveDivider fromColor="#ffffff" toColor="#f1f5f9" type="curve-1" />
+      {/* 📚 2. SECTION: AVAILABLE ONLINE COURSES (SOLID DARK #0B0F19, BENTO GRID) */}
+      <section className="relative py-16 sm:py-20 bg-[#0B0F19] text-white border-b border-slate-800">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
-      {/* 📚 2. SECTION: AVAILABLE ONLINE COURSES (SOFT SLATE #f1f5f9) */}
-      <section className="relative py-12 sm:py-16 bg-[#f1f5f9] text-slate-900 overflow-hidden">
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 z-10">
-          
           {/* Section Header */}
           <div className="text-center max-w-3xl mx-auto mb-14">
-            <span className="text-xs uppercase tracking-wider text-blue-700 font-bold px-3.5 py-1.5 rounded-full bg-blue-50 border border-blue-200 mb-3 inline-flex items-center gap-1.5 shadow-xs">
-              <Laptop className="w-3.5 h-3.5 text-blue-600" />
+            <span className="text-xs uppercase tracking-wider text-blue-400 font-mono font-bold px-3 py-1 rounded-[4px] bg-slate-900 border border-slate-800 mb-3 inline-flex items-center gap-1.5">
+              <Laptop className="w-3.5 h-3.5 text-blue-400" />
               Live Online LMS Portal
             </span>
-            <h2 className="font-Space Grotesk text-3xl sm:text-5xl font-extrabold tracking-tight text-slate-950 mb-3" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
+            <h2 className="text-3xl sm:text-5xl font-black tracking-tight text-white mb-3">
               Available Online Courses
             </h2>
-            <p className="text-sm sm:text-base text-slate-600 max-w-xl mx-auto leading-relaxed font-normal">
+            <p className="text-sm sm:text-base text-slate-400 max-w-xl mx-auto leading-relaxed font-normal">
               Structured LMS access with real project source code, interactive quizzes, cloud deployment guides, and 1-on-1 engineer assistance.
             </p>
           </div>
 
-          {/* 3 Cards Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7 items-stretch max-w-7xl mx-auto">
-            {ONLINE_COURSES.map((course, idx) => (
+          {/* 3 Cards Bento Grid */}
+          <motion.div
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch max-w-7xl mx-auto"
+          >
+            {ONLINE_COURSES.map((course) => (
               <motion.div
                 key={course.id}
-                initial={{ opacity: 0, y: 25 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.4, delay: idx * 0.12 }}
-                className="rounded-3xl p-7 bg-white border border-slate-200/90 shadow-sm hover:shadow-xl hover:border-blue-300 transition-all duration-300 flex flex-col justify-between group"
+                variants={itemVariants}
+                {...cardHoverReaction}
+                className="rounded-[4px] p-7 bg-[#111827] border border-slate-800 flex flex-col justify-between group"
               >
                 <div>
                   {/* Top Badges */}
                   <div className="flex items-center justify-between gap-2 mb-4 flex-wrap">
-                    <span className={`text-[11px] font-extrabold uppercase tracking-wider px-3 py-1 rounded-full border ${course.badgeColor}`}>
+                    <span className="text-[10px] font-mono font-bold uppercase tracking-wider px-2.5 py-1 rounded-[4px] border border-slate-700 bg-slate-900 text-blue-400">
                       {course.badge}
                     </span>
-                    <span className="text-xs font-semibold text-slate-600 flex items-center gap-1 bg-slate-50 px-2.5 py-1 rounded-md border border-slate-200">
-                      <Clock className="w-3.5 h-3.5 text-blue-600" />
+                    <span className="text-xs font-mono text-slate-400 flex items-center gap-1 bg-slate-900 px-2.5 py-1 rounded-[4px] border border-slate-800">
+                      <Clock className="w-3.5 h-3.5 text-blue-400" />
                       {course.duration.split('·')[0]}
                     </span>
                   </div>
 
                   {/* Title & Subtitle */}
-                  <h3 className="font-Space Grotesk text-xl font-extrabold text-slate-950 tracking-tight mb-2 leading-snug group-hover:text-blue-600 transition-colors" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
+                  <h3 className="text-xl font-bold text-white tracking-tight mb-2 leading-snug group-hover:text-blue-400 transition-colors">
                     {course.title}
                   </h3>
 
-                  <p className="text-xs font-bold text-blue-600 mb-3">
+                  <p className="text-xs font-bold text-blue-400 mb-3">
                     {course.subtitle}
                   </p>
 
-                  <p className="text-xs text-slate-600 leading-relaxed mb-5 font-normal line-clamp-3">
+                  <p className="text-xs text-slate-400 leading-relaxed mb-5 font-normal line-clamp-3">
                     {course.description}
                   </p>
 
                   {/* Key Modules Checklist */}
-                  <div className="pt-4 border-t border-slate-100 mb-6 space-y-2.5">
-                    <div className="text-[10px] uppercase tracking-wider text-slate-700 font-bold mb-2">
+                  <div className="pt-4 border-t border-slate-800 mb-6 space-y-2.5">
+                    <div className="text-[10px] font-mono uppercase tracking-wider text-slate-400 font-bold mb-2">
                       Core Curriculum Highlights:
                     </div>
                     {course.modules.slice(0, 5).map((m) => (
-                      <div key={m} className="flex items-start gap-2 text-xs text-slate-700 font-medium">
-                        <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+                      <div key={m} className="flex items-start gap-2 text-xs text-slate-300 font-medium">
+                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0 mt-0.5" />
                         <span className="line-clamp-1">{m}</span>
                       </div>
                     ))}
@@ -264,18 +287,18 @@ export const CoursesPage: React.FC<CoursesPageProps> = ({ onNavigate, onOpenLogi
                 </div>
 
                 {/* Card Footer / CTA */}
-                <div className="pt-4 border-t border-slate-100 space-y-4">
+                <div className="pt-4 border-t border-slate-800 space-y-4">
                   <div className="flex items-center justify-between">
                     <div>
-                      <span className="text-[10px] uppercase tracking-wider text-slate-500 font-bold block">
+                      <span className="text-[10px] font-mono uppercase tracking-wider text-slate-400 font-bold block">
                         Full LMS Access
                       </span>
                       <div className="flex items-baseline gap-1.5">
-                        <span className="text-2xl font-black text-slate-950">{course.price}</span>
-                        <span className="text-[11px] text-slate-500 font-normal">/ One-time</span>
+                        <span className="text-2xl font-black text-white">{course.price}</span>
+                        <span className="text-[11px] text-slate-400 font-normal">/ One-time</span>
                       </div>
                     </div>
-                    <span className="text-[11px] text-slate-700 font-bold bg-slate-100 border border-slate-200 px-2.5 py-1 rounded-md">
+                    <span className="text-[10px] font-mono font-bold uppercase text-slate-300 bg-slate-900 border border-slate-800 px-2.5 py-1 rounded-[4px]">
                       {course.level}
                     </span>
                   </div>
@@ -288,31 +311,28 @@ export const CoursesPage: React.FC<CoursesPageProps> = ({ onNavigate, onOpenLogi
                         onNavigate('/contact');
                       }
                     }}
-                    className="w-full py-3.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs sm:text-sm transition-all shadow-md shadow-blue-500/20 flex items-center justify-center gap-2 cursor-pointer hover:scale-[1.02] active:scale-[0.98]"
+                    className="w-full py-3 rounded-[4px] bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs uppercase tracking-wider transition-colors flex items-center justify-center gap-2 cursor-pointer border border-blue-600"
                   >
                     <span>Access Online LMS</span>
-                    <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+                    <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
                   </button>
                 </div>
               </motion.div>
             ))}
-          </div>
+          </motion.div>
 
         </div>
       </section>
 
-      {/* ✨ WAVE DIVIDER: SOFT SLATE TO PURE WHITE */}
-      <WaveDivider fromColor="#f1f5f9" toColor="#ffffff" type="curve-2" />
-
-      {/* 🏫 3. SECTION: REQUEST OFFLINE COURSE TRAINING (PURE WHITE) */}
-      <section id="offline-training" className="relative py-12 sm:py-16 bg-white text-slate-900 scroll-mt-16 overflow-hidden">
-        <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 z-10">
+      {/* 🏫 3. SECTION: REQUEST OFFLINE COURSE TRAINING (SOLID WHITE) */}
+      <section id="offline-training" className="relative py-16 sm:py-20 bg-white text-slate-900 scroll-mt-16">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-2xl mx-auto mb-10">
-            <span className="text-xs uppercase tracking-wider text-blue-700 font-bold px-3.5 py-1 rounded-full bg-blue-50 border border-blue-200 mb-3 inline-flex items-center gap-1.5 shadow-xs">
+            <span className="text-xs uppercase tracking-wider text-slate-900 font-mono font-bold px-3 py-1 rounded-[4px] bg-slate-100 border border-slate-300 mb-3 inline-flex items-center gap-1.5">
               <Building2 className="w-3.5 h-3.5 text-blue-600" />
               In-Person &amp; Offline Batches
             </span>
-            <h2 className="font-Space Grotesk text-3xl sm:text-5xl font-black text-slate-950 tracking-tight leading-tight" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
+            <h2 className="text-3xl sm:text-5xl font-black text-slate-950 tracking-tight leading-tight">
               Request Offline Course Training
             </h2>
             <p className="mt-3 text-xs sm:text-sm text-slate-600 leading-relaxed font-normal">
@@ -320,23 +340,21 @@ export const CoursesPage: React.FC<CoursesPageProps> = ({ onNavigate, onOpenLogi
             </p>
           </div>
 
-          {/* FORM CONTAINER CARD */}
+          {/* FORM CONTAINER CARD (SWISS FLAT HAILINE) */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="rounded-3xl p-8 sm:p-12 bg-white border border-slate-200/90 shadow-xl shadow-blue-500/5 relative overflow-hidden text-slate-900"
+            className="rounded-[4px] p-8 sm:p-12 bg-white border border-slate-300 relative text-slate-900"
           >
-            <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-blue-600 via-indigo-600 to-sky-500" />
-
             {formSubmitted ? (
               <motion.div
-                initial={{ opacity: 0, scale: 0.95 }}
+                initial={{ opacity: 0, scale: 0.98 }}
                 animate={{ opacity: 1, scale: 1 }}
-                className="p-8 rounded-2xl bg-blue-50 border border-blue-200 text-center"
+                className="p-8 rounded-[4px] bg-slate-50 border border-slate-300 text-center"
               >
-                <CheckCircle2 className="w-14 h-14 text-blue-600 mx-auto mb-3" />
-                <h3 className="text-2xl font-bold text-slate-950 mb-2 font-Space Grotesk" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
+                <CheckCircle2 className="w-12 h-12 text-emerald-600 mx-auto mb-3" />
+                <h3 className="text-2xl font-bold text-slate-950 mb-2">
                   Offline Course Request Received!
                 </h3>
                 <p className="text-xs sm:text-sm text-slate-600 max-w-md mx-auto mb-6 font-medium leading-relaxed">
@@ -351,7 +369,7 @@ export const CoursesPage: React.FC<CoursesPageProps> = ({ onNavigate, onOpenLogi
                     setOfflineCourse('');
                     setOfflinePurpose('');
                   }}
-                  className="px-6 py-3 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs transition-colors shadow-md cursor-pointer"
+                  className="px-6 py-3 rounded-[4px] bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs uppercase tracking-wider transition-colors border border-blue-600 cursor-pointer"
                 >
                   Submit Another Offline Request
                 </button>
@@ -363,9 +381,9 @@ export const CoursesPage: React.FC<CoursesPageProps> = ({ onNavigate, onOpenLogi
                   <div>
                     <label htmlFor="off-name" className="block text-xs font-bold uppercase tracking-wider text-slate-800 mb-1.5 flex items-center justify-between">
                       <span className="flex items-center gap-1">
-                        <User className="w-3.5 h-3.5 text-blue-600" /> Full Name <span className="text-rose-500">*</span>
+                        <User className="w-3.5 h-3.5 text-blue-600" /> Full Name <span className="text-rose-600">*</span>
                       </span>
-                      <span className="text-[10px] text-slate-500 font-normal">Mandatory</span>
+                      <span className="text-[10px] font-mono text-slate-500 font-normal">Mandatory</span>
                     </label>
                     <input
                       id="off-name"
@@ -374,16 +392,16 @@ export const CoursesPage: React.FC<CoursesPageProps> = ({ onNavigate, onOpenLogi
                       value={offlineName}
                       onChange={(e) => setOfflineName(e.target.value)}
                       placeholder="e.g. Kowsalya Devi"
-                      className="w-full text-xs sm:text-sm p-3.5 rounded-xl border border-slate-200 bg-slate-50/70 text-slate-900 placeholder-slate-400 focus:outline-none focus:bg-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 shadow-2xs transition-all"
+                      className="w-full text-xs sm:text-sm p-3.5 rounded-[4px] border border-slate-300 bg-white text-slate-900 placeholder-slate-400 focus:outline-none focus:border-slate-900 transition-colors"
                     />
                   </div>
 
                   <div>
                     <label htmlFor="off-phone" className="block text-xs font-bold uppercase tracking-wider text-slate-800 mb-1.5 flex items-center justify-between">
                       <span className="flex items-center gap-1">
-                        <PhoneCall className="w-3.5 h-3.5 text-blue-600" /> Phone / WhatsApp <span className="text-rose-500">*</span>
+                        <PhoneCall className="w-3.5 h-3.5 text-blue-600" /> Phone / WhatsApp <span className="text-rose-600">*</span>
                       </span>
-                      <span className="text-[10px] text-rose-600 font-bold">Mandatory</span>
+                      <span className="text-[10px] font-mono text-rose-600 font-bold">Mandatory</span>
                     </label>
                     <input
                       id="off-phone"
@@ -393,7 +411,7 @@ export const CoursesPage: React.FC<CoursesPageProps> = ({ onNavigate, onOpenLogi
                       value={offlinePhone}
                       onChange={(e) => setOfflinePhone(e.target.value.replace(/\D/g, '').slice(0, 10))}
                       placeholder="9876543210"
-                      className="w-full text-xs sm:text-sm p-3.5 rounded-xl border border-slate-200 bg-slate-50/70 text-slate-900 placeholder-slate-400 focus:outline-none focus:bg-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 shadow-2xs transition-all"
+                      className="w-full text-xs sm:text-sm p-3.5 rounded-[4px] border border-slate-300 bg-white text-slate-900 placeholder-slate-400 focus:outline-none focus:border-slate-900 transition-colors"
                     />
                   </div>
                 </div>
@@ -405,7 +423,7 @@ export const CoursesPage: React.FC<CoursesPageProps> = ({ onNavigate, onOpenLogi
                       <span className="flex items-center gap-1">
                         <Mail className="w-3.5 h-3.5 text-blue-600" /> Email ID
                       </span>
-                      <span className="text-[10px] text-slate-500 font-normal">Optional</span>
+                      <span className="text-[10px] font-mono text-slate-500 font-normal">Optional</span>
                     </label>
                     <input
                       id="off-email"
@@ -413,19 +431,19 @@ export const CoursesPage: React.FC<CoursesPageProps> = ({ onNavigate, onOpenLogi
                       value={offlineEmail}
                       onChange={(e) => setOfflineEmail(e.target.value)}
                       placeholder="name@gmail.com (Optional)"
-                      className="w-full text-xs sm:text-sm p-3.5 rounded-xl border border-slate-200 bg-slate-50/70 text-slate-900 placeholder-slate-400 focus:outline-none focus:bg-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 shadow-2xs transition-all"
+                      className="w-full text-xs sm:text-sm p-3.5 rounded-[4px] border border-slate-300 bg-white text-slate-900 placeholder-slate-400 focus:outline-none focus:border-slate-900 transition-colors"
                     />
                   </div>
 
                   <div>
                     <label htmlFor="off-profession" className="block text-xs font-bold uppercase tracking-wider text-slate-800 mb-1.5 flex items-center gap-1">
-                      <Building2 className="w-3.5 h-3.5 text-blue-600" /> Profession / Role <span className="text-rose-500">*</span>
+                      <Building2 className="w-3.5 h-3.5 text-blue-600" /> Profession / Role <span className="text-rose-600">*</span>
                     </label>
                     <select
                       id="off-profession"
                       value={offlineProfession}
                       onChange={(e) => setOfflineProfession(e.target.value)}
-                      className="w-full text-xs sm:text-sm p-3.5 rounded-xl border border-slate-200 bg-slate-50/70 text-slate-900 focus:outline-none focus:bg-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 shadow-2xs transition-all cursor-pointer"
+                      className="w-full text-xs sm:text-sm p-3.5 rounded-[4px] border border-slate-300 bg-white text-slate-900 focus:outline-none focus:border-slate-900 transition-colors cursor-pointer"
                     >
                       <option value="College Student">College Student</option>
                       <option value="Job Seeker">Job Seeker</option>
@@ -435,13 +453,13 @@ export const CoursesPage: React.FC<CoursesPageProps> = ({ onNavigate, onOpenLogi
                   </div>
                 </div>
 
-                {/* Row 3: Course Needed (Text Input - NOT Dropdown!) */}
+                {/* Row 3: Course Needed (Text Input) */}
                 <div>
                   <label htmlFor="off-course" className="block text-xs font-bold uppercase tracking-wider text-slate-800 mb-1.5 flex items-center justify-between">
                     <span className="flex items-center gap-1">
-                      <BookOpen className="w-3.5 h-3.5 text-blue-600" /> Course Needed <span className="text-rose-500">*</span>
+                      <BookOpen className="w-3.5 h-3.5 text-blue-600" /> Course Needed <span className="text-rose-600">*</span>
                     </span>
-                    <span className="text-[10px] text-slate-500 font-normal">Type custom topic name</span>
+                    <span className="text-[10px] font-mono text-slate-500 font-normal">Type custom topic name</span>
                   </label>
                   <input
                     id="off-course"
@@ -450,7 +468,7 @@ export const CoursesPage: React.FC<CoursesPageProps> = ({ onNavigate, onOpenLogi
                     value={offlineCourse}
                     onChange={(e) => setOfflineCourse(e.target.value)}
                     placeholder="e.g. Full-Stack Web Development, Data Science with Python, AI Automation, PowerBI..."
-                    className="w-full text-xs sm:text-sm p-3.5 rounded-xl border border-slate-200 bg-slate-50/70 text-slate-900 placeholder-slate-400 focus:outline-none focus:bg-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 shadow-2xs transition-all"
+                    className="w-full text-xs sm:text-sm p-3.5 rounded-[4px] border border-slate-300 bg-white text-slate-900 placeholder-slate-400 focus:outline-none focus:border-slate-900 transition-colors"
                   />
                 </div>
 
@@ -458,7 +476,7 @@ export const CoursesPage: React.FC<CoursesPageProps> = ({ onNavigate, onOpenLogi
                 <div>
                   <label htmlFor="off-purpose" className="block text-xs font-bold uppercase tracking-wider text-slate-800 mb-1.5 flex items-center justify-between">
                     <span>What is your purpose for studying this course?</span>
-                    <span className="text-[10px] text-slate-500 font-normal">e.g. Final year project, Job placement, Upskilling</span>
+                    <span className="text-[10px] font-mono text-slate-500 font-normal">e.g. Final year project, Job placement, Upskilling</span>
                   </label>
                   <textarea
                     id="off-purpose"
@@ -467,19 +485,19 @@ export const CoursesPage: React.FC<CoursesPageProps> = ({ onNavigate, onOpenLogi
                     value={offlinePurpose}
                     onChange={(e) => setOfflinePurpose(e.target.value)}
                     placeholder="e.g. Need hands-on training and project source code for final year college placement & interview preparation..."
-                    className="w-full text-xs sm:text-sm p-4 rounded-xl border border-slate-200 bg-slate-50/70 text-slate-900 placeholder-slate-400 focus:outline-none focus:bg-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 shadow-2xs transition-all"
+                    className="w-full text-xs sm:text-sm p-3.5 rounded-[4px] border border-slate-300 bg-white text-slate-900 placeholder-slate-400 focus:outline-none focus:border-slate-900 transition-colors"
                   />
                 </div>
 
                 <div className="pt-2 flex flex-col sm:flex-row items-center justify-between gap-4">
                   <div className="flex items-center gap-2 text-[11px] text-slate-500 font-medium">
-                    <ShieldCheck className="w-4 h-4 text-blue-600 shrink-0" />
+                    <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0" />
                     <span>Direct response within 4 business hours. No sales spam.</span>
                   </div>
 
                   <button
                     type="submit"
-                    className="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs sm:text-sm transition-all shadow-lg shadow-blue-500/25 hover:scale-[1.02] flex items-center justify-center gap-2 cursor-pointer"
+                    className="w-full sm:w-auto px-7 py-3 rounded-[4px] bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs uppercase tracking-wider transition-colors border border-blue-600 flex items-center justify-center gap-2 cursor-pointer"
                   >
                     <span>Submit Offline Course Inquiry</span>
                     <Send className="w-4 h-4" />
@@ -490,9 +508,6 @@ export const CoursesPage: React.FC<CoursesPageProps> = ({ onNavigate, onOpenLogi
           </motion.div>
         </div>
       </section>
-
-      {/* 🌊 WAVE DIVIDER: WHITE TO DARK FOOTER */}
-      <WaveDivider fromColor="#ffffff" toColor="#0f172a" type="footer" />
 
     </div>
   );

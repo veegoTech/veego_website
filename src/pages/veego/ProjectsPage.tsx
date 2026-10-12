@@ -1,13 +1,37 @@
 import React, { useState } from 'react';
+import { motion, Variants } from 'framer-motion';
 import { ProjectCard } from '../../components/ProjectCard';
 import { projectsData } from '../../data/projects';
 import { Project, ProjectCategory } from '../../types';
-import { Sparkles, Layers, ArrowRight } from 'lucide-react';
+import { Layers, ArrowRight } from 'lucide-react';
 
 interface ProjectsPageProps {
   onNavigate: (path: string) => void;
   onOpenLiveDemo: (project: Project) => void;
 }
+
+const containerVariants: Variants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.08,
+      delayChildren: 0.05
+    }
+  }
+};
+
+const itemVariants: Variants = {
+  hidden: { opacity: 0, y: 16 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.45,
+      ease: [0.16, 1, 0.3, 1] as [number, number, number, number]
+    }
+  }
+};
 
 export const ProjectsPage: React.FC<ProjectsPageProps> = ({
   onNavigate,
@@ -28,15 +52,20 @@ export const ProjectsPage: React.FC<ProjectsPageProps> = ({
   });
 
   return (
-    <div className="py-12 sm:py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-slate-900 bg-slate-50 min-h-screen">
+    <div className="py-12 sm:py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-slate-900 bg-white min-h-screen">
       {/* Header */}
-      <div className="max-w-3xl mb-10">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-xs text-emerald-800 font-semibold mb-4">
-          <Layers className="w-3.5 h-3.5 text-emerald-600" />
+      <motion.div
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4 }}
+        className="max-w-3xl mb-10"
+      >
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-[4px] bg-slate-100 border border-slate-300 text-xs font-mono font-bold text-slate-900 mb-4">
+          <Layers className="w-3.5 h-3.5 text-blue-600" />
           <span>PRODUCTION SYSTEMS</span>
         </div>
         <h1
-          className="text-3xl sm:text-5xl font-black tracking-tight text-slate-900 mb-3"
+          className="text-3xl sm:text-5xl font-black tracking-tight text-slate-950 mb-3"
           style={{ textWrap: 'balance' }}
         >
           Built by VeeGo
@@ -44,20 +73,20 @@ export const ProjectsPage: React.FC<ProjectsPageProps> = ({
         <p className="text-base sm:text-lg text-slate-600 leading-relaxed font-normal">
           Technology we&apos;ve already built. These are production applications engineered around real workflows to eliminate manual work, automate staff tracking, and streamline billing.
         </p>
-      </div>
+      </motion.div>
 
       {/* Segmented Filter Bar */}
-      <div className="flex items-center gap-1.5 p-1 bg-white border border-slate-200 rounded-xl overflow-x-auto mb-8 w-fit shadow-xs">
+      <div className="flex items-center gap-1.5 p-1 bg-slate-100 border border-slate-300 rounded-[4px] overflow-x-auto mb-8 w-fit">
         {filterTabs.map((tab) => {
           const isActive = activeFilter === tab.value;
           return (
             <button
               key={tab.value}
               onClick={() => setActiveFilter(tab.value)}
-              className={`px-4 py-2 text-xs font-semibold rounded-lg transition-all whitespace-nowrap ${
+              className={`px-3.5 py-2 text-xs font-bold uppercase tracking-wider rounded-[4px] transition-colors whitespace-nowrap cursor-pointer ${
                 isActive
-                  ? 'bg-blue-600 text-white shadow-xs'
-                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
+                  ? 'bg-slate-900 text-white'
+                  : 'text-slate-700 hover:text-slate-950 hover:bg-slate-200'
               }`}
             >
               {tab.label}
@@ -67,21 +96,33 @@ export const ProjectsPage: React.FC<ProjectsPageProps> = ({
       </div>
 
       {/* Projects Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
+      <motion.div
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+        key={activeFilter}
+        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16"
+      >
         {filteredProjects.map((project) => (
-          <ProjectCard
-            key={project.id}
-            project={project}
-            onViewProject={(id) => onNavigate(`/projects/${id}`)}
-            onLiveDemo={(proj) => onOpenLiveDemo(proj)}
-          />
+          <motion.div key={project.id} variants={itemVariants}>
+            <ProjectCard
+              project={project}
+              onViewProject={(id) => onNavigate(`/projects/${id}`)}
+              onLiveDemo={(proj) => onOpenLiveDemo(proj)}
+            />
+          </motion.div>
         ))}
-      </div>
+      </motion.div>
 
       {/* Discussion Strip */}
-      <div className="p-8 sm:p-10 rounded-2xl bg-white border border-slate-200 flex flex-col md:flex-row items-center justify-between gap-6 shadow-xs">
+      <motion.div
+        initial={{ opacity: 0, y: 16 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        className="p-8 sm:p-10 rounded-[4px] bg-slate-50 border border-slate-300 flex flex-col md:flex-row items-center justify-between gap-6"
+      >
         <div>
-          <h3 className="text-xl sm:text-2xl font-bold text-slate-900">
+          <h3 className="text-xl sm:text-2xl font-bold text-slate-950">
             Need a similar system built for your company?
           </h3>
           <p className="text-xs sm:text-sm text-slate-600 mt-1 max-w-xl leading-relaxed">
@@ -90,12 +131,12 @@ export const ProjectsPage: React.FC<ProjectsPageProps> = ({
         </div>
         <button
           onClick={() => onNavigate('/business-enquiry')}
-          className="px-6 py-3.5 text-xs sm:text-sm font-semibold rounded-xl bg-blue-600 hover:bg-blue-700 text-white whitespace-nowrap shadow-xs flex items-center gap-2"
+          className="px-6 py-3.5 text-xs font-bold uppercase tracking-wider rounded-[4px] bg-blue-600 hover:bg-blue-700 text-white whitespace-nowrap flex items-center gap-2 border border-blue-600 transition-colors cursor-pointer"
         >
           <span>Discuss System Deployment</span>
           <ArrowRight className="w-4 h-4" />
         </button>
-      </div>
+      </motion.div>
     </div>
   );
 };

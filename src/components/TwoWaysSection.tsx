@@ -63,17 +63,16 @@ export const TwoWaysSection: React.FC<TwoWaysSectionProps> = ({
   ];
 
   return (
-    <section className="relative py-12 sm:py-16 bg-white text-slate-900 overflow-hidden">
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 z-10">
+    <section className="relative py-16 sm:py-20 bg-white text-slate-900 border-b border-slate-200">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-16">
           <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
+            initial={{ opacity: 0, scale: 0.95 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
-            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-50 border border-blue-200 text-xs text-blue-700 font-bold mb-4 shadow-xs"
+            className="inline-flex items-center gap-2 px-3 py-1 rounded-[4px] bg-slate-100 border border-slate-300 text-xs font-mono font-bold text-slate-900 mb-4"
           >
-
             <span className="tracking-wider uppercase">THE TWO PILLARS OF VEEGO</span>
           </motion.div>
 
@@ -82,10 +81,9 @@ export const TwoWaysSection: React.FC<TwoWaysSectionProps> = ({
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.1 }}
-            className="font-Space Grotesk text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-slate-950 leading-tight"
-            style={{ fontFamily: "'Space Grotesk', sans-serif" }}
+            className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-slate-950 leading-tight"
           >
-            Built for Businesses. <span className="text-blue-600 font-extrabold" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>Engineered for Students.</span>
+            Built for Businesses. <span className="text-blue-600">Engineered for Students.</span>
           </motion.h2>
 
           <motion.p
@@ -106,34 +104,34 @@ export const TwoWaysSection: React.FC<TwoWaysSectionProps> = ({
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            whileHover={{ y: -6 }}
-            transition={{ duration: 0.3 }}
-            className="rounded-3xl p-7 sm:p-9 bg-white border border-slate-200/90 hover:border-blue-400 shadow-xl shadow-blue-500/5 hover:shadow-2xl hover:shadow-blue-500/15 transition-all flex flex-col justify-between relative overflow-hidden group text-slate-900"
+            whileHover={{ y: -3 }}
+            transition={{ duration: 0.2 }}
+            className="rounded-[4px] p-7 sm:p-9 bg-white border border-slate-300 hover:border-slate-900 transition-colors flex flex-col justify-between text-slate-900"
           >
-            <div className="relative z-10 flex-1 flex flex-col justify-between">
+            <div className="flex-1 flex flex-col justify-between">
               <div>
                 {/* Card Header */}
                 <div className="flex items-center justify-between mb-6">
                   <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 rounded-2xl bg-blue-600 text-white flex items-center justify-center shadow-md shrink-0 group-hover:rotate-3 transition-transform">
-                      <Building2 className="w-6 h-6" />
+                    <div className="w-10 h-10 rounded-[4px] bg-slate-900 text-white flex items-center justify-center shrink-0">
+                      <Building2 className="w-5 h-5" />
                     </div>
                     <div>
-                      <span className="text-[11px] uppercase tracking-wider text-blue-700 font-bold block">
+                      <span className="text-[10px] font-mono uppercase tracking-wider text-blue-700 font-bold block">
                         FOR ORGANIZATIONS &amp; BUSINESSES
                       </span>
-                      <h3 className="text-2xl font-extrabold text-slate-950 tracking-tight font-Space Grotesk" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
+                      <h3 className="text-2xl font-black text-slate-950 tracking-tight">
                         Business Automation &amp; Applications
                       </h3>
                     </div>
                   </div>
-                  <span className="hidden sm:inline-flex items-center gap-1 text-[11px] font-bold text-blue-700 bg-blue-50 px-2.5 py-1 rounded-full border border-blue-200">
+                  <span className="hidden sm:inline-flex items-center gap-1 text-[10px] font-mono font-bold text-slate-900 bg-slate-100 px-2 py-0.5 rounded-[4px] border border-slate-300">
                     <Zap className="w-3 h-3 text-blue-600" /> ROI Focused
                   </span>
                 </div>
 
                 {/* Human Quote */}
-                <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 text-slate-700 text-xs sm:text-sm font-medium mb-6 leading-relaxed min-h-[84px] flex items-center shadow-2xs">
+                <div className="p-4 rounded-[4px] bg-slate-50 border border-slate-200 text-slate-700 text-xs sm:text-sm font-medium mb-6 leading-relaxed min-h-[84px] flex items-center">
                   <span>
                     &ldquo;<strong>Tell us what is slowing your business down.</strong> Our engineers audit your manual daily routine, identify friction points, and deliver custom applications &amp; automated systems that run your business seamlessly.&rdquo;
                   </span>
@@ -141,39 +139,39 @@ export const TwoWaysSection: React.FC<TwoWaysSectionProps> = ({
 
                 {/* Interactive LifeCycle Pipeline */}
                 <div className="mb-6">
-                  <div className="flex items-center justify-between text-xs uppercase tracking-wider text-slate-500 font-bold mb-2.5">
+                  <div className="flex items-center justify-between text-xs font-mono uppercase tracking-wider text-slate-500 font-bold mb-2.5">
                     <span>The Business Delivery Loop:</span>
-                    <span className="text-[11px] text-blue-600 font-semibold">Hover steps to inspect</span>
+                    <span className="text-[10px] text-blue-600 font-bold">Hover to inspect</span>
                   </div>
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                     {businessSteps.map((step, idx) => (
-                      <motion.div
+                      <div
                         key={step.label}
-                        onHoverStart={() => setActiveBusinessStep(idx)}
-                        className={`p-2.5 rounded-xl border transition-all cursor-pointer text-center ${activeBusinessStep === idx
-                            ? 'bg-blue-600 text-white border-blue-600 shadow-sm'
-                            : 'bg-slate-50 border-slate-200 text-slate-700 hover:border-blue-300'
+                        onMouseEnter={() => setActiveBusinessStep(idx)}
+                        className={`p-2.5 rounded-[4px] border transition-colors cursor-pointer text-center ${activeBusinessStep === idx
+                            ? 'bg-slate-900 text-white border-slate-900'
+                            : 'bg-slate-50 border-slate-300 text-slate-700 hover:bg-slate-100'
                           }`}
                       >
                         <span className="text-[11px] font-bold block truncate">{step.label}</span>
-                      </motion.div>
+                      </div>
                     ))}
                   </div>
-                  <div className="mt-2 text-[11px] p-2.5 bg-blue-50/60 rounded-lg text-slate-700 border border-blue-100 font-medium flex items-center gap-2">
+                  <div className="mt-2 text-xs p-2.5 bg-slate-50 rounded-[4px] text-slate-700 border border-slate-200 font-medium flex items-center gap-2">
                     <ShieldCheck className="w-3.5 h-3.5 text-blue-600 shrink-0" />
                     <span>{businessSteps[activeBusinessStep].desc}</span>
                   </div>
                 </div>
 
                 {/* Solutions List */}
-                <div className="pt-4 border-t border-slate-100 mb-8">
-                  <div className="text-xs uppercase tracking-wider text-slate-500 font-bold mb-3">
+                <div className="pt-4 border-t border-slate-200 mb-8">
+                  <div className="text-xs font-mono uppercase tracking-wider text-slate-500 font-bold mb-3">
                     Applications &amp; Automation We Build:
                   </div>
                   <ul className="space-y-2.5 text-xs sm:text-sm text-slate-700">
                     {businessSolutionsList.map((sol) => (
-                      <li key={sol} className="flex items-start gap-2.5 group/item">
-                        <CheckCircle2 className="w-4 h-4 text-blue-600 shrink-0 mt-0.5 group-hover/item:scale-110 transition-transform" />
+                      <li key={sol} className="flex items-start gap-2.5">
+                        <CheckCircle2 className="w-4 h-4 text-blue-600 shrink-0 mt-0.5" />
                         <span>{sol}</span>
                       </li>
                     ))}
@@ -182,29 +180,29 @@ export const TwoWaysSection: React.FC<TwoWaysSectionProps> = ({
               </div>
 
               {/* Direct Action Pathways */}
-              <div className="pt-5 border-t border-slate-100 space-y-2.5 mt-auto">
+              <div className="pt-5 border-t border-slate-200 space-y-2.5 mt-auto">
                 <button
                   onClick={onSubmitProblem}
-                  className="w-full py-3.5 px-5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs sm:text-sm transition-all shadow-md flex items-center justify-between group/btn cursor-pointer"
+                  className="w-full py-3 px-5 rounded-[4px] bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs uppercase tracking-wider transition-colors flex items-center justify-between cursor-pointer border border-blue-600 group"
                 >
                   <div className="flex items-center gap-2">
                     <Send className="w-4 h-4" />
                     <span>Submit Your Operational Bottleneck</span>
                   </div>
-                  <ArrowRight className="w-4 h-4 transition-transform group-hover/btn:translate-x-1" />
+                  <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
                 </button>
 
                 <div className="grid grid-cols-2 gap-2">
                   <button
                     onClick={onExploreSolutions}
-                    className="py-2.5 px-3 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 font-semibold text-xs transition-colors flex items-center justify-center gap-1.5 cursor-pointer shadow-2xs"
+                    className="py-2.5 px-3 rounded-[4px] border border-slate-300 bg-white hover:bg-slate-100 text-slate-900 font-bold text-xs uppercase tracking-wider transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
                   >
                     <Search className="w-3.5 h-3.5 text-blue-600" />
                     <span>Explore Solutions</span>
                   </button>
                   <button
                     onClick={onRequestCustomSoftware}
-                    className="py-2.5 px-3 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 font-semibold text-xs transition-colors flex items-center justify-center gap-1.5 cursor-pointer shadow-2xs"
+                    className="py-2.5 px-3 rounded-[4px] border border-slate-300 bg-white hover:bg-slate-100 text-slate-900 font-bold text-xs uppercase tracking-wider transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
                   >
                     <Wrench className="w-3.5 h-3.5 text-blue-600" />
                     <span>Request Custom App</span>
@@ -219,34 +217,34 @@ export const TwoWaysSection: React.FC<TwoWaysSectionProps> = ({
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ delay: 0.1, duration: 0.3 }}
-            whileHover={{ y: -4 }}
-            className="rounded-3xl p-7 sm:p-9 bg-white border border-slate-200/90 hover:border-indigo-400 shadow-xl shadow-blue-500/5 hover:shadow-2xl hover:shadow-indigo-500/15 transition-all flex flex-col justify-between relative overflow-hidden group text-slate-900"
+            transition={{ delay: 0.1, duration: 0.2 }}
+            whileHover={{ y: -3 }}
+            className="rounded-[4px] p-7 sm:p-9 bg-white border border-slate-300 hover:border-slate-900 transition-colors flex flex-col justify-between text-slate-900"
           >
-            <div className="relative z-10 flex-1 flex flex-col justify-between">
+            <div className="flex-1 flex flex-col justify-between">
               <div>
                 {/* Card Header */}
                 <div className="flex items-center justify-between mb-6">
                   <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 rounded-2xl bg-indigo-600 text-white flex items-center justify-center shadow-md shrink-0 group-hover:-rotate-3 transition-transform">
-                      <FolderGit2 className="w-6 h-6" />
+                    <div className="w-10 h-10 rounded-[4px] bg-slate-900 text-white flex items-center justify-center shrink-0">
+                      <FolderGit2 className="w-5 h-5" />
                     </div>
                     <div>
-                      <span className="text-[11px] uppercase tracking-wider text-indigo-700 font-bold block">
+                      <span className="text-[10px] font-mono uppercase tracking-wider text-indigo-700 font-bold block">
                         FOR ENGINEERS &amp; STUDENTS
                       </span>
-                      <h3 className="text-2xl font-extrabold text-slate-950 tracking-tight font-Space Grotesk" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
+                      <h3 className="text-2xl font-black text-slate-950 tracking-tight">
                         Projects &amp; Technical Training
                       </h3>
                     </div>
                   </div>
-                  <span className="hidden sm:inline-flex items-center gap-1 text-[11px] font-bold text-indigo-700 bg-indigo-50 px-2.5 py-1 rounded-full border border-indigo-200">
+                  <span className="hidden sm:inline-flex items-center gap-1 text-[10px] font-mono font-bold text-slate-900 bg-slate-100 px-2 py-0.5 rounded-[4px] border border-slate-300">
                     <Code2 className="w-3 h-3 text-indigo-600" /> Hands-on Learning
                   </span>
                 </div>
 
                 {/* Human Quote */}
-                <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 text-slate-700 text-xs sm:text-sm font-medium mb-6 leading-relaxed min-h-[84px] flex items-center shadow-2xs">
+                <div className="p-4 rounded-[4px] bg-slate-50 border border-slate-200 text-slate-700 text-xs sm:text-sm font-medium mb-6 leading-relaxed min-h-[84px] flex items-center">
                   <span>
                     &ldquo;<strong>Get production-ready software projects accompanied by 1-on-1 technical training.</strong> Full modular source code, live cloud links, detailed architecture docs, and hands-on viva &amp; code walkthroughs with senior engineers.&rdquo;
                   </span>
@@ -254,39 +252,39 @@ export const TwoWaysSection: React.FC<TwoWaysSectionProps> = ({
 
                 {/* Interactive LifeCycle Pipeline */}
                 <div className="mb-6">
-                  <div className="flex items-center justify-between text-xs uppercase tracking-wider text-slate-500 font-bold mb-2.5">
+                  <div className="flex items-center justify-between text-xs font-mono uppercase tracking-wider text-slate-500 font-bold mb-2.5">
                     <span>The Engineering &amp; Training Loop:</span>
-                    <span className="text-[11px] text-indigo-600 font-semibold">Hover steps to inspect</span>
+                    <span className="text-[10px] text-indigo-600 font-bold">Hover to inspect</span>
                   </div>
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                     {projectSteps.map((step, idx) => (
-                      <motion.div
+                      <div
                         key={step.label}
-                        onHoverStart={() => setActiveProjectStep(idx)}
-                        className={`p-2.5 rounded-xl border transition-all cursor-pointer text-center ${activeProjectStep === idx
-                            ? 'bg-indigo-600 text-white border-indigo-600 shadow-sm'
-                            : 'bg-slate-50 border-slate-200 text-slate-700 hover:border-indigo-300'
+                        onMouseEnter={() => setActiveProjectStep(idx)}
+                        className={`p-2.5 rounded-[4px] border transition-colors cursor-pointer text-center ${activeProjectStep === idx
+                            ? 'bg-slate-900 text-white border-slate-900'
+                            : 'bg-slate-50 border-slate-300 text-slate-700 hover:bg-slate-100'
                           }`}
                       >
                         <span className="text-[11px] font-bold block truncate">{step.label}</span>
-                      </motion.div>
+                      </div>
                     ))}
                   </div>
-                  <div className="mt-2 text-[11px] p-2.5 bg-indigo-50/60 rounded-lg text-slate-700 border border-indigo-100 font-medium flex items-center gap-2">
+                  <div className="mt-2 text-xs p-2.5 bg-slate-50 rounded-[4px] text-slate-700 border border-slate-200 font-medium flex items-center gap-2">
                     <ShieldCheck className="w-3.5 h-3.5 text-indigo-600 shrink-0" />
                     <span>{projectSteps[activeProjectStep].desc}</span>
                   </div>
                 </div>
 
                 {/* Features List */}
-                <div className="pt-4 border-t border-slate-100 mb-8">
-                  <div className="text-xs uppercase tracking-wider text-slate-500 font-bold mb-3">
+                <div className="pt-4 border-t border-slate-200 mb-8">
+                  <div className="text-xs font-mono uppercase tracking-wider text-slate-500 font-bold mb-3">
                     What Every Project &amp; Training Package Includes:
                   </div>
                   <ul className="space-y-2.5 text-xs sm:text-sm text-slate-700">
                     {projectFeaturesList.map((item) => (
-                      <li key={item} className="flex items-start gap-2.5 group/item">
-                        <CheckCircle2 className="w-4 h-4 text-indigo-600 shrink-0 mt-0.5 group-hover/item:scale-110 transition-transform" />
+                      <li key={item} className="flex items-start gap-2.5">
+                        <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
                         <span>{item}</span>
                       </li>
                     ))}
@@ -295,29 +293,29 @@ export const TwoWaysSection: React.FC<TwoWaysSectionProps> = ({
               </div>
 
               {/* Direct Action Pathways */}
-              <div className="pt-5 border-t border-slate-100 space-y-2.5 mt-auto">
+              <div className="pt-5 border-t border-slate-200 space-y-2.5 mt-auto">
                 <button
                   onClick={onViewProjects}
-                  className="w-full py-3.5 px-5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs sm:text-sm transition-all shadow-md flex items-center justify-between group/btn cursor-pointer"
+                  className="w-full py-3 px-5 rounded-[4px] bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs uppercase tracking-wider transition-colors flex items-center justify-between cursor-pointer border border-blue-600 group"
                 >
                   <div className="flex items-center gap-2">
                     <FolderGit2 className="w-4 h-4" />
                     <span>Browse Built Systems &amp; Live Demos</span>
                   </div>
-                  <ArrowRight className="w-4 h-4 transition-transform group-hover/btn:translate-x-1" />
+                  <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
                 </button>
 
                 <div className="grid grid-cols-2 gap-2">
                   <button
                     onClick={onViewProjects}
-                    className="py-2.5 px-3 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 font-semibold text-xs transition-colors flex items-center justify-center gap-1.5 cursor-pointer shadow-2xs"
+                    className="py-2.5 px-3 rounded-[4px] border border-slate-300 bg-white hover:bg-slate-100 text-slate-900 font-bold text-xs uppercase tracking-wider transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
                   >
                     <Code2 className="w-3.5 h-3.5 text-indigo-600" />
                     <span>View Architectures</span>
                   </button>
                   <button
                     onClick={onRequestCustomSoftware}
-                    className="py-2.5 px-3 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 font-semibold text-xs transition-colors flex items-center justify-center gap-1.5 cursor-pointer shadow-2xs"
+                    className="py-2.5 px-3 rounded-[4px] border border-slate-300 bg-white hover:bg-slate-100 text-slate-900 font-bold text-xs uppercase tracking-wider transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
                   >
                     <MessageSquare className="w-3.5 h-3.5 text-indigo-600" />
                     <span>Request Custom Project</span>

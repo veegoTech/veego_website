@@ -38,8 +38,8 @@ export const LiveDemoModal: React.FC<LiveDemoModalProps> = ({ project, onClose, 
   const grandTotal = subtotal + taxAmount;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 overflow-y-auto bg-slate-900/50 backdrop-blur-sm animate-in fade-in duration-200">
-      <div className="relative w-full max-w-4xl bg-white border border-slate-200 rounded-2xl shadow-xl overflow-hidden my-8">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 overflow-y-auto bg-slate-900/70 backdrop-blur-xs animate-in fade-in duration-200">
+      <div className="relative w-full max-w-4xl bg-white border border-slate-200 rounded-[4px] overflow-hidden my-8">
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-slate-200 bg-slate-50">
           <div className="flex items-center gap-3">
@@ -55,7 +55,7 @@ export const LiveDemoModal: React.FC<LiveDemoModalProps> = ({ project, onClose, 
           </div>
           <button
             onClick={onClose}
-            className="p-1.5 text-slate-500 hover:text-slate-800 hover:bg-slate-200/60 rounded-lg transition-colors"
+            className="p-1.5 text-slate-500 hover:text-slate-800 hover:bg-slate-200/60 rounded-[4px] transition-colors"
             aria-label="Close interactive preview"
           >
             <X className="w-5 h-5" />
@@ -66,27 +66,27 @@ export const LiveDemoModal: React.FC<LiveDemoModalProps> = ({ project, onClose, 
         <div className="p-6 max-h-[75vh] overflow-y-auto">
           {project.demoType === 'stafftrack' && (
             <div className="space-y-6">
-              <div className="bg-blue-50/60 border border-blue-100 rounded-xl p-4 text-xs sm:text-sm text-slate-700">
+              <div className="bg-blue-50/60 border border-blue-100 rounded-[4px] p-4 text-xs sm:text-sm text-slate-700">
                 <span className="font-semibold text-blue-700">StaffTrack Operations Sandbox:</span> Test how managers assign tasks, verify check-in logs, and capture real-time team deliverables without phone calls or paper sheets.
               </div>
 
               {/* Staff Tracker Top Stats */}
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                <div className="p-3 bg-slate-50 rounded-xl border border-slate-200">
+                <div className="p-3 bg-slate-50 rounded-[4px] border border-slate-200">
                   <div className="text-xs text-slate-500 font-medium">Active Staff</div>
                   <div className="text-xl font-bold text-slate-900 mt-1">4 / 4</div>
                 </div>
-                <div className="p-3 bg-slate-50 rounded-xl border border-slate-200">
+                <div className="p-3 bg-slate-50 rounded-[4px] border border-slate-200">
                   <div className="text-xs text-slate-500 font-medium">Tasks Completed</div>
                   <div className="text-xl font-bold text-emerald-600 mt-1">
                     {staffList.filter((s) => s.completed).length} / {staffList.length}
                   </div>
                 </div>
-                <div className="p-3 bg-slate-50 rounded-xl border border-slate-200">
+                <div className="p-3 bg-slate-50 rounded-[4px] border border-slate-200">
                   <div className="text-xs text-slate-500 font-medium">On-Time Rate</div>
                   <div className="text-xl font-bold text-blue-600 mt-1">98.5%</div>
                 </div>
-                <div className="p-3 bg-slate-50 rounded-xl border border-slate-200">
+                <div className="p-3 bg-slate-50 rounded-[4px] border border-slate-200">
                   <div className="text-xs text-slate-500 font-medium">Reporting Status</div>
                   <div className="text-xl font-bold text-slate-900 mt-1 text-sm">Automated</div>
                 </div>
@@ -101,7 +101,7 @@ export const LiveDemoModal: React.FC<LiveDemoModalProps> = ({ project, onClose, 
                   {staffList.map((staff) => (
                     <div
                       key={staff.id}
-                      className="flex flex-col sm:flex-row sm:items-center justify-between p-3 rounded-lg border border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50/50 transition-colors gap-2"
+                      className="flex flex-col sm:flex-row sm:items-center justify-between p-3 rounded-[4px] border border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50/50 transition-colors gap-2"
                     >
                       <div className="flex items-center gap-3">
                         <button
@@ -110,7 +110,7 @@ export const LiveDemoModal: React.FC<LiveDemoModalProps> = ({ project, onClose, 
                               prev.map((s) => (s.id === staff.id ? { ...s, completed: !s.completed } : s))
                             );
                           }}
-                          className={`w-5 h-5 rounded flex items-center justify-center border transition-colors ${staff.completed
+                          className={`w-5 h-5 rounded-[4px] flex items-center justify-center border transition-colors ${staff.completed
                               ? 'bg-blue-600 border-blue-600 text-white'
                               : 'border-slate-300 text-transparent hover:border-blue-500'
                             }`}
@@ -133,7 +133,7 @@ export const LiveDemoModal: React.FC<LiveDemoModalProps> = ({ project, onClose, 
                         <span className="text-slate-500 flex items-center gap-1 font-medium">
                           <Clock className="w-3.5 h-3.5" /> {staff.time}
                         </span>
-                        <span className={`px-2 py-0.5 rounded text-[11px] font-semibold ${staff.status === 'Present' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : 'bg-amber-50 text-amber-700 border border-amber-200'}`}>
+                        <span className={`px-2 py-0.5 rounded-[4px] text-[11px] font-semibold ${staff.status === 'Present' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : 'bg-amber-50 text-amber-700 border border-amber-200'}`}>
                           {staff.status}
                         </span>
                       </div>
@@ -166,7 +166,7 @@ export const LiveDemoModal: React.FC<LiveDemoModalProps> = ({ project, onClose, 
                       setNewStaffTask('');
                     }
                   }}
-                  className="flex-1 px-3 py-2 text-xs sm:text-sm rounded-lg border border-slate-300 bg-white text-slate-900 focus:outline-none focus:ring-1 focus:ring-blue-600 focus:border-blue-600"
+                  className="flex-1 px-3 py-2 text-xs sm:text-sm rounded-[4px] border border-slate-300 bg-white text-slate-900 focus:outline-none focus:ring-1 focus:ring-blue-600 focus:border-blue-600"
                 />
                 <button
                   onClick={() => {
@@ -186,7 +186,7 @@ export const LiveDemoModal: React.FC<LiveDemoModalProps> = ({ project, onClose, 
                       setNewStaffTask('');
                     }
                   }}
-                  className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs sm:text-sm font-semibold rounded-lg transition-colors whitespace-nowrap"
+                  className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs sm:text-sm font-semibold rounded-[4px] transition-colors whitespace-nowrap"
                 >
                   Add Task
                 </button>
@@ -196,12 +196,12 @@ export const LiveDemoModal: React.FC<LiveDemoModalProps> = ({ project, onClose, 
 
           {project.demoType === 'billing' && (
             <div className="space-y-6">
-              <div className="bg-blue-50/60 border border-blue-100 rounded-xl p-4 text-xs sm:text-sm text-slate-700">
+              <div className="bg-blue-50/60 border border-blue-100 rounded-[4px] p-4 text-xs sm:text-sm text-slate-700">
                 <span className="font-semibold text-blue-700">Billing &amp; Operations Sandbox:</span> Test fast line-item invoice calculations, automatic tax computation, and instant receipt generation.
               </div>
 
               {/* Items Table */}
-              <div className="border border-slate-200 rounded-xl overflow-hidden">
+              <div className="border border-slate-200 rounded-[4px] overflow-hidden">
                 <div className="bg-slate-50 px-4 py-2.5 text-xs font-semibold text-slate-600 grid grid-cols-12 gap-2">
                   <div className="col-span-6">Description</div>
                   <div className="col-span-2 text-right">Qty</div>
@@ -242,7 +242,7 @@ export const LiveDemoModal: React.FC<LiveDemoModalProps> = ({ project, onClose, 
                   <select
                     value={taxRate}
                     onChange={(e) => setTaxRate(Number(e.target.value))}
-                    className="px-2 py-1 rounded border border-slate-300 bg-white text-xs text-slate-800"
+                    className="px-2 py-1 rounded-[4px] border border-slate-300 bg-white text-xs text-slate-800"
                   >
                     <option value={0}>0%</option>
                     <option value={5}>5%</option>
@@ -253,7 +253,7 @@ export const LiveDemoModal: React.FC<LiveDemoModalProps> = ({ project, onClose, 
               </div>
 
               {/* Totals Calculation */}
-              <div className="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-2 max-w-sm ml-auto text-xs sm:text-sm">
+              <div className="p-4 bg-slate-50 rounded-[4px] border border-slate-200 space-y-2 max-w-sm ml-auto text-xs sm:text-sm">
                 <div className="flex justify-between text-slate-600">
                   <span>Subtotal</span>
                   <span className="font-medium">₹{subtotal.toLocaleString()}</span>
@@ -271,14 +271,14 @@ export const LiveDemoModal: React.FC<LiveDemoModalProps> = ({ project, onClose, 
               <div className="flex justify-end gap-3">
                 <button
                   onClick={() => setInvoiceGenerated(true)}
-                  className="px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-xs sm:text-sm font-semibold rounded-lg transition-colors shadow-xs"
+                  className="px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-xs sm:text-sm font-semibold rounded-[4px] transition-colors"
                 >
                   Generate Invoice PDF
                 </button>
               </div>
 
               {invoiceGenerated && (
-                <div className="p-4 bg-emerald-50 border border-emerald-200 rounded-xl flex items-center justify-between text-xs sm:text-sm text-emerald-800">
+                <div className="p-4 bg-emerald-50 border border-emerald-200 rounded-[4px] flex items-center justify-between text-xs sm:text-sm text-emerald-800">
                   <div className="flex items-center gap-2">
                     <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
                     <span>
@@ -298,7 +298,7 @@ export const LiveDemoModal: React.FC<LiveDemoModalProps> = ({ project, onClose, 
 
           {project.demoType === 'alphafly' && (
             <div className="space-y-6">
-              <div className="bg-blue-50/60 border border-blue-100 rounded-xl p-4 text-xs sm:text-sm text-slate-700">
+              <div className="bg-blue-50/60 border border-blue-100 rounded-[4px] p-4 text-xs sm:text-sm text-slate-700">
                 <span className="font-semibold text-blue-700">Alpha Fly LMS Sandbox:</span> Experience interactive curriculum progression, automated assessment scoring, and instant milestone verification.
               </div>
 
@@ -308,16 +308,16 @@ export const LiveDemoModal: React.FC<LiveDemoModalProps> = ({ project, onClose, 
                   <span>Module 3: Relational Schema Design &amp; Django Models</span>
                   <span className="font-bold text-blue-600">{moduleCompleted ? '100% Completed' : '75% Progress'}</span>
                 </div>
-                <div className="w-full h-2 bg-slate-200 rounded-full overflow-hidden">
+                <div className="w-full h-2 bg-slate-200 rounded-[2px] overflow-hidden">
                   <div
-                    className="h-full bg-blue-600 transition-all duration-500 rounded-full"
+                    className="h-full bg-blue-600 transition-all duration-500 rounded-[2px]"
                     style={{ width: moduleCompleted ? '100%' : '75%' }}
                   />
                 </div>
               </div>
 
               {/* Sample Quiz */}
-              <div className="p-5 border border-slate-200 rounded-xl bg-slate-50">
+              <div className="p-5 border border-slate-200 rounded-[4px] bg-slate-50">
                 <div className="text-xs font-bold text-blue-700 uppercase tracking-wider mb-2">
                   Practical Checkpoint Assessment
                 </div>
@@ -336,7 +336,7 @@ export const LiveDemoModal: React.FC<LiveDemoModalProps> = ({ project, onClose, 
                       key={idx}
                       onClick={() => setSelectedQuizAnswer(idx)}
                       disabled={quizSubmitted}
-                      className={`w-full text-left p-3 rounded-lg text-xs sm:text-sm border transition-all ${selectedQuizAnswer === idx
+                      className={`w-full text-left p-3 rounded-[4px] text-xs sm:text-sm border transition-all ${selectedQuizAnswer === idx
                           ? quizSubmitted && idx === 1
                             ? 'border-emerald-500 bg-emerald-50 text-emerald-900 font-medium'
                             : quizSubmitted && idx !== 1
@@ -362,7 +362,7 @@ export const LiveDemoModal: React.FC<LiveDemoModalProps> = ({ project, onClose, 
                       }
                     }}
                     disabled={selectedQuizAnswer === null}
-                    className="mt-4 px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white text-xs sm:text-sm font-semibold rounded-lg transition-colors shadow-xs"
+                    className="mt-4 px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white text-xs sm:text-sm font-semibold rounded-[4px] transition-colors"
                   >
                     Submit Assessment
                   </button>
@@ -386,7 +386,7 @@ export const LiveDemoModal: React.FC<LiveDemoModalProps> = ({ project, onClose, 
               </div>
 
               {moduleCompleted && (
-                <div className="p-4 bg-blue-50 border border-blue-200 rounded-xl flex items-center gap-3">
+                <div className="p-4 bg-blue-50 border border-blue-200 rounded-[4px] flex items-center gap-3">
                   <Award className="w-6 h-6 text-blue-600 shrink-0" />
                   <div>
                     <div className="font-bold text-slate-900 text-sm">
@@ -410,7 +410,7 @@ export const LiveDemoModal: React.FC<LiveDemoModalProps> = ({ project, onClose, 
           <div className="flex items-center gap-2">
             <button
               onClick={onClose}
-              className="px-4 py-2 text-xs font-semibold text-slate-600 hover:text-slate-900 rounded-lg transition-colors"
+              className="px-4 py-2 text-xs font-semibold text-slate-600 hover:text-slate-900 rounded-[4px] transition-colors"
             >
               Close
             </button>
@@ -419,7 +419,7 @@ export const LiveDemoModal: React.FC<LiveDemoModalProps> = ({ project, onClose, 
                 onClose();
                 onContactClick();
               }}
-              className="px-4 py-2 text-xs font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors flex items-center gap-1.5 shadow-xs"
+              className="px-4 py-2 text-xs font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-[4px] transition-colors flex items-center gap-1.5"
             >
               Discuss Implementation <ArrowRight className="w-3.5 h-3.5" />
             </button>

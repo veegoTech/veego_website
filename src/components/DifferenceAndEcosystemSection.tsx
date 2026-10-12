@@ -20,14 +20,14 @@ export const DifferenceAndEcosystemSection: React.FC<DifferenceAndEcosystemSecti
   const [hoveredStep, setHoveredStep] = useState<number | null>(null);
 
   return (
-    <section className="relative py-12 sm:py-16 bg-[#f1f5f9] text-slate-900 overflow-hidden">
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 z-10">
+    <section className="relative py-16 sm:py-20 bg-white text-slate-900 border-b border-slate-200">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center max-w-3xl mx-auto mb-16">
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="inline-flex items-center gap-2 text-xs uppercase tracking-widest text-blue-700 font-bold px-3.5 py-1.5 bg-blue-50 border border-blue-200 rounded-full mb-4 shadow-xs"
+            className="inline-flex items-center gap-2 text-xs font-mono uppercase tracking-widest text-slate-900 font-bold px-3 py-1 bg-slate-100 border border-slate-300 rounded-[4px] mb-4"
           >
             <Cpu className="w-3.5 h-3.5 text-blue-600" />
             <span>Engineering Standard</span>
@@ -38,10 +38,9 @@ export const DifferenceAndEcosystemSection: React.FC<DifferenceAndEcosystemSecti
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.1 }}
-            className="font-Space Grotesk text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-slate-950 leading-tight"
-            style={{ fontFamily: "'Space Grotesk', sans-serif" }}
+            className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-slate-950 leading-tight"
           >
-            Technology is only useful when it <span className="text-blue-600 font-extrabold" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>solves real operational problems.</span>
+            Technology is only useful when it <span className="text-blue-600">solves real operational problems.</span>
           </motion.h2>
 
           <motion.p
@@ -55,33 +54,33 @@ export const DifferenceAndEcosystemSection: React.FC<DifferenceAndEcosystemSecti
           </motion.p>
 
           {/* Interactive view toggle */}
-          <div className="mt-8 inline-flex p-1.5 bg-slate-100 border border-slate-200 rounded-2xl shadow-xs">
+          <div className="mt-8 inline-flex p-1 bg-slate-100 border border-slate-300 rounded-[4px]">
             <button
               onClick={() => setActiveComparison('both')}
-              className={`px-4 py-2 rounded-xl text-xs font-bold transition-all duration-200 cursor-pointer ${
+              className={`px-3.5 py-1.5 rounded-[4px] text-xs font-bold uppercase tracking-wider transition-colors cursor-pointer ${
                 activeComparison === 'both'
-                  ? 'bg-blue-600 text-white shadow-md'
-                  : 'text-slate-600 hover:text-slate-900'
+                  ? 'bg-slate-900 text-white'
+                  : 'text-slate-700 hover:text-slate-950'
               }`}
             >
               Side-by-Side Comparison
             </button>
             <button
               onClick={() => setActiveComparison('outdated')}
-              className={`px-4 py-2 rounded-xl text-xs font-bold transition-all duration-200 cursor-pointer ${
+              className={`px-3.5 py-1.5 rounded-[4px] text-xs font-bold uppercase tracking-wider transition-colors cursor-pointer ${
                 activeComparison === 'outdated'
-                  ? 'bg-rose-600 text-white shadow-md'
-                  : 'text-slate-600 hover:text-slate-900'
+                  ? 'bg-rose-700 text-white'
+                  : 'text-slate-700 hover:text-slate-950'
               }`}
             >
               The Outdated Model
             </button>
             <button
               onClick={() => setActiveComparison('veego')}
-              className={`px-4 py-2 rounded-xl text-xs font-bold transition-all duration-200 cursor-pointer ${
+              className={`px-3.5 py-1.5 rounded-[4px] text-xs font-bold uppercase tracking-wider transition-colors cursor-pointer ${
                 activeComparison === 'veego'
-                  ? 'bg-blue-600 text-white shadow-md'
-                  : 'text-slate-600 hover:text-slate-900'
+                  ? 'bg-blue-600 text-white'
+                  : 'text-slate-700 hover:text-slate-950'
               }`}
             >
               The VeeGo Standard
@@ -90,7 +89,7 @@ export const DifferenceAndEcosystemSection: React.FC<DifferenceAndEcosystemSecti
         </div>
 
         {/* Side by Side Comparison Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto items-stretch">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-5xl mx-auto items-stretch">
           {/* Traditional Outdated Model (Left) */}
           <AnimatePresence mode="wait">
             {(activeComparison === 'both' || activeComparison === 'outdated') && (
@@ -100,22 +99,22 @@ export const DifferenceAndEcosystemSection: React.FC<DifferenceAndEcosystemSecti
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -20 }}
                 transition={{ duration: 0.4 }}
-                className={`p-8 sm:p-9 rounded-3xl bg-rose-50/40 border ${
-                  activeComparison === 'outdated' ? 'border-rose-400 ring-2 ring-rose-300/40' : 'border-rose-200/80'
-                } shadow-md flex flex-col justify-between text-slate-900`}
+                className={`p-7 sm:p-8 rounded-[4px] bg-slate-50 border ${
+                  activeComparison === 'outdated' ? 'border-rose-500' : 'border-slate-300'
+                } flex flex-col justify-between text-slate-900`}
               >
                 <div>
-                  <div className="flex items-center justify-between pb-4 mb-6 border-b border-rose-200 text-xs font-bold">
-                    <span className="text-rose-700 uppercase tracking-wider flex items-center gap-1.5">
+                  <div className="flex items-center justify-between pb-4 mb-6 border-b border-slate-200 text-xs font-bold">
+                    <span className="text-rose-700 font-mono uppercase tracking-wider flex items-center gap-1.5">
                       <AlertCircle className="w-4 h-4 text-rose-600" />
                       Conventional Approach
                     </span>
-                    <span className="text-rose-700 bg-rose-100 px-2.5 py-1 rounded-md border border-rose-200 font-medium">
+                    <span className="text-rose-700 bg-white px-2 py-0.5 rounded-[4px] border border-rose-200 font-mono text-[10px]">
                       High Friction &amp; Disconnected
                     </span>
                   </div>
 
-                  <h3 className="text-2xl font-extrabold text-slate-950 mb-6 font-Space Grotesk">
+                  <h3 className="text-2xl font-black text-slate-950 mb-6">
                     Outdated Model
                   </h3>
 
@@ -127,10 +126,10 @@ export const DifferenceAndEcosystemSection: React.FC<DifferenceAndEcosystemSecti
                       { num: '04', title: 'Paper certificate (No deployed app)', desc: 'Zero proof of real capability to show employers' },
                     ].map((step, idx) => (
                       <React.Fragment key={idx}>
-                        <div className="p-3.5 rounded-xl bg-white text-slate-800 border border-rose-100 shadow-2xs flex items-start justify-between gap-3">
+                        <div className="p-3.5 rounded-[4px] bg-white text-slate-800 border border-slate-200 flex items-start justify-between gap-3">
                           <div>
-                            <div className="font-semibold text-slate-900 flex items-center gap-2">
-                              <span className="text-rose-500 font-mono text-[11px]">{step.num}.</span>
+                            <div className="font-bold text-slate-950 flex items-center gap-2">
+                              <span className="text-rose-600 font-mono text-[11px]">{step.num}.</span>
                               {step.title}
                             </div>
                             <div className="text-[11px] text-slate-500 mt-0.5">{step.desc}</div>
@@ -138,7 +137,7 @@ export const DifferenceAndEcosystemSection: React.FC<DifferenceAndEcosystemSecti
                           <X className="w-4 h-4 text-rose-500 shrink-0 mt-0.5" />
                         </div>
                         {idx < 3 && (
-                          <div className="flex justify-center text-rose-300">
+                          <div className="flex justify-center text-slate-400">
                             <ArrowDown className="w-3.5 h-3.5" />
                           </div>
                         )}
@@ -147,8 +146,8 @@ export const DifferenceAndEcosystemSection: React.FC<DifferenceAndEcosystemSecti
                   </div>
                 </div>
 
-                <div className="mt-8 pt-4 border-t border-rose-200 text-xs text-rose-800 leading-relaxed bg-rose-100/60 p-3.5 rounded-xl border border-rose-200">
-                  <span className="font-bold text-rose-900">Outcome:</span> Theoretical knowledge with zero ability to architect or deploy a real business application.
+                <div className="mt-8 pt-4 border-t border-slate-200 text-xs text-rose-800 leading-relaxed bg-white p-3.5 rounded-[4px] border border-slate-200">
+                  <span className="font-bold text-rose-900 font-mono">Outcome:</span> Theoretical knowledge with zero ability to architect or deploy a real business application.
                 </div>
               </motion.div>
             )}
@@ -163,26 +162,23 @@ export const DifferenceAndEcosystemSection: React.FC<DifferenceAndEcosystemSecti
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: 20 }}
                 transition={{ duration: 0.4 }}
-                className={`p-8 sm:p-9 rounded-3xl bg-white border-2 ${
-                  activeComparison === 'veego' ? 'border-blue-600 ring-4 ring-blue-500/15' : 'border-blue-400/80 hover:border-blue-600'
-                } shadow-2xl shadow-blue-500/10 flex flex-col justify-between relative overflow-hidden text-slate-900`}
+                className={`p-7 sm:p-8 rounded-[4px] bg-white border ${
+                  activeComparison === 'veego' ? 'border-slate-950' : 'border-slate-300'
+                } flex flex-col justify-between relative text-slate-900`}
               >
-                {/* Clean blue top accent bar */}
-                <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-blue-600 via-indigo-600 to-sky-500" />
-
                 <div>
-                  <div className="flex items-center justify-between pb-4 mb-6 border-b border-slate-100 text-xs font-bold">
-                    <span className="text-blue-700 uppercase tracking-wider flex items-center gap-1.5">
+                  <div className="flex items-center justify-between pb-4 mb-6 border-b border-slate-200 text-xs font-bold">
+                    <span className="text-blue-700 font-mono uppercase tracking-wider flex items-center gap-1.5">
                       <Sparkles className="w-4 h-4 text-blue-600" />
                       THE VEEGO STANDARD
                     </span>
-                    <span className="text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-md border border-emerald-200 font-medium flex items-center gap-1">
+                    <span className="text-emerald-700 bg-slate-50 px-2 py-0.5 rounded-[4px] border border-slate-300 font-mono text-[10px] flex items-center gap-1">
                       <Zap className="w-3 h-3 text-emerald-600 fill-emerald-600" />
                       Production-Ready
                     </span>
                   </div>
 
-                  <h3 className="text-2xl font-extrabold text-slate-950 mb-6 font-Space Grotesk">
+                  <h3 className="text-2xl font-black text-slate-950 mb-6">
                     VeeGo Applied Method
                   </h3>
 
@@ -196,36 +192,34 @@ export const DifferenceAndEcosystemSection: React.FC<DifferenceAndEcosystemSecti
                     ].map((step, idx) => (
                       <React.Fragment key={idx}>
                         <motion.div
-                          whileHover={{ scale: 1.02, x: 2 }}
+                          whileHover={{ scale: 1.01 }}
                           onHoverStart={() => setHoveredStep(idx)}
                           onHoverEnd={() => setHoveredStep(null)}
-                          className={`p-3.5 rounded-xl transition-all cursor-pointer ${
+                          className={`p-3.5 rounded-[4px] transition-colors cursor-pointer ${
                             hoveredStep === idx
-                              ? 'bg-blue-600 text-white border-blue-600 shadow-md'
-                              : idx === 4
-                                ? 'bg-emerald-50 text-emerald-900 border border-emerald-200'
-                                : 'bg-slate-50 text-slate-900 border border-slate-200/90 hover:border-blue-300'
+                              ? 'bg-slate-900 text-white border border-slate-900'
+                              : 'bg-slate-50 text-slate-900 border border-slate-200 hover:border-slate-400'
                           }`}
                         >
                           <div className="flex items-start justify-between gap-3">
                             <div>
                               <div className="font-bold flex items-center gap-2">
-                                <span className={hoveredStep === idx ? 'text-blue-100' : 'text-blue-600 font-mono text-[11px]'}>
+                                <span className={hoveredStep === idx ? 'text-blue-300' : 'text-blue-600 font-mono text-[11px]'}>
                                   {step.num}.
                                 </span>
                                 {step.title}
                               </div>
-                              <div className={`text-[11px] mt-0.5 ${hoveredStep === idx ? 'text-blue-50' : 'text-slate-600'}`}>
+                              <div className={`text-[11px] mt-0.5 ${hoveredStep === idx ? 'text-slate-300' : 'text-slate-600'}`}>
                                 {step.desc}
                               </div>
                             </div>
                             <CheckCircle2 className={`w-4 h-4 shrink-0 mt-0.5 ${
-                              hoveredStep === idx ? 'text-white' : idx === 4 ? 'text-emerald-600' : 'text-blue-600'
+                              hoveredStep === idx ? 'text-white' : 'text-blue-600'
                             }`} />
                           </div>
                         </motion.div>
                         {idx < 4 && (
-                          <div className="flex justify-center text-blue-300">
+                          <div className="flex justify-center text-slate-400">
                             <ArrowDown className="w-3.5 h-3.5" />
                           </div>
                         )}
@@ -234,8 +228,8 @@ export const DifferenceAndEcosystemSection: React.FC<DifferenceAndEcosystemSecti
                   </div>
                 </div>
 
-                <div className="mt-8 pt-4 border-t border-slate-100 text-xs text-blue-900 font-medium leading-relaxed bg-blue-50/70 p-3.5 rounded-xl border border-blue-200">
-                  <span className="font-bold text-blue-950">Outcome:</span> Genuine engineering mastery. Real deployed software live on the internet solving tangible everyday needs.
+                <div className="mt-8 pt-4 border-t border-slate-200 text-xs text-slate-800 font-medium leading-relaxed bg-slate-50 p-3.5 rounded-[4px] border border-slate-200">
+                  <span className="font-bold text-slate-950 font-mono">Outcome:</span> Genuine engineering mastery. Real deployed software live on the internet solving tangible everyday needs.
                 </div>
               </motion.div>
             )}
