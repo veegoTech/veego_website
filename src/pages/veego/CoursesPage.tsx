@@ -65,6 +65,27 @@ const cardHoverReaction = {
 
 const ONLINE_COURSES: OnlineCourse[] = [
   {
+    id: 'ai-tools',
+    badge: 'Popular · ₹499 INR',
+    badgeColor: 'bg-blue-900/40 text-blue-300 border-blue-700/60',
+    title: 'AI Tools for Students & Professionals',
+    subtitle: 'Hands-on Generative AI for Study, Presentations, Communication & Productivity',
+    description:
+      'A practical 4-hour, 15-lesson recorded course teaching ChatGPT, Gemini, Copilot, prompt engineering, study notes, slide presentations, executive emails, and resume tailoring. No coding required.',
+    price: '₹499',
+    duration: '4 Hours · 15 Lessons · Self-Paced + Certificate',
+    level: 'Beginner (No coding)',
+    modules: [
+      'Module 1: What Is AI & Popular Assistants (ChatGPT, Gemini, Copilot)',
+      'Module 2: Prompt Engineering & The RCTCF Reusable Framework',
+      'Module 3: AI for Cornell Study Notes, Research & Exam Preparation',
+      'Module 4: Presentations in Canva/Gamma, Reports & Creative Thinking',
+      'Module 5: Professional Emails, Google XYZ Resumes & Daily Productivity',
+      'Module 6: Privacy, Accuracy, 20-MCQ Final Assessment & Certificate'
+    ],
+    accentColor: 'text-blue-500'
+  },
+  {
     id: 'core-python',
     badge: 'Core Program',
     badgeColor: 'bg-slate-100 text-blue-700 border-slate-300',

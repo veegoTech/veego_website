@@ -172,7 +172,8 @@ import LandingPage from './pages/dashboards/LandingPage';
 
 
 
-import { htmlCourseData, sqlCourseData, summerSqlCourseData, daSqlCourseData, powerBiCourseData, agenticAiCourseData, inductionCourseData, pythonFullStackCourseData, pythonCourseData, pythonDaCourseData, generativeAiCourseData, reactCourseData, gitCourseData, jsonCourseData, djangoCourseData, devopsCourseData, statsCourseData, numpyCourseData, coreJsCourseData, pandasCourseData, matplotlibCourseData, seabornCourseData, tallyCourseData, webDesignCourseData, spokoStoryCourseData, spokoProCourseData } from './courseData';
+import { htmlCourseData, sqlCourseData, summerSqlCourseData, daSqlCourseData, powerBiCourseData, agenticAiCourseData, inductionCourseData, pythonFullStackCourseData, pythonCourseData, pythonDaCourseData, generativeAiCourseData, reactCourseData, gitCourseData, jsonCourseData, djangoCourseData, devopsCourseData, statsCourseData, numpyCourseData, coreJsCourseData, pandasCourseData, matplotlibCourseData, seabornCourseData, tallyCourseData, webDesignCourseData, spokoStoryCourseData, spokoProCourseData, aiToolsCourseData } from './courseData';
+import { AIToolsLessonPlayer } from './pages/ai-tools/AIToolsLessonPlayer';
 
 import AssignmentSubmissionPage from './components/AssignmentSubmissionPage';
 import { isModuleLocked, getLockReason } from './utils/htmlCssLocking';
@@ -343,6 +344,7 @@ function App() {
 
   const getFirstIncompleteLesson = (courseKey) => {
     const map = {
+      ai_tools: aiToolsCourseData,
       html_css: htmlCourseData,
       sql: sqlCourseData,
       summer_sql: summerSqlCourseData,
@@ -459,6 +461,7 @@ function App() {
         setActiveNode({ moduleId: 'powerbi_demo', tabId: 'intro' });
       } else {
         const courseMap = {
+          ai_tools: aiToolsCourseData,
           html_css: htmlCourseData,
           sql: sqlCourseData,
           summer_sql: summerSqlCourseData,
@@ -576,6 +579,7 @@ function App() {
   else if (activeCourse === 'web_design_20days') currentCourseData = webDesignCourseData;
   else if (activeCourse === 'spoko_story') currentCourseData = spokoStoryCourseData;
   else if (activeCourse === 'spoko_pro' || activeCourse === 'softskills') currentCourseData = spokoProCourseData;
+  else if (activeCourse === 'ai_tools') currentCourseData = aiToolsCourseData;
 
   if (!session) {
     return <LandingPage onLoginSuccess={handleLoginSuccess} />;
@@ -646,6 +650,11 @@ function App() {
           onLogout={handleLogout}
           completedLessons={completedLessons}
           taskSubmissions={taskSubmissions}
+        />
+      ) : activeCourse === 'ai_tools' ? (
+        <AIToolsLessonPlayer
+          onBackToDashboard={() => setActiveCourse('dashboard')}
+          session={session}
         />
       ) : (
         <>

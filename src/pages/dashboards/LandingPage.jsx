@@ -15,6 +15,8 @@ import { ContactPage } from '../veego/ContactPage';
 import { BusinessEnquiryPage } from '../veego/BusinessEnquiryPage';
 import { AdminPage } from '../veego/AdminPage';
 import { ProjectDetailPage } from '../veego/ProjectDetailPage';
+import { VerifyCertificatePage } from '../ai-tools/VerifyCertificatePage';
+import { AIToolsLessonPlayer } from '../ai-tools/AIToolsLessonPlayer';
 
 import { getProjectById } from '../../data/projects';
 
@@ -77,6 +79,10 @@ export default function LandingPage({ onLoginSuccess }) {
       document.title = 'What Problem Are You Trying to Solve? | VeeGo Consultation';
     } else if (currentPath === '/admin') {
       document.title = 'VeeGo Admin Dashboard | Maintain Projects & Client Enquiries';
+    } else if (currentPath.startsWith('/verify-certificate') || currentPath.startsWith('/verify')) {
+      document.title = 'Verify Certificate Authenticity | VeeGo Credential Registry';
+    } else if (currentPath.startsWith('/courses/ai-tools')) {
+      document.title = 'AI Tools for Students & Professionals (₹499) | VeeGo LMS';
     } else if (currentPath.startsWith('/projects/')) {
       const pId = currentPath.replace('/projects/', '');
       const proj = getProjectById(pId);
@@ -165,7 +171,17 @@ export default function LandingPage({ onLoginSuccess }) {
       return <AdminPage onNavigate={navigate} />;
     }
 
-    // 10. Default: VeeGo Enterprise Home View
+    // 10. Public Certificate Verification Portal
+    if (currentPath.startsWith('/verify-certificate') || currentPath.startsWith('/verify')) {
+      return <VerifyCertificatePage onNavigate={navigate} />;
+    }
+
+    // 11. Dedicated AI Tools Course Player / Preview
+    if (currentPath.startsWith('/courses/ai-tools')) {
+      return <AIToolsLessonPlayer onBackToDashboard={() => navigate('/courses')} />;
+    }
+
+    // 12. Default: VeeGo Enterprise Home View
     return (
       <HomePage
         onNavigate={navigate}

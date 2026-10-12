@@ -127,6 +127,7 @@ const formatTaskTitle = (task) => {
 };
 
 const availableCourseOptions = [
+  { value: "ai_tools", label: "AI Tools for Students & Professionals (₹499)" },
   { value: "python_course", label: "Core Python & OOPs" },
   { value: "summer_sql", label: "Summer SQL" },
   { value: "generative_ai_course", label: "Generative AI" },
@@ -168,7 +169,8 @@ function getCourseLabel(courseKey) {
     tally_prime: 'AI powered Tally',
     spoko_story: 'Story-Based Learning (Spoko English)',
     spoko_pro: 'Professional Track (Soft Skills)',
-    softskills: 'Professional Track (Soft Skills)'
+    softskills: 'Professional Track (Soft Skills)',
+    ai_tools: 'AI Tools for Students & Professionals'
   };
   if (labels[courseKey]) return labels[courseKey];
   return courseKey.replace(/_/g, ' ').toUpperCase();
@@ -177,6 +179,7 @@ function getCourseLabel(courseKey) {
 function getCourseDataList(courseKey) {
   if (!courseKey) return [];
   const map = {
+    ai_tools: CourseData.aiToolsCourseData,
     html_css: CourseData.htmlCourseData,
     sql: CourseData.sqlCourseData,
     summer_sql: CourseData.summerSqlCourseData,
@@ -217,7 +220,7 @@ function calculateDetailedCourseProgress(student) {
   let courseKeys = [];
   if (enrolledCourse === 'all') {
     courseKeys = [
-      'html_css', 'react_course', 'python_course', 'django_course', 'git_github',
+      'ai_tools', 'html_css', 'react_course', 'python_course', 'django_course', 'git_github',
       'core_js', 'web_design_20days', 'sql', 'powerbi', 'stats_course', 'devops',
       'json_course', 'numpy_course', 'pandas_course', 'matplotlib_course', 'seaborn_course',
       'summer_sql', 'sql_da', 'python_da', 'agentic_ai', 'generative_ai_course', 'induction', 'tally', 'spoko_story', 'spoko_pro'

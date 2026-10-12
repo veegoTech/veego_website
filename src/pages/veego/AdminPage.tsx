@@ -17,7 +17,10 @@ import {
   Phone,
   Mail,
   Download,
-  RotateCcw
+  RotateCcw,
+  Award,
+  BookOpen,
+  FileCheck
 } from 'lucide-react';
 import { Project, CustomerInquiry } from '../../types';
 import {
@@ -46,6 +49,8 @@ import {
   toggleFeedbackPublic,
   deleteFeedback
 } from '../../services/db';
+import { allAIToolsLessons } from '../../data/aiToolsLessons';
+import { getAllLocalCertificates, setCertificateStatus, CertificateRecord } from '../../services/certificateService';
 
 interface AdminPageProps {
   onNavigate: (path: string) => void;
@@ -55,7 +60,8 @@ type AdminNavSection =
   | 'overview'
   | 'projects'
   | 'inquiries'
-  | 'database';
+  | 'database'
+  | 'ai-course';
 
 export const AdminPage: React.FC<AdminPageProps> = ({ onNavigate }) => {
   const [activeSection, setActiveSection] = useState<AdminNavSection>('overview');
@@ -72,6 +78,11 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigate }) => {
   const [inquiryStatusFilter, setInquiryStatusFilter] = useState<string>('All');
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
+  // AI Course & Certificate Management States
+  const [certificates, setCertificates] = useState<CertificateRecord[]>([]);
+  const [aiCourseTab, setAiCourseTab] = useState<'lessons' | 'certificates' | 'projects'>('lessons');
+  const [searchCertId, setSearchCertId] = useState('');
+
   const showToast = (msg: string) => {
     setToastMessage(msg);
     setTimeout(() => setToastMessage(null), 3000);
@@ -87,6 +98,15 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigate }) => {
     setCustomers(getCustomers());
     setDbQueries(getCustomerQueries());
     setDbFeedbacks(getCustomerFeedbacks());
+    setCertificates(getAllLocalCertificates());
+  };
+
+  const handleToggleCertStatus = async (id: string, currentStatus: 'valid' | 'revoked') => {
+    const nextStatus = currentStatus === 'valid' ? 'revoked' : 'valid';
+    const reason = nextStatus === 'revoked' ? prompt('Reason for certificate revocation:', 'Academic integrity review') || 'Revoked by admin' : undefined;
+    await setCertificateStatus(id, nextStatus, reason);
+    setCertificates(getAllLocalCertificates());
+    showToast(`Certificate ${id} marked as ${nextStatus.toUpperCase()}`);
   };
 
   // Inquiries status updater
@@ -289,6 +309,18 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigate }) => {
             >
               <Users className="w-4 h-4" />
               <span>Customer DB &amp; Feedback</span>
+            </button>
+
+            <button
+              onClick={() => setActiveSection('ai-course')}
+              className={`w-full text-left px-4 py-2.5 rounded-[4px] text-xs sm:text-sm font-semibold transition-all flex items-center gap-3 border ${
+                activeSection === 'ai-course'
+                  ? 'bg-blue-600 text-white border-blue-600'
+                  : 'text-slate-700 hover:text-slate-900 hover:bg-slate-50 border-transparent'
+              }`}
+            >
+              <Award className="w-4 h-4" />
+              <span>AI Course &amp; Certs</span>
             </button>
           </nav>
 
@@ -610,6 +642,221 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigate }) => {
                         </button>
                       </div>
                     ))}
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* AI TOOLS COURSE & CERTIFICATES ADMIN PANEL */}
+            {activeSection === 'ai-course' && (
+              <div className="space-y-6">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200 pb-4">
+                  <div>
+                    <h2 className="text-xl font-black text-slate-900 tracking-tight">
+                      AI Tools for Students & Professionals · Management Center
+                    </h2>
+                    <p className="text-xs text-slate-500 font-mono mt-0.5">
+                      Maintain 15-lesson recorded curriculum, question keys, and tamper-evident certificate issuance.
+                    </p>
+                  </div>
+
+                  <div className="flex items-center gap-1.5 p-1 bg-slate-100 rounded-[4px] border border-slate-200 text-xs font-mono font-bold">
+                    <button
+                      onClick={() => setAiCourseTab('lessons')}
+                      className={`px-3 py-1.5 rounded-[2px] transition-colors cursor-pointer ${
+                        aiCourseTab === 'lessons' ? 'bg-white text-blue-700 shadow-sm' : 'text-slate-600 hover:text-slate-900'
+                      }`}
+                    >
+                      Lessons ({allAIToolsLessons.length})
+                    </button>
+                    <button
+                      onClick={() => setAiCourseTab('certificates')}
+                      className={`px-3 py-1.5 rounded-[2px] transition-colors cursor-pointer ${
+                        aiCourseTab === 'certificates' ? 'bg-white text-blue-700 shadow-sm' : 'text-slate-600 hover:text-slate-900'
+                      }`}
+                    >
+                      Certificates ({certificates.length})
+                    </button>
+                    <button
+                      onClick={() => setAiCourseTab('projects')}
+                      className={`px-3 py-1.5 rounded-[2px] transition-colors cursor-pointer ${
+                        aiCourseTab === 'projects' ? 'bg-white text-blue-700 shadow-sm' : 'text-slate-600 hover:text-slate-900'
+                      }`}
+                    >
+                      Portfolio Rubric
+                    </button>
+                  </div>
+                </div>
+
+                {/* TAB 1: LESSONS CURRICULUM */}
+                {aiCourseTab === 'lessons' && (
+                  <div className="bg-white rounded-[4px] border border-slate-200 overflow-hidden">
+                    <div className="p-4 bg-slate-50 border-b border-slate-200 flex items-center justify-between text-xs font-mono text-slate-600 font-bold">
+                      <span>Total Planned Duration: 240 Minutes (4 Hours) Across 6 Modules</span>
+                      <span className="text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-[2px] border border-emerald-200">
+                        15 Recorded Lessons Ready
+                      </span>
+                    </div>
+
+                    <div className="overflow-x-auto">
+                      <table className="w-full text-left text-xs">
+                        <thead className="bg-slate-50 border-b border-slate-200 font-mono text-slate-500 uppercase">
+                          <tr>
+                            <th className="p-3.5">#</th>
+                            <th className="p-3.5">Module</th>
+                            <th className="p-3.5">Lesson Title</th>
+                            <th className="p-3.5">Duration</th>
+                            <th className="p-3.5">Prompts</th>
+                            <th className="p-3.5">Quiz MCQs</th>
+                            <th className="p-3.5">Status</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-slate-100 font-sans">
+                          {allAIToolsLessons.map((l) => (
+                            <tr key={l.id} className="hover:bg-slate-50/60">
+                              <td className="p-3.5 font-mono font-bold text-slate-500">{l.lessonNumber}</td>
+                              <td className="p-3.5 font-mono text-[11px] text-blue-700">{l.moduleTitle.split(':')[0]}</td>
+                              <td className="p-3.5 font-bold text-slate-900">{l.title}</td>
+                              <td className="p-3.5 font-mono text-slate-600">{l.durationMinutes} mins</td>
+                              <td className="p-3.5 font-mono text-slate-600">{l.prompts.length} prompts</td>
+                              <td className="p-3.5 font-mono text-slate-600">{l.quiz.length} questions</td>
+                              <td className="p-3.5">
+                                <span className="inline-flex items-center gap-1 text-[10px] font-mono font-bold px-2 py-0.5 rounded-[2px] bg-emerald-50 text-emerald-700 border border-emerald-200 uppercase">
+                                  ● Published
+                                </span>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                )}
+
+                {/* TAB 2: CERTIFICATES ISSUANCE & REVOCATION */}
+                {aiCourseTab === 'certificates' && (
+                  <div className="space-y-4">
+                    <div className="p-4 bg-white rounded-[4px] border border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-3">
+                      <div className="relative flex-1 w-full sm:max-w-md">
+                        <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                        <input
+                          type="text"
+                          placeholder="Search Certificate ID or Student Name..."
+                          value={searchCertId}
+                          onChange={(e) => setSearchCertId(e.target.value)}
+                          className="w-full pl-9 pr-3 py-2 border border-slate-200 rounded-[4px] text-xs font-mono focus:outline-none focus:border-blue-500"
+                        />
+                      </div>
+
+                      <div className="text-xs font-mono text-slate-500">
+                        Total Certificates in Registry: <strong className="text-slate-900">{certificates.length}</strong>
+                      </div>
+                    </div>
+
+                    <div className="bg-white rounded-[4px] border border-slate-200 overflow-hidden">
+                      <div className="overflow-x-auto">
+                        <table className="w-full text-left text-xs">
+                          <thead className="bg-slate-50 border-b border-slate-200 font-mono text-slate-500 uppercase">
+                            <tr>
+                              <th className="p-3.5">Certificate ID</th>
+                              <th className="p-3.5">Learner Name</th>
+                              <th className="p-3.5">Issue Date</th>
+                              <th className="p-3.5">Score</th>
+                              <th className="p-3.5">Portfolio</th>
+                              <th className="p-3.5">Status</th>
+                              <th className="p-3.5">Actions</th>
+                            </tr>
+                          </thead>
+                          <tbody className="divide-y divide-slate-100">
+                            {certificates
+                              .filter(c =>
+                                !searchCertId ||
+                                c.id.toLowerCase().includes(searchCertId.toLowerCase()) ||
+                                c.studentName.toLowerCase().includes(searchCertId.toLowerCase())
+                              )
+                              .map((c) => (
+                                <tr key={c.id} className="hover:bg-slate-50/60">
+                                  <td className="p-3.5 font-mono font-bold text-blue-700">{c.id}</td>
+                                  <td className="p-3.5 font-bold text-slate-900">{c.studentName}</td>
+                                  <td className="p-3.5 font-mono text-slate-600">{c.issueDate}</td>
+                                  <td className="p-3.5 font-mono font-bold text-slate-800">{c.finalScore}%</td>
+                                  <td className="p-3.5 font-mono text-emerald-600 font-bold">Approved</td>
+                                  <td className="p-3.5">
+                                    <span
+                                      className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded-[2px] uppercase ${
+                                        c.status === 'valid'
+                                          ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                                          : 'bg-rose-50 text-rose-700 border border-rose-200'
+                                      }`}
+                                    >
+                                      {c.status}
+                                    </span>
+                                  </td>
+                                  <td className="p-3.5">
+                                    <div className="flex items-center gap-2">
+                                      <button
+                                        onClick={() => handleToggleCertStatus(c.id, c.status)}
+                                        className={`px-2.5 py-1 rounded-[2px] font-mono text-[10px] font-bold transition-colors cursor-pointer border ${
+                                          c.status === 'valid'
+                                            ? 'bg-rose-50 text-rose-700 border-rose-200 hover:bg-rose-100'
+                                            : 'bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-100'
+                                        }`}
+                                      >
+                                        {c.status === 'valid' ? 'Revoke' : 'Reinstate'}
+                                      </button>
+                                      <button
+                                        onClick={() => window.open(`/verify-certificate?id=${c.id}`, '_blank')}
+                                        className="text-slate-400 hover:text-blue-600 p-1"
+                                        title="View Public Verification Page"
+                                      >
+                                        <ExternalLink className="w-3.5 h-3.5" />
+                                      </button>
+                                    </div>
+                                  </td>
+                                </tr>
+                              ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* TAB 3: PROJECT RUBRIC OVERVIEW */}
+                {aiCourseTab === 'projects' && (
+                  <div className="bg-white rounded-[4px] border border-slate-200 p-6 space-y-4">
+                    <h3 className="text-sm font-bold text-slate-900">
+                      Standardized Evaluation Rubric for Practical Portfolio Submissions
+                    </h3>
+                    <p className="text-xs text-slate-600 leading-relaxed font-normal">
+                      Submissions are verified against 4 core competency criteria: Completeness (25%), Accuracy &amp; Fact-Checking (25%), Practical Usefulness (25%), and Responsible AI Ethics (25%). Minimum passing score is 70%.
+                    </p>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+                      <div className="p-4 rounded-[4px] bg-slate-50 border border-slate-200">
+                        <span className="text-[10px] font-mono uppercase font-bold text-blue-700 block mb-1">
+                          Component A: Study Notes
+                        </span>
+                        <p className="text-xs text-slate-700">Cornell format, 5 recall cues, 2 verified independent academic/primary sources.</p>
+                      </div>
+                      <div className="p-4 rounded-[4px] bg-slate-50 border border-slate-200">
+                        <span className="text-[10px] font-mono uppercase font-bold text-blue-700 block mb-1">
+                          Component B: Presentation Deck
+                        </span>
+                        <p className="text-xs text-slate-700">5 to 8 slides, maximum 3 concise bullets per slide, visual ideas, and spoken speaker notes.</p>
+                      </div>
+                      <div className="p-4 rounded-[4px] bg-slate-50 border border-slate-200">
+                        <span className="text-[10px] font-mono uppercase font-bold text-blue-700 block mb-1">
+                          Component C: Professional Email
+                        </span>
+                        <p className="text-xs text-slate-700">Under 120 words, purpose in line 1, low-friction CTA, zero generic AI clichés.</p>
+                      </div>
+                      <div className="p-4 rounded-[4px] bg-slate-50 border border-slate-200">
+                        <span className="text-[10px] font-mono uppercase font-bold text-blue-700 block mb-1">
+                          Component D: 5-Prompt Portfolio
+                        </span>
+                        <p className="text-xs text-slate-700">5 tailored reusable prompts with variables, purpose, and responsible AI disclosures.</p>
+                      </div>
+                    </div>
                   </div>
                 )}
               </div>

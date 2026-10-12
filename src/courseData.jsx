@@ -527,3 +527,59 @@ export const seabornCourseData = [];
 export const webDesignCourseData = [];
 export const spokoStoryCourseData = [];
 export const spokoProCourseData = [];
+
+export const aiToolsCourseData = [
+  {
+    id: 'aitools_module1',
+    title: 'Module 1: Introduction to AI (30m)',
+    items: [
+      { id: 'lesson-1', label: 'Lesson 1: What Is AI?', icon: <Bot size={18} /> },
+      { id: 'lesson-2', label: 'Lesson 2: Popular AI Tools', icon: <Sparkles size={18} /> },
+    ]
+  },
+  {
+    id: 'aitools_module2',
+    title: 'Module 2: Prompt Engineering Basics (40m)',
+    items: [
+      { id: 'lesson-3', label: 'Lesson 3: Understanding Prompts', icon: <Terminal size={18} /> },
+      { id: 'lesson-4', label: 'Lesson 4: Writing Better Prompts', icon: <Zap size={18} /> },
+    ]
+  },
+  {
+    id: 'aitools_module3',
+    title: 'Module 3: AI for Students & Learning (45m)',
+    items: [
+      { id: 'lesson-5', label: 'Lesson 5: AI for Study Notes', icon: <BookOpen size={18} /> },
+      { id: 'lesson-6', label: 'Lesson 6: Research & Learning', icon: <Compass size={18} /> },
+      { id: 'lesson-7', label: 'Lesson 7: Exam Prep & Integrity', icon: <Award size={18} /> },
+    ]
+  },
+  {
+    id: 'aitools_module4',
+    title: 'Module 4: Presentations & Content (45m)',
+    items: [
+      { id: 'lesson-8', label: 'Lesson 8: AI Presentations', icon: <Presentation size={18} /> },
+      { id: 'lesson-9', label: 'Lesson 9: Documents & Reports', icon: <FileText size={18} /> },
+      { id: 'lesson-10', label: 'Lesson 10: Creative Thinking', icon: <Brain size={18} /> },
+    ]
+  },
+  {
+    id: 'aitools_module5',
+    title: 'Module 5: Professional Productivity (40m)',
+    items: [
+      { id: 'lesson-11', label: 'Lesson 11: Professional Email', icon: <Send size={18} /> },
+      { id: 'lesson-12', label: 'Lesson 12: Resumes & Interviews', icon: <Briefcase size={18} /> },
+      { id: 'lesson-13', label: 'Lesson 13: Daily Productivity', icon: <Clock size={18} /> },
+    ]
+  },
+  {
+    id: 'aitools_module6',
+    title: 'Module 6: Responsible AI & Certification (40m)',
+    items: [
+      { id: 'lesson-14', label: 'Lesson 14: Privacy & Responsible AI', icon: <Shield size={18} /> },
+      { id: 'lesson-15', label: 'Lesson 15: Final Practical Project', icon: <Trophy size={18} /> },
+      { id: 'final_exam', label: 'Final Assessment (20 MCQs)', icon: <CheckSquare size={18} /> },
+      { id: 'certificate', label: 'Certificate Verification & PDF', icon: <Award size={18} /> },
+    ]
+  }
+];
