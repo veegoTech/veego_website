@@ -58,6 +58,7 @@ export interface ProjectRubricCriterion {
   weight: number; // percentage
   excellent: string;
   good: string;
+  satisfactory?: string;
   needsImprovement: string;
 }
 

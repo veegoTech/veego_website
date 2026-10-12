@@ -11,20 +11,13 @@ export const isSupabaseConfigured = Boolean(
   !rawUrl.includes('placeholder')
 );
 
-// Fallback dummy credentials to prevent Supabase JS client crash if env vars are unset in build/deployment
-// ("Uncaught Error: supabaseUrl is required")
-const fallbackUrl = 'https://placeholder.supabase.co';
-const fallbackKey = 'dummy-anon-key-placeholder';
+const supabaseUrl = isSupabaseConfigured ? rawUrl : 'https://placeholder.supabase.co';
+const supabaseAnonKey = isSupabaseConfigured ? rawKey : 'dummy-anon-key-placeholder';
 
-export const supabase = createClient(
-  isSupabaseConfigured ? rawUrl : fallbackUrl,
-  isSupabaseConfigured ? rawKey : fallbackKey
-);
+export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 if (!isSupabaseConfigured && typeof window !== 'undefined') {
-  console.warn(
-    '⚠️ Supabase environment variables not found or incomplete. Set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY in your .env or deployment configuration.'
-  );
+  console.warn('Supabase environment variables not found. Operating in local mode.');
 }
 
 // --- SUPABASE CLOUD SYNC HELPERS ---
@@ -248,7 +241,7 @@ export const syncStudentToSupabaseClient = async (studentData: {
         status: 'Active',
         is_verified: studentData.isVerified ?? true
       }, { onConflict: 'access_code' });
-    } catch (_) {}
+    } catch {}
 
     return data;
   } catch (err) {
