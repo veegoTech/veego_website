@@ -1,8 +1,16 @@
 import { createClient } from '@supabase/supabase-js';
 import { Customer, CustomerQuery, CustomerFeedback } from '../types/database';
 
-const supabaseUrl = import.meta.env?.VITE_SUPABASE_URL || '';
-const supabaseAnonKey = import.meta.env?.VITE_SUPABASE_ANON_KEY || '';
+const DEFAULT_SUPABASE_URL = 'https://nziavlzgudaybsieramx.supabase.co';
+const DEFAULT_SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im56aWF2bHpndWRheWJzaWVyYW14Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA1ODMzMTQsImV4cCI6MjEwNjE1OTMxNH0.7rrAnLLRTmwk2qssfkWR8nfkkyux4ULnV25aCThLX5U';
+
+const rawUrl = (typeof import.meta !== 'undefined' && import.meta.env?.VITE_SUPABASE_URL ? String(import.meta.env.VITE_SUPABASE_URL) : '').trim();
+const rawKey = (typeof import.meta !== 'undefined' && import.meta.env?.VITE_SUPABASE_ANON_KEY ? String(import.meta.env.VITE_SUPABASE_ANON_KEY) : '').trim();
+
+const supabaseUrl = (rawUrl && rawUrl.startsWith('http')) ? rawUrl : DEFAULT_SUPABASE_URL;
+const supabaseAnonKey = (rawKey && rawKey.length > 10) ? rawKey : DEFAULT_SUPABASE_ANON_KEY;
+
+export const isSupabaseConfigured = Boolean(supabaseUrl && supabaseAnonKey && supabaseUrl.startsWith('http'));
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
