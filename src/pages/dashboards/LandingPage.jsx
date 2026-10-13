@@ -17,6 +17,8 @@ import { AdminPage } from '../veego/AdminPage';
 import { ProjectDetailPage } from '../veego/ProjectDetailPage';
 import { VerifyCertificatePage } from '../ai-tools/VerifyCertificatePage';
 import { AIToolsLessonPlayer } from '../ai-tools/AIToolsLessonPlayer';
+import { PrivacyPolicyPage } from '../veego/PrivacyPolicyPage';
+import { TermsPage } from '../veego/TermsPage';
 
 import { getProjectById } from '../../data/projects';
 
@@ -83,6 +85,10 @@ export default function LandingPage({ onLoginSuccess }) {
       document.title = 'Verify Certificate Authenticity | VeeGo Credential Registry';
     } else if (currentPath.startsWith('/courses/ai-tools')) {
       document.title = 'AI Tools for Students & Professionals (₹499) | VeeGo LMS';
+    } else if (currentPath === '/privacy-policy' || currentPath === '/privacy') {
+      document.title = 'Privacy Policy | VeeGo Technologies';
+    } else if (currentPath === '/terms-and-conditions' || currentPath === '/terms') {
+      document.title = 'Terms & Conditions | VeeGo Technologies';
     } else if (currentPath.startsWith('/projects/')) {
       const pId = currentPath.replace('/projects/', '');
       const proj = getProjectById(pId);
@@ -181,7 +187,17 @@ export default function LandingPage({ onLoginSuccess }) {
       return <AIToolsLessonPlayer onBackToDashboard={() => navigate('/courses')} />;
     }
 
-    // 12. Default: VeeGo Enterprise Home View
+    // 12. Privacy Policy Page
+    if (currentPath === '/privacy-policy' || currentPath === '/privacy') {
+      return <PrivacyPolicyPage onNavigate={navigate} />;
+    }
+
+    // 13. Terms & Conditions Page
+    if (currentPath === '/terms-and-conditions' || currentPath === '/terms') {
+      return <TermsPage onNavigate={navigate} />;
+    }
+
+    // 14. Default: VeeGo Enterprise Home View
     return (
       <HomePage
         onNavigate={navigate}

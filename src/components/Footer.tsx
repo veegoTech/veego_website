@@ -154,7 +154,9 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                 { name: 'Applied Courses', path: '/courses' },
                 { name: 'Built by VeeGo', path: '/projects' },
                 { name: 'How It Works', path: '/how-it-works' },
-                { name: 'Contact Engineering', path: '/contact' }
+                { name: 'Contact Engineering', path: '/contact' },
+                { name: 'Privacy Policy', path: '/privacy-policy' },
+                { name: 'Terms & Conditions', path: '/terms-and-conditions' }
               ].map((item) => (
                 <li key={item.name}>
                   <button
@@ -217,10 +219,22 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
 
         {/* Bottom Copyright */}
         <div className="pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
-          <div className="flex items-center gap-3">
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
             <span>&copy; {new Date().getFullYear()} <span className="text-slate-300 font-semibold">VeeGo Technologies</span>. All rights reserved.</span>
             <span className="text-slate-700">·</span>
-
+            <button
+              onClick={() => onNavigate('/privacy-policy')}
+              className="text-slate-400 hover:text-blue-400 transition-colors cursor-pointer"
+            >
+              Privacy Policy
+            </button>
+            <span className="text-slate-700">·</span>
+            <button
+              onClick={() => onNavigate('/terms-and-conditions')}
+              className="text-slate-400 hover:text-blue-400 transition-colors cursor-pointer"
+            >
+              Terms &amp; Conditions
+            </button>
           </div>
 
           <div className="flex items-center gap-3">
