@@ -31,16 +31,16 @@ export async function downloadCertificatePDF(
 
     if (onProgress) onProgress('Building PDF document...');
 
-    // Create A4 portrait PDF (210mm x 297mm)
+    // Create A4 landscape PDF (297mm x 210mm) matching VeeGo template
     const pdf = new jsPDF({
-      orientation: 'portrait',
+      orientation: 'landscape',
       unit: 'mm',
       format: 'a4',
       compress: true,
     });
 
-    const pdfWidth = 210;
-    const pdfHeight = 297;
+    const pdfWidth = 297;
+    const pdfHeight = 210;
 
     // Draw full-page certificate without extra margins
     pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight, undefined, 'FAST');

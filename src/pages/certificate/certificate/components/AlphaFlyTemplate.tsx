@@ -1,4 +1,5 @@
 import React from 'react';
+import { QRCodeSVG } from 'qrcode.react';
 import type { CertificateData, CustomAssets } from '../types/certificate';
 
 interface AlphaFlyTemplateProps {
@@ -8,518 +9,343 @@ interface AlphaFlyTemplateProps {
   isPrintMode?: boolean;
 }
 
+/**
+ * Official VeeGo Technologies Certificate of Participation Template.
+ * High-fidelity landscape A4 format matching the official VeeGo brand design.
+ */
 export const AlphaFlyTemplate: React.FC<AlphaFlyTemplateProps> = ({
   data,
   customAssets = {},
   containerId = 'certificate-canvas',
   isPrintMode = false,
 }) => {
-  // Format student name to uppercase
-  const studentNameUpper = (data.studentName || 'STUDENT NAME').toUpperCase();
+  const studentName = data.studentName || 'Suriya Prakash';
+  const courseName = data.courseName || 'Google Sheets for Business Automation';
+  const certId = data.id || 'VG-GS-2026-000127';
 
-  // Format first name / display name for "Noted Qualities of [Name]"
-  const formatNameForQualities = (name?: string) => {
-    if (!name || !name.trim()) return 'Student';
-    const words = name.trim().split(/\s+/);
-    return words.map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join(' ');
-  };
-
-  // Join final assessment items if it's an array
-  const formattedAssessment = Array.isArray(data.finalAssessment)
-    ? data.finalAssessment.join(', ')
-    : (data.finalAssessment || '');
-
-  // Calculate dynamic font size for student name to prevent overflow on any name length
+  // Dynamic font sizing for student name to guarantee flawless visual fit
   const getStudentNameFontSize = (name: string) => {
-    if (name.length > 36) return '22px';
-    if (name.length > 28) return '26px';
-    if (name.length > 22) return '30px';
-    if (name.length > 16) return '34px';
-    return '38px';
+    const len = name.length;
+    if (len > 34) return '28px';
+    if (len > 26) return '34px';
+    if (len > 18) return '40px';
+    return '46px';
   };
+
+  // Format date for "held on 15th September 2026."
+  const formatHeldOnDate = (dateVal?: string) => {
+    if (!dateVal) return '15th September 2026';
+    try {
+      const d = new Date(dateVal);
+      if (!isNaN(d.getTime())) {
+        const day = d.getDate();
+        const suffix = (day === 1 || day === 21 || day === 31) ? 'st' :
+                       (day === 2 || day === 22) ? 'nd' :
+                       (day === 3 || day === 23) ? 'rd' : 'th';
+        const month = d.toLocaleString('en-US', { month: 'long' });
+        const year = d.getFullYear();
+        return `${day}${suffix} ${month} ${year}`;
+      }
+    } catch {
+      // fallback
+    }
+    return dateVal;
+  };
+
+  // Format short date for laurel wreath "15-09-2026"
+  const formatShortDate = (dateVal?: string) => {
+    if (!dateVal) return '15-09-2026';
+    try {
+      const d = new Date(dateVal);
+      if (!isNaN(d.getTime())) {
+        const day = String(d.getDate()).padStart(2, '0');
+        const month = String(d.getMonth() + 1).padStart(2, '0');
+        const year = d.getFullYear();
+        return `${day}-${month}-${year}`;
+      }
+    } catch {
+      // fallback
+    }
+    return dateVal;
+  };
+
+  const rawDate = data.issueDate || data.endDate || data.generatedDate || '2026-09-15';
+  const heldOnDateStr = formatHeldOnDate(rawDate);
+  const shortDateStr = formatShortDate(rawDate);
+
+  const verificationUrl =
+    data.qrCodeUrl ||
+    (typeof window !== 'undefined'
+      ? `${window.location.origin}/verify/${certId}`
+      : `https://veegotech.com/verify/${certId}`);
 
   return (
     <div
       id={containerId}
-      className={`relative bg-white text-black mx-auto select-none overflow-hidden ${
+      className={`relative bg-white text-slate-900 mx-auto select-none overflow-hidden ${
         isPrintMode ? '' : 'shadow-2xl'
       }`}
       style={{
-        width: '794px', // standard A4 width at 96 DPI (210mm)
-        height: '1123px', // standard A4 height at 96 DPI (297mm)
-        minWidth: '794px',
-        minHeight: '1123px',
-        maxWidth: '794px',
-        maxHeight: '1123px',
+        width: '1056px', // Standard A4 Landscape width (297mm @ 90-96 DPI)
+        height: '747px',  // Standard A4 Landscape height (210mm @ 90-96 DPI)
+        minWidth: '1056px',
+        minHeight: '747px',
+        maxWidth: '1056px',
+        maxHeight: '747px',
         position: 'relative',
         boxSizing: 'border-box',
         backgroundColor: '#FFFFFF',
-        fontFamily: "'Barlow', sans-serif",
+        fontFamily: "'Plus Jakarta Sans', 'Outfit', sans-serif",
       }}
     >
-      {/* 1. TOP BOOKMARK RIBBON */}
-      <div 
-        className="absolute z-10"
+      {/* 1. High-Resolution Official VeeGo Template Background Image */}
+      <img
+        src="/veego_certificate_template.png"
+        alt="VeeGo Certificate Template"
         style={{
-          left: '48px',
-          top: '0px',
-          width: '66px',
-          height: '78px',
-          backgroundColor: '#EE831B',
-          clipPath: 'polygon(0 0, 100% 0, 100% 86%, 50% 100%, 0 86%)',
+          width: '100%',
+          height: '100%',
+          objectFit: 'contain',
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          zIndex: 1,
+          pointerEvents: 'none'
         }}
       />
 
-      {/* 2. HEADER: ALPHA FLY EDUCATION LOGO (Exact original PDF logo) */}
+      {/* 2. DYNAMIC FIELD: Student Name in luxury calligraphy script font */}
       <div
-        className="absolute z-10"
         style={{
-          left: '49.7px',
-          top: '92px',
+          position: 'absolute',
+          top: '39.8%',
+          left: '21%',
+          width: '58%',
+          height: '12.2%',
+          background: '#ffffff',
+          zIndex: 2,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          textAlign: 'center',
+          overflow: 'hidden'
         }}
       >
-        <img
-          src="/asset_logo_veego.png"
-          alt="VEEGO TECH EDUCATION"
+        <span
           style={{
-            height: '52px',
-            objectFit: 'contain',
-          }}
-          onError={(e) => {
-            (e.target as HTMLImageElement).style.display = 'none';
-          }}
-        />
-        <div style={{ fontSize: '24px', fontWeight: 900, color: '#1877F2', letterSpacing: '-0.5px', fontFamily: "'Garet', sans-serif" }}>
-          VEEGO TECH
-        </div>
-      </div>
-
-      {/* 3. TOP RIGHT: FOCLEN LOGO + ISO BADGE & DYNAMIC QR CODE */}
-      <div 
-        className="absolute flex flex-col items-end z-10"
-        style={{
-          right: '38px',
-          top: '24px',
-        }}
-      >
-        {/* Foclen Logo */}
-        <div className="mb-2.5 flex items-center justify-end">
-          <img
-            src={customAssets.foclenLogo || "/foclen_assets/image1.jpg"}
-            alt="FOCLEN SOFTWARE - BELIEVE IN PROCESS"
-            style={{
-              height: '38px',
-              maxWidth: '170px',
-              objectFit: 'contain',
-            }}
-          />
-        </div>
-
-        {/* Badges Row */}
-        <div className="flex items-center gap-3">
-          {/* ISO 9001:2015 Gold Medallion Badge */}
-          <img
-            src="/asset_iso_badge_clean.png"
-            alt="ISO 9001:2015 Certified Company"
-            style={{
-              width: '64px',
-              height: '88px',
-              objectFit: 'contain',
-            }}
-          />
-
-          {/* Student Passport Photo */}
-          <div 
-            style={{
-              width: '86px',
-              height: '98px',
-              backgroundColor: '#F8FAFC',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              padding: '2px',
-              border: '2px solid #EE831B',
-              borderRadius: '4px',
-              boxShadow: '0 2px 6px rgba(0,0,0,0.08)',
-              overflow: 'hidden',
-            }}
-          >
-            <img
-              src={data.photoUrl || '/id_card_assets/sample_student_photo.jpg'}
-              alt={data.studentName}
-              style={{
-                width: '100%',
-                height: '100%',
-                objectFit: 'cover',
-              }}
-              onError={(e) => {
-                (e.target as HTMLImageElement).src = '/id_card_assets/sample_student_photo.jpg';
-              }}
-            />
-          </div>
-        </div>
-      </div>
-
-      {/* 4. PRESENTATION TEXT: "This certificate is proudly presented to" (Barlow Font) */}
-      <div
-        className="absolute text-black font-normal"
-        style={{
-          left: '46.7px',
-          top: '175px',
-          fontSize: '24px',
-          lineHeight: '1.2',
-          fontFamily: "'Barlow', sans-serif",
-          fontWeight: 400,
-          zIndex: 10,
-        }}
-      >
-        This certificate is proudly presented to
-      </div>
-
-      {/* 5. STUDENT NAME (GARET FONT) */}
-      <div
-        className="absolute text-black font-bold uppercase"
-        style={{
-          left: '46.7px',
-          top: '225px',
-          width: '700px',
-          fontSize: getStudentNameFontSize(studentNameUpper),
-          lineHeight: '1.2',
-          letterSpacing: '0.8px',
-          fontFamily: "'Garet', 'Outfit', 'Montserrat', sans-serif",
-          fontWeight: 700,
-          zIndex: 10,
-        }}
-      >
-        {studentNameUpper}
-      </div>
-
-      {/* 6. CERTIFICATE DESCRIPTION (Barlow Font) */}
-      <div
-        className="absolute text-black font-normal"
-        style={{
-          left: '49.7px',
-          top: '286px',
-          width: '695px',
-          fontSize: '20px',
-          lineHeight: '28px',
-          fontFamily: "'Barlow', sans-serif",
-          fontWeight: 400,
-          zIndex: 10,
-        }}
-      >
-        {data.description || 'has successfully completed the Full Stack Development program in Python and a Full Stack Development internship.'}
-      </div>
-
-      {/* 7. SIGNATURE & BEST STUDENT STAMP SECTION */}
-      {/* Signature Graphic */}
-      <div
-        className="absolute pointer-events-none"
-        style={{
-          left: '55px',
-          top: '348px',
-          zIndex: 10,
-        }}
-      >
-        <img
-          src="/asset_signature_clean.png"
-          alt="Satheeshkumar Nagaraj Signature"
-          style={{
-            height: '105px',
-            objectFit: 'contain',
-          }}
-        />
-      </div>
-
-      {/* Signer Name & Designation Text (Barlow Font) */}
-      <div
-        className="absolute text-black"
-        style={{
-          left: '46.7px',
-          top: '463px',
-          zIndex: 10,
-          fontFamily: "'Barlow', sans-serif",
-        }}
-      >
-        <p style={{ fontSize: '19.7px', fontWeight: 400, lineHeight: '1.2', margin: 0 }}>
-          Satheeshkumar Nagaraj
-        </p>
-        <p style={{ fontSize: '19.7px', fontWeight: 700, lineHeight: '1.2', marginTop: '4px', margin: 0 }}>
-          Founder & Director of VeeGo Technologies
-        </p>
-      </div>
-
-      {/* Best Student Circular Stamp */}
-      <div
-        className="absolute pointer-events-none select-none"
-        style={{
-          right: '98px',
-          top: '365px',
-          zIndex: 10,
-        }}
-      >
-        <img
-          src="/asset_stamp_clean.png"
-          alt="Alpha Fly Best Student Stamp"
-          style={{
-            width: '185px',
-            height: '160px',
-            objectFit: 'contain',
-          }}
-        />
-      </div>
-
-      {/* 8. CONGRATULATIONS QUOTE (Barlow Font) */}
-      <div
-        className="absolute text-black font-normal"
-        style={{
-          left: '45px',
-          top: '537px',
-          width: '700px',
-          fontSize: '14.8px',
-          lineHeight: '20px',
-          fontFamily: "'Barlow', sans-serif",
-          fontWeight: 400,
-          zIndex: 10,
-        }}
-      >
-        "Congratulations on completing the Internship! You've turned your commitment into accomplishment. May this knowledge be the key to unlocking new opportunities and successes in your journey ahead."
-      </div>
-
-      {/* 9. SPLIT BOTTOM SECTION */}
-      <div
-        className="absolute flex items-stretch gap-4"
-        style={{
-          left: '42px',
-          top: '610px',
-          width: '710px',
-          height: '465px',
-          zIndex: 10,
-          fontFamily: "'Barlow', sans-serif",
-        }}
-      >
-        {/* LEFT SOLID ORANGE PANEL */}
-        <div
-          style={{
-            width: '344px',
-            height: '465px',
-            backgroundColor: '#EE831B',
-            borderRadius: '2px',
-            padding: '24px 20px',
-            boxSizing: 'border-box',
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'flex-start',
-            fontFamily: "'Barlow', sans-serif",
+            fontFamily: "'Great Vibes', 'Alex Brush', cursive",
+            fontSize: getStudentNameFontSize(studentName),
+            color: '#0f172a',
+            fontWeight: 600,
+            lineHeight: 1.1,
+            letterSpacing: '0.5px',
+            textShadow: '0 1px 1px rgba(0,0,0,0.05)',
+            whiteSpace: 'nowrap',
+            padding: '0 10px'
           }}
         >
-          {/* Course Duration (Barlow Font) */}
-          <div style={{ marginBottom: '16px' }}>
-            <h3 
-              style={{
-                fontSize: '19.2px',
-                fontWeight: 700,
-                color: '#000000',
-                textDecoration: 'underline',
-                textUnderlineOffset: '3px',
-                margin: '0 0 6px 0',
-                fontFamily: "'Barlow', sans-serif",
-              }}
-            >
-              Course Duration
-            </h3>
-            <p 
-              style={{
-                fontSize: '19.2px',
-                fontWeight: 700,
-                color: '#FFFFFF',
-                margin: 0,
-                fontFamily: "'Barlow', sans-serif",
-              }}
-            >
-              {data.formattedDuration || `${data.startDate} - ${data.endDate}`}
-            </p>
-          </div>
-
-          {/* Final Assessment (Barlow Font) */}
-          <div style={{ marginBottom: '16px' }}>
-            <h3 
-              style={{
-                fontSize: '17.8px',
-                fontWeight: 700,
-                color: '#000000',
-                textDecoration: 'underline',
-                textUnderlineOffset: '3px',
-                margin: '0 0 6px 0',
-                fontFamily: "'Barlow', sans-serif",
-              }}
-            >
-              Final Assessment
-            </h3>
-            <p 
-              style={{
-                fontSize: '17.8px',
-                fontWeight: 700,
-                color: '#FFFFFF',
-                lineHeight: '26px',
-                margin: 0,
-                fontFamily: "'Barlow', sans-serif",
-              }}
-            >
-              {formattedAssessment}
-            </p>
-          </div>
-
-          {/* Noted Qualities (Barlow Font) */}
-          <div>
-            <h3 
-              style={{
-                fontSize: '17.8px',
-                fontWeight: 700,
-                color: '#000000',
-                textDecoration: 'underline',
-                textUnderlineOffset: '3px',
-                margin: '0 0 8px 0',
-                fontFamily: "'Barlow', sans-serif",
-              }}
-            >
-              Noted Qualities of {formatNameForQualities(data.studentName)}
-            </h3>
-
-            {/* Quality 1 */}
-            <div style={{ fontSize: '17.8px', lineHeight: '24px', marginBottom: '8px', fontFamily: "'Barlow', sans-serif" }}>
-              <span style={{ fontWeight: 700, color: '#FFFFFF' }}>
-                {data.qualities?.[0]?.title || 'Resourceful'}:
-              </span>{' '}
-              <span style={{ fontWeight: 400, color: '#000000' }}>
-                {data.qualities?.[0]?.description || 'Finding creative solutions and utilizing available resources.'}
-              </span>
-            </div>
-
-            {/* Quality 2 */}
-            <div style={{ fontSize: '17.8px', lineHeight: '24px', fontFamily: "'Barlow', sans-serif" }}>
-              <span style={{ fontWeight: 700, color: '#FFFFFF' }}>
-                {data.qualities?.[1]?.title || 'Diligent'}:
-              </span>{' '}
-              <span style={{ fontWeight: 400, color: '#000000' }}>
-                {data.qualities?.[1]?.description || 'Consistently putting in hard work and effort.'}
-              </span>
-            </div>
-          </div>
-        </div>
-
-        {/* RIGHT WHITE PANEL WITH ORANGE BORDER */}
-        <div
-          style={{
-            width: '350px',
-            height: '465px',
-            backgroundColor: '#FFFFFF',
-            border: '4px solid #EE831B',
-            borderRadius: '2px',
-            padding: '24px 20px',
-            boxSizing: 'border-box',
-            position: 'relative',
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'space-between',
-            textAlign: 'center',
-            fontFamily: "'Barlow', sans-serif",
-          }}
-        >
-          {/* Computer Illustration Watermark */}
-          <div 
-            className="absolute inset-0 flex items-center justify-center pointer-events-none"
-            style={{ top: '15px' }}
-          >
-            <img
-              src="/asset_computer_only.png"
-              alt="Computer sketch watermark"
-              style={{
-                width: '230px',
-                height: 'auto',
-                opacity: 0.65,
-                objectFit: 'contain',
-              }}
-            />
-          </div>
-
-          {/* Top Quote (Barlow Bold) */}
-          <div style={{ position: 'relative', zIndex: 2, marginTop: '8px' }}>
-            <p
-              style={{
-                fontFamily: "'Barlow', sans-serif",
-                fontSize: '25.6px',
-                fontWeight: 700,
-                color: '#EE831B',
-                lineHeight: '34px',
-                margin: 0,
-              }}
-            >
-              "The best way to<br />
-              predict the future is<br />
-              to invent it."
-            </p>
-          </div>
-
-          {/* Bottom Address Block (Barlow Font) */}
-          <div style={{ position: 'relative', zIndex: 2, paddingBottom: '4px' }}>
-            <h4
-              style={{
-                fontFamily: "'Barlow', sans-serif",
-                fontSize: '17.8px',
-                fontWeight: 700,
-                color: '#000000',
-                margin: '0 0 10px 0',
-                letterSpacing: '0.2px',
-              }}
-            >
-              VEEGO COMPUTER EDUCATION
-            </h4>
-
-            <p
-              style={{
-                fontFamily: "'Barlow', sans-serif",
-                fontSize: '17.8px',
-                fontWeight: 400,
-                color: '#000000',
-                lineHeight: '24px',
-                margin: 0,
-              }}
-            >
-              No 10 | 1st Floor<br />
-              K S Complex | Subban Street<br />
-              Theni | 625531
-            </p>
-
-            <div 
-              style={{
-                fontFamily: "'Barlow', sans-serif",
-                fontSize: '17.8px',
-                fontWeight: 400,
-                color: '#000000',
-                lineHeight: '24px',
-                marginTop: '14px',
-              }}
-            >
-              <p style={{ margin: 0 }}>Contact: 8015 8016 89</p>
-              <p style={{ margin: '2px 0 0 0' }}>www.veegotech.com</p>
-            </div>
-          </div>
-        </div>
-
+          {studentName}
+        </span>
       </div>
 
-      {/* 10. SUBTLE CERTIFICATE ID */}
-      <div 
-        className="absolute text-[10px] text-slate-400 font-mono tracking-wider select-all"
+      {/* 3. DYNAMIC FIELD: Course Title */}
+      <div
         style={{
-          right: '48px',
-          bottom: '10px',
-          zIndex: 10,
+          position: 'absolute',
+          top: '56.4%',
+          left: '20%',
+          width: '60%',
+          height: '5.2%',
+          background: '#ffffff',
+          zIndex: 2,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          textAlign: 'center'
         }}
       >
-        Certificate ID: {data.id}
+        <span
+          style={{
+            fontSize: '22px',
+            fontWeight: 800,
+            color: '#0284c7',
+            fontFamily: "'Plus Jakarta Sans', 'Outfit', sans-serif",
+            letterSpacing: '-0.3px',
+            whiteSpace: 'nowrap',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            maxWidth: '100%'
+          }}
+        >
+          {courseName}
+        </span>
       </div>
+
+      {/* 4. DYNAMIC FIELD: Held On Date */}
+      <div
+        style={{
+          position: 'absolute',
+          top: '64.5%',
+          left: '24%',
+          width: '52%',
+          height: '3.6%',
+          background: '#ffffff',
+          zIndex: 2,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          textAlign: 'center'
+        }}
+      >
+        <span
+          style={{
+            fontSize: '14.5px',
+            fontWeight: 500,
+            color: '#334155',
+            fontFamily: "'Plus Jakarta Sans', 'Outfit', sans-serif"
+          }}
+        >
+          held on {heldOnDateStr}.
+        </span>
+      </div>
+
+      {/* 5. DYNAMIC FIELD: Date inside Laurel Wreath */}
+      <div
+        style={{
+          position: 'absolute',
+          top: '80.0%',
+          left: '43.2%',
+          width: '13.6%',
+          height: '3.2%',
+          background: '#ffffff',
+          zIndex: 2,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          textAlign: 'center'
+        }}
+      >
+        <span
+          style={{
+            fontSize: '13px',
+            fontWeight: 700,
+            color: '#0f172a',
+            letterSpacing: '0.6px',
+            fontFamily: "'Plus Jakarta Sans', 'Outfit', sans-serif"
+          }}
+        >
+          {shortDateStr}
+        </span>
+      </div>
+
+      {/* 6. DYNAMIC FIELD: Live Scannable QR Code and Certificate ID */}
+      <div
+        style={{
+          position: 'absolute',
+          top: '73.2%',
+          right: '3.8%',
+          width: '12%',
+          height: '20%',
+          background: '#ffffff',
+          zIndex: 2,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: '3px'
+        }}
+      >
+        <div
+          style={{
+            background: '#ffffff',
+            padding: '3px',
+            borderRadius: '4px',
+            display: 'inline-flex',
+            boxShadow: '0 1px 3px rgba(0,0,0,0.06)'
+          }}
+        >
+          <QRCodeSVG
+            value={verificationUrl}
+            size={74}
+            level="M"
+            includeMargin={false}
+          />
+        </div>
+        <div
+          style={{
+            fontSize: '9px',
+            fontWeight: 800,
+            color: '#475569',
+            letterSpacing: '0.8px',
+            marginTop: '2px',
+            fontFamily: "'Plus Jakarta Sans', 'Outfit', sans-serif"
+          }}
+        >
+          CERTIFICATE ID
+        </div>
+        <div
+          style={{
+            fontSize: '9.5px',
+            fontWeight: 800,
+            color: '#0f172a',
+            fontFamily: "'Consolas', monospace",
+            letterSpacing: '-0.2px'
+          }}
+        >
+          {certId}
+        </div>
+      </div>
+
+      {/* 7. CUSTOM SIGNATURE OVERLAYS (Optional, if custom assets provided) */}
+      {customAssets?.signature && (
+        <div
+          style={{
+            position: 'absolute',
+            top: '75.2%',
+            left: '19.5%',
+            width: '18%',
+            height: '8%',
+            background: '#ffffff',
+            zIndex: 2,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}
+        >
+          <img
+            src={customAssets.signature}
+            alt="Instructor Signature"
+            style={{ maxHeight: '100%', maxWidth: '100%', objectFit: 'contain' }}
+          />
+        </div>
+      )}
+
+      {customAssets?.founderSignature && (
+        <div
+          style={{
+            position: 'absolute',
+            top: '75.2%',
+            right: '19.5%',
+            width: '18%',
+            height: '8%',
+            background: '#ffffff',
+            zIndex: 2,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}
+        >
+          <img
+            src={customAssets.founderSignature}
+            alt="Founder Signature"
+            style={{ maxHeight: '100%', maxWidth: '100%', objectFit: 'contain' }}
+          />
+        </div>
+      )}
     </div>
   );
 };
+
+// Also export as VeeGoCertificateTemplate for modern imports
+export const VeeGoCertificateTemplate = AlphaFlyTemplate;
+export default AlphaFlyTemplate;
