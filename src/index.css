@@ -79,6 +79,16 @@ h4,
   font-family: 'Space Grotesk', 'Outfit', sans-serif !important;
 }
 
+h1 *,
+h2 *,
+h3 *,
+h4 *,
+.font-display *,
+.font-space *,
+.font-space-grotesk * {
+  font-family: inherit;
+}
+
 /* Sidebar styling overrides */
 .sidebar {
   background-color: #ffffff !important;

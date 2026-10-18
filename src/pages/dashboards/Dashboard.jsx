@@ -21,6 +21,33 @@ import { getDynamicCourses } from '../../services/courseManager';
 
 const mainCourses = [
   {
+    id: 'fullstack_main',
+    title: 'Python Full Stack Development',
+    desc: 'Complete full stack engineering: HTML, CSS, Bootstrap, JavaScript, React, Git, JSON, Python OOPs, Django & SQL.',
+    icon: <Code size={24} />,
+    color: '#2563eb',
+    gradient: 'linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)',
+    bgLight: 'rgba(37, 99, 235, 0.08)'
+  },
+  {
+    id: 'dataanalytics',
+    title: 'Data Analytics & AI',
+    desc: 'Python for Data Analysis, SQL, Power BI, Statistics, NumPy, Pandas, Matplotlib, and Seaborn visualization.',
+    icon: <BarChart3 size={24} />,
+    color: '#0284c7',
+    gradient: 'linear-gradient(135deg, #0ea5e9 0%, #0369a1 100%)',
+    bgLight: 'rgba(2, 132, 199, 0.08)'
+  },
+  {
+    id: 'accounting_main',
+    title: 'Accounting & Finance',
+    desc: 'Computerized ledger accounting, voucher entry, balance sheets, inventory management, and AI-powered Tally Prime.',
+    icon: <Receipt size={24} />,
+    color: '#059669',
+    gradient: 'linear-gradient(135deg, #10b981 0%, #047857 100%)',
+    bgLight: 'rgba(5, 150, 105, 0.08)'
+  },
+  {
     id: 'ai_tools_main',
     title: 'AI Tools & Productivity',
     desc: 'Hands-on Generative AI for students & professionals: ChatGPT, Gemini, Copilot, Gamma, Prompts & Certification.',
@@ -59,6 +86,241 @@ const mainCourses = [
 ];
 
 const subCourses = [
+  // Python Full Stack Development Tracks
+  {
+    id: 'html_css',
+    mainCourseId: 'fullstack_main',
+    title: 'HTML5 & CSS3 Web Fundamentals',
+    desc: 'Semantic web tags, styling architecture, modern Flexbox, responsive CSS Grid, animations, and responsive web design.',
+    icon: <LayoutTemplate size={24} />,
+    bgColor: 'rgba(239, 68, 68, 0.08)',
+    borderColor: '#ef4444',
+    shadowColor: 'rgba(239, 68, 68, 0.25)',
+    modulesCount: '9 Modules · Real-world Projects',
+    enrolledKey: 'html_css'
+  },
+  {
+    id: 'bootstrap',
+    mainCourseId: 'fullstack_main',
+    title: 'Bootstrap 5 Responsive UI',
+    desc: 'Mobile-first responsive grid system, utility classes, typography, navbars, cards, modals, and AI Bootstrap tools.',
+    icon: <Layers size={24} />,
+    bgColor: 'rgba(124, 58, 237, 0.08)',
+    borderColor: '#7c3aed',
+    shadowColor: 'rgba(124, 58, 237, 0.25)',
+    modulesCount: '4 Modules · Live Coding Lab',
+    enrolledKey: 'html_css'
+  },
+  {
+    id: 'javascript_course',
+    mainCourseId: 'fullstack_main',
+    title: 'Modern JavaScript (ES6+)',
+    desc: 'Variables, arrow functions, DOM manipulation, promises, async/await, fetch API, and interactive client-side logic.',
+    icon: <Code size={24} />,
+    bgColor: 'rgba(234, 179, 8, 0.08)',
+    borderColor: '#eab308',
+    shadowColor: 'rgba(234, 179, 8, 0.25)',
+    modulesCount: '10 Modules · Interactive Playgrounds',
+    enrolledKey: 'javascript_course'
+  },
+  {
+    id: 'react_course',
+    mainCourseId: 'fullstack_main',
+    title: 'React JS & Frontend Engineering',
+    desc: 'Components, JSX, state & props, hooks (useState, useEffect), router, and modern single-page applications.',
+    icon: <Sparkles size={24} />,
+    bgColor: 'rgba(6, 182, 212, 0.08)',
+    borderColor: '#06b6d4',
+    shadowColor: 'rgba(6, 182, 212, 0.25)',
+    modulesCount: '15 Modules · Frontend SPA',
+    enrolledKey: 'react_course'
+  },
+  {
+    id: 'git_github',
+    mainCourseId: 'fullstack_main',
+    title: 'Git & GitHub Version Control',
+    desc: 'Version control fundamentals, branching, commits, merging, pull requests, resolving merge conflicts, and GitHub collaboration.',
+    icon: <GitBranch size={24} />,
+    bgColor: 'rgba(249, 115, 22, 0.08)',
+    borderColor: '#f97316',
+    shadowColor: 'rgba(249, 115, 22, 0.25)',
+    modulesCount: '6 Modules · Terminal Lab',
+    enrolledKey: 'git_github'
+  },
+  {
+    id: 'json_course',
+    mainCourseId: 'fullstack_main',
+    title: 'JSON & API Data Architecture',
+    desc: 'Data interchange syntax, nested objects, array parsing, serialization, REST APIs, and client-server exchange.',
+    icon: <FileText size={24} />,
+    bgColor: 'rgba(168, 85, 247, 0.08)',
+    borderColor: '#a855f7',
+    shadowColor: 'rgba(168, 85, 247, 0.25)',
+    modulesCount: '5 Modules · Data Architecture',
+    enrolledKey: 'json_course'
+  },
+  {
+    id: 'python_course',
+    mainCourseId: ['fullstack_main', 'python_main'],
+    title: 'Python Core & OOPs Course',
+    desc: 'Master variables, loops, file streams, regex, classes, inheritance, polymorphism, and object-oriented structures.',
+    icon: <Terminal size={24} />,
+    bgColor: 'rgba(14, 165, 233, 0.08)',
+    borderColor: '#0ea5e9',
+    shadowColor: 'rgba(14, 165, 233, 0.15)',
+    modulesCount: '13 Modules · AI Logic Labs',
+    enrolledKey: 'python_course'
+  },
+  {
+    id: 'django_course',
+    mainCourseId: 'fullstack_main',
+    title: 'Django Web Framework & Backend',
+    desc: 'MVT architecture, Django ORM, models, migrations, views, URL routing, admin panel, templates, and REST backends.',
+    icon: <Server size={24} />,
+    bgColor: 'rgba(16, 185, 129, 0.08)',
+    borderColor: '#10b981',
+    shadowColor: 'rgba(16, 185, 129, 0.25)',
+    modulesCount: '8 Modules · Backend API',
+    enrolledKey: 'django_course'
+  },
+  {
+    id: 'sql',
+    mainCourseId: ['fullstack_main', 'summer'],
+    title: 'SQL & Relational Databases',
+    desc: 'DDL, DML, relational queries, joins, aggregations, subqueries, database modeling, indexes, and full stack database connectivity.',
+    icon: <Database size={24} />,
+    bgColor: 'rgba(59, 130, 246, 0.08)',
+    borderColor: '#3b82f6',
+    shadowColor: 'rgba(59, 130, 246, 0.25)',
+    modulesCount: '7 Modules · SQL Playground',
+    enrolledKey: 'sql'
+  },
+  {
+    id: 'python_fullstack',
+    mainCourseId: 'fullstack_main',
+    title: 'Complete Python Full Stack Track',
+    desc: 'Master the entire end-to-end curriculum: HTML, CSS, Bootstrap, JavaScript, React, Git, JSON, Python OOPs, Django & SQL.',
+    icon: <Code size={24} />,
+    bgColor: 'rgba(37, 99, 235, 0.1)',
+    borderColor: '#2563eb',
+    shadowColor: 'rgba(37, 99, 235, 0.25)',
+    modulesCount: 'Complete Master Track (8 Courses)',
+    enrolledKey: 'python_fullstack'
+  },
+
+  // Data Analytics & AI Modules
+  {
+    id: 'python_da',
+    mainCourseId: 'dataanalytics',
+    title: 'Python for Data Analysis',
+    desc: 'Python programming tailored for data workflows: arrays, data manipulation, cleaning, and logic labs.',
+    icon: <Terminal size={24} />,
+    bgColor: 'rgba(14, 165, 233, 0.08)',
+    borderColor: '#0ea5e9',
+    shadowColor: 'rgba(14, 165, 233, 0.25)',
+    modulesCount: '10 Modules · Data Logic Labs',
+    enrolledKey: 'python_da'
+  },
+  {
+    id: 'sql_da',
+    mainCourseId: 'dataanalytics',
+    title: 'SQL for Data Analysis',
+    desc: 'Relational data querying, complex aggregations, window functions, CTEs, and multi-table joins for analytical insights.',
+    icon: <Database size={24} />,
+    bgColor: 'rgba(59, 130, 246, 0.08)',
+    borderColor: '#3b82f6',
+    shadowColor: 'rgba(59, 130, 246, 0.25)',
+    modulesCount: '7 Modules · SQL Analytics',
+    enrolledKey: 'sql_da'
+  },
+  {
+    id: 'powerbi',
+    mainCourseId: 'dataanalytics',
+    title: 'Power BI Business Intelligence',
+    desc: 'Interactive dashboard engineering, Power Query data transformation, DAX calculated measures, and visual storytelling.',
+    icon: <BarChart3 size={24} />,
+    bgColor: 'rgba(245, 158, 11, 0.08)',
+    borderColor: '#f59e0b',
+    shadowColor: 'rgba(245, 158, 11, 0.25)',
+    modulesCount: '10 Modules · Real-world Dashboards',
+    enrolledKey: 'powerbi'
+  },
+  {
+    id: 'stats_course',
+    mainCourseId: 'dataanalytics',
+    title: 'Statistics for Data Science',
+    desc: 'Descriptive & inferential statistics, probability distributions, hypothesis testing, p-values, regression, and variance.',
+    icon: <BarChart3 size={24} />,
+    bgColor: 'rgba(139, 92, 246, 0.08)',
+    borderColor: '#8b5cf6',
+    shadowColor: 'rgba(139, 92, 246, 0.25)',
+    modulesCount: '17 Days (6 Modules) · Statistical Labs',
+    enrolledKey: 'stats_course'
+  },
+  {
+    id: 'numpy_course',
+    mainCourseId: 'dataanalytics',
+    title: 'NumPy for Numerical Computing',
+    desc: 'High-performance N-dimensional arrays, vectorization, mathematical operations, linear algebra, and data slicing.',
+    icon: <Grid size={24} />,
+    bgColor: 'rgba(16, 185, 129, 0.08)',
+    borderColor: '#10b981',
+    shadowColor: 'rgba(16, 185, 129, 0.25)',
+    modulesCount: '10 Modules · Interactive Playgrounds',
+    enrolledKey: 'numpy_course'
+  },
+  {
+    id: 'pandas_course',
+    mainCourseId: 'dataanalytics',
+    title: 'Pandas for Data Manipulation',
+    desc: 'DataFrames, Series, missing value imputation, grouping, pivoting, merging datasets, and exploratory analysis.',
+    icon: <Layers size={24} />,
+    bgColor: 'rgba(236, 72, 153, 0.08)',
+    borderColor: '#ec4899',
+    shadowColor: 'rgba(236, 72, 153, 0.25)',
+    modulesCount: '10 Modules · Exploratory Labs',
+    enrolledKey: 'pandas_course'
+  },
+  {
+    id: 'matplotlib_course',
+    mainCourseId: 'dataanalytics',
+    title: 'Matplotlib Data Visualization',
+    desc: 'Custom line plots, scatter graphs, bar charts, subplots, annotations, and publication-ready visual styling.',
+    icon: <BarChart3 size={24} />,
+    bgColor: 'rgba(239, 68, 68, 0.08)',
+    borderColor: '#ef4444',
+    shadowColor: 'rgba(239, 68, 68, 0.25)',
+    modulesCount: '8 Modules · Live Chart Lab',
+    enrolledKey: 'matplotlib_course'
+  },
+  {
+    id: 'seaborn_course',
+    mainCourseId: 'dataanalytics',
+    title: 'Seaborn Statistical Visualization',
+    desc: 'Heatmaps, pairplots, violin charts, distribution plots, categorical visualizations, and attractive theme palettes.',
+    icon: <Sparkles size={24} />,
+    bgColor: 'rgba(6, 182, 212, 0.08)',
+    borderColor: '#06b6d4',
+    shadowColor: 'rgba(6, 182, 212, 0.25)',
+    modulesCount: '8 Modules · Visual Gallery',
+    enrolledKey: 'seaborn_course'
+  },
+
+  // Accounting & Finance Track
+  {
+    id: 'tally_prime',
+    mainCourseId: 'accounting_main',
+    title: 'Tally Prime & GST Accounting',
+    desc: 'Computerized ledger bookkeeping, vouchers, inventory management, taxation, GST filing, and financial balance sheets.',
+    icon: <Receipt size={24} />,
+    bgColor: 'rgba(5, 150, 105, 0.08)',
+    borderColor: '#059669',
+    shadowColor: 'rgba(5, 150, 105, 0.25)',
+    modulesCount: '12 Modules · Accounting Ledgers',
+    enrolledKey: 'tally_prime'
+  },
+
+  // Existing Main Tracks
   {
     id: 'ai_tools',
     mainCourseId: ['ai_tools_main', 'aidevelopment'],
@@ -70,18 +332,6 @@ const subCourses = [
     shadowColor: 'rgba(99, 102, 241, 0.25)',
     modulesCount: '15 Lessons (6 Modules) · Certificate',
     enrolledKey: 'ai_tools'
-  },
-  {
-    id: 'python_course',
-    mainCourseId: 'python_main',
-    title: 'Python Core & OOPs Course',
-    desc: 'Master variables, loops, file streams, regex, and core object-oriented structures with AI enhancements.',
-    icon: <Terminal size={24} />,
-    bgColor: 'rgba(14, 165, 233, 0.08)',
-    borderColor: '#0ea5e9',
-    shadowColor: 'rgba(14,165,233,0.15)',
-    modulesCount: '13 Modules',
-    enrolledKey: 'python_course'
   },
   {
     id: 'summer_sql',
@@ -150,8 +400,26 @@ const formatTaskTitle = (task) => {
 };
 
 const availableCourseOptions = [
-  { value: "ai_tools", label: "AI Tools for Students & Professionals (₹499)" },
+  { value: "python_fullstack", label: "Python Full Stack Development (Master Track)" },
+  { value: "html_css", label: "HTML5, CSS3 & Bootstrap UI" },
+  { value: "javascript_course", label: "Modern JavaScript (ES6+)" },
+  { value: "react_course", label: "React JS Frontend Engineering" },
+  { value: "git_github", label: "Git & GitHub Version Control" },
+  { value: "json_course", label: "JSON & API Data Architecture" },
   { value: "python_course", label: "Core Python & OOPs" },
+  { value: "django_course", label: "Django Web Framework & Backend" },
+  { value: "sql", label: "SQL & Relational Databases" },
+  { value: "powerbi", label: "Power BI & Business Intelligence" },
+  { value: "python_da", label: "Python for Data Analysis" },
+  { value: "sql_da", label: "SQL for Data Analysis" },
+  { value: "stats_course", label: "Statistics for Data Science" },
+  { value: "numpy_course", label: "NumPy for Numerical Computing" },
+  { value: "pandas_course", label: "Pandas for Data Manipulation" },
+  { value: "matplotlib_course", label: "Matplotlib Data Visualization" },
+  { value: "seaborn_course", label: "Seaborn Statistical Visualization" },
+  { value: "tally_prime", label: "Tally Prime & GST Accounting" },
+  { value: "tally", label: "Tally Prime Accounting" },
+  { value: "ai_tools", label: "AI Tools for Students & Professionals" },
   { value: "summer_sql", label: "Summer SQL" },
   { value: "generative_ai_course", label: "Generative AI" },
   { value: "agentic_ai", label: "Agentic AI Development" }
@@ -166,30 +434,33 @@ function getCourseLabel(courseKey) {
   const found = availableCourseOptions.find(c => c.value === courseKey);
   if (found) return found.label;
   const labels = {
+    python_fullstack: 'Python Full Stack Development',
+    bootstrap: 'Bootstrap 5 Responsive UI',
     web_design_20days: 'AI-Powered Web Design (20 Days)',
     web_design: 'AI-Powered Web Design',
-    html_css: 'Web Design (HTML, CSS & Bootstrap)',
-    sql: 'AI-Powered SQL Course',
+    html_css: 'HTML5, CSS3 & Bootstrap',
+    sql: 'SQL & Relational Databases',
     sql_da: 'SQL for Data Analytics',
     python_course: 'Core Python & OOPs',
     python_da: 'Python for Data Analytics',
-    javascript_course: 'AI-Powered JavaScript',
+    javascript_course: 'Modern JavaScript (ES6+)',
     generative_ai_course: 'Generative AI',
     agentic_ai: 'Agentic AI Development',
     summer_sql: 'Summer SQL Crash Course',
     powerbi: 'AI-Powered Data Analytics (Power BI)',
-    react_course: 'AI-Powered React JS',
-    git_github: 'Git & GitHub',
-    json_course: 'JSON Essentials',
-    django_course: 'Django Framework',
+    react_course: 'React JS Frontend Engineering',
+    git_github: 'Git & GitHub Version Control',
+    json_course: 'JSON & API Data Architecture',
+    django_course: 'Django Web Framework & Backend',
     devops: 'DevOps Framework',
-    stats_course: 'Statistics for Data Analytics',
+    stats_course: 'Statistics for Data Science',
     numpy_course: 'NumPy for Data Science',
     pandas_course: 'Pandas for Data Science',
     matplotlib_course: 'Matplotlib for Data Science',
     seaborn_course: 'Seaborn for Data Science',
     core_js: 'Core JavaScript',
-    tally_prime: 'AI powered Tally',
+    tally_prime: 'Tally Prime & GST Accounting',
+    tally: 'Tally Prime Accounting',
     spoko_story: 'Story-Based Learning (Spoko English)',
     spoko_pro: 'Professional Track (Soft Skills)',
     softskills: 'Professional Track (Soft Skills)',
@@ -204,6 +475,8 @@ function getCourseDataList(courseKey) {
   const map = {
     ai_tools: CourseData.aiToolsCourseData,
     html_css: CourseData.htmlCourseData,
+    bootstrap: CourseData.htmlCourseData,
+    javascript_course: CourseData.javascriptCourseData || CourseData.coreJsCourseData,
     sql: CourseData.sqlCourseData,
     summer_sql: CourseData.summerSqlCourseData,
     sql_da: CourseData.daSqlCourseData,
@@ -226,6 +499,7 @@ function getCourseDataList(courseKey) {
     core_js: CourseData.coreJsCourseData,
     induction: CourseData.inductionCourseData,
     tally: CourseData.tallyCourseData,
+    tally_prime: CourseData.tallyCourseData,
     web_design_20days: CourseData.webDesignCourseData,
     spoko_story: CourseData.spokoStoryCourseData,
     spoko_pro: CourseData.spokoProCourseData,
@@ -243,9 +517,10 @@ function calculateDetailedCourseProgress(student) {
   let courseKeys = [];
   if (enrolledCourse === 'all') {
     courseKeys = [
-      'ai_tools', 'html_css', 'react_course', 'python_course', 'django_course', 'git_github',
-      'core_js', 'web_design_20days', 'sql', 'powerbi', 'stats_course', 'devops',
-      'json_course', 'numpy_course', 'pandas_course', 'matplotlib_course', 'seaborn_course',
+      'python_fullstack', 'html_css', 'javascript_course', 'react_course', 'git_github',
+      'json_course', 'python_course', 'django_course', 'sql', 'ai_tools',
+      'core_js', 'web_design_20days', 'powerbi', 'stats_course', 'devops',
+      'numpy_course', 'pandas_course', 'matplotlib_course', 'seaborn_course',
       'summer_sql', 'sql_da', 'python_da', 'agentic_ai', 'generative_ai_course', 'induction', 'tally', 'spoko_story', 'spoko_pro'
     ];
   } else if (Array.isArray(enrolledCourse)) {
@@ -320,7 +595,7 @@ function calculateStudentProgress(student) {
     const allKeys = [
       'html_css', 'sql', 'sql_da', 'summer_sql', 'powerbi', 'agentic_ai',
       'python_fullstack', 'python_course', 'python_da', 'generative_ai_course',
-      'react_course', 'git_github', 'json_course', 'django_course', 'devops',
+      'javascript_course', 'react_course', 'git_github', 'json_course', 'django_course', 'devops',
       'stats_course', 'numpy_course', 'pandas_course', 'matplotlib_course',
       'seaborn_course', 'core_js', 'induction', 'tally', 'web_design_20days', 'spoko_story', 'spoko_pro'
     ];
@@ -763,6 +1038,8 @@ export default function Dashboard({ onSelectCourse, enrolledCourse, setEnrolledC
       git_github: CourseData.gitCourseData,
       json_course: CourseData.jsonCourseData,
       django_course: CourseData.djangoCourseData,
+      javascript_course: CourseData.javascriptCourseData || CourseData.coreJsCourseData,
+      bootstrap: CourseData.htmlCourseData,
       devops: CourseData.devopsCourseData,
       stats_course: CourseData.statsCourseData,
       numpy_course: CourseData.numpyCourseData,
@@ -772,6 +1049,7 @@ export default function Dashboard({ onSelectCourse, enrolledCourse, setEnrolledC
       core_js: CourseData.coreJsCourseData,
       induction: CourseData.inductionCourseData,
       tally: CourseData.tallyCourseData,
+      tally_prime: CourseData.tallyCourseData,
       web_design: CourseData.webDesignCourseData,
       web_design_20days: CourseData.webDesignCourseData
     };
@@ -779,14 +1057,16 @@ export default function Dashboard({ onSelectCourse, enrolledCourse, setEnrolledC
   };
 
   const getInitialMainCourse = () => {
-    const list = enrolledCourse ? enrolledCourse.split(',') : [];
+    const list = enrolledCourse ? (Array.isArray(enrolledCourse) ? enrolledCourse : enrolledCourse.split(',').map(s => s.trim())) : [];
     const firstCourse = list[0];
+    if (firstCourse === 'python_fullstack' || firstCourse === 'html_css' || firstCourse === 'bootstrap' || firstCourse === 'javascript_course' || firstCourse === 'core_js' || firstCourse === 'react_course' || firstCourse === 'git_github' || firstCourse === 'json_course' || firstCourse === 'django_course') return 'fullstack_main';
+    if (firstCourse === 'powerbi' || firstCourse === 'dataanalytics' || firstCourse === 'stats_course' || firstCourse === 'numpy_course' || firstCourse === 'pandas_course' || firstCourse === 'matplotlib_course' || firstCourse === 'seaborn_course' || firstCourse === 'sql_da' || firstCourse === 'python_da') return 'dataanalytics';
+    if (firstCourse === 'tally' || firstCourse === 'tally_prime' || firstCourse === 'accounting' || firstCourse === 'accounting_main') return 'accounting_main';
     if (firstCourse === 'ai_tools') return 'ai_tools_main';
-    if (firstCourse === 'powerbi' || firstCourse === 'stats_course' || firstCourse === 'numpy_course' || firstCourse === 'pandas_course' || firstCourse === 'matplotlib_course' || firstCourse === 'seaborn_course' || firstCourse === 'sql_da' || firstCourse === 'python_da') return 'dataanalytics';
     if (firstCourse === 'summer_sql') return 'summer';
     if (firstCourse === 'generative_ai_course' || firstCourse === 'agentic_ai') return 'aidevelopment';
     if (firstCourse === 'python_course') return 'python_main';
-    return 'ai_tools_main';
+    return 'fullstack_main';
   };
   const [activeMainCourse, setActiveMainCourse] = useState(getInitialMainCourse);
 
@@ -2443,8 +2723,12 @@ export default function Dashboard({ onSelectCourse, enrolledCourse, setEnrolledC
                     const belongs = Array.isArray(sub.mainCourseId)
                       ? sub.mainCourseId.includes(course.id)
                       : sub.mainCourseId === course.id;
-                    const enrolledList = enrolledCourse ? enrolledCourse.split(',') : [];
-                    return belongs && (enrolledCourse === 'all' || enrolledList.includes(sub.enrolledKey));
+                    const enrolledList = enrolledCourse ? (Array.isArray(enrolledCourse) ? enrolledCourse : enrolledCourse.split(',').map(s => s.trim())) : [];
+                    const isDirectlyEnrolled = enrolledList.includes(sub.enrolledKey) || (Array.isArray(sub.enrolledKey) && sub.enrolledKey.some(k => enrolledList.includes(k)));
+                    const isFullStackEnrolled = (course.id === 'fullstack_main' || (Array.isArray(sub.mainCourseId) ? sub.mainCourseId.includes('fullstack_main') : sub.mainCourseId === 'fullstack_main')) && enrolledList.includes('python_fullstack');
+                    const isDataAnalyticsEnrolled = (course.id === 'dataanalytics' || (Array.isArray(sub.mainCourseId) ? sub.mainCourseId.includes('dataanalytics') : sub.mainCourseId === 'dataanalytics')) && (enrolledList.includes('dataanalytics') || enrolledList.includes('powerbi'));
+                    const isAccountingEnrolled = (course.id === 'accounting_main' || (Array.isArray(sub.mainCourseId) ? sub.mainCourseId.includes('accounting_main') : sub.mainCourseId === 'accounting_main')) && (enrolledList.includes('accounting') || enrolledList.includes('accounting_main') || enrolledList.includes('tally') || enrolledList.includes('tally_prime'));
+                    return belongs && (enrolledCourse === 'all' || isDirectlyEnrolled || isFullStackEnrolled || isDataAnalyticsEnrolled || isAccountingEnrolled);
                   });
 
                   const isStudent = session?.role === 'student';
@@ -2569,15 +2853,25 @@ export default function Dashboard({ onSelectCourse, enrolledCourse, setEnrolledC
                       : sub.mainCourseId === activeMainCourse;
                   })
                   .map(sub => {
-                    const enrolledList = enrolledCourse ? enrolledCourse.split(',') : [];
-                    const isEnrolled = enrolledCourse === 'all' || enrolledList.includes(sub.enrolledKey);
+                    const enrolledList = enrolledCourse ? (Array.isArray(enrolledCourse) ? enrolledCourse : enrolledCourse.split(',').map(s => s.trim())) : [];
+                    const isDirectlyEnrolled = enrolledList.includes(sub.enrolledKey) || (Array.isArray(sub.enrolledKey) && sub.enrolledKey.some(k => enrolledList.includes(k)));
+                    const isFullStackEnrolled = ((Array.isArray(sub.mainCourseId) ? sub.mainCourseId.includes('fullstack_main') : sub.mainCourseId === 'fullstack_main')) && enrolledList.includes('python_fullstack');
+                    const isDataAnalyticsEnrolled = ((Array.isArray(sub.mainCourseId) ? sub.mainCourseId.includes('dataanalytics') : sub.mainCourseId === 'dataanalytics')) && (enrolledList.includes('dataanalytics') || enrolledList.includes('powerbi'));
+                    const isAccountingEnrolled = ((Array.isArray(sub.mainCourseId) ? sub.mainCourseId.includes('accounting_main') : sub.mainCourseId === 'accounting_main')) && (enrolledList.includes('accounting') || enrolledList.includes('accounting_main') || enrolledList.includes('tally') || enrolledList.includes('tally_prime'));
+                    const isEnrolled = enrolledCourse === 'all' || isDirectlyEnrolled || isFullStackEnrolled || isDataAnalyticsEnrolled || isAccountingEnrolled;
 
                     return (
                       <div
                         key={sub.id}
                         onClick={() => {
                           if (isEnrolled) {
-                            onSelectCourse(sub.id);
+                            if (sub.id === 'bootstrap') {
+                              onSelectCourse('html_css', 'bootstrap_day1');
+                            } else if (sub.id === 'tally') {
+                              onSelectCourse('tally_prime');
+                            } else {
+                              onSelectCourse(sub.id);
+                            }
                           } else {
                             setSelfEnrollCourse(sub.enrolledKey || sub.id);
                             setShowSelfEnrollModal(true);

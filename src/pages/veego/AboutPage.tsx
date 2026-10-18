@@ -102,11 +102,11 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate }) => {
 
         {/* Primary Customer-Facing Tagline */}
         <h1
-          className="text-3xl sm:text-5xl font-black tracking-tight text-slate-950 mb-4 leading-tight"
-          style={{ textWrap: 'balance' }}
+          className="font-display text-3xl sm:text-5xl font-black tracking-tight text-slate-950 mb-4 leading-tight"
+          style={{ textWrap: 'balance', fontFamily: "'Space Grotesk', sans-serif" }}
         >
           We Go Through Your Problem.{' '}
-          <span className="text-blue-600">
+          <span className="text-blue-600 font-black">
             We Give You the Solution.
           </span>
         </h1>

@@ -32,8 +32,12 @@ h1, h2, h3, h4, h5, h6 {
   letter-spacing: -0.02em;
 }
 
-p, span, div {
+p {
   font-family: 'Inter', sans-serif;
+}
+
+span, div {
+  font-family: inherit;
 }
 
 /* Glassmorphism Utilities */
@@ -536,7 +540,7 @@ p, span, div {
   font-weight: 800;
   color: white;
   text-align: center;
-  max-w: 750px;
+  max-width: 750px;
   line-height: 1.4;
 }
 
@@ -755,7 +759,7 @@ p, span, div {
 }
 .quiz-options {
   display: grid;
-  grid-template-cols: 1fr;
+  grid-template-columns: 1fr;
   gap: 0.75rem;
 }
 @media (min-width: 640px) {

@@ -67,7 +67,7 @@ export default function LandingPage({ onLoginSuccess }) {
   useEffect(() => {
     if (currentPath === '/' || currentPath === '/home') {
       document.title = 'VeeGo | Understand. Build. Grow. — We Go Through Your Problem. We Give You the Solution.';
-    } else if (currentPath === '/courses') {
+    } else if (currentPath === '/courses' || currentPath === '/course') {
       document.title = 'VeeGo Academy & Courses | Online LMS & Offline Classroom Training';
     } else if (currentPath === '/projects') {
       document.title = 'Built by VeeGo | Production Systems & Case Studies';
@@ -84,7 +84,7 @@ export default function LandingPage({ onLoginSuccess }) {
     } else if (currentPath.startsWith('/verify-certificate') || currentPath.startsWith('/verify')) {
       document.title = 'Verify Certificate Authenticity | VeeGo Credential Registry';
     } else if (currentPath.startsWith('/courses/ai-tools')) {
-      document.title = 'AI Tools for Students & Professionals (₹499) | VeeGo LMS';
+      document.title = 'AI Tools for Students & Professionals | VeeGo LMS';
     } else if (currentPath === '/privacy-policy' || currentPath === '/privacy') {
       document.title = 'Privacy Policy | VeeGo Technologies';
     } else if (currentPath === '/terms-and-conditions' || currentPath === '/terms') {
@@ -121,7 +121,7 @@ export default function LandingPage({ onLoginSuccess }) {
     }
 
     // 2. Dedicated Courses Page View
-    if (currentPath === '/courses') {
+    if (currentPath === '/courses' || currentPath === '/course') {
       return (
         <CoursesPage
           onNavigate={navigate}

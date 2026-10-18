@@ -10,6 +10,130 @@ import DynamicCourseViewer from './components/course-builder/DynamicCourseViewer
 
 
 
+import Day1 from './pages/html-css/Day1';
+import Day2 from './pages/html-css/Day2';
+import HTMLProject from './pages/html-css/HTMLProject';
+import CSSDay1 from './pages/html-css/CSSDay1';
+import CSSDay2 from './pages/html-css/CSSDay2';
+import CSSDay3 from './pages/html-css/CSSDay3';
+import CSSDay4 from './pages/html-css/CSSDay4';
+import CSSDay5 from './pages/html-css/CSSDay5';
+import CSSDay6 from './pages/html-css/CSSDay6';
+import CSSFinalProject from './pages/html-css/CSSFinalProject';
+import BootstrapDay1 from './pages/html-css/BootstrapDay1';
+import BootstrapDay2 from './pages/html-css/BootstrapDay2';
+import SQLDay8 from './pages/sql/SQLDay8';
+import SQLDay9 from './pages/sql/SQLDay9';
+import PowerBIDemo from './pages/powerbi/PowerBIDemo';
+import PowerBIDay1 from './pages/powerbi/PowerBIDay1';
+import PowerBIDay2 from './pages/powerbi/PowerBIDay2';
+import PowerBIDay3 from './pages/powerbi/PowerBIDay3';
+import PowerBIDay4 from './pages/powerbi/PowerBIDay4';
+import PowerBIDay5 from './pages/powerbi/PowerBIDay5';
+import PowerBIDay6 from './pages/powerbi/PowerBIDay6';
+import PowerBIDay7 from './pages/powerbi/PowerBIDay7';
+import PowerBIDay8 from './pages/powerbi/PowerBIDay8';
+import PowerBIProjects from './pages/powerbi/PowerBIProjects';
+import JSDay1 from './pages/javascript/JSDay1';
+import JSDay2 from './pages/javascript/JSDay2';
+import JSDay3 from './pages/javascript/JSDay3';
+import JSDay4 from './pages/javascript/JSDay4';
+import JSDay5 from './pages/javascript/JSDay5';
+import JSDay6 from './pages/javascript/JSDay6';
+import JSDay7 from './pages/javascript/JSDay7';
+import JSDay8 from './pages/javascript/JSDay8';
+import JSDay9 from './pages/javascript/JSDay9';
+import JSDay10 from './pages/javascript/JSDay10';
+import JSFinalProjects from './pages/javascript/JSFinalProjects';
+import ReactJSEssentials from './pages/react/ReactJSEssentials';
+import ReactDay1 from './pages/react/ReactDay1';
+import ReactDay2 from './pages/react/ReactDay2';
+import ReactDay3 from './pages/react/ReactDay3';
+import ReactDay4 from './pages/react/ReactDay4';
+import ReactDay5 from './pages/react/ReactDay5';
+import ReactDay6 from './pages/react/ReactDay6';
+import ReactDay7 from './pages/react/ReactDay7';
+import ReactDay8 from './pages/react/ReactDay8';
+import ReactDay9 from './pages/react/ReactDay9';
+import ReactDay10 from './pages/react/ReactDay10';
+import ReactDay11 from './pages/react/ReactDay11';
+import ReactDay12 from './pages/react/ReactDay12';
+import ReactDay13 from './pages/react/ReactDay13';
+import ReactDay14 from './pages/react/ReactDay14';
+import ReactDay15 from './pages/react/ReactDay15';
+import GitDay1 from './pages/git/GitDay1';
+import GitDay2 from './pages/git/GitDay2';
+import JSONDay1 from './pages/json/JSONDay1';
+import DjangoDay1 from './pages/django/DjangoDay1';
+import DjangoDay2 from './pages/django/DjangoDay2';
+import DjangoDay3 from './pages/django/DjangoDay3';
+import DjangoDay4 from './pages/django/DjangoDay4';
+import DjangoDay5 from './pages/django/DjangoDay5';
+import DjangoDay6 from './pages/django/DjangoDay6';
+import DjangoDay7 from './pages/django/DjangoDay7';
+import DjangoDay8 from './pages/django/DjangoDay8';
+import DjangoDay9 from './pages/django/DjangoDay9';
+import DjangoDay10 from './pages/django/DjangoDay10';
+import DjangoDay11 from './pages/django/DjangoDay11';
+import DjangoDay12 from './pages/django/DjangoDay12';
+import DjangoDay13 from './pages/django/DjangoDay13';
+import DjangoDay14 from './pages/django/DjangoDay14';
+import DjangoDay15 from './pages/django/DjangoDay15';
+import DevOpsDay1 from './pages/devops/DevOpsDay1';
+import DevOpsDay2 from './pages/devops/DevOpsDay2';
+import DevOpsDay3 from './pages/devops/DevOpsDay3';
+import StatsDay1 from './pages/statistics/StatsDay1';
+import StatsDay2 from './pages/statistics/StatsDay2';
+import StatsDay3 from './pages/statistics/StatsDay3';
+import StatsDay4 from './pages/statistics/StatsDay4';
+import StatsDay5 from './pages/statistics/StatsDay5';
+import StatsDay6 from './pages/statistics/StatsDay6';
+import StatsDay7 from './pages/statistics/StatsDay7';
+import StatsDay8 from './pages/statistics/StatsDay8';
+import StatsDay9 from './pages/statistics/StatsDay9';
+import StatsDay10 from './pages/statistics/StatsDay10';
+import StatsDay11 from './pages/statistics/StatsDay11';
+import StatsDay12 from './pages/statistics/StatsDay12';
+import StatsDay13 from './pages/statistics/StatsDay13';
+import StatsDay14 from './pages/statistics/StatsDay14';
+import StatsDay15 from './pages/statistics/StatsDay15';
+import StatsDay16 from './pages/statistics/StatsDay16';
+import StatsDay17 from './pages/statistics/StatsDay17';
+import StatsMiniProjects from './pages/statistics/StatsMiniProjects';
+import StatsFinalProject from './pages/statistics/StatsFinalProject';
+import StatsDayPlaceholder from './pages/statistics/StatsDayPlaceholder';
+import NumpyDay1 from './pages/numpy/NumpyDay1';
+import NumpyDay2 from './pages/numpy/NumpyDay2';
+import NumpyDay3 from './pages/numpy/NumpyDay3';
+import NumpyDay4 from './pages/numpy/NumpyDay4';
+import NumpyDay5 from './pages/numpy/NumpyDay5';
+import NumpyDay6 from './pages/numpy/NumpyDay6';
+import PandasDay1 from './pages/pandas/PandasDay1';
+import PandasDay2 from './pages/pandas/PandasDay2';
+import PandasDay3 from './pages/pandas/PandasDay3';
+import PandasDay4 from './pages/pandas/PandasDay4';
+import PandasDay5 from './pages/pandas/PandasDay5';
+import PandasDay6 from './pages/pandas/PandasDay6';
+import MatplotlibDay1 from './pages/matplotlib/MatplotlibDay1';
+import MatplotlibDay2 from './pages/matplotlib/MatplotlibDay2';
+import MatplotlibDay3 from './pages/matplotlib/MatplotlibDay3';
+import MatplotlibDay4 from './pages/matplotlib/MatplotlibDay4';
+import MatplotlibDay5 from './pages/matplotlib/MatplotlibDay5';
+import SeabornDay1 from './pages/seaborn/SeabornDay1';
+import SeabornDay2 from './pages/seaborn/SeabornDay2';
+import SeabornDay3 from './pages/seaborn/SeabornDay3';
+import SeabornDay4 from './pages/seaborn/SeabornDay4';
+import CoreJSDay1 from './pages/javascript/CoreJSDay1';
+import CoreJSDay2 from './pages/javascript/CoreJSDay2';
+import CoreJSDay3 from './pages/javascript/CoreJSDay3';
+import CoreJSDay4 from './pages/javascript/CoreJSDay4';
+import CoreJSDay5 from './pages/javascript/CoreJSDay5';
+import CoreJSDay6 from './pages/javascript/CoreJSDay6';
+import CoreJSDay7 from './pages/javascript/CoreJSDay7';
+import CoreJSDay8 from './pages/javascript/CoreJSDay8';
+import CoreJSDay9 from './pages/javascript/CoreJSDay9';
+import CoreJSDay10 from './pages/javascript/CoreJSDay10';
+import TallyCourseDay from './pages/tally/TallyCourseDay';
 import SQLDay1 from './pages/sql/SQLDay1';
 import SQLDay2 from './pages/sql/SQLDay2';
 import SQLDay3 from './pages/sql/SQLDay3';
@@ -174,7 +298,7 @@ import LandingPage from './pages/dashboards/LandingPage';
 
 
 
-import { htmlCourseData, sqlCourseData, summerSqlCourseData, daSqlCourseData, powerBiCourseData, agenticAiCourseData, inductionCourseData, pythonFullStackCourseData, pythonCourseData, pythonDaCourseData, generativeAiCourseData, reactCourseData, gitCourseData, jsonCourseData, djangoCourseData, devopsCourseData, statsCourseData, numpyCourseData, coreJsCourseData, pandasCourseData, matplotlibCourseData, seabornCourseData, tallyCourseData, webDesignCourseData, spokoStoryCourseData, spokoProCourseData, aiToolsCourseData } from './courseData';
+import { htmlCourseData, sqlCourseData, summerSqlCourseData, daSqlCourseData, powerBiCourseData, agenticAiCourseData, inductionCourseData, pythonFullStackCourseData, pythonCourseData, pythonDaCourseData, generativeAiCourseData, javascriptCourseData, reactCourseData, gitCourseData, jsonCourseData, djangoCourseData, devopsCourseData, statsCourseData, numpyCourseData, coreJsCourseData, pandasCourseData, matplotlibCourseData, seabornCourseData, tallyCourseData, webDesignCourseData, spokoStoryCourseData, spokoProCourseData, aiToolsCourseData } from './courseData';
 import { AIToolsLessonPlayer } from './pages/ai-tools/AIToolsLessonPlayer';
 import AIToolsCourseView from './pages/ai-tools/AIToolsCourseView';
 
@@ -363,6 +487,8 @@ function App() {
       git_github: gitCourseData,
       json_course: jsonCourseData,
       django_course: djangoCourseData,
+      javascript_course: javascriptCourseData || coreJsCourseData,
+      bootstrap: htmlCourseData,
       devops: devopsCourseData,
       stats_course: statsCourseData,
       numpy_course: numpyCourseData,
@@ -372,6 +498,7 @@ function App() {
       core_js: coreJsCourseData,
       induction: inductionCourseData,
       tally_prime: tallyCourseData,
+      tally: tallyCourseData,
       web_design_20days: webDesignCourseData,
       spoko_story: spokoStoryCourseData,
       spoko_pro: spokoProCourseData,
@@ -398,8 +525,29 @@ function App() {
   };
 
   const handleSelectCourse = (course, startModuleId = null) => {
-    const enrolledCoursesList = session?.enrolledCourse ? session.enrolledCourse.split(',') : [];
-    const isEnrolled = session?.enrolledCourse === 'all' || enrolledCoursesList.includes(course);
+    if (course === 'bootstrap') {
+      course = 'html_css';
+      if (!startModuleId) startModuleId = 'bootstrap_day1';
+    }
+    if (course === 'tally') {
+      course = 'tally_prime';
+    }
+    const fullStackCourses = [
+      'python_fullstack', 'html_css', 'javascript_course', 'core_js', 'react_course', 
+      'git_github', 'json_course', 'python_course', 'django_course', 'sql'
+    ];
+    const dataAnalyticsCourses = [
+      'dataanalytics', 'powerbi', 'python_da', 'sql_da', 'stats_course', 
+      'numpy_course', 'pandas_course', 'matplotlib_course', 'seaborn_course'
+    ];
+    const accountingCourses = [
+      'accounting', 'accounting_main', 'tally', 'tally_prime'
+    ];
+    const enrolledCoursesList = session?.enrolledCourse ? (Array.isArray(session.enrolledCourse) ? session.enrolledCourse : session.enrolledCourse.split(',').map(s => s.trim())) : [];
+    const isFullStackEnrolled = enrolledCoursesList.includes('python_fullstack') && fullStackCourses.includes(course);
+    const isDataAnalyticsEnrolled = (enrolledCoursesList.includes('dataanalytics') || enrolledCoursesList.includes('powerbi')) && dataAnalyticsCourses.includes(course);
+    const isAccountingEnrolled = (enrolledCoursesList.includes('accounting') || enrolledCoursesList.includes('accounting_main') || enrolledCoursesList.includes('tally') || enrolledCoursesList.includes('tally_prime')) && accountingCourses.includes(course);
+    const isEnrolled = session?.enrolledCourse === 'all' || enrolledCoursesList.includes(course) || isFullStackEnrolled || isDataAnalyticsEnrolled || isAccountingEnrolled;
     const isDynamic = typeof course === 'string' && (course.startsWith('custom_') || course.startsWith('course_') || course === 'course_builder');
     if (session?.role === 'student' && !isEnrolled && course !== 'induction' && !isDynamic) {
       return; // Block student access to non-enrolled courses
@@ -422,7 +570,7 @@ function App() {
         setActiveNode({ moduleId: 'spoko_pro_topic1', tabId: 'pro_overview' });
       } else if (course === 'spoko_story') {
         setActiveNode({ moduleId: 'spoko_story_day1', tabId: 'story_reading' });
-      } else if (course === 'tally_prime') {
+      } else if (course === 'tally_prime' || course === 'tally') {
         setActiveNode({ moduleId: 'tally_prime_module1', tabId: 'day1' });
       } else if (course === 'web_design_20days') {
         setActiveNode({ moduleId: 'web_design_day1', tabId: 'intro' });
@@ -435,13 +583,13 @@ function App() {
       } else if (course === 'agentic_ai') {
         setActiveNode({ moduleId: 'agentic_ai_foundation', tabId: 'day1' });
       } else if (course === 'python_fullstack') {
-        setActiveNode({ moduleId: 'python_fullstack_demo', tabId: 'intro' });
+        setActiveNode({ moduleId: 'module1', tabId: 'intro' });
       } else if (course === 'python_course' || course === 'python_da') {
         setActiveNode({ moduleId: 'python_day1', tabId: 'intro' });
       } else if (course === 'generative_ai_course') {
         setActiveNode({ moduleId: 'genai_module1', tabId: 'day1' });
-      } else if (course === 'core_js') {
-        setActiveNode({ moduleId: 'core_js_day1', tabId: 'intro' });
+      } else if (course === 'javascript_course' || course === 'core_js') {
+        setActiveNode({ moduleId: 'js_module1', tabId: 'intro_js' });
       } else if (course === 'react_course') {
         setActiveNode({ moduleId: 'react_module1', tabId: 'intro_react' });
       } else if (course === 'git_github') {
@@ -552,8 +700,22 @@ function App() {
   }, []);
 
   useEffect(() => {
-    const enrolledList = enrolledCourse ? enrolledCourse.split(',') : [];
-    const isEnrolled = enrolledCourse === 'all' || enrolledList.includes(activeCourse);
+    const fullStackCourses = [
+      'python_fullstack', 'html_css', 'javascript_course', 'core_js', 'react_course', 
+      'git_github', 'json_course', 'python_course', 'django_course', 'sql'
+    ];
+    const dataAnalyticsCourses = [
+      'dataanalytics', 'powerbi', 'python_da', 'sql_da', 'stats_course', 
+      'numpy_course', 'pandas_course', 'matplotlib_course', 'seaborn_course'
+    ];
+    const accountingCourses = [
+      'accounting', 'accounting_main', 'tally', 'tally_prime'
+    ];
+    const enrolledList = enrolledCourse ? (Array.isArray(enrolledCourse) ? enrolledCourse : enrolledCourse.split(',').map(s => s.trim())) : [];
+    const isFullStackEnrolled = enrolledList.includes('python_fullstack') && fullStackCourses.includes(activeCourse);
+    const isDataAnalyticsEnrolled = (enrolledList.includes('dataanalytics') || enrolledList.includes('powerbi')) && dataAnalyticsCourses.includes(activeCourse);
+    const isAccountingEnrolled = (enrolledList.includes('accounting') || enrolledList.includes('accounting_main') || enrolledList.includes('tally') || enrolledList.includes('tally_prime')) && accountingCourses.includes(activeCourse);
+    const isEnrolled = enrolledCourse === 'all' || enrolledList.includes(activeCourse) || isFullStackEnrolled || isDataAnalyticsEnrolled || isAccountingEnrolled;
     const isDynamic = typeof activeCourse === 'string' && (activeCourse.startsWith('custom_') || activeCourse.startsWith('course_') || activeCourse === 'course_builder');
     if (activeCourse !== 'dashboard' && activeCourse !== 'induction' && !isDynamic && !isEnrolled) {
       setActiveCourse('dashboard');
@@ -581,9 +743,9 @@ function App() {
   else if (activeCourse === 'pandas_course') currentCourseData = pandasCourseData;
   else if (activeCourse === 'matplotlib_course') currentCourseData = matplotlibCourseData;
   else if (activeCourse === 'seaborn_course') currentCourseData = seabornCourseData;
-  else if (activeCourse === 'core_js') currentCourseData = coreJsCourseData;
+  else if (activeCourse === 'javascript_course' || activeCourse === 'core_js') currentCourseData = javascriptCourseData || coreJsCourseData;
   else if (activeCourse === 'induction') currentCourseData = inductionCourseData;
-  else if (activeCourse === 'tally_prime') currentCourseData = tallyCourseData;
+  else if (activeCourse === 'tally_prime' || activeCourse === 'tally') currentCourseData = tallyCourseData;
   else if (activeCourse === 'web_design_20days') currentCourseData = webDesignCourseData;
   else if (activeCourse === 'spoko_story') currentCourseData = spokoStoryCourseData;
   else if (activeCourse === 'spoko_pro' || activeCourse === 'softskills') currentCourseData = spokoProCourseData;
@@ -701,7 +863,7 @@ function App() {
             {/* Mobile Header — shown on tablet/mobile via responsive.css */}
             <div className="mobile-header">
               <h2 style={{ fontSize: '1.2rem', margin: 0, color: '#1E3A8A' }}>
-                {activeCourse === 'ai_tools' ? 'AI Tools for Students & Professionals' : activeCourse === 'spoko_pro' || activeCourse === 'softskills' ? 'Professional Track (Soft Skills)' : activeCourse === 'spoko_story' ? 'Spoko Story-Based English' : activeCourse === 'tally_prime' ? 'AI powered Tally' : activeCourse === 'html_css' ? 'HTML, CSS & Bootstrap' : activeCourse === 'javascript_course' ? 'AI-Powered JavaScript' : activeCourse === 'core_js' ? 'Core JavaScript' : activeCourse === 'react_course' ? 'AI-Powered React JS' : activeCourse === 'powerbi' ? 'AI-Powered Data Analytics' : activeCourse === 'agentic_ai' ? 'Agentic AI Development' : activeCourse === 'induction' ? 'Free Induction & Demo Sessions' : activeCourse === 'devops' ? 'DevOps & CI/CD' : activeCourse === 'numpy_course' ? 'NumPy for Data Science' : activeCourse === 'pandas_course' ? 'Pandas for Data Science' : activeCourse === 'matplotlib_course' ? 'Matplotlib for Data Science' : activeCourse === 'seaborn_course' ? 'Seaborn for Data Science' : 'AI-Powered SQL'}
+                {activeCourse === 'python_fullstack' ? 'Python Full Stack Development' : activeCourse === 'ai_tools' ? 'AI Tools for Students & Professionals' : activeCourse === 'spoko_pro' || activeCourse === 'softskills' ? 'Professional Track (Soft Skills)' : activeCourse === 'spoko_story' ? 'Spoko Story-Based English' : activeCourse === 'tally_prime' ? 'AI powered Tally' : activeCourse === 'html_css' ? 'HTML, CSS & Bootstrap' : activeCourse === 'javascript_course' ? 'AI-Powered JavaScript' : activeCourse === 'core_js' ? 'Core JavaScript' : activeCourse === 'react_course' ? 'AI-Powered React JS' : activeCourse === 'powerbi' ? 'AI-Powered Data Analytics' : activeCourse === 'agentic_ai' ? 'Agentic AI Development' : activeCourse === 'induction' ? 'Free Induction & Demo Sessions' : activeCourse === 'devops' ? 'DevOps & CI/CD' : activeCourse === 'numpy_course' ? 'NumPy for Data Science' : activeCourse === 'pandas_course' ? 'Pandas for Data Science' : activeCourse === 'matplotlib_course' ? 'Matplotlib for Data Science' : activeCourse === 'seaborn_course' ? 'Seaborn for Data Science' : 'AI-Powered SQL'}
               </h2>
               <button
                 className="btn btn-outline"
@@ -741,7 +903,7 @@ function App() {
                     onClick={handleStudentRazorpayUnlock}
                     style={{ width: '100%', padding: '1rem', background: 'linear-gradient(135deg, #2563eb, #1d4ed8)', color: '#ffffff', borderRadius: '14px', border: 'none', fontWeight: 900, fontSize: '1rem', cursor: 'pointer', boxShadow: '0 8px 25px rgba(37,99,235,0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}
                   >
-                    <Lock size={18} /> Pay ₹499 via Razorpay & Instant Unlock Access
+                    <Lock size={18} /> Unlock Full Course Access via Razorpay
                   </button>
                   <button
                     onClick={() => setActiveCourse('dashboard')}
@@ -770,14 +932,22 @@ function App() {
                     {activeNode.moduleId === 'css_ai_module' && <AIPowerTools activeTab={activeNode.tabId} onNavigate={handleNavClick} course="css" />}
                     {activeNode.moduleId === 'bootstrap_ai_module' && <AIPowerTools activeTab={activeNode.tabId} onNavigate={handleNavClick} course="bootstrap" />}
 
-
-
-
-
-
-                  </>
-                )}
-
+                {activeNode.moduleId === 'module1' && <Day1 activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                {activeNode.moduleId === 'module2' && <Day2 activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                {activeNode.moduleId === 'html_project' && <HTMLProject activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                {activeNode.moduleId === 'module3' && <CSSDay1 activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                {activeNode.moduleId === 'module4' && <CSSDay2 activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                {activeNode.moduleId === 'module5' && <CSSDay3 activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                {activeNode.moduleId === 'module6' && <CSSDay4 activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                {activeNode.moduleId === 'module7' && <CSSDay5 activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                {activeNode.moduleId === 'module8' && <CSSDay6 activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                {activeNode.moduleId === 'bootstrap_day1' && <BootstrapDay1 activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                {activeNode.moduleId === 'bootstrap_day2' && <BootstrapDay2 activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                {activeNode.moduleId === 'module9' && <CSSFinalProject activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                {activeNode.moduleId === 'html_ai_module' && <AIPowerTools activeTab={activeNode.tabId} onNavigate={handleNavClick} course="html" />}
+                {activeNode.moduleId === 'css_ai_module' && <AIPowerTools activeTab={activeNode.tabId} onNavigate={handleNavClick} course="css" />}
+                {activeNode.moduleId === 'bootstrap_ai_module' && <AIPowerTools activeTab={activeNode.tabId} onNavigate={handleNavClick} course="bootstrap" />}
+                
                 {/* SQL Course Rendering */}
                 {activeNode.moduleId === 'sql_module1' && <SQLDay1 activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
                 {activeNode.moduleId === 'sql_module2' && <SQLDay2 activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
@@ -799,130 +969,110 @@ function App() {
                     session={session}
                   />
                 )}
-
+                {activeNode.moduleId === 'sql_module8' && <SQLDay8 activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                {activeNode.moduleId === 'sql_module9' && <SQLDay9 activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
                 {activeNode.moduleId === 'sql_final_project' && <SQLFinalProject activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
                 {activeNode.moduleId === 'sql_da_day8' && <SQLDADay8 activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
                 {activeNode.moduleId === 'sql_da_final_project' && <SQLDAFinalProject activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
 
-                {/* JavaScript Capstone & AI Tools */}
+                {/* JavaScript Course Rendering */}
+                {activeNode.moduleId === 'js_module1' && <JSDay1 activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                {activeNode.moduleId === 'js_module2' && <JSDay2 activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                {activeNode.moduleId === 'js_module3' && <JSDay3 activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                {activeNode.moduleId === 'js_module4' && <JSDay4 activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                {activeNode.moduleId === 'js_module5' && <JSDay5 activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                {activeNode.moduleId === 'js_module6' && <JSDay6 activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                {activeNode.moduleId === 'js_module7' && <JSDay7 activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                {activeNode.moduleId === 'js_module8' && <JSDay8 activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                {activeNode.moduleId === 'js_module9' && <JSDay9 activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                {activeNode.moduleId === 'js_module10' && <JSDay10 activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                {activeNode.moduleId === 'js_final_projects' && <JSFinalProjects activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
                 {activeNode.moduleId === 'js_ai_module' && <AIPowerTools activeTab={activeNode.tabId} onNavigate={handleNavClick} course="js" />}
 
                 {/* Power BI Course Rendering */}
-
-
-
-
-
+                {activeNode.moduleId === 'powerbi_demo' && <PowerBIDemo activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                {activeNode.moduleId === 'powerbi_module1' && <PowerBIDay1 activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                {activeNode.moduleId === 'powerbi_module2' && <PowerBIDay2 activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                {activeNode.moduleId === 'powerbi_module3' && <PowerBIDay3 activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                {activeNode.moduleId === 'powerbi_module4' && <PowerBIDay4 activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                {activeNode.moduleId === 'powerbi_module5' && <PowerBIDay5 activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                {activeNode.moduleId === 'powerbi_module6' && <PowerBIDay6 activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                {activeNode.moduleId === 'powerbi_module7' && <PowerBIDay7 activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                {activeNode.moduleId === 'powerbi_module8' && <PowerBIDay8 activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                {activeNode.moduleId === 'powerbi_module9' && <PowerBIProjects activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
 
                 {/* Tally Prime Course Rendering */}
                 {activeNode.moduleId.startsWith('tally_') && (
-                  <TallyCourseDay
-                    dayId={
-                      activeNode.moduleId === 'tally_prime_module1' || activeNode.moduleId === 'tally_module1' ? 'day1' :
-                      activeNode.moduleId === 'tally_prime_module2' || activeNode.moduleId === 'tally_module2' ? 'day2' :
-                      activeNode.moduleId === 'tally_prime_module3' || activeNode.moduleId === 'tally_module3' ? 'day3' :
-                      activeNode.moduleId === 'tally_prime_module4' || activeNode.moduleId === 'tally_module4' ? 'day4' :
-                      activeNode.moduleId === 'tally_prime_project1' || activeNode.moduleId === 'tally_project1' ? 'tally_project1' :
-                      activeNode.moduleId === 'tally_prime_module5' || activeNode.moduleId === 'tally_module5' ? 'day5' :
-                      activeNode.moduleId === 'tally_prime_module6' || activeNode.moduleId === 'tally_module6' ? 'day6' :
-                      activeNode.moduleId === 'tally_prime_module7' || activeNode.moduleId === 'tally_module7' ? 'day7' :
-                      activeNode.moduleId === 'tally_prime_module8' || activeNode.moduleId === 'tally_module8' ? 'day8' :
-                      activeNode.moduleId === 'tally_prime_module9' || activeNode.moduleId === 'tally_module9' ? 'day9' :
-                      activeNode.moduleId === 'tally_prime_project2' || activeNode.moduleId === 'tally_project2' || activeNode.moduleId === 'tally_prime_module10' ? 'day10' :
-                      activeNode.moduleId === 'tally_prime_module11' || activeNode.moduleId === 'tally_module11' ? 'day11' :
-                      activeNode.moduleId === 'tally_prime_module12' || activeNode.moduleId === 'tally_module12' ? 'day12' :
-                      activeNode.moduleId === 'tally_prime_module13' || activeNode.moduleId === 'tally_module13' ? 'day13' :
-                      activeNode.moduleId === 'tally_prime_module14' || activeNode.moduleId === 'tally_module14' ? 'day14' :
-                      activeNode.moduleId === 'tally_prime_project3' || activeNode.moduleId === 'tally_project3' || activeNode.moduleId === 'tally_prime_module15' ? 'day15' :
-                      activeNode.moduleId === 'tally_prime_module16' || activeNode.moduleId === 'tally_module16' ? 'day16' :
-                      activeNode.moduleId === 'tally_prime_module17' || activeNode.moduleId === 'tally_module17' ? 'day17' :
-                      activeNode.moduleId === 'tally_prime_module18' || activeNode.moduleId === 'tally_module18' ? 'day18' :
-                      activeNode.moduleId === 'tally_prime_module19' || activeNode.moduleId === 'tally_module19' ? 'day19' :
-                      activeNode.moduleId === 'tally_prime_project4' || activeNode.moduleId === 'tally_project4' || activeNode.moduleId === 'tally_prime_module20' ? 'day20' :
-                      activeNode.moduleId === 'tally_prime_module21' || activeNode.moduleId === 'tally_module21' ? 'day21' :
-                      activeNode.moduleId === 'tally_prime_module22' || activeNode.moduleId === 'tally_module22' ? 'day22' :
-                      activeNode.moduleId === 'tally_prime_module23' || activeNode.moduleId === 'tally_module23' ? 'day23' :
-                      activeNode.moduleId === 'tally_prime_module24' || activeNode.moduleId === 'tally_module24' ? 'day24' :
-                      activeNode.moduleId === 'tally_prime_project5' || activeNode.moduleId === 'tally_project5' || activeNode.moduleId === 'tally_prime_module25' ? 'day25' :
-                      activeNode.moduleId === 'tally_prime_module26' || activeNode.moduleId === 'tally_module26' ? 'day26' :
-                      activeNode.moduleId === 'tally_prime_module27' || activeNode.moduleId === 'tally_module27' ? 'day27' :
-                      activeNode.moduleId === 'tally_prime_module28' || activeNode.moduleId === 'tally_module28' ? 'day28' :
-                      activeNode.moduleId === 'tally_prime_module29' || activeNode.moduleId === 'tally_module29' ? 'day29' :
-                      activeNode.moduleId === 'tally_prime_project6' || activeNode.moduleId === 'tally_project6' || activeNode.moduleId === 'tally_prime_module30' || activeNode.moduleId === 'tally_module30' ? 'day30' :
-                      activeNode.moduleId === 'tally_prime_final_project' || activeNode.moduleId === 'tally_final_project' || activeNode.moduleId === 'tally_prime_module31' || activeNode.moduleId === 'tally_module31' ? 'day31' :
-                      activeNode.moduleId || activeNode.tabId || 'day1'
-                    }
-                    activeTab={activeNode.tabId}
-                    activeModuleId={activeNode.moduleId}
-                    onNavigate={handleNavClick}
-                    openAITutor={openAITutor}
-                    session={session}
+                  <TallyCourseDay 
+                    dayId={activeNode.tabId} 
+                    onNavigate={handleNavClick} 
+                    openAITutor={openAITutor} 
                     onSubmitTask={() => setShowTaskModal(true)}
                   />
                 )}
 
-                {/* Agentic AI Course Rendering */}
-                {activeNode.moduleId === 'agentic_ai_foundation' && activeNode.tabId === 'day1' && <AgenticAIDemo activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
-                {activeNode.moduleId === 'agentic_ai_foundation' && activeNode.tabId === 'day2' && <AgenticAIDay2 activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
-                {activeNode.moduleId === 'agentic_ai_foundation' && activeNode.tabId === 'day3' && <AgenticAIDay3 activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
-                {activeNode.moduleId === 'agentic_ai_foundation' && activeNode.tabId === 'day4' && <AgenticAIDay4 activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
-                {activeNode.moduleId === 'agentic_ai_foundation' && activeNode.tabId === 'day5' && <AgenticAIDay5 activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                 {/* Agentic AI Course Rendering */}
+                 {activeNode.moduleId === 'agentic_ai_foundation' && activeNode.tabId === 'day1' && <AgenticAIDemo activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                 {activeNode.moduleId === 'agentic_ai_foundation' && activeNode.tabId === 'day2' && <AgenticAIDay2 activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                 {activeNode.moduleId === 'agentic_ai_foundation' && activeNode.tabId === 'day3' && <AgenticAIDay3 activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                 {activeNode.moduleId === 'agentic_ai_foundation' && activeNode.tabId === 'day4' && <AgenticAIDay4 activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                 {activeNode.moduleId === 'agentic_ai_foundation' && activeNode.tabId === 'day5' && <AgenticAIDay5 activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
 
-                {/* Agentic AI Module 2 & 3 Course Rendering */}
-                {activeNode.moduleId === 'agentic_ai_module2' && activeNode.tabId === 'day6' && <AgenticAIDay6 activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
-                {activeNode.moduleId === 'agentic_ai_module2' && activeNode.tabId === 'day7' && <AgenticAIDay7 onNavigate={handleNavClick} openAITutor={openAITutor} />}
-                {activeNode.moduleId === 'agentic_ai_module2' && activeNode.tabId === 'day8' && <AgenticAIDay8 onNavigate={handleNavClick} openAITutor={openAITutor} />}
-                {activeNode.moduleId === 'agentic_ai_module2' && activeNode.tabId === 'day9' && <AgenticAIDay9 onNavigate={handleNavClick} openAITutor={openAITutor} />}
-                {activeNode.moduleId === 'agentic_ai_module2' && activeNode.tabId === 'day10' && <AgenticAIDay10 onNavigate={handleNavClick} openAITutor={openAITutor} />}
-                {activeNode.moduleId === 'agentic_ai_module2' && activeNode.tabId === 'module2_project' && <GenAIModule2Project />}
-                {activeNode.moduleId === 'agentic_ai_module3' && activeNode.tabId === 'day11' && <AgenticAIDay11 onNavigate={handleNavClick} openAITutor={openAITutor} />}
-                {activeNode.moduleId === 'agentic_ai_module3' && activeNode.tabId === 'day12' && <AgenticAIDay12 onNavigate={handleNavClick} openAITutor={openAITutor} />}
-                {activeNode.moduleId === 'agentic_ai_module3' && activeNode.tabId === 'day13' && <AgenticAIDay13 onNavigate={handleNavClick} openAITutor={openAITutor} />}
-                {activeNode.moduleId === 'agentic_ai_module3' && activeNode.tabId === 'day14' && <AgenticAIDay14 onNavigate={handleNavClick} openAITutor={openAITutor} />}
-                {activeNode.moduleId === 'agentic_ai_module3' && activeNode.tabId === 'day15' && <AgenticAIDay15 onNavigate={handleNavClick} openAITutor={openAITutor} />}
-                {activeNode.moduleId === 'agentic_ai_module3' && activeNode.tabId === 'module3_project' && <AgenticAIModule3Project onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                 {/* Agentic AI Module 2 & 3 Course Rendering */}
+                 {activeNode.moduleId === 'agentic_ai_module2' && activeNode.tabId === 'day6' && <AgenticAIDay6 activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                 {activeNode.moduleId === 'agentic_ai_module2' && activeNode.tabId === 'day7' && <AgenticAIDay7 onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                 {activeNode.moduleId === 'agentic_ai_module2' && activeNode.tabId === 'day8' && <AgenticAIDay8 onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                 {activeNode.moduleId === 'agentic_ai_module2' && activeNode.tabId === 'day9' && <AgenticAIDay9 onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                 {activeNode.moduleId === 'agentic_ai_module2' && activeNode.tabId === 'day10' && <AgenticAIDay10 onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                 {activeNode.moduleId === 'agentic_ai_module2' && activeNode.tabId === 'module2_project' && <GenAIModule2Project />}
+                 {activeNode.moduleId === 'agentic_ai_module3' && activeNode.tabId === 'day11' && <AgenticAIDay11 onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                 {activeNode.moduleId === 'agentic_ai_module3' && activeNode.tabId === 'day12' && <AgenticAIDay12 onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                 {activeNode.moduleId === 'agentic_ai_module3' && activeNode.tabId === 'day13' && <AgenticAIDay13 onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                 {activeNode.moduleId === 'agentic_ai_module3' && activeNode.tabId === 'day14' && <AgenticAIDay14 onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                 {activeNode.moduleId === 'agentic_ai_module3' && activeNode.tabId === 'day15' && <AgenticAIDay15 onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                 {activeNode.moduleId === 'agentic_ai_module3' && activeNode.tabId === 'module3_project' && <AgenticAIModule3Project onNavigate={handleNavClick} openAITutor={openAITutor} />}
 
-                {/* Agentic AI Module 4 — Flowise & Visual AI Agents */}
-                {activeNode.moduleId === 'agentic_ai_module4' && activeNode.tabId === 'day16' && <AgenticAIDay16 onNavigate={handleNavClick} openAITutor={openAITutor} />}
-                {activeNode.moduleId === 'agentic_ai_module4' && activeNode.tabId === 'day17' && <AgenticAIDay17 onNavigate={handleNavClick} openAITutor={openAITutor} />}
-                {activeNode.moduleId === 'agentic_ai_module4' && activeNode.tabId === 'day18' && <AgenticAIDay18 onNavigate={handleNavClick} openAITutor={openAITutor} />}
-                {activeNode.moduleId === 'agentic_ai_module4' && activeNode.tabId === 'day19' && <AgenticAIDay19 onNavigate={handleNavClick} openAITutor={openAITutor} />}
-                {activeNode.moduleId === 'agentic_ai_module4' && activeNode.tabId === 'day20' && <AgenticAIDay20 onNavigate={handleNavClick} openAITutor={openAITutor} />}
-                {activeNode.moduleId === 'agentic_ai_module4' && activeNode.tabId === 'module4_project' && <AgenticAIModule4Project onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                 {/* Agentic AI Module 4 ÔÇö Flowise & Visual AI Agents */}
+                 {activeNode.moduleId === 'agentic_ai_module4' && activeNode.tabId === 'day16' && <AgenticAIDay16 onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                 {activeNode.moduleId === 'agentic_ai_module4' && activeNode.tabId === 'day17' && <AgenticAIDay17 onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                 {activeNode.moduleId === 'agentic_ai_module4' && activeNode.tabId === 'day18' && <AgenticAIDay18 onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                 {activeNode.moduleId === 'agentic_ai_module4' && activeNode.tabId === 'day19' && <AgenticAIDay19 onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                 {activeNode.moduleId === 'agentic_ai_module4' && activeNode.tabId === 'day20' && <AgenticAIDay20 onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                 {activeNode.moduleId === 'agentic_ai_module4' && activeNode.tabId === 'module4_project' && <AgenticAIModule4Project onNavigate={handleNavClick} openAITutor={openAITutor} />}
 
-                {/* Agentic AI Module 5 — LangChain & Agent Development */}
-                {activeNode.moduleId === 'agentic_ai_module5' && activeNode.tabId === 'day21' && <AgenticAIDay21 onNavigate={handleNavClick} openAITutor={openAITutor} />}
-                {activeNode.moduleId === 'agentic_ai_module5' && activeNode.tabId === 'day22' && <AgenticAIDay22 onNavigate={handleNavClick} openAITutor={openAITutor} />}
-                {activeNode.moduleId === 'agentic_ai_module5' && activeNode.tabId === 'day23' && <AgenticAIDay23 onNavigate={handleNavClick} openAITutor={openAITutor} />}
-                {activeNode.moduleId === 'agentic_ai_module5' && activeNode.tabId === 'day24' && <AgenticAIDay24 onNavigate={handleNavClick} openAITutor={openAITutor} />}
-                {activeNode.moduleId === 'agentic_ai_module5' && activeNode.tabId === 'day25' && <AgenticAIDay25 onNavigate={handleNavClick} openAITutor={openAITutor} />}
-                {activeNode.moduleId === 'agentic_ai_module5' && activeNode.tabId === 'module5_project' && <AgenticAIModule5Project onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                 {/* Agentic AI Module 5 ÔÇö LangChain & Agent Development */}
+                 {activeNode.moduleId === 'agentic_ai_module5' && activeNode.tabId === 'day21' && <AgenticAIDay21 onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                 {activeNode.moduleId === 'agentic_ai_module5' && activeNode.tabId === 'day22' && <AgenticAIDay22 onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                 {activeNode.moduleId === 'agentic_ai_module5' && activeNode.tabId === 'day23' && <AgenticAIDay23 onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                 {activeNode.moduleId === 'agentic_ai_module5' && activeNode.tabId === 'day24' && <AgenticAIDay24 onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                 {activeNode.moduleId === 'agentic_ai_module5' && activeNode.tabId === 'day25' && <AgenticAIDay25 onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                 {activeNode.moduleId === 'agentic_ai_module5' && activeNode.tabId === 'module5_project' && <AgenticAIModule5Project onNavigate={handleNavClick} openAITutor={openAITutor} />}
 
-                {/* Agentic AI Module 6 — LangGraph & Stateful Agents */}
-                {activeNode.moduleId === 'agentic_ai_module6' && activeNode.tabId === 'day26' && <AgenticAIDay26 onNavigate={handleNavClick} openAITutor={openAITutor} />}
-                {activeNode.moduleId === 'agentic_ai_module6' && activeNode.tabId === 'day27' && <AgenticAIDay27 onNavigate={handleNavClick} openAITutor={openAITutor} />}
-                {activeNode.moduleId === 'agentic_ai_module6' && activeNode.tabId === 'day28' && <AgenticAIDay28 onNavigate={handleNavClick} openAITutor={openAITutor} />}
-                {activeNode.moduleId === 'agentic_ai_module6' && activeNode.tabId === 'day29' && <AgenticAIDay29 onNavigate={handleNavClick} openAITutor={openAITutor} />}
-                {activeNode.moduleId === 'agentic_ai_module6' && activeNode.tabId === 'day30' && <AgenticAIDay30 onNavigate={handleNavClick} openAITutor={openAITutor} />}
-                {activeNode.moduleId === 'agentic_ai_module6' && activeNode.tabId === 'module6_project' && <AgenticAIModule6Project onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                 {/* Agentic AI Module 6 ÔÇö LangGraph & Stateful Agents */}
+                 {activeNode.moduleId === 'agentic_ai_module6' && activeNode.tabId === 'day26' && <AgenticAIDay26 onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                 {activeNode.moduleId === 'agentic_ai_module6' && activeNode.tabId === 'day27' && <AgenticAIDay27 onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                 {activeNode.moduleId === 'agentic_ai_module6' && activeNode.tabId === 'day28' && <AgenticAIDay28 onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                 {activeNode.moduleId === 'agentic_ai_module6' && activeNode.tabId === 'day29' && <AgenticAIDay29 onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                 {activeNode.moduleId === 'agentic_ai_module6' && activeNode.tabId === 'day30' && <AgenticAIDay30 onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                 {activeNode.moduleId === 'agentic_ai_module6' && activeNode.tabId === 'module6_project' && <AgenticAIModule6Project onNavigate={handleNavClick} openAITutor={openAITutor} />}
 
-                {/* Agentic AI Module 7 — CrewAI Multi-Agent Systems */}
-                {activeNode.moduleId === 'agentic_ai_module7' && activeNode.tabId === 'day31' && <AgenticAIDay31 onNavigate={handleNavClick} openAITutor={openAITutor} />}
-                {activeNode.moduleId === 'agentic_ai_module7' && activeNode.tabId === 'day32' && <AgenticAIDay32 onNavigate={handleNavClick} openAITutor={openAITutor} />}
-                {activeNode.moduleId === 'agentic_ai_module7' && activeNode.tabId === 'day33' && <AgenticAIDay33 onNavigate={handleNavClick} openAITutor={openAITutor} />}
-                {activeNode.moduleId === 'agentic_ai_module7' && activeNode.tabId === 'day34' && <AgenticAIDay34 onNavigate={handleNavClick} openAITutor={openAITutor} />}
-                {activeNode.moduleId === 'agentic_ai_module7' && activeNode.tabId === 'day35' && <AgenticAIDay35 onNavigate={handleNavClick} openAITutor={openAITutor} />}
-                {activeNode.moduleId === 'agentic_ai_module7' && activeNode.tabId === 'module7_project' && <AgenticAIModule7Project onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                 {/* Agentic AI Module 7 ÔÇö CrewAI Multi-Agent Systems */}
+                 {activeNode.moduleId === 'agentic_ai_module7' && activeNode.tabId === 'day31' && <AgenticAIDay31 onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                 {activeNode.moduleId === 'agentic_ai_module7' && activeNode.tabId === 'day32' && <AgenticAIDay32 onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                 {activeNode.moduleId === 'agentic_ai_module7' && activeNode.tabId === 'day33' && <AgenticAIDay33 onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                 {activeNode.moduleId === 'agentic_ai_module7' && activeNode.tabId === 'day34' && <AgenticAIDay34 onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                 {activeNode.moduleId === 'agentic_ai_module7' && activeNode.tabId === 'day35' && <AgenticAIDay35 onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                 {activeNode.moduleId === 'agentic_ai_module7' && activeNode.tabId === 'module7_project' && <AgenticAIModule7Project onNavigate={handleNavClick} openAITutor={openAITutor} />}
 
-                {/* Agentic AI Module 8 — Agno AI & Advanced Agent Development */}
-                {activeNode.moduleId === 'agentic_ai_module8' && activeNode.tabId === 'day36' && <AgenticAIDay36 onNavigate={handleNavClick} openAITutor={openAITutor} />}
-                {activeNode.moduleId === 'agentic_ai_module8' && activeNode.tabId === 'day37' && <AgenticAIDay37 onNavigate={handleNavClick} openAITutor={openAITutor} />}
-                {activeNode.moduleId === 'agentic_ai_module8' && activeNode.tabId === 'day38' && <AgenticAIDay38 onNavigate={handleNavClick} openAITutor={openAITutor} />}
-                {activeNode.moduleId === 'agentic_ai_module8' && activeNode.tabId === 'day39' && <AgenticAIDay39 onNavigate={handleNavClick} openAITutor={openAITutor} />}
-                {activeNode.moduleId === 'agentic_ai_module8' && activeNode.tabId === 'day40' && <AgenticAIDay40 onNavigate={handleNavClick} openAITutor={openAITutor} />}
-                {activeNode.moduleId === 'agentic_ai_module8' && activeNode.tabId === 'module8_project' && <AgenticAIModule8Project onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                 {/* Agentic AI Module 8 ÔÇö Agno AI & Advanced Agent Development */}
+                 {activeNode.moduleId === 'agentic_ai_module8' && activeNode.tabId === 'day36' && <AgenticAIDay36 onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                 {activeNode.moduleId === 'agentic_ai_module8' && activeNode.tabId === 'day37' && <AgenticAIDay37 onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                 {activeNode.moduleId === 'agentic_ai_module8' && activeNode.tabId === 'day38' && <AgenticAIDay38 onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                 {activeNode.moduleId === 'agentic_ai_module8' && activeNode.tabId === 'day39' && <AgenticAIDay39 onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                 {activeNode.moduleId === 'agentic_ai_module8' && activeNode.tabId === 'day40' && <AgenticAIDay40 onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                 {activeNode.moduleId === 'agentic_ai_module8' && activeNode.tabId === 'module8_project' && <AgenticAIModule8Project onNavigate={handleNavClick} openAITutor={openAITutor} />}
 
-                {activeNode.moduleId === 'generative_ai_demo' && <GenerativeAIDemo activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                 {activeNode.moduleId === 'generative_ai_demo' && <GenerativeAIDemo activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
 
                 {/* AI Python Full Stack Demo Rendering */}
                 {activeNode.moduleId === 'python_fullstack_demo' && <PythonFullStackDemo activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
@@ -969,73 +1119,102 @@ function App() {
                 {activeNode.moduleId === 'genai_module4' && activeNode.tabId === 'day20' && <GenAIDay20 onNavigate={handleNavClick} openAITutor={openAITutor} />}
 
                 {/* React Course Rendering */}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+                {activeNode.moduleId === 'react_js_essentials' && <ReactJSEssentials activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                {activeNode.moduleId === 'react_module1' && <ReactDay1 activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                {activeNode.moduleId === 'react_module2' && <ReactDay2 activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                {activeNode.moduleId === 'react_module3' && <ReactDay3 activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                {activeNode.moduleId === 'react_module4' && <ReactDay4 activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                {activeNode.moduleId === 'react_module5' && <ReactDay5 activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                {activeNode.moduleId === 'react_module6' && <ReactDay6 activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                {activeNode.moduleId === 'react_module7' && <ReactDay7 activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                {activeNode.moduleId === 'react_module8' && <ReactDay8 activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                {activeNode.moduleId === 'react_module9' && <ReactDay9 activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                {activeNode.moduleId === 'react_module10' && <ReactDay10 activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                {activeNode.moduleId === 'react_module11' && <ReactDay11 activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                {activeNode.moduleId === 'react_module12' && <ReactDay12 activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                {activeNode.moduleId === 'react_module13' && <ReactDay13 activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                {activeNode.moduleId === 'react_module14' && <ReactDay14 activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                {activeNode.moduleId === 'react_module15' && <ReactDay15 activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                {activeNode.moduleId === 'git_module1' && <GitDay1 activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                {activeNode.moduleId === 'git_module2' && <GitDay2 activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                {activeNode.moduleId === 'json_module1' && <JSONDay1 activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                {activeNode.moduleId === 'django_module1' && <DjangoDay1 activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                {activeNode.moduleId === 'django_module2' && <DjangoDay2 activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                {activeNode.moduleId === 'django_module3' && <DjangoDay3 activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                {activeNode.moduleId === 'django_module4' && <DjangoDay4 activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                {activeNode.moduleId === 'django_module5' && <DjangoDay5 activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                {activeNode.moduleId === 'django_module6' && <DjangoDay6 activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                {activeNode.moduleId === 'django_module7' && <DjangoDay7 activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                {activeNode.moduleId === 'django_module8' && <DjangoDay8 activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                {activeNode.moduleId === 'django_module9' && <DjangoDay9 activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                {activeNode.moduleId === 'django_module10' && <DjangoDay10 activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                {activeNode.moduleId === 'django_module11' && <DjangoDay11 activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                {activeNode.moduleId === 'django_module12' && <DjangoDay12 activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                {activeNode.moduleId === 'django_module13' && <DjangoDay13 activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                {activeNode.moduleId === 'django_module14' && <DjangoDay14 activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                {activeNode.moduleId === 'django_module15' && <DjangoDay15 activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                {activeNode.moduleId === 'devops_module1' && <DevOpsDay1 activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                {activeNode.moduleId === 'devops_module2' && <DevOpsDay2 activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                {activeNode.moduleId === 'devops_module3' && <DevOpsDay3 activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
                 {activeNode.moduleId === 'react_ai_module' && <AIPowerTools activeTab={activeNode.tabId} onNavigate={handleNavClick} course="react" />}
                 {activeNode.moduleId === 'git_ai_module' && <AIPowerTools activeTab={activeNode.tabId} onNavigate={handleNavClick} course="git" />}
                 {activeNode.moduleId === 'json_ai_module' && <AIPowerTools activeTab={activeNode.tabId} onNavigate={handleNavClick} course="json" />}
                 {activeNode.moduleId === 'django_ai_module' && <AIPowerTools activeTab={activeNode.tabId} onNavigate={handleNavClick} course="django" />}
                 {activeNode.moduleId === 'devops_ai_module' && <AIPowerTools activeTab={activeNode.tabId} onNavigate={handleNavClick} course="devops" />}
-
+                
                 {/* Statistics Course Rendering */}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                {/* Spoko Story-Based English Course Rendering */}
-
-
-
-
-                {/* Spoko Professional Track (Soft Skills) Course Rendering */}
-                {activeNode.moduleId.startsWith('spoko_pro_topic') && (
-                  <SpokoProTopic
-                    topic={parseInt(activeNode.moduleId.replace('spoko_pro_topic', '')) || 1}
-                    activeTab={activeNode.tabId}
-                    onNavigate={handleNavClick}
-                    openAITutor={openAITutor}
-                    session={session}
-                  />
+                {activeNode.moduleId === 'stats_day1' && <StatsDay1 activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                {activeNode.moduleId === 'stats_day2' && <StatsDay2 activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                {activeNode.moduleId === 'stats_day3' && <StatsDay3 activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                {activeNode.moduleId === 'stats_day4' && <StatsDay4 activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                {activeNode.moduleId === 'stats_day5' && <StatsDay5 activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                {activeNode.moduleId === 'stats_day6' && <StatsDay6 activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                {activeNode.moduleId === 'stats_day7' && <StatsDay7 activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                {activeNode.moduleId === 'stats_day8' && <StatsDay8 activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                {activeNode.moduleId === 'stats_day9' && <StatsDay9 activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                {activeNode.moduleId === 'stats_day10' && <StatsDay10 activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                {activeNode.moduleId === 'stats_day11' && <StatsDay11 activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                {activeNode.moduleId === 'stats_day12' && <StatsDay12 activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                {activeNode.moduleId === 'stats_day13' && <StatsDay13 activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                {activeNode.moduleId === 'stats_day14' && <StatsDay14 activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                {activeNode.moduleId === 'stats_day15' && <StatsDay15 activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                {activeNode.moduleId === 'stats_day16' && <StatsDay16 activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                {activeNode.moduleId === 'stats_day17' && <StatsDay17 activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                {activeNode.moduleId === 'stats_mini_projects' && <StatsMiniProjects activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                {activeNode.moduleId === 'stats_final_project' && <StatsFinalProject activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                {activeNode.moduleId === 'numpy_day1' && <NumpyDay1 activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                {activeNode.moduleId === 'numpy_day2' && <NumpyDay2 activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                {activeNode.moduleId === 'numpy_day3' && <NumpyDay3 activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                {activeNode.moduleId === 'numpy_day4' && <NumpyDay4 activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                {activeNode.moduleId === 'numpy_day5' && <NumpyDay5 activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                {activeNode.moduleId === 'numpy_day6' && <NumpyDay6 activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                {activeNode.moduleId === 'pandas_day1' && <PandasDay1 activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                {activeNode.moduleId === 'pandas_day2' && <PandasDay2 activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                {activeNode.moduleId === 'pandas_day3' && <PandasDay3 activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                {activeNode.moduleId === 'pandas_day4' && <PandasDay4 activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                 {activeNode.moduleId === 'pandas_day5' && <PandasDay5 activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                 {activeNode.moduleId === 'pandas_day6' && <PandasDay6 activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                 {activeNode.moduleId === 'matplotlib_day1' && <MatplotlibDay1 activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                 {activeNode.moduleId === 'matplotlib_day2' && <MatplotlibDay2 activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                 {activeNode.moduleId === 'matplotlib_day3' && <MatplotlibDay3 activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                 {activeNode.moduleId === 'matplotlib_day4' && <MatplotlibDay4 activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                 {activeNode.moduleId === 'matplotlib_day5' && <MatplotlibDay5 activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                 {activeNode.moduleId === 'seaborn_day1' && <SeabornDay1 activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                 {activeNode.moduleId === 'seaborn_day2' && <SeabornDay2 activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                 {activeNode.moduleId === 'seaborn_day3' && <SeabornDay3 activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                 {activeNode.moduleId === 'seaborn_day4' && <SeabornDay4 activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                {activeNode.moduleId === 'core_js_day1' && <CoreJSDay1 activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                {activeNode.moduleId === 'core_js_day2' && <CoreJSDay2 activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                {activeNode.moduleId === 'core_js_day3' && <CoreJSDay3 activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                {activeNode.moduleId === 'core_js_day4' && <CoreJSDay4 activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                {activeNode.moduleId === 'core_js_day5' && <CoreJSDay5 activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                {activeNode.moduleId === 'core_js_day6' && <CoreJSDay6 activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                {activeNode.moduleId === 'core_js_day7' && <CoreJSDay7 activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                {activeNode.moduleId === 'core_js_day8' && <CoreJSDay8 activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                {activeNode.moduleId === 'core_js_day9' && <CoreJSDay9 activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                {activeNode.moduleId === 'core_js_day10' && <CoreJSDay10 activeTab={activeNode.tabId} onNavigate={handleNavClick} openAITutor={openAITutor} />}
+                {activeNode.moduleId.startsWith('stats_day') && !['stats_day1','stats_day2','stats_day3','stats_day4','stats_day5','stats_day6','stats_day7','stats_day8','stats_day9','stats_day10','stats_day11','stats_day12','stats_day13','stats_day14','stats_day15','stats_day16','stats_day17','stats_mini_projects','stats_final_project'].includes(activeNode.moduleId) && <StatsDayPlaceholder activeTab={activeNode.tabId} onNavigate={handleNavClick} dayTitle={activeNode.moduleId.replace('stats_day', 'Day ')} />}
+                  </>
                 )}
               </>
             )}
@@ -1101,21 +1280,19 @@ function App() {
                           display: 'flex',
                           alignItems: 'center',
                           gap: '8px',
-                          border: '1px solid',
-                          borderColor: isCompleted ? '#10b981' : '#2563eb',
-                          background: isCompleted ? '#d1fae5' : 'linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%)',
-                          color: isCompleted ? '#065f46' : '#ffffff',
-                          padding: '0.6rem 1.25rem',
+                          padding: '0.6rem 1.2rem',
                           borderRadius: '10px',
-                          fontSize: '0.88rem',
+                          border: isCompleted ? '1px solid #10b981' : '1px solid #cbd5e1',
+                          background: isCompleted ? '#ecfdf5' : '#ffffff',
+                          color: isCompleted ? '#059669' : '#475569',
                           fontWeight: 700,
+                          fontSize: '0.85rem',
                           cursor: 'pointer',
-                          transition: 'all 0.2s ease',
-                          boxShadow: isCompleted ? '0 2px 4px rgba(16, 185, 129, 0.1)' : '0 4px 12px rgba(37, 99, 235, 0.25)'
+                          transition: 'all 0.2s'
                         }}
                       >
-                        <CheckCircle size={16} color={isCompleted ? '#10b981' : '#ffffff'} fill={isCompleted ? '#ffffff' : 'transparent'} />
-                        {isCompleted ? 'Completed 🎉' : 'Mark Completed & Next Topic →'}
+                        <CheckCircle size={16} />
+                        {isCompleted ? 'Completed' : 'Mark as Complete'}
                       </button>
                     );
                   })()}
@@ -1123,17 +1300,17 @@ function App() {
               </div>
             )}
           </div>
-          <FloatingAITutor
-            isOpen={tutorOpen}
+          <FloatingAITutor 
+            isOpen={tutorOpen} 
             onOpen={() => setTutorOpen(true)}
-            onClose={() => setTutorOpen(false)}
-            initialQuestion={initialQuestion}
+            onClose={() => setTutorOpen(false)} 
+            initialQuestion={initialQuestion} 
             activeCourse={activeCourse}
           />
         </>
       )}
 
-      {/* 📝 TASK SUBMISSION MODAL */}
+      {/* ­ƒôØ TASK SUBMISSION MODAL */}
       {showTaskModal && (
         <div style={{
           position: 'fixed',
@@ -1163,9 +1340,7 @@ function App() {
               Submit Topic Assignment
             </h3>
             <p style={{ fontSize: '0.88rem', color: '#64748b', margin: '0 0 1.5rem 0', lineHeight: 1.4, fontFamily: 'system-ui' }}>
-              {activeCourse === 'tally_prime' || activeNode?.moduleId?.startsWith('tally_')
-                ? 'Submit your assignment link (Google Drive / cloud backup / screenshot) or type your journal entries and answers below.'
-                : 'Submit your code repository link, event host URL, or a text explanation of your solution.'}
+              Submit your code repository link, event host URL, or a text explanation of your solution.
             </p>
 
             <form onSubmit={(e) => {
@@ -1174,15 +1349,11 @@ function App() {
             }}>
               <div style={{ marginBottom: '1.25rem' }}>
                 <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 700, color: '#334155', marginBottom: '0.5rem', fontFamily: 'system-ui' }}>
-                  {activeCourse === 'tally_prime' || activeNode?.moduleId?.startsWith('tally_')
-                    ? 'Submission URL (Google Drive, Cloud Link, or Screenshots — Optional)'
-                    : 'Submission URL (GitHub, Netlify, Vercel, CodePen, etc.)'}
+                  Submission URL (GitHub, Netlify, Vercel, CodePen, etc.)
                 </label>
-                <input
+                <input 
                   type="url"
-                  placeholder={activeCourse === 'tally_prime' || activeNode?.moduleId?.startsWith('tally_')
-                    ? 'https://drive.google.com/... (optional if answering below)'
-                    : 'https://github.com/your-username/project-repo'}
+                  placeholder="https://github.com/your-username/project-repo"
                   value={taskSubmitUrl}
                   onChange={(e) => setTaskSubmitUrl(e.target.value)}
                   style={{
@@ -1202,14 +1373,10 @@ function App() {
 
               <div style={{ marginBottom: '1.5rem' }}>
                 <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 700, color: '#334155', marginBottom: '0.5rem', fontFamily: 'system-ui' }}>
-                  {activeCourse === 'tally_prime' || activeNode?.moduleId?.startsWith('tally_')
-                    ? 'Journal Entries / Ledger Details / Answer Text'
-                    : 'Submission Details / Code Snippets / Notes'}
+                  Submission Details / Code Snippets / Notes
                 </label>
                 <textarea
-                  placeholder={activeCourse === 'tally_prime' || activeNode?.moduleId?.startsWith('tally_')
-                    ? 'Type your journal entries, ledger groups, voucher steps, or answer text...'
-                    : 'Describe your implementation details, paste short scripts, or provide answer text...'}
+                  placeholder="Describe your implementation details, paste short scripts, or provide answer text..."
                   rows={4}
                   value={taskSubmitNotes}
                   onChange={(e) => setTaskSubmitNotes(e.target.value)}

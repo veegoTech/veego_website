@@ -21,7 +21,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentPath, onNavigate, onOpenL
     { label: 'Home', path: '/' },
     { label: 'About', path: '/about' },
     { label: 'Projects', path: '/projects' },
-    { label: 'Courses', path: '/courses', badge: '₹499' },
+    { label: 'Courses', path: '/courses', badge: '' },
     { label: 'Contact', path: '/contact' }
   ];
 
@@ -33,6 +33,9 @@ export const Navbar: React.FC<NavbarProps> = ({ currentPath, onNavigate, onOpenL
   const isLinkActive = (item: { label: string; path: string }) => {
     if (item.path === '/') {
       return currentPath === '/' || currentPath === '/home';
+    }
+    if (item.path === '/courses') {
+      return currentPath === '/courses' || currentPath === '/course' || currentPath.startsWith('/courses/') || currentPath.startsWith('/course/');
     }
     return currentPath === item.path || currentPath.startsWith(item.path + '/');
   };

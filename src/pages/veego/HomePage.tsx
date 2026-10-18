@@ -165,11 +165,11 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
                 {/* High-Contrast Swiss Typography (Strictly Flat, No Gradients) */}
                 <motion.h1
                   variants={itemVariants}
-                  className="font-Space Grotesk text-4xl sm:text-6xl lg:text-[4.25rem] font-black tracking-tight text-slate-950 mb-6 leading-[1.05]"
+                  className="font-display text-4xl sm:text-6xl lg:text-[4.25rem] font-black tracking-tight text-slate-950 mb-6 leading-[1.05]"
                   style={{ fontFamily: "'Space Grotesk', sans-serif" }}
                 >
-                  <span>Problems Out -</span>{' '}
-                  <span className="text-blue-600">Solution In.</span>
+                  <span className="font-black">Problems Out -</span>{' '}
+                  <span className="text-blue-600 font-black">Solution In.</span>
                 </motion.h1>
 
                 <motion.p

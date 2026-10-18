@@ -50,7 +50,7 @@ export const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({ onStartDis
             viewport={{ once: true }}
             className="inline-flex items-center gap-2 px-3 py-1 rounded-[4px] bg-white border border-slate-300 text-xs font-mono font-bold text-slate-900 mb-4"
           >
-            <Sparkles className="w-3.5 h-3.5 text-blue-600" />
+
             <span className="tracking-wider uppercase">THE VEEGO PROCESS</span>
           </motion.div>
           <motion.h2
@@ -58,10 +58,10 @@ export const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({ onStartDis
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.1 }}
-            className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-slate-950 leading-tight"
-            style={{ textWrap: 'balance' }}
+            className="font-display text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-slate-950 leading-tight"
+            style={{ textWrap: 'balance', fontFamily: "'Space Grotesk', sans-serif" }}
           >
-            Understand. Build. <span className="text-blue-600">Grow.</span>
+            Understand. Build. <span className="text-blue-600 font-black">Grow.</span>
           </motion.h2>
           <motion.p
             initial={{ opacity: 0, y: 15 }}
@@ -84,11 +84,10 @@ export const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({ onStartDis
               transition={{ delay: idx * 0.08, duration: 0.4 }}
               onHoverStart={() => setHoveredStep(idx)}
               onHoverEnd={() => setHoveredStep(null)}
-              className={`p-7 rounded-[4px] bg-white border transition-colors duration-150 flex flex-col justify-between cursor-pointer ${
-                hoveredStep === idx
+              className={`p-7 rounded-[4px] bg-white border transition-colors duration-150 flex flex-col justify-between cursor-pointer ${hoveredStep === idx
                   ? 'border-slate-950'
                   : 'border-slate-200 hover:border-slate-400'
-              }`}
+                }`}
             >
               <div>
                 <div className="flex items-center justify-between mb-6">

@@ -76,7 +76,7 @@ export const WhyVeeGoAndCTA: React.FC<WhyVeeGoAndCTAProps> = ({
               variants={itemVariants}
               className="inline-flex items-center gap-2 px-3 py-1 rounded-[4px] bg-slate-900 border border-slate-800 text-xs uppercase tracking-widest text-blue-400 font-bold mb-4"
             >
-              <Sparkles className="w-3.5 h-3.5 text-blue-400" />
+
               <span>CORE ENGINEERING ETHICS</span>
             </motion.div>
 
@@ -151,12 +151,12 @@ export const WhyVeeGoAndCTA: React.FC<WhyVeeGoAndCTAProps> = ({
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.08, duration: 0.4 }}
-            className="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight text-slate-950 mb-6 leading-tight"
+            className="font-display text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight text-slate-950 mb-6 leading-tight"
             style={{ textWrap: 'balance', fontFamily: "'Space Grotesk', sans-serif" }}
           >
             We Go Through Your Problem. <br className="hidden sm:inline" />
             <span className="text-blue-600 font-black">
-              We Deliver Your Solution.
+              We Give You the Solution.
             </span>
           </motion.h2>
 

@@ -246,7 +246,7 @@ export const AIToolsLessonPlayer: React.FC<AIToolsLessonPlayerProps> = ({
             )}
             <div>
               <span className="text-[10px] font-mono uppercase tracking-wider text-blue-400 font-bold block">
-                VeeGo Recorded LMS · ₹499 INR
+                VeeGo Recorded LMS Track
               </span>
               <h1 className="text-sm sm:text-base font-bold text-white tracking-tight truncate max-w-[280px] sm:max-w-md">
                 AI Tools for Students & Professionals

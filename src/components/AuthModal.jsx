@@ -213,7 +213,7 @@ export const AuthModal = ({ isOpen, onClose, onLoginSuccess }) => {
           return;
         }
       }
-    } catch (_) {}
+    } catch (_) { }
 
     // Demo Student Bypass
     if (cleanUser === '9876543210' && (cleanPass === '01-01-2000' || cleanPass === '2000-01-01')) {
@@ -643,37 +643,6 @@ export const AuthModal = ({ isOpen, onClose, onLoginSuccess }) => {
                     </div>
                   </div>
 
-                  {/* QUICK DEMO CREDENTIAL PILLS */}
-                  <div className="pt-1">
-                    <span className="text-[10px] font-mono uppercase tracking-wider text-slate-500 font-bold block mb-1.5">
-                      Quick Auto-Fill Test Roles:
-                    </span>
-                    <div className="flex gap-2 flex-wrap">
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setLoginUsername('admin');
-                          setLoginPassword('admin123');
-                          setErrorMsg('');
-                        }}
-                        className="px-2.5 py-1 bg-slate-100 hover:bg-blue-50 hover:text-blue-700 text-slate-700 text-[11px] font-mono font-bold rounded-[4px] border border-slate-200 transition-colors cursor-pointer"
-                      >
-                        🔑 Admin (admin / admin123)
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setLoginUsername('staff');
-                          setLoginPassword('staff123');
-                          setErrorMsg('');
-                        }}
-                        className="px-2.5 py-1 bg-slate-100 hover:bg-emerald-50 hover:text-emerald-700 text-slate-700 text-[11px] font-mono font-bold rounded-[4px] border border-slate-200 transition-colors cursor-pointer"
-                      >
-                        👥 Staff (staff / staff123)
-                      </button>
-                    </div>
-                  </div>
-
                   {/* SUBMIT BUTTON */}
                   <button
                     type="submit"
@@ -706,13 +675,13 @@ export const AuthModal = ({ isOpen, onClose, onLoginSuccess }) => {
                       Don&apos;t have an account? <span className="underline font-bold">Register</span>
                     </button>
 
-                    <a
+                    {/* <a
                       href="/admin"
                       onClick={() => onClose()}
                       className="text-slate-500 hover:text-slate-900 font-mono text-[11px] underline"
                     >
                       Open /admin Center →
-                    </a>
+                    </a> */}
                   </div>
                 </form>
               </div>
@@ -965,7 +934,7 @@ export const AuthModal = ({ isOpen, onClose, onLoginSuccess }) => {
         <div className="lg:w-1/2 bg-[#f8fafc] p-6 sm:p-7 flex flex-col justify-between relative overflow-hidden border-t md:border-t-0 md:border-l border-slate-200">
           <div className="relative z-10">
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-[4px] bg-blue-50 border border-blue-200 text-blue-700 text-[11px] font-bold mb-3 font-mono">
-              <Sparkles className="w-3.5 h-3.5 text-blue-600" />
+
               <span>VeeGo Ecosystem</span>
             </div>
 

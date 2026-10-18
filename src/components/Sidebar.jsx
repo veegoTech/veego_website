@@ -47,6 +47,7 @@ export default function Sidebar({ courseStructure, activeNode, onNavClick, onBac
   const progressPercent = totalItems > 0 ? Math.min(100, Math.round((completedInThisCourse / totalItems) * 100)) : 0;
 
   const getCourseDuration = () => {
+    if (activeCourse === 'python_fullstack') return 3600; // 60h Full Stack
     const firstId = courseStructure?.[0]?.id || '';
     if (firstId.includes('aitools')) return 240; // 4h
     if (firstId.includes('spoko_pro') || firstId.includes('softskills')) return 450; // 7h 30m
