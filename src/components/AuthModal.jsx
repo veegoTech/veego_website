@@ -675,13 +675,6 @@ export const AuthModal = ({ isOpen, onClose, onLoginSuccess }) => {
                       Don&apos;t have an account? <span className="underline font-bold">Register</span>
                     </button>
 
-                    {/* <a
-                      href="/admin"
-                      onClick={() => onClose()}
-                      className="text-slate-500 hover:text-slate-900 font-mono text-[11px] underline"
-                    >
-                      Open /admin Center →
-                    </a> */}
                   </div>
                 </form>
               </div>

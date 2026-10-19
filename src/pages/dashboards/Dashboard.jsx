@@ -1760,19 +1760,19 @@ export default function Dashboard({ onSelectCourse, enrolledCourse, setEnrolledC
                     border: 'none',
                     padding: '0.55rem 0.75rem',
                     fontSize: '0.86rem',
-                    fontWeight: (['prepare_certs', 'af_certificates', 'idcards', 'foclen'].includes(activeTab)) ? 700 : 500,
+                    fontWeight: (['prepare_certs', 'af_certificates', 'idcards'].includes(activeTab)) ? 700 : 500,
                     borderRadius: '8px',
                     cursor: 'pointer',
                     textAlign: 'left',
-                    background: (['prepare_certs', 'af_certificates', 'idcards', 'foclen'].includes(activeTab)) ? '#eff6ff' : 'transparent',
-                    color: (['prepare_certs', 'af_certificates', 'idcards', 'foclen'].includes(activeTab)) ? '#1d4ed8' : '#334155',
-                    borderLeft: (['prepare_certs', 'af_certificates', 'idcards', 'foclen'].includes(activeTab)) ? '3px solid #2563eb' : '3px solid transparent',
+                    background: (['prepare_certs', 'af_certificates', 'idcards'].includes(activeTab)) ? '#eff6ff' : 'transparent',
+                    color: (['prepare_certs', 'af_certificates', 'idcards'].includes(activeTab)) ? '#1d4ed8' : '#334155',
+                    borderLeft: (['prepare_certs', 'af_certificates', 'idcards'].includes(activeTab)) ? '3px solid #2563eb' : '3px solid transparent',
                     transition: 'all 0.15s ease'
                   }}
-                  onMouseEnter={e => { if (!['prepare_certs', 'af_certificates', 'idcards', 'foclen'].includes(activeTab)) { e.currentTarget.style.background = '#f8fafc'; e.currentTarget.style.color = '#0f172a'; } }}
-                  onMouseLeave={e => { if (!['prepare_certs', 'af_certificates', 'idcards', 'foclen'].includes(activeTab)) { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#334155'; } }}
+                  onMouseEnter={e => { if (!['prepare_certs', 'af_certificates', 'idcards'].includes(activeTab)) { e.currentTarget.style.background = '#f8fafc'; e.currentTarget.style.color = '#0f172a'; } }}
+                  onMouseLeave={e => { if (!['prepare_certs', 'af_certificates', 'idcards'].includes(activeTab)) { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#334155'; } }}
                 >
-                  <Award size={17} color={['prepare_certs', 'af_certificates', 'idcards', 'foclen'].includes(activeTab) ? '#2563eb' : '#64748b'} />
+                  <Award size={17} color={['prepare_certs', 'af_certificates', 'idcards'].includes(activeTab) ? '#2563eb' : '#64748b'} />
                   <span>Certificates & ID</span>
                 </button>
 
@@ -1968,7 +1968,7 @@ export default function Dashboard({ onSelectCourse, enrolledCourse, setEnrolledC
       }}>
 
         {/* Dynamic header title based on active tab */}
-        {activeTab !== 'invoices' && activeTab !== 'builder' && activeTab !== 'prepare_certs' && activeTab !== 'af_certificates' && activeTab !== 'idcards' && activeTab !== 'foclen' && (
+        {activeTab !== 'invoices' && activeTab !== 'builder' && activeTab !== 'prepare_certs' && activeTab !== 'af_certificates' && activeTab !== 'idcards' && (
           <div style={{
             display: 'flex',
             flexDirection: isMobile ? 'column' : 'row',
@@ -4479,15 +4479,14 @@ export default function Dashboard({ onSelectCourse, enrolledCourse, setEnrolledC
         )}
 
         {/* 🎓 TAB 6.5: CERTIFICATES & ID CARD MANAGEMENT (STAFF & ADMIN ONLY) */}
-        {(activeTab === 'prepare_certs' || activeTab === 'af_certificates' || activeTab === 'idcards' || activeTab === 'foclen') && (session?.role === 'admin' || session?.role === 'staff') && (
+        {(activeTab === 'prepare_certs' || activeTab === 'af_certificates' || activeTab === 'idcards') && (session?.role === 'admin' || session?.role === 'staff') && (
           <CertificateManager 
             session={session} 
             students={students} 
-            initialModule={activeTab === 'idcards' ? 'idcards' : activeTab === 'foclen' ? 'foclen' : 'certificates'}
+            initialModule={activeTab === 'idcards' ? 'idcards' : 'certificates'}
             onSelectModule={(mod) => {
               if (mod === 'certificates') setActiveTab('af_certificates');
               else if (mod === 'idcards') setActiveTab('idcards');
-              else if (mod === 'foclen') setActiveTab('foclen');
             }}
             onBack={() => setActiveTab('overview')} 
           />

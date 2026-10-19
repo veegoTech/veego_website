@@ -9,18 +9,6 @@ export const TopRibbonTab: React.FC<{ className?: string }> = ({ className = '' 
   </div>
 );
 
-// Foclen Software Pvt Ltd Logo replica
-export const FoclenLogo: React.FC<{ className?: string }> = ({ className = '' }) => (
-  <div className={`flex flex-col items-end ${className}`}>
-    <img 
-      src="/foclen_assets/image1.jpg" 
-      alt="FOCLEN SOFTWARE - BELIEVE IN PROCESS" 
-      className="h-10 object-contain"
-    />
-  </div>
-);
-export const FoclenLogoVector = FoclenLogo;
-
 // ISO 9001:2015 Gold Medal with Red Ribbon Badge
 export const ISOBadge: React.FC<{ className?: string }> = ({ className = '' }) => (
   <div className={`relative flex flex-col items-center select-none ${className}`}>

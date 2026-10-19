@@ -132,55 +132,7 @@ export const AssetManager: React.FC<AssetManagerProps> = ({
           </div>
         </div>
 
-        {/* Asset 2: Foclen Software Logo */}
-        <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-xs flex flex-col justify-between">
-          <div>
-            <div className="flex items-center justify-between mb-3">
-              <span className="text-xs font-bold uppercase tracking-wider text-slate-500">Logo 2</span>
-              {assets.foclenLogo ? (
-                <span className="text-[10px] bg-blue-100 text-blue-700 font-bold px-2 py-0.5 rounded">Custom Upload</span>
-              ) : (
-                <span className="text-[10px] bg-slate-100 text-slate-600 font-bold px-2 py-0.5 rounded">Vector Built-in</span>
-              )}
-            </div>
-            <h3 className="text-sm font-bold text-slate-900 mb-1">Foclen Software Corporate Logo</h3>
-            <p className="text-xs text-slate-500 mb-4">Top-right corner parent company logo badge.</p>
-
-            {/* Preview Box */}
-            <div className="h-28 bg-slate-50 border border-dashed border-slate-300 rounded-lg flex items-center justify-center p-3 mb-4">
-              <img 
-                src={assets.foclenLogo || "/foclen_assets/image1.jpg"} 
-                alt="Foclen Logo" 
-                className="max-h-16 max-w-full object-contain" 
-              />
-            </div>
-          </div>
-
-          <div className="flex items-center gap-2 pt-2 border-t border-slate-100">
-            <label className="flex-1 inline-flex items-center justify-center gap-2 px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold rounded-lg cursor-pointer transition-colors">
-              <Upload className="w-3.5 h-3.5" />
-              <span>Replace Logo</span>
-              <input 
-                type="file" 
-                accept="image/*" 
-                className="hidden" 
-                onChange={(e) => e.target.files?.[0] && handleFileUpload('foclenLogo', e.target.files[0])}
-              />
-            </label>
-            {assets.foclenLogo && (
-              <button
-                type="button"
-                onClick={() => handleResetAsset('foclenLogo')}
-                className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                title="Reset to default"
-              >
-                <Trash2 className="w-4 h-4" />
-              </button>
-            )}
-          </div>
-        </div>
-
-        {/* Asset 3: ISO 9001:2015 Emblem */}
+        {/* Asset 2: ISO 9001:2015 Emblem */}
         <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-xs flex flex-col justify-between">
           <div>
             <div className="flex items-center justify-between mb-3">
@@ -192,7 +144,7 @@ export const AssetManager: React.FC<AssetManagerProps> = ({
               )}
             </div>
             <h3 className="text-sm font-bold text-slate-900 mb-1">ISO 9001:2015 Certification Badge</h3>
-            <p className="text-xs text-slate-500 mb-4">Official ISO accreditation seal embedded next to Foclen Software logo.</p>
+            <p className="text-xs text-slate-500 mb-4">Official ISO accreditation seal embedded on certificates.</p>
 
             {/* Preview Box */}
             <div className="h-28 bg-slate-50 border border-dashed border-slate-300 rounded-lg flex items-center justify-center p-3 mb-4">

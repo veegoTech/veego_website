@@ -23,11 +23,11 @@ interface GoogleSheetSyncModalProps {
   isOpen: boolean;
   onClose: () => void;
   title: string;
-  moduleType: 'certificate' | 'idcard' | 'foclen';
+  moduleType: 'certificate' | 'idcard';
   onImport: (importedRows: any[]) => void;
 }
 
-const DEFAULT_SHEET_URL = 'https://docs.google.com/spreadsheets/d/1-B2M4HCEYpjwODULGApsl0YamV-enhyIpJCKPEhFjmI/edit';
+const DEFAULT_SHEET_URL = import.meta.env.VITE_GOOGLE_SHEET_SYNC_URL || '';
 const STORAGE_SHEET_URL_KEY = 'veego_cached_google_sheet_url';
 
 export const GoogleSheetSyncModal: React.FC<GoogleSheetSyncModalProps> = ({
@@ -37,7 +37,7 @@ export const GoogleSheetSyncModal: React.FC<GoogleSheetSyncModalProps> = ({
   moduleType,
   onImport,
 }) => {
-  const [sheetUrl, setSheetUrl] = useState<string>(DEFAULT_SHEET_URL);
+  const [sheetUrl, setSheetUrl] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [errorMsg, setErrorMsg] = useState<string>('');
   const [sheetData, setSheetData] = useState<ParsedSheetData | null>(null);
@@ -50,7 +50,7 @@ export const GoogleSheetSyncModal: React.FC<GoogleSheetSyncModalProps> = ({
     const cached = localStorage.getItem(STORAGE_SHEET_URL_KEY);
     if (cached) {
       setSheetUrl(cached);
-    } else {
+    } else if (DEFAULT_SHEET_URL) {
       setSheetUrl(DEFAULT_SHEET_URL);
     }
   }, []);
@@ -182,34 +182,6 @@ export const GoogleSheetSyncModal: React.FC<GoogleSheetSyncModalProps> = ({
           issueDate: issueDate.trim() || new Date().toISOString().split('T')[0],
           validUntil: '2026-12-31',
           qrCodeUrl: `https://veego-tech.vercel.app/verify/${idCardNum}`,
-        });
-      } else if (moduleType === 'foclen') {
-        const foclenId = `FOC-${Date.now().toString().slice(-4)}-${idx + 1}`;
-        importedRecords.push({
-          id: foclenId,
-          certificateNumber: `FOCLEN/INT/${new Date().getFullYear()}/${Math.floor(100 + Math.random() * 900)}`,
-          issueDate: issueDate.trim() || new Date().toLocaleDateString('en-GB').replace(/\//g, '.'),
-          studentName: studentName.trim() || `Student ${idx + 1}`,
-          studentPrefix: 'Mr.',
-          role: role.trim() || 'full-stack developer',
-          periodDescription: duration.trim() || 'three months from Dec 2024 to March 2025',
-          proficiencyDescription: 'both front-end and back-end development',
-          contributionsDescription: 'building intuitive user interfaces, implementing server-side logic, and managing databases to deliver end-to-end solutions',
-          signatory1: {
-            name: 'VEERALAKSHMI V',
-            designation: 'Project Manager',
-            signedBy: 'Veeralakshmi.V',
-            signDate: `${new Date().toLocaleDateString('en-GB')} 14:52:24`,
-          },
-          signatory2: {
-            name: 'VIVEKANANDAN V',
-            designation: 'HR Manager',
-            signedBy: 'Vivekanandan.V',
-            signDate: `${new Date().toLocaleDateString('en-GB')} 14:52:24`,
-          },
-          registeredAddress: 'NO- 2/91 SCHOOL STREET, SRIRENGAPURAM, THENI, TAMILNADU 625534, India',
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
         });
       }
     });

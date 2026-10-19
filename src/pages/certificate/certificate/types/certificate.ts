@@ -25,7 +25,6 @@ export interface CertificateData {
 
 export interface CustomAssets {
   alphaFlyLogo?: string;
-  foclenLogo?: string;
   isoBadge?: string;
   founderSignature?: string;
   signature?: string;
